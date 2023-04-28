@@ -1,0 +1,6 @@
+{
+    "recommendations": [
+        "esbenp.prettier-vscode",
+        "dennisoosterling.jsx-path-refactor"
+    ]
+}

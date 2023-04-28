@@ -1,0 +1,7 @@
+{
+    "prettier.jsxSingleQuote": true,
+    "prettier.proseWrap": "preserve",
+    "prettier.singleAttributePerLine": false,
+    "prettier.singleQuote": true,
+    "prettier.printWidth": 100
+}
