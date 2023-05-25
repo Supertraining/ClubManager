@@ -94,15 +94,27 @@ export default class UsersDAO {
     }
   }
 
-  async updateUser(id, data) {
+  async updateUserReserves(username, reserveData) {
 
     try {
 
-      const updateUser = await model
+      let data = await model
         .usermodel
-        .updateMany({ _id: id }, data);
+        .updateOne(
+          {
+            username: username
+          },
+          {
+            $push:
+            {
 
-      return updateUser;
+              [`reserves`]: reserveData
+
+            }
+          }
+        );
+
+      return data;
 
     } catch (err) {
 
@@ -110,6 +122,35 @@ export default class UsersDAO {
 
     }
 
+  }
+
+  async deleteReserveById(username, reserveId) {
+
+    try {
+
+      let data = await model
+        .usermodel
+        .updateOne(
+          {
+            username: username
+          },
+          {
+            $pull:
+            {
+              
+              [`reserves`]: { id: reserveId }
+
+            }
+          }
+        );
+          
+      return data;
+
+    } catch (error) {
+
+      logger.error(error);
+
+    }
   }
 
   static async getInstance() {

@@ -10,7 +10,7 @@ export default class UserRouter {
     constructor() {
         this.controllers = new UsersController();
     }
-    
+
     start() {
 
         router.post(
@@ -36,25 +36,25 @@ export default class UserRouter {
 
         router.get(
 
-			'/login',
-            
-			async (req, res) => {
+            '/login',
 
-				try {
-					
-					req.isAuthenticated()
-						
-					? res.json(`El usuario ${req.user.username} ya está logueado`)
-					: res.status(404).json({message: 'Por favor inicie sesión'});
+            async (req, res) => {
 
-				} catch (error) {
+                try {
 
-					routeLogger(req, 'error', error);
+                    req.isAuthenticated()
 
-				}
+                        ? res.json(true)
+                        : res.json(false)
+
+                } catch (error) {
+
+                    routeLogger(req, 'error', error);
+
+                }
 
 
-			}
+            }
 
         );
 
@@ -62,28 +62,29 @@ export default class UserRouter {
             '/login',
 
             passportLogin,
-            
+
 
             passport
-                .authenticate('login', 
-                
-                {
-                    failureRedirect: '/faillogin',
-                    successRedirect: '/home'
-                }
-            )
+                .authenticate('login',
 
-    );
+                    {
+                        failureRedirect: '/faillogin',
+                        successRedirect: '/home'
+                    }
+                )
+
+        );
 
         router.get(
             '/faillogin',
+
 
             this.controllers
                 .failLogin
 
         );
 
-        router.get(
+        router.post(
 
             '/logout',
 
@@ -114,9 +115,7 @@ export default class UserRouter {
                 .getByUserName
 
         );
-
-
-
+        
         router.get(
 
             '/getAll',
@@ -144,6 +143,23 @@ export default class UserRouter {
 
         );
 
+        router.put(
+
+            '/reserves/delete',
+
+            this.controllers
+                .deleteReserveById
+
+        )
+
+        router.put(
+
+            '/reserves/:username',
+
+            this.controllers
+                .updateUserReserves
+
+        );
         router.put(
 
             '/actualizar/:id',

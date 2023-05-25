@@ -1,11 +1,11 @@
 import Booking from '../courtBooking/Booking'
 import './paddle.css'
 
-const Paddle = ({ id }) => {
+const Paddle = ({ court }) => {
   return (
-    <div>
+    <div className='paddleContainer'>
 
-    <Booking id={id} />
+    <Booking court={court} />
     
   </div>
   )

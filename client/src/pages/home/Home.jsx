@@ -5,7 +5,13 @@ const Home = () => {
   
 
   return (
-    <>Home</>
+    <div >
+      <ul style={{marginTop: '650px'}}>
+        <li>HISTORIA</li>
+        <li>ACTUALIDAD</li>
+        <li>FOTOS</li>
+      </ul>
+    </div>
   )
 }
 

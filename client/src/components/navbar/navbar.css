@@ -1,3 +1,34 @@
 .navBarContainer {
     height: 100px;
 }
+
+.offCanvasBg {
+    background-color: rgba(0, 0, 0, 0.514);
+}
+
+.userLiItem:hover {
+    background-color: black;
+}
+
+.dropdown-menu:hover {
+    transition: 3s !important;
+    background-color: rgba(0, 0, 0, 0.438) !important;
+}
+.dropdown-menu:hover .dropdownitem {
+    color: rgb(13,202,2409) !important;
+}
+.dropdownitem {
+    text-decoration: none;
+    color: white;
+    padding: 3px
+}
+.dropdownitem:hover {
+
+   text-decoration: underline;
+
+}
+
+td {
+    font-size: small;
+    padding: 10px !important;
+}

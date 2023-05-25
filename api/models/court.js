@@ -1,20 +1,20 @@
 import mongoose from "mongoose";
 
 
-const userSchema = new mongoose.Schema({
+const courtSchema = new mongoose.Schema({
     name: {
         type: String,
         require: true
     },
     unavailableDates: {
-        Lunes: [{ type: Object }],
-        Martes: [{ type: Object }],
-        Miercoles: [{ type: Object }],
-        Jueves: [{ type: Object }],
-        Viernes: [{ type: Object }],
-        Sabado: [{ type: Object }],
-        Domingo: [{ type: Object }],
+        lunes: [{ type: Object }],
+        martes: [{ type: Object }],
+        miercoles: [{ type: Object }],
+        jueves: [{ type: Object }],
+        viernes: [{ type: Object }],
+        sabado: [{ type: Object }],
+        domingo: [{ type: Object }],
     }
 });
 
-export const usermodel = mongoose.model('courts', userSchema);
+export const courtModel = mongoose.model('courts', courtSchema);

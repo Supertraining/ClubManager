@@ -52,7 +52,7 @@ export const passportRegister = async (req, res, next) => {
               },
 
               async (req, username, password, done) => {
-                
+                    
                   const usuario = await userServices
                       .getByUserName(username);
                   
@@ -91,8 +91,8 @@ export const passportRegister = async (req, res, next) => {
 
 export const passportLogin = async (req, res, next) => {
 
-  try {
-            
+    try {
+      
       passport.use(
 
           'login',
@@ -100,9 +100,9 @@ export const passportLogin = async (req, res, next) => {
           new LocalStrategy(
 
               async (username, password, done) => {
-            
+               
                   let usuario = await userServices.getByUserName(username);
-                
+                    
                   if (!usuario) {
 
                       return done(null, false);
@@ -116,8 +116,10 @@ export const passportLogin = async (req, res, next) => {
                       return done(null, false);
 
                   }
+                  
                   req.logIn(usuario, (error) => {
                       if (error) return done(error);
+                     
                       return done(null, usuario);
                   });
               })
@@ -128,7 +130,7 @@ export const passportLogin = async (req, res, next) => {
       routeLogger(req, 'error', error);
 
   }
-
+ 
   next();
 }
 

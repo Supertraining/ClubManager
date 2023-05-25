@@ -15,7 +15,7 @@ export const sessionConfig = {
       mongoUrl: process.env.MONGO_URL,
       mongoOptions: advancedOptions,
       collectionName: 'sessions',
-      ttl: 600
+      ttl: 600,
     }
   ),
   secret: process.env.SESSION_SECRET,

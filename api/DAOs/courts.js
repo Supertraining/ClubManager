@@ -1,6 +1,5 @@
 import * as model from '../models/court.js';
 
-
 let instance = null;
 export default class CourtsDAO {
 
@@ -9,7 +8,7 @@ export default class CourtsDAO {
         try {
 
             let data = await model
-                .usermodel
+                .courtModel
                 .create(court);
 
             return data;
@@ -27,7 +26,7 @@ export default class CourtsDAO {
         try {
 
             let data = await model
-                .usermodel
+                .courtModel
                 .find();
 
             return data;
@@ -40,11 +39,11 @@ export default class CourtsDAO {
     }
 
     getUnavailableDatesByName = async (name) => {
-
+      
         try {
 
             let data = await model
-                .usermodel
+                .courtModel
                 .findOne(
                     {
                         name: name
@@ -52,7 +51,7 @@ export default class CourtsDAO {
                 );
 
             let unavailableDates = data.get('unavailableDates')
-                 
+
             return unavailableDates;
 
         } catch (err) {
@@ -63,67 +62,71 @@ export default class CourtsDAO {
 
     }
 
-    
     reserveDate = async (reserve) => {
-        
+      
+        try {
+            
+            let data = await model
+                .courtModel
+                .updateOne(
+                    {
+                        name: reserve.name
+                    },
+                    {
+                        $push:
+                        {
+
+                            [`unavailableDates.${reserve.selectedDates.weekday}`]: reserve.selectedDates,
+
+                        }
+                    }
+                );
+
+            return data;
+
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    deleteReserveById = async (courtName, reserveDay, reserveId) => {
+
+        try {
+
+            let data = await model.courtModel
+                .updateOne(
+                    { name: courtName }, // Update criteria
+                    { $pull: { [`unavailableDates.${reserveDay}`]: { id: reserveId } } }
+            );
+            
+                    return data;
+
+        } catch (err) {
+
+            console.log(err);
+
+        }
+
+    }
+
+    updateById = async (id, newData) => {
         try {
 
             let data = await model
-            .usermodel
-            .updateOne(
-                {
-                    name: reserve.name
-                },
-                {
-                        $push:
-                        {
-                            [`unavailableDates.${reserve.day}`]: reserve.selectedDates
-                        }
-                    }
-                    );
-                    
-                    return data;
-                    
-                } catch (err) {
-                    console.log(err);
-                }
-            }
-            
-            deleteById = async (id) => {
-        
-                try {
-        
-                    let data = await model
-                        .usermodel
-                        .findByIdAndDelete(id);
-        
-                    return data;
-        
-                } catch (err) {
-        
-                    console.log(err);
-        
-                }
-        
-            }
-        
-            updateById = async (id, newData) => {
-                try {
-        
-                    let data = await model
-                        .usermodel
-                        .findByIdAndUpdate(id, newData);
-        
-                    return data;
-        
-                } catch (err) {
-        
-                    console.log(err);
-        
-                }
+                .courtModel
+                .findByIdAndUpdate(id, newData);
+
+            return data;
+
+        } catch (err) {
+
+            console.log(err);
+
+        }
     }
-    
+
+
 }
-        
+
 
 

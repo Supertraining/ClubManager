@@ -1,11 +1,11 @@
 import Booking from '../courtBooking/Booking'
 import './squash.css'
 
-const Squash = ({ id }) => {
+const Squash = ({ court }) => {
   return (
-    <div>
+    <div className='squashContainer'>
 
-    <Booking id={id} />
+    <Booking court={court} />
     
   </div>
   )

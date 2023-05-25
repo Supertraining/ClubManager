@@ -39,6 +39,7 @@ export default class CourtsControllers {
     }
 
     getUnavailableDatesByName = async (req, res) => {
+ 
         try {
             let data = await this.courtsService.getUnavailableDatesByName(req.params.name);
             res.json(data);
@@ -48,9 +49,8 @@ export default class CourtsControllers {
     }
 
     reserveDate = async (req, res) => {
-
+       
         try {
-
             let data = await this.courtsService
                 .reserveDate(req.body);
 
@@ -61,5 +61,22 @@ export default class CourtsControllers {
             console.log(err);
 
         }
+    }
+
+    deleteReserveById = async (req, res) => {
+        try {
+            
+             let data = await this.courtsService
+                .deleteReserveById(req.body.courtName, req.body.reserveDay, req.body.reserveId);
+            
+            res.json(data);
+            
+        } catch (error) {
+
+            console.log(err);
+            
+        }
+       
+        
     }
 }

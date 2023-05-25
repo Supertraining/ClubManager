@@ -1,0 +1,7 @@
+.squashContainer{
+  /* background-image: url('../../assets/squash/squash-min.jpg'); */
+  background: linear-gradient(rgba(0, 0, 0, 0.212), rgba(0, 0, 0, 0.295)), url('../../assets/squash/squash-min.jpg');
+  background-position: center;
+  background-size: cover;
+  
+}

@@ -1,6 +1,7 @@
 import UsersRepo from "../repo/users.js";
 import logger from "../utils/logger.js";
 import bcrypt from 'bcrypt';
+import { v4 as uuidv4 } from 'uuid';
 
 export default class UsersServices {
 
@@ -77,18 +78,13 @@ export default class UsersServices {
 
                 logger.info(`El Usuario con el Id: ${id} no existe`);
 
-                return {
-                    message: `El Usuario con el Id: ${id} no existe`,
-                    data: null
-                }
+                return null
+                    
             }
 
             logger.info('Usuario eliminado con exito');
 
-            return {
-                message: `Usuario ${id} eliminado con exito`,
-                data: data
-            };
+            return data
 
         } catch (err) {
 
@@ -135,19 +131,11 @@ export default class UsersServices {
                 
                 logger.info(`El usuario con el Id: ${id} no existe`);
 
-                return {
+                return null
 
-                    message: `El usuario con el Id: ${id} no existe`,
-                    data: null
-
-                }
             }
 
-            return {
-
-                data: data
-
-            };
+            return data
         }
         catch (err) {
             
@@ -193,6 +181,46 @@ export default class UsersServices {
 
         }
 
+    }
+    async updateUserReserves(username, reserveData) {
+           
+        try {
+            const updateUser = await this.repo
+                .updateUserReserves(username, reserveData);
+           
+            if (updateUser.matchedCount === 0) {
+
+                logger.info(`El usuario con el Id: ${id} no encontrado`);
+
+                return null;
+
+            }
+
+            const updatedUser = await this.repo
+                .getByUserName(username);
+            
+            return updatedUser;
+
+        } catch (err) {
+
+            logger.error(err);
+
+        }
+
+    }
+
+    async deleteReserveById(username, reserveId) {
+       
+        try {
+
+            let deletedReserve = await this.repo.
+                deleteReserveById(username, reserveId); 
+            
+            return deletedReserve;
+
+        } catch (error) {
+            
+        }
     }
 
 }

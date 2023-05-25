@@ -2,19 +2,37 @@ import Football from "../../components/Football/Football"
 import Paleta from '../../components/pelotaPaleta/Paleta'
 import Paddle from '../../components/paddle/Paddle'
 import Squash from '../../components/squash/Squash'
+import { useNavigate, useLocation } from "react-router-dom"
+import { useEffect, useState } from "react"
 
-import { useParams } from "react-router-dom"
 
 const Reserves = () => {
 
-  let { id } = useParams()
+  const [court, setcourt] = useState()
+  const location = useLocation()
+  const id = location.state?.court
+  const navigate = useNavigate()
+  
+  useEffect(() => {
+
+    !id && navigate('/')
+
+  }, [])
+
+
+
+  useEffect(() => {
+
+    setcourt(id)
+
+  })
 
   return (
     <>
-      {id === 'futbol' && <Football id={id} />}
-      {id === 'paleta' && <Paleta id={id} />}
-      {id === 'paddle' && <Paddle id={id} />}
-      {id === 'squash' && <Squash id={id} />}
+      {id === 'futbol' && <Football court={id} />}
+      {id === 'paleta' && <Paleta court={id} />}
+      {id === 'paddle' && <Paddle court={id} />}
+      {id === 'squash' && <Squash court={id} />}
     </>
   )
 }

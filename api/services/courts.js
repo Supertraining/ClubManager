@@ -1,4 +1,5 @@
 import CourtsDAO from "../DAOs/courts.js";
+import { v4 as uuidv4 } from 'uuid';
 
 export default class CourtServices {
 
@@ -44,7 +45,7 @@ export default class CourtServices {
     getUnavailableDatesByName = async (name) => {
 
         try {
-
+            
             let data = await this.courtsDAO
                 .getUnavailableDatesByName(name);
 
@@ -59,31 +60,11 @@ export default class CourtServices {
     }
 
     reserveDate = async (reserve) => {
-
+       
         try {
-
-            let reserveData;
-            let weekDay = (new Date(reserve.selectedDates.initialTime).getDay())
-            switch (weekDay) {
-                case 0: reserveData = { ...reserve, day: 'Domingo' }
-                    break;
-                case 1: reserveData = { ...reserve, day: 'Lunes' }
-                    break;
-                case 2: reserveData = { ...reserve, day: 'Martes' }
-                    break;
-                case 3: reserveData = { ...reserve, day: 'Miercoles' }
-                    break;
-                case 4: reserveData = { ...reserve, day: 'Jueves' }
-                    break;
-                case 5: reserveData = { ...reserve, day: 'Viernes' }
-                    break;
-                case 6: reserveData = { ...reserve, day: 'Sabado' }
-                    break;
-                
-            }
-         
+            
             let data = await this.courtsDAO
-                .reserveDate(reserveData);
+                .reserveDate(reserve);
 
             return data
 
@@ -92,6 +73,23 @@ export default class CourtServices {
             console.log(err);
             
         }
+    }
+
+    deleteReserveById = async (courtName, reserveDay, reserveId) => {
+        try {
+
+           let data = await this.courtsDAO
+                .deleteReserveById(courtName, reserveDay, reserveId); 
+            
+            return data
+
+        } catch (error) {
+
+            console.log(err);
+
+            
+        }
+        
     }
 
 }

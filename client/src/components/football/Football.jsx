@@ -1,12 +1,12 @@
 import Booking from '../courtBooking/Booking'
 import './football.css'
 
-const Football = ({ id }) => {
+const Football = ({ court }) => {
 
   return (
     <div className='footballContainer'>
 
-      <Booking id={id} />
+      <Booking court={court} />
 
     </div>
   )

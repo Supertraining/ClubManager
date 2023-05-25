@@ -1,0 +1,46 @@
+.menu-container {
+  height: 100vh;
+  border-right: 1px solid black;
+  background-color: rgba(0, 0, 0, 0.589);
+}
+.options-wrapper{
+  height: fit-content;
+  padding: 5px;
+  margin: 10px;
+  list-style: none;
+}
+
+.options-wrapper > li {
+  margin: 10px 0px;
+}
+
+.options-wrapper > li > a {
+  width: 100%;
+}
+
+.btn-success:hover {
+  background-color: #146c4383 !important;
+  transition: 1s;
+}
+
+.btn-arrow-active {
+  transform: translateX(5px) scale(1.2);
+  transition: 0.5s;
+  text-shadow: 1px 1px 1px black;
+  font-weight: bold !important;
+}
+.btn-arrow-inActive {
+  transition: 0.5s;
+}
+
+/* .options-wrapper li{
+  padding: 5px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  border: 1px solid black;
+  background-color: white;
+  color: black;
+  font-weight: bold;
+
+} */

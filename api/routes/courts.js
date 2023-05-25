@@ -13,7 +13,7 @@ export default class CourtsRouter {
         router.get("/:name", this.controllers.getUnavailableDatesByName)
         router.post("/createCourt", this.controllers.save)
         router.put("/reserve", this.controllers.reserveDate)
-        // router.delete("/",)
+        router.put("/reserve/delete", this.controllers.deleteReserveById)
         // router.put("/",)
 
         return router

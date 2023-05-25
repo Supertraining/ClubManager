@@ -1,0 +1,11 @@
+::placeholder{
+  color: black !important;
+}
+.bi-asterisk{
+  font-size: 10px !important;
+}
+
+.loginBtn:hover {
+  transition: 0.5s !important;
+  background-color: #146c4365 !important;
+}

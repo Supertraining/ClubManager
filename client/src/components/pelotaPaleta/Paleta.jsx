@@ -1,11 +1,12 @@
 import Booking from '../courtBooking/Booking'
 import './paleta.css'
 
-const Paleta = ({ id }) => {
-  return (
-    <div>
+const Paleta = ({ court }) => {
 
-      <Booking id={id} />
+  return (
+    <div className='paletaContainer'>
+
+      <Booking court={court} />
 
     </div>
   )

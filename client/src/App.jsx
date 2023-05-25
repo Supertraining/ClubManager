@@ -4,10 +4,12 @@ import Home from './pages/home/Home';
 import {
   BrowserRouter as Router,
   Routes,
-  Route
+  Route,
+  Navigate
 } from "react-router-dom";
 import Reserves from './pages/reserves/Reserves';
-import Login from './components/login/Login';
+import Footer from './components/footer/Footer';
+import Register from './components/auth/register/Register';
 
 
 
@@ -19,10 +21,12 @@ function App() {
       <Router>
         <Navbar />
         <Routes>
-          <Route exact path='/login' element={<Login />} />
           <Route exact path='/' element={<Home />} />
-          <Route exact path='/reserves/:id' element={<Reserves />} />
+          <Route exact path='/reserves' element={<Reserves />} />
+          <Route exact path='/register' element={<Register/>} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+        <Footer />
       </Router>
 
     </div>

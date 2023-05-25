@@ -1,4 +1,5 @@
 import UsersServices from '../services/users.js';
+import { createError } from '../utils/error.js';
 import logger, { routeLogger } from '../utils/logger.js';
 
 export default class UsersController {
@@ -9,15 +10,16 @@ export default class UsersController {
 
 	}
 
-
 	getByUserName = async (req, res) => {
 
 		try {
-			
+
 			const usuario = await this.userServices
 				.getByUserName(req.user?.username);
-		
-			 res.json(usuario);
+
+			usuario
+				? res.json(usuario)
+				: res.status(404).json(usuario)
 
 		} catch (error) {
 
@@ -43,25 +45,21 @@ export default class UsersController {
 
 		try {
 
-			res.json({ message: `Hasta luego ${req.user.username}` });
+			req.logout((error) => {
 
+				if (error) {
 
-			setTimeout(() => {
+					logger.error('Error en cierre de sesión');
 
-				req.logout((error) => {
+				} else {
 
-					if (error) {
+					logger.info('session eliminada con éxito');
 
-						logger.error('Error en cierre de sesión');
+				}
 
-					} else {
+			});
 
-						logger.info('session eliminada con éxito');
-
-					}
-
-				});
-			}, 2000);
+			res.json(true);
 
 		} catch (error) {
 
@@ -71,11 +69,11 @@ export default class UsersController {
 
 	}
 
-	failLogin = async (req, res) => {
+	failLogin = (req, res) => {
 
 		try {
 
-			res.status(404).json({ message: 'Error en el login' });
+			res.status(404).end();
 
 		} catch (error) {
 
@@ -93,11 +91,11 @@ export default class UsersController {
 			const deletedUser = await this.userServices
 				.deleteById(req.params.id);
 
-			deletedUser.data
+			deletedUser
 
-				? res.status(200).json(deletedUser)
+				? res.status(200).json(deletedUser.deletedCount)
 
-				: res.status(404).json(deletedUser);
+				: res.status(404).json(deletedUser.deletedCount);
 
 		} catch (error) {
 
@@ -131,9 +129,9 @@ export default class UsersController {
 			const user = await this.userServices
 				.getById(req.params.id);
 
-			user.data
+			user
 
-				? res.status(200).json(user)
+				? res.json(user)
 
 				: res.status(404).json(user);
 
@@ -164,6 +162,42 @@ export default class UsersController {
 
 		}
 
+	}
+	updateUserReserves = async (req, res) => {
+
+		try {
+
+			const updatedUser = await this.userServices
+				.updateUserReserves(req.params.username, req.body);
+
+			updatedUser
+
+				? res.json(updatedUser)
+
+				: res.status(404).json(false);
+
+		} catch (error) {
+
+			routeLogger(req, 'error', error);
+
+		}
+
+	}
+
+	deleteReserveById = async (req, res) => {
+
+		try {
+			
+			let deletedReserve = await this.userServices.
+				deleteReserveById(req.body.username, req.body.reserveId)
+			
+			res.json(deletedReserve);
+
+		} catch (error) {
+
+			routeLogger(req, 'error', error);
+
+		}
 	}
 
 }

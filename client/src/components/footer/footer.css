@@ -1,0 +1,26 @@
+.footerContainer {
+  height: 135px;
+}
+
+.whatsappImg{
+
+filter: brightness(0.5);
+
+}
+
+.whatsappImg:hover {
+  filter: brightness(1);
+  transform: scale(1.1);
+  transition: 0.5s;
+}
+
+.instagramImg{
+
+filter: brightness(0.5);
+
+}
+.instagramImg:hover {
+  filter: brightness(1);
+  transform: scale(1.1);
+  transition: 0.5s;
+}
