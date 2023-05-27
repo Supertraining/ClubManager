@@ -18,6 +18,7 @@ const Menu = (props) => {
             onClick={() => {
               props.setShowCreateUser(true),
                 props.setShowGetAll(false)
+                props.setShowResDeleted(false)
             }}>
             Create user
           </Link>
@@ -36,6 +37,7 @@ const Menu = (props) => {
             onClick={() => {
               props.setShowGetAll(true),
                 props.setShowCreateUser(false),
+                props.setShowResDeleted(false)
                 props.getAllUsers()
             }}>
             All Users
@@ -63,8 +65,23 @@ const Menu = (props) => {
 
 
         <li className='d-flex align-items-center'>
-          <Link className='btn btn-success bg-transparent' onClick={() => setOpen(true)}>Ver Todas las reservas</Link>
-          <i className={open ? 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-active text-success' : 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-inActive'}></i>
+          <Link
+            to={'/oldReservesDeleted'}
+            className={props.showResDeleted
+              ? 'btn btn-success'
+              : 'btn btn-success bg-transparent'}
+            onClick={() => {
+              props.setShowResDeleted(true)
+              props.setShowGetAll(false),
+                props.setShowCreateUser(false),
+                props.deleteOldReserves()
+            }}>
+            Delete reserves history
+          </Link>
+          <i
+            className={props.showResDeleted
+              ? 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-active text-success' : 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-inActive'}>
+          </i>
         </li>
 
       </ul>

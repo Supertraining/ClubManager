@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import './booking.css'
 import { AuthContext } from '../context/AuthContext'
 import { v4 as uuidv4 } from 'uuid';
-import CourtBookingBoard from '../../courtBookingBoard/CourtBookingBoard'
+import CourtBookingBoard from '../courtBookingBoard/CourtBookingBoard'
 import { ReserveBoardContext } from '../context/ReserveBoardUpdate'
 import unidecode from 'unidecode';
 
@@ -21,6 +21,7 @@ const Booking = ({ court }) => {
 
 
   let { data, reFetch } = useFetch(`http://localhost:8080/courts/${court}`)
+
 
   const { user } = useContext(AuthContext)
   const { reserveDeleted, setReserveDeleted } = useContext(ReserveBoardContext)

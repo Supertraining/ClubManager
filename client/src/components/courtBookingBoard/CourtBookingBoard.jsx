@@ -11,6 +11,7 @@ const CourtBookingBoard = ({ data }) => {
   const dateList = [];
   const dateListLc = [];
   const weekDaysList = [];
+  
   for (let d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
     const day = d.toLocaleDateString('es-AR', { weekday: 'long' });
     const unaccentedDay = unidecode(day);

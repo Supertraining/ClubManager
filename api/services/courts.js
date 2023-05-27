@@ -85,11 +85,26 @@ export default class CourtServices {
 
         } catch (error) {
 
-            console.log(err);
+            console.log(error);
 
             
         }
         
+    }
+
+    deleteOldReserves = async () => {
+        try {
+
+            let data = await this.courtsDAO
+                .deleteOldReserves();
+            
+            return data;
+            
+        } catch (error) {
+            
+            console.log(error)
+
+        }
     }
 
 }

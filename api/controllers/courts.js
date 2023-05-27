@@ -73,10 +73,24 @@ export default class CourtsControllers {
             
         } catch (error) {
 
-            console.log(err);
+            console.log(error);
             
         }
        
-        
+    }
+
+    deleteOldReserves = async (req, res) => {
+        try {
+
+            let data = await this.courtsService
+                .deleteOldReserves();
+            
+            res.json(data);
+            
+        } catch (error) {
+
+            console.log(error)
+
+        }
     }
 }
