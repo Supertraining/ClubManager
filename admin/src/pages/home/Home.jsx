@@ -18,54 +18,74 @@ const Home = () => {
 
   const getAllUsers = async () => {
 
-    
-    const allUsers = await axios.get('/getAll')
+    try {
 
-    setAllUsers(allUsers.data)
+      const allUsers = await axios.get('/getAll')
+
+      setAllUsers(allUsers.data)
+
+    } catch (error) {
+
+      console.log(error)
+
+    }
 
   };
 
   const deleteOldReserves = async () => {
+
     try {
 
       await axios.put('/courts/reserve/clean')
-      
+
     } catch (error) {
-      
+
       console.log(error)
 
     }
+
   }
 
 
   return (
+
     <div className='home d-flex'>
 
       <Menu
         showCreateUser={showCreateUser}
-        setShowCreateUser={setShowCreateUser} 
+        setShowCreateUser={setShowCreateUser}
 
         showGetAll={showGetAll} getAllUsers={getAllUsers}
-        setShowGetAll={setShowGetAll} 
+        setShowGetAll={setShowGetAll}
 
         showResDeleted={showResDeleted}
         setShowResDeleted={setShowResDeleted}
         deleteOldReserves={deleteOldReserves}
-
       />
 
       <Routes>
 
-        <Route exact path='/createUser' element={<CreateUser setShowCreateUser={setShowCreateUser} showCreateUser={showCreateUser} />} />
+        <Route
+          exact path='/createUser'
+          element={<CreateUser setShowCreateUser={setShowCreateUser} showCreateUser={showCreateUser} />}
+        />
 
-        <Route exact path='/getAllUsers' element={<GetAllUsers setShowGetAll={setShowGetAll} showGetAll={showGetAll} allUsers={allUsers} getAllUsers={getAllUsers} />} />
+        <Route
+          exact path='/getAllUsers'
+          element={<GetAllUsers setShowGetAll={setShowGetAll} showGetAll={showGetAll} allUsers={allUsers} getAllUsers={getAllUsers} />}
+        />
 
-        <Route exact path='/oldReservesDeleted' element={<OldReservesDeleted setShowResDeleted={setShowResDeleted} />} />
+        <Route
+          exact path='/oldReservesDeleted'
+          element={<OldReservesDeleted setShowResDeleted={setShowResDeleted} />}
+        />
 
       </Routes>
 
     </div>
+
   )
+  
 }
 
 export default Home

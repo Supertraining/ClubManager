@@ -1,4 +1,4 @@
-import UsersRepo from "../repo/users.js";
+import UsersDAO from "../DAOs/users.js";
 import logger from "../utils/logger.js";
 import bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
@@ -7,7 +7,7 @@ export default class UsersServices {
 
     constructor() {
 
-        this.repo = new UsersRepo();
+        this.DAO = new UsersDAO();
 
     }
 
@@ -15,7 +15,7 @@ export default class UsersServices {
            
         try {
 
-            const user = await this.repo
+            const user = await this.DAO
                 .getByUserName(username);
                 
             if (user.length === 0) {
@@ -45,7 +45,7 @@ export default class UsersServices {
                 
             }
             
-            const newUser = await this.repo
+            const newUser = await this.DAO
                 .insertUser(
 
                     {
@@ -71,7 +71,7 @@ export default class UsersServices {
 
         try {
 
-            const data = await this.repo
+            const data = await this.DAO
                 .deleteById(id);
 
             if (data.deletedCount === 0) {
@@ -98,7 +98,7 @@ export default class UsersServices {
 
         try {
 
-            const data = await this.repo
+            const data = await this.DAO
                 .getAllUsers();
 
             if (data.length === 0) {
@@ -124,7 +124,7 @@ export default class UsersServices {
     async getById(id) {
       
         try {
-            const data = await this.repo
+            const data = await this.DAO
                 .getById(id);
             
             if (!data) {
@@ -148,7 +148,7 @@ export default class UsersServices {
 
         try {
      
-            const updateUser = await this.repo
+            const updateUser = await this.DAO
                 .updateUser(id,
                     {
                         ...data,
@@ -167,7 +167,7 @@ export default class UsersServices {
 
             }
 
-            const updatedUser = await this.repo
+            const updatedUser = await this.DAO
                 .getById(id);
             
             return {
@@ -185,7 +185,7 @@ export default class UsersServices {
     async updateUserReserves(username, reserveData) {
            
         try {
-            const updateUser = await this.repo
+            const updateUser = await this.DAO
                 .updateUserReserves(username, reserveData);
            
             if (updateUser.matchedCount === 0) {
@@ -196,7 +196,7 @@ export default class UsersServices {
 
             }
 
-            const updatedUser = await this.repo
+            const updatedUser = await this.DAO
                 .getByUserName(username);
             
             return updatedUser;
@@ -213,7 +213,7 @@ export default class UsersServices {
        
         try {
 
-            let deletedReserve = await this.repo.
+            let deletedReserve = await this.DAO.
                 deleteReserveById(username, reserveId); 
             
             return deletedReserve;

@@ -5,11 +5,16 @@ import { Link } from 'react-router-dom'
 const Menu = (props) => {
 
   return (
-    <div className="menu-container d-flex align-items-center justify-content-center col-3">
 
-      <ul className='options-wrapper'>
+    <div
+      className="menu-container d-flex align-items-center justify-content-center col-3">
 
-        <li className='d-flex align-items-center'>
+      <ul
+        className='options-wrapper'>
+
+        <li
+          className='d-flex align-items-center'>
+
           <Link
             to='/createUser'
             className={props.showCreateUser
@@ -18,17 +23,21 @@ const Menu = (props) => {
             onClick={() => {
               props.setShowCreateUser(true),
                 props.setShowGetAll(false)
-                props.setShowResDeleted(false)
+              props.setShowResDeleted(false)
             }}>
             Create user
           </Link>
+
           <i
             className={props.showCreateUser
               ? 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-active text-success' : 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-inActive'}>
           </i>
+
         </li>
 
-        <li className='d-flex align-items-center'>
+        <li
+          className='d-flex align-items-center'>
+
           <Link
             to={'/getAllUsers'}
             className={props.showGetAll
@@ -38,33 +47,71 @@ const Menu = (props) => {
               props.setShowGetAll(true),
                 props.setShowCreateUser(false),
                 props.setShowResDeleted(false)
-                props.getAllUsers()
-            }}>
+              props.getAllUsers()
+            }}
+          >
             All Users
           </Link>
+
           <i
             className={props.showGetAll
               ? 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-active text-success' : 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-inActive'}>
           </i>
+
         </li>
 
-        <li className='d-flex align-items-center'>
-          <Link className='btn btn-success bg-transparent' onClick={() => setOpen(true)}>Read user</Link>
-          <i className={open ? 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-active text-success' : 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-inActive'}></i>
+        <li
+          className='d-flex align-items-center'>
+          
+          <Link
+            className='btn btn-success bg-transparent'
+            onClick={() => setOpen(true)}>
+            Read user
+          </Link>
+
+          <i
+            className={open
+              ? 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-active text-success' : 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-inActive'}>
+          </i>
+          
         </li>
 
-        <li className='d-flex align-items-center'>
-          <Link className='btn btn-success bg-transparent' onClick={() => setOpen(true)}>Update user</Link>
-          <i className={open ? 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-active text-success' : 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-inActive'}></i>
+        <li
+          className='d-flex align-items-center'>
+          
+          <Link
+            className='btn btn-success bg-transparent'
+            onClick={() => setOpen(true)}>
+            Update user
+          </Link>
+
+          <i
+            className={open
+              ? 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-active text-success' : 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-inActive'}>
+            
+          </i>
+          
         </li>
 
-        <li className='d-flex align-items-center'>
-          <Link className='btn btn-success bg-transparent' onClick={() => setOpen(true)}>Delete User</Link>
-          <i className={open ? 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-active text-success' : 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-inActive'}></i>
+        <li
+          className='d-flex align-items-center'>
+          
+          <Link
+            className='btn btn-success bg-transparent'
+            onClick={() => setOpen(true)}>
+            Delete User
+          </Link>
+
+          <i className={open
+            ? 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-active text-success' : 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-inActive'}>
+          </i>
+          
         </li>
 
 
-        <li className='d-flex align-items-center'>
+        <li
+          className='d-flex align-items-center'>
+          
           <Link
             to={'/oldReservesDeleted'}
             className={props.showResDeleted
@@ -78,10 +125,12 @@ const Menu = (props) => {
             }}>
             Delete reserves history
           </Link>
+
           <i
             className={props.showResDeleted
               ? 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-active text-success' : 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-inActive'}>
           </i>
+          
         </li>
 
       </ul>

@@ -1,5 +1,5 @@
 import CourtServices from "../services/courts.js";
-
+import { routeLogger } from "../utils/logger.js";
 
 export default class CourtsControllers {
     constructor() {
@@ -15,9 +15,9 @@ export default class CourtsControllers {
 
             res.json(data);
 
-        } catch (err) {
+        } catch (error) {
 
-            console.log(err);
+            routeLogger(req, 'error', error);
 
         }
     }
@@ -31,9 +31,9 @@ export default class CourtsControllers {
 
             res.json(data);
 
-        } catch (err) {
+        } catch (error) {
 
-            console.log(err);
+            routeLogger(req, 'error', error);
 
         }
     }
@@ -43,8 +43,8 @@ export default class CourtsControllers {
         try {
             let data = await this.courtsService.getUnavailableDatesByName(req.params.name);
             res.json(data);
-        } catch (err) {
-            console.log(err);
+        } catch (error) {
+            routeLogger(req, 'error', error);
         }
     }
 
@@ -56,9 +56,9 @@ export default class CourtsControllers {
 
             res.json(data);
 
-        } catch (err) {
+        } catch (error) {
 
-            console.log(err);
+            routeLogger(req, 'error', error);
 
         }
     }
@@ -71,9 +71,9 @@ export default class CourtsControllers {
             
             res.json(data);
             
-        } catch (error) {
+        } catch (erroror) {
 
-            console.log(error);
+            routeLogger(req, 'error', error);
             
         }
        
@@ -87,9 +87,9 @@ export default class CourtsControllers {
             
             res.json(data);
             
-        } catch (error) {
+        } catch (erroror) {
 
-            console.log(error)
+            routeLogger(req, 'error', error);
 
         }
     }

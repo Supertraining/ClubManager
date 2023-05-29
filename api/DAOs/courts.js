@@ -1,4 +1,5 @@
 import * as model from '../models/court.js';
+import logger from '../utils/logger.js';
 
 let instance = null;
 export default class CourtsDAO {
@@ -13,9 +14,9 @@ export default class CourtsDAO {
 
             return data;
 
-        } catch (err) {
+        } catch (error) {
 
-            console.log(err);
+            logger.error(error);
 
         }
 
@@ -31,9 +32,9 @@ export default class CourtsDAO {
 
             return data;
 
-        } catch (err) {
+        } catch (error) {
 
-            console.log(err);
+            logger.error(error);
 
         }
     }
@@ -54,9 +55,9 @@ export default class CourtsDAO {
 
             return unavailableDates;
 
-        } catch (err) {
+        } catch (error) {
 
-            console.log(err);
+            logger.error(error);
 
         }
 
@@ -84,8 +85,8 @@ export default class CourtsDAO {
 
             return data;
 
-        } catch (err) {
-            console.log(err);
+        } catch (error) {
+            logger.error(error);
         }
     }
 
@@ -101,9 +102,9 @@ export default class CourtsDAO {
 
             return data;
 
-        } catch (err) {
+        } catch (error) {
 
-            console.log(err);
+            logger.error(error);
 
         }
 
@@ -129,8 +130,8 @@ export default class CourtsDAO {
                 );
                 return (result.modifiedCount + ' reserves deleted from ' + court.name);
             }
-        } catch (err) {
-            console.log(err);
+        } catch (error) {
+            logger.error(error);
         }
     }
 
@@ -144,9 +145,9 @@ export default class CourtsDAO {
 
             return data;
 
-        } catch (err) {
+        } catch (error) {
 
-            console.log(err);
+            logger.error(error);
 
         }
     }

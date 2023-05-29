@@ -1,5 +1,5 @@
 import CourtsDAO from "../DAOs/courts.js";
-import { v4 as uuidv4 } from 'uuid';
+import logger from "../utils/logger.js";
 
 export default class CourtServices {
 
@@ -18,9 +18,9 @@ export default class CourtServices {
             
             return data;
 
-        } catch (err) {
+        } catch (error) {
 
-            console.log(err);
+            logger.error(error);
 
         }
 
@@ -35,9 +35,9 @@ export default class CourtServices {
             
             return data;
 
-        } catch (err) {
+        } catch (error) {
 
-            console.log(err);
+            logger.error(error);
 
         }
     }
@@ -51,9 +51,9 @@ export default class CourtServices {
 
             return data
              
-        } catch (err) {
+        } catch (error) {
 
-            console.log(err);
+            logger.error(error);
 
         }
 
@@ -68,9 +68,9 @@ export default class CourtServices {
 
             return data
 
-        } catch (err) {
+        } catch (error) {
 
-            console.log(err);
+            logger.error(error);
             
         }
     }
@@ -83,9 +83,9 @@ export default class CourtServices {
             
             return data
 
-        } catch (error) {
+        } catch (erroror) {
 
-            console.log(error);
+            console.log(erroror);
 
             
         }
@@ -100,9 +100,9 @@ export default class CourtServices {
             
             return data;
             
-        } catch (error) {
+        } catch (erroror) {
             
-            console.log(error)
+            console.log(erroror)
 
         }
     }

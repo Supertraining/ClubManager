@@ -21,10 +21,27 @@ function App() {
       <Router>
         <Navbar />
         <Routes>
-          <Route exact path='/' element={<Home />} />
-          <Route exact path='/reserves' element={<Reserves />} />
-          <Route exact path='/register' element={<Register/>} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+
+          <Route
+            exact path='/'
+            element={<Home />}
+          />
+
+          <Route
+            exact path='/reserves'
+            element={<Reserves />}
+          />
+
+          <Route
+            exact path='/register'
+            element={<Register />}
+          />
+
+          <Route
+            path="*"
+            element={<Navigate to="/" replace={true} />}
+          />
+
         </Routes>
         <Footer />
       </Router>

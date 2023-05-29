@@ -6,7 +6,10 @@ import { connect } from './utils/mongoConnection.js';
 import passport from 'passport';
 import CourtsRouter from './routes/courts.js';
 import UserRouter from './routes/users.js';
+import logger from './utils/logger.js';
+
 const app = express();
+
 app.use(cors({
     origin: [ 'http://localhost:5173', 'http://localhost:5174' ], 
     credentials: true
@@ -23,9 +26,8 @@ const userRouter = new UserRouter();
 app.use(userRouter.start());
 app.use('/courts', courtsRouter.start());
 
-
 app.listen(config.port, () => {
     connect(config.mongoUrl)
-    console.log(`Example app listening at http://localhost:${config.port}`);
+    logger.info(`Club Manager app listening at http://localhost:${config.port}`);
 })
 
