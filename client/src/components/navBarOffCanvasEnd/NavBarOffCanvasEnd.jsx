@@ -2,7 +2,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import MyUser from '../myUser/MyUser'
 
 
-const NavBarOffCanvasEnd = ({ setShowProfile, handleDeleteAccount, delAccountMssg, showProfile, allArrays, futbolReserves, paddleReserves, squashReserves, paletaReserves, user, handleDeleteReserve }) => {
+const NavBarOffCanvasEnd = ({ setShowProfile, handleDeleteAccount, showProfile, allArrays, futbolReserves, paddleReserves, squashReserves, paletaReserves, user, handleDeleteReserve }) => {
+
 
   return (
 
@@ -48,7 +49,7 @@ const NavBarOffCanvasEnd = ({ setShowProfile, handleDeleteAccount, delAccountMss
           <div
             className='my-4 d-flex flex-column align-items-center'>
 
-            {showProfile && <MyUser handleDeleteAccount={handleDeleteAccount} delAccountMssg={delAccountMssg} />}
+            {showProfile && <MyUser handleDeleteAccount={handleDeleteAccount}/>}
 
             {!showProfile &&
               <div

@@ -93,10 +93,10 @@ export default class CourtsDAO {
     deleteReserveById = async (courtName, reserveDay, reserveId) => {
 
         try {
-
+            
             let data = await model.courtModel
                 .updateOne(
-                    { name: courtName }, // Update criteria
+                    { name: courtName }, 
                     { $pull: { [`unavailableDates.${reserveDay}`]: { id: reserveId } } }
                 );
 

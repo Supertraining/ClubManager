@@ -61,19 +61,28 @@ const Navbar = () => {
 
   }
 
-  const handleDeleteAccount = async () => {
+  const notifyDeletedAccount = () => toast.error("Cuenta Eliminada", { position: 'bottom-right', autoClose: 1000, theme: 'dark' });
+  const handleDeleteAccount = async (id) => {
 
     try {
 
-      const res = await axios.delete(`http://localhost:8080/eliminar/${user._id}`)
+      const res = await axios.delete(`http://localhost:8080/eliminar/${id}`)
+      console.log(res.data)
 
-      res.data === 1 && (dispatch({ type: 'LOGOUT' }) && setDelAccountMssg(true))
+      if (res.data === true) {
 
-      setTimeout(() => {
+        dispatch({ type: 'LOGOUT' });
 
-        navigate('/')
+        notifyDeletedAccount()
 
-      }, 2000)
+        setTimeout(() => {
+
+          navigate('/')
+
+        }, 2000)
+
+      }
+
 
     } catch (error) {
 
@@ -115,7 +124,7 @@ const Navbar = () => {
   }
 
   return (
-    
+
     <div
       className="navBarContainer">
 
@@ -152,7 +161,6 @@ const Navbar = () => {
         <NavBarOffCanvasEnd
           setShowProfile={setShowProfile}
           handleDeleteAccount={handleDeleteAccount}
-          delAccountMssg={delAccountMssg}
           showProfile={showProfile}
           handleDeleteReserve={handleDeleteReserve}
           allArrays={allArrays}

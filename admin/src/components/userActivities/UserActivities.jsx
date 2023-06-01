@@ -5,7 +5,7 @@ import React from 'react'
 const UserActivities = () => {
   return (
     <div>
-      <h3>Actividades</h3>
+      <h3>@Actividades</h3>
     </div>
   )
 }

@@ -197,7 +197,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
               className='p-0 text-center'>
 
               <ul>
-                {data[weekDaysList[1]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
+                {data[weekDaysList[4]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
 
                   reserve.date === dateListLc[4] &&
 

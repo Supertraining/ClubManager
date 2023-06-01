@@ -7,8 +7,11 @@ import passport from 'passport';
 import CourtsRouter from './routes/courts.js';
 import UserRouter from './routes/users.js';
 import logger from './utils/logger.js';
+import helmet from "helmet";
 
 const app = express();
+
+app.use(helmet());
 
 app.use(cors({
     origin: [ 'http://localhost:5173', 'http://localhost:5174' ], 

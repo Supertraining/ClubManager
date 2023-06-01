@@ -2,7 +2,7 @@ import './menu.css'
 import { Link } from 'react-router-dom'
 
 
-const Menu = (props) => {
+const Menu = ({ menu, setMenu, handleGetAllUsers, handleGetAllCourts }) => {
 
   return (
 
@@ -17,19 +17,24 @@ const Menu = (props) => {
 
           <Link
             to='/createUser'
-            className={props.showCreateUser
+            className={menu.createUser
               ? 'btn btn-success'
               : 'btn btn-success bg-transparent'}
             onClick={() => {
-              props.setShowCreateUser(true),
-                props.setShowGetAll(false)
-              props.setShowResDeleted(false)
+              setMenu({
+                createUser: true,
+                getAllUsers: false,
+                deleteReserves: false,
+                createCourt: false,
+                getAllCourts: false,
+                main: false
+              })
             }}>
             Create user
           </Link>
 
           <i
-            className={props.showCreateUser
+            className={menu.createUser
               ? 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-active text-success' : 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-inActive'}>
           </i>
 
@@ -40,21 +45,25 @@ const Menu = (props) => {
 
           <Link
             to={'/getAllUsers'}
-            className={props.showGetAll
+            className={menu.getAllUsers
               ? 'btn btn-success'
               : 'btn btn-success bg-transparent'}
             onClick={() => {
-              props.setShowGetAll(true),
-                props.setShowCreateUser(false),
-                props.setShowResDeleted(false)
-              props.getAllUsers()
-            }}
-          >
+              setMenu({
+                createUser: false,
+                getAllUsers: true,
+                deleteReserves: false,
+                createCourt: false,
+                getAllCourts: false,
+                main: false
+              }),
+                handleGetAllUsers()
+            }}>
             All Users
           </Link>
 
           <i
-            className={props.showGetAll
+            className={menu.getAllUsers
               ? 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-active text-success' : 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-inActive'}>
           </i>
 
@@ -62,75 +71,103 @@ const Menu = (props) => {
 
         <li
           className='d-flex align-items-center'>
-          
+
           <Link
-            className='btn btn-success bg-transparent'
-            onClick={() => setOpen(true)}>
-            Read user
+            to={'/createCourt'}
+            className={menu.createCourt
+              ? 'btn btn-success'
+              : 'btn btn-success bg-transparent'}
+            onClick={() => {
+              setMenu({
+                createUser: false,
+                getAllUsers: false,
+                deleteReserves: false,
+                createCourt: true,
+                getAllCourts: false,
+                main: false
+              })
+            }}>
+            Create court
           </Link>
 
           <i
-            className={open
+            className={menu.createCourt
               ? 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-active text-success' : 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-inActive'}>
           </i>
-          
+
         </li>
 
         <li
           className='d-flex align-items-center'>
-          
+
           <Link
-            className='btn btn-success bg-transparent'
-            onClick={() => setOpen(true)}>
-            Update user
+            to={'/getAllCourts'}
+            className={menu.getAllCourts
+              ? 'btn btn-success'
+              : 'btn btn-success bg-transparent'}
+            onClick={() => {
+              setMenu({
+                createUser: false,
+                getAllUsers: false,
+                deleteReserves: false,
+                createCourt: false,
+                getAllCourts: true,
+                main: false
+              }),
+                handleGetAllCourts()
+            }}>
+            All Courts
           </Link>
 
           <i
-            className={open
+            className={menu.getAllCourts
               ? 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-active text-success' : 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-inActive'}>
-            
           </i>
-          
+
         </li>
 
         <li
           className='d-flex align-items-center'>
-          
+
           <Link
             className='btn btn-success bg-transparent'
-            onClick={() => setOpen(true)}>
+          >
             Delete User
           </Link>
 
           <i className={open
             ? 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-active text-success' : 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-inActive'}>
           </i>
-          
+
         </li>
 
 
         <li
           className='d-flex align-items-center'>
-          
+
           <Link
             to={'/oldReservesDeleted'}
-            className={props.showResDeleted
+            className={menu.deleteReserves
               ? 'btn btn-success'
               : 'btn btn-success bg-transparent'}
             onClick={() => {
-              props.setShowResDeleted(true)
-              props.setShowGetAll(false),
-                props.setShowCreateUser(false),
-                props.deleteOldReserves()
+              setMenu({
+                createUser: false,
+                getAllUsers: false,
+                deleteReserves: true,
+                createCourt: false,
+                getAllCourts: false,
+                main: false
+              })
             }}>
             Delete reserves history
           </Link>
 
           <i
-            className={props.showResDeleted
+            className={menu.deleteReserves
               ? 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-active text-success' : 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-inActive'}>
           </i>
-          
+
         </li>
 
       </ul>

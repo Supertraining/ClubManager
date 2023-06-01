@@ -86,15 +86,15 @@ export default class UsersController {
 	deleteById = async (req, res) => {
 
 		try {
-
+			
 			const deletedUser = await this.userServices
 				.deleteById(req.params.id);
 
 			deletedUser
 
-				? res.status(200).json(deletedUser.deletedCount)
+				? res.status(200).json(deletedUser)
 
-				: res.status(404).json(deletedUser.deletedCount);
+				: res.status(404).json(deletedUser);
 
 		} catch (error) {
 
@@ -107,7 +107,7 @@ export default class UsersController {
 	getAllUsers = async (req, res) => {
 
 		try {
-
+			
 			const users = await this.userServices
 				.getAllUsers();
 
@@ -146,14 +146,15 @@ export default class UsersController {
 	updateUser = async (req, res) => {
 
 		try {
-
+			
 			const updatedUser = await this.userServices
 				.updateUser(req.params.id, req.body);
-			updatedUser.data
+			
+			updatedUser
 
 				? res.json(updatedUser)
 
-				: res.status(404).json(updatedUser.message);
+				: res.status(404).json(updatedUser);
 
 		} catch (error) {
 

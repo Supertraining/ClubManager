@@ -1,10 +1,9 @@
-import { Link } from 'react-router-dom';
 import './user.css';
 import UserReserves from '../userReserves/UserReserves';
 import UserActivities from '../userActivities/UserActivities';
 import UserData from '../userData/UserData';
 
-const User = ({ setUser, user, handleDeleteReserve }) => {
+const User = ({ setUser, user, handleDeleteReserve, handleUpdateUser, handleDeleteUser }) => {
 
   return (
 
@@ -21,16 +20,18 @@ const User = ({ setUser, user, handleDeleteReserve }) => {
       </div>
 
       <div
-        className="col-12 h-75 p-1 border border-dark d-flex flex-column">
+        className="col-12 h-75 p-1 border border-dark d-flex flex-column gap-3">
 
         <div
           className='row justify-content-center'>
 
           <div
-            className='col-6 border border-dark'>
+            className='col-7 border border-dark shadow p-3'>
             
             <UserData
               user={user}
+              handleUpdateUser={handleUpdateUser}
+              handleDeleteUser={handleDeleteUser}
             />
 
           </div>
@@ -41,7 +42,7 @@ const User = ({ setUser, user, handleDeleteReserve }) => {
           className='row justify-content-evenly'>
 
           <div
-            className='col-5 border border-dark'>
+            className='col-5 border border-dark shadow'>
             
             <UserReserves
               user={user}
@@ -51,7 +52,7 @@ const User = ({ setUser, user, handleDeleteReserve }) => {
           </div>
 
           <div
-            className='col-5 border border-dark'>
+            className='col-5 border border-dark shadow'>
             
             <UserActivities />
 

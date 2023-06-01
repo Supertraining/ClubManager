@@ -1,0 +1,25 @@
+.background {
+
+  background-image: url('../../assets/sportIconBg(1).webp');
+  background-position: center;
+  background-size: cover;
+
+}
+
+.title {
+  text-shadow: 20px 20px 12px black;
+  font-size: 3rem;
+  animation-name: title3d;
+  animation-duration: 3s;
+}
+
+@keyframes title3d {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

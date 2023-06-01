@@ -1,37 +1,9 @@
 import { Link } from 'react-router-dom'
 import './getAllUsers.css'
 import User from '../user/User'
-import { useState } from 'react'
-import axios from '../../utils/axiosInstance.js'
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 
-const GetAllUsers = ({ setGetAll, allUsers, getAllUsers }) => {
-
-  const [user, setUser] = useState(false)
-
-  const notifyDeletedReserve = () => toast.error("Reserva Eliminada", { position: 'bottom-right', autoClose: 1000, theme: 'dark' });
-
-
-  const handleDeleteReserve = async (court, day, id, userid) => {
-
-    await axios.put(`/courts/reserve/delete`, {
-      courtName: court,
-      reserveDay: day,
-      reserveId: id
-    });
-
-    await axios.put(`/reserves/delete`, {
-      username: user.username,
-      reserveId: id
-    });
-
-    const userById = await axios.get(`http://localhost:8080/user/${userid}`);
-
-    setUser(userById)
-    notifyDeletedReserve();
-
-  }
-
+const GetAllUsers = ({ setMenu, menu, allUsers, handleDeleteReserve, user, setUser, handleUpdateUser, handleDeleteUser }) => {
 
   return (
 
@@ -47,7 +19,7 @@ const GetAllUsers = ({ setGetAll, allUsers, getAllUsers }) => {
             <Link
               to={'/'}
               className='btn btn-close border border-dark p-2'
-              onClick={() => setGetAll(false)}>
+              onClick={() => setMenu({ ...menu, main: true, getAllUsers: false })}>
             </Link>
 
           </div>
@@ -113,19 +85,19 @@ const GetAllUsers = ({ setGetAll, allUsers, getAllUsers }) => {
 
               {allUsers.length === 0
 
-                ? <div
+                ? <tr
                   className="spinner-grow text-success m-5"
                   role="status">
-                </div>
+                </tr>
 
-                : allUsers.map((user) => (
+                : allUsers.map((user, i) => (
 
                   <tr
-                    key={user.id}
+                    key={user._id}
                     className="text-center">
 
                     <td>
-                      {allUsers.length}
+                      {i + 1}
                     </td>
 
                     <td>
@@ -161,8 +133,8 @@ const GetAllUsers = ({ setGetAll, allUsers, getAllUsers }) => {
                       </td>
                       : <td
                         className='text-success fw-bold'>
-                        Reservas activa
-                        s</td>}
+                        Reservas activas
+                      </td>}
 
                     <td>
                       @actividades
@@ -180,7 +152,7 @@ const GetAllUsers = ({ setGetAll, allUsers, getAllUsers }) => {
           </table>
 
         </>
-        : <User setUser={setUser} user={user} handleDeleteReserve={handleDeleteReserve} />
+        : <User setUser={setUser} user={user} handleDeleteReserve={handleDeleteReserve} handleUpdateUser={handleUpdateUser} handleDeleteUser={handleDeleteUser} />
       }
 
       <div>
@@ -192,7 +164,7 @@ const GetAllUsers = ({ setGetAll, allUsers, getAllUsers }) => {
     </div>
 
   )
-  
+
 }
 
 export default GetAllUsers

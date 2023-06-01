@@ -162,7 +162,7 @@ export default class UserRouter {
         );
         router.put(
 
-            '/actualizar/:id',
+            '/update/:id',
 
             this.controllers
                 .updateUser

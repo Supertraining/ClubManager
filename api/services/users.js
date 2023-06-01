@@ -12,19 +12,19 @@ export default class UsersServices {
     }
 
     async getByUserName(username) {
-           
+
         try {
 
             const user = await this.DAO
                 .getByUserName(username);
-                
+
             if (user.length === 0) {
 
                 logger.info(`No existe el usuario ${username}`);
 
                 return false
-            }    
-            
+            }
+
             return user[0];
 
         } catch (error) {
@@ -36,15 +36,15 @@ export default class UsersServices {
     }
 
     async insertUser(data) {
-        
+
         try {
-           
-            if (!data.username || !data.password || !data.nombre  || !data.apellido || !data.edad || 100 >= data.edad <= 0 || isNaN(data.edad) || !data.telefono) {
-                
+
+            if (!data.username || !data.password || !data.nombre || !data.apellido || !data.edad || 100 >= data.edad <= 0 || isNaN(data.edad) || !data.telefono) {
+
                 return null
-                
+
             }
-            
+
             const newUser = await this.DAO
                 .insertUser(
 
@@ -55,7 +55,7 @@ export default class UsersServices {
                     }
 
                 );
-           
+
             return newUser[0];
 
 
@@ -78,13 +78,13 @@ export default class UsersServices {
 
                 logger.info(`El Usuario con el Id: ${id} no existe`);
 
-                return null
-                    
+                return false
+
             }
 
             logger.info('Usuario eliminado con exito');
 
-            return data
+            return true
 
         } catch (err) {
 
@@ -105,10 +105,8 @@ export default class UsersServices {
 
                 logger.info('No hay usuarios registrados');
 
-                return {
-                    message: 'No hay usuarios registrados',
-                    users: data
-                }
+                return data
+                   
             }
 
             return data;
@@ -122,13 +120,13 @@ export default class UsersServices {
     }
 
     async getById(id) {
-      
+
         try {
             const data = await this.DAO
                 .getById(id);
-            
+
             if (!data) {
-                
+
                 logger.info(`El usuario con el Id: ${id} no existe`);
 
                 return null
@@ -138,7 +136,7 @@ export default class UsersServices {
             return data
         }
         catch (err) {
-            
+
             logger.error(err);
 
         }
@@ -147,33 +145,24 @@ export default class UsersServices {
     async updateUser(id, data) {
 
         try {
-     
+
             const updateUser = await this.DAO
                 .updateUser(id,
-                    {
-                        ...data,
-                        password: bcrypt.hashSync(data.password, bcrypt.genSaltSync(10))
-                    }
+                    data
                 );
-           
+
             if (updateUser.matchedCount === 0) {
 
                 logger.info(`El usuario con el Id: ${id} no encontrado`);
 
-                return {
-                    message: `El usuario con el Id: ${id} no encontrado`,
-                    data: null
-                };
+                return false
 
             }
 
             const updatedUser = await this.DAO
                 .getById(id);
-            
-            return {
-                message: `Usuario ${id} actualizado con exito`,
-                data: updatedUser
-            };
+
+            return updatedUser
 
         } catch (err) {
 
@@ -183,11 +172,11 @@ export default class UsersServices {
 
     }
     async updateUserReserves(username, reserveData) {
-           
+
         try {
             const updateUser = await this.DAO
                 .updateUserReserves(username, reserveData);
-           
+
             if (updateUser.matchedCount === 0) {
 
                 logger.info(`El usuario con el Id: ${id} no encontrado`);
@@ -198,7 +187,7 @@ export default class UsersServices {
 
             const updatedUser = await this.DAO
                 .getByUserName(username);
-            
+
             return updatedUser;
 
         } catch (err) {
@@ -210,16 +199,16 @@ export default class UsersServices {
     }
 
     async deleteReserveById(username, reserveId) {
-       
+
         try {
 
             let deletedReserve = await this.DAO.
-                deleteReserveById(username, reserveId); 
-            
+                deleteReserveById(username, reserveId);
+
             return deletedReserve;
 
         } catch (error) {
-            
+
         }
     }
 

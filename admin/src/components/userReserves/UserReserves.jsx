@@ -9,9 +9,8 @@ const UserReserves = ({ user, handleDeleteReserve }) => {
     <div
       className='userReserveTable'>
       
-      <h3
-        className='text-center text-success'>
-        Reservas
+      <h3>
+        @Reservas
       </h3>
 
       <table

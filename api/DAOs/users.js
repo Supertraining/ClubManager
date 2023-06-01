@@ -44,13 +44,13 @@ export default class UsersDAO {
   async deleteById(id) {
 
     try {
-
+     
       const data = await model
         .usermodel
-        .deleteMany({ _id: id });
+        .deleteOne({ _id: id });
 
       return data;
-
+     
     } catch (err) {
 
       logger.error(err);
@@ -80,7 +80,7 @@ export default class UsersDAO {
   async getById(id) {
 
     try {
-
+   
       const data = await model
         .usermodel
         .findById(id);
@@ -94,6 +94,23 @@ export default class UsersDAO {
     }
   }
 
+  async updateUser(id, data) {
+
+    try {
+      
+      const updatedUser = await model
+        .usermodel
+        .updateOne({ _id: id }, { $set: data });
+      
+      return updatedUser;
+
+    } catch (err) {
+
+      logger.error(err);
+
+    }
+
+  }
   async updateUserReserves(username, reserveData) {
 
     try {
@@ -137,13 +154,13 @@ export default class UsersDAO {
           {
             $pull:
             {
-              
+
               [`reserves`]: { id: reserveId }
 
             }
           }
         );
-          
+
       return data;
 
     } catch (error) {

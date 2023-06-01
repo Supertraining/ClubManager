@@ -55,7 +55,7 @@ const Register = () => {
         className='text-success text-center my-4 d-flex align-items-center'>
 
         <i
-          class="bi bi-list-check mx-1 fs-4">
+          className="bi bi-list-check mx-1 fs-4">
         </i>
 
         <h1>REGISTER</h1>
@@ -111,6 +111,7 @@ const Register = () => {
             placeholder="Password"
             className="form-control my-2 text-center border-0 border-bottom" type="password"
             onChange={handleChange}
+            minLength={5}
             required
           />
 
@@ -226,7 +227,7 @@ const Register = () => {
           <input
             className="my-2 text-center border border-success w-25 rounded bg-white text-secondary p-2"
             type="submit"
-            placeholder='Registrarse'
+            value='Registrarme'
             onClick={handleClick}
             disabled={loading}
           />

@@ -5,19 +5,20 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
 
-const CreateUser = ({ setShowCreateUser }) => {
+const CreateUser = ({ setMenu, menu }) => {
 
   const [credentials, setCredentials] = useState({
-    username: undefined,
-    password: undefined,
-    nombre: undefined,
-    apellido: undefined,
-    edad: undefined,
-    telefono: undefined,
-    admin: undefined
+    username: '',
+    password: '',
+    nombre: '',
+    apellido: '',
+    edad: '',
+    telefono: '',
+    admin: ''
+
   })
 
-  const notify = () => toast.success("User Created");
+  const notify = () => toast.success("User Created", {autoClose: 1000});
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value })
   }
@@ -31,6 +32,17 @@ const CreateUser = ({ setShowCreateUser }) => {
       await axios.post('/register', credentials)
 
       notify()
+      setCredentials({
+        username: '',
+        password: '',
+        nombre: '',
+        apellido: '',
+        edad: '',
+        telefono: '',
+        admin: ''
+    
+      })
+      
 
     } catch (error) {
 
@@ -52,7 +64,7 @@ const CreateUser = ({ setShowCreateUser }) => {
         <Link
           to={'/'}
           className='btn btn-close border border-dark p-2'
-          onClick={() => setShowCreateUser(false)}>
+          onClick={() => setMenu({...menu, main: true, createUser: false})}>
         </Link>
 
       </div>
@@ -99,6 +111,7 @@ const CreateUser = ({ setShowCreateUser }) => {
             name='username'
             placeholder="Email"
             className="form-control my-2 text-center border-0 border-bottom" type="email"
+            value={credentials?.username}
             onChange={handleChange}
             required
           />
@@ -123,6 +136,7 @@ const CreateUser = ({ setShowCreateUser }) => {
             name='password'
             placeholder="Password"
             className="form-control my-2 text-center border-0 border-bottom" type="password"
+            value={credentials?.password}
             onChange={handleChange}
             required
           />
@@ -146,6 +160,7 @@ const CreateUser = ({ setShowCreateUser }) => {
             name='nombre'
             placeholder="Nombre"
             className="form-control my-2 text-center border-0 border-bottom" type="text"
+            value={credentials?.nombre}
             onChange={handleChange}
             required
           />
@@ -169,7 +184,9 @@ const CreateUser = ({ setShowCreateUser }) => {
             id="apellido"
             name='apellido'
             placeholder="Apellido"
-            className="form-control my-2 text-center border-0 border-bottom" type="text" onChange={handleChange}
+            className="form-control my-2 text-center border-0 border-bottom"
+            value={credentials?.apellido}
+            type="text" onChange={handleChange}
             required
           />
 
@@ -193,6 +210,7 @@ const CreateUser = ({ setShowCreateUser }) => {
             name='edad'
             placeholder="Edad"
             className="form-control my-2 text-center border-0 border-bottom" type="number"
+            value={credentials?.edad}
             onChange={handleChange} min={0} max={99}
             required
           />
@@ -218,6 +236,7 @@ const CreateUser = ({ setShowCreateUser }) => {
             placeholder="Telefono"
             className="form-control my-2 text-center border-0 border-bottom" type="text"
             onChange={handleChange}
+            value={credentials?.telefono}
             required
           />
 
@@ -271,7 +290,7 @@ const CreateUser = ({ setShowCreateUser }) => {
           <input
             className="my-2 text-center border border-success w-25 rounded bg-white text-secondary p-2"
             type="submit"
-            placeholder='Registrarse'
+            value='Registrarse'
             onClick={handleClick}
           />
 
