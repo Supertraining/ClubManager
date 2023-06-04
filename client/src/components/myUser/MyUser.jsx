@@ -12,7 +12,6 @@ const MyUser = ({handleDeleteAccount }) => {
   const { ref, inView } = useInView({
     threshold: 0,
   })
-  console.log(user)
 
   return (
   

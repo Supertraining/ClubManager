@@ -3,6 +3,7 @@ import axios from '../../../utils/axiosInstance.js'
 import { useContext, useState } from 'react'
 import { AuthContext } from '../../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
+import { isStrongPassword } from 'validator';
 
 const Register = () => {
 
@@ -26,10 +27,25 @@ const Register = () => {
   }
 
   const handleClick = async (e) => {
-
+    console.log(credentials)
     try {
 
       e.preventDefault()
+
+      const passwordValidationOptions = {
+        minLength: 8,
+        minLowercase: 0,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
+      };
+
+      if (!isStrongPassword(credentials.password, passwordValidationOptions)) {
+
+        dispatch({ type: 'LOGIN_FAILURE', payload: 'Error de contraseña' })
+        return
+      }
+
 
       const res = await axios.post('/register', credentials)
 
@@ -66,8 +82,7 @@ const Register = () => {
       <form
         className="form d-flex flex-column col-8"
         role="form"
-        autoComplete="on"
-        encType="multipart/form-data">
+        autoComplete="on">
 
         <div
           className="input-group align-items-center">
@@ -111,11 +126,14 @@ const Register = () => {
             placeholder="Password"
             className="form-control my-2 text-center border-0 border-bottom" type="password"
             onChange={handleChange}
-            minLength={5}
-            required
+            required={true}
           />
 
         </div>
+        
+        <small className='text-center text-success'>
+          La contraseña debe tener al menos 8 caracteres y, debe incluir como mínimo una mayúscula, un número y un caracter especial
+        </small>
 
         <div
           className="input-group align-items-center">
@@ -236,8 +254,8 @@ const Register = () => {
 
       </form>
 
-      {error && <div className='text-danger p-1 m-1'>El usuario ya existe</div>}
-      
+      {error && <div className='text-danger p-1 m-1'>Algun error</div>}
+
     </div>
   )
 }

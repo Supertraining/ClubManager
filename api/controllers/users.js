@@ -82,7 +82,6 @@ export default class UsersController {
 
 	}
 
-
 	deleteById = async (req, res) => {
 
 		try {

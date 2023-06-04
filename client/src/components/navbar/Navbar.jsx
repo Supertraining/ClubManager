@@ -12,7 +12,6 @@ import NavBarOffCanvasEnd from '../navBarOffCanvasEnd/NavBarOffCanvasEnd'
 
 const Navbar = () => {
 
-  const [delAccountMssg, setDelAccountMssg] = useState(false)
   const [userReserves, setUserReserves] = useState([])
   const [showProfile, setShowProfile] = useState(false)
 
