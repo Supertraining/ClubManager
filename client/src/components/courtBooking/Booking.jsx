@@ -18,6 +18,7 @@ const Booking = ({ court }) => {
   const [day, setDay] = useState(new Date());
   const [initialTime, setInitialTime] = useState();
   const [finalTime, setFinalTime] = useState();
+  const [confirmReserve, setConfirmReserve] = useState(false)
 
 
   let { data, reFetch } = useFetch(`http://localhost:8080/courts/${court}`)
@@ -146,7 +147,7 @@ const Booking = ({ court }) => {
         className='col-12 p-2 text-center border rounded mt-3'>
 
         <button
-          className='col-8 rounded shadow btn btn-light fw-bold p-2 m-1' onClick={() => setVisible(!visible)}>
+          className='col-8 rounded btn btn-light btn-pressed fw-bold p-2 m-1' onClick={() => { setVisible(!visible), setInitialTime(), setFinalTime(), setConfirmReserve(false) }}>
           Reservar
         </button>
 
@@ -154,7 +155,7 @@ const Booking = ({ court }) => {
 
 
       <div
-        className='calendarContainer d-flex flex-column flex-wrap col-12'>
+        className='calendarContainer d-flex flex-column col-12'>
 
         {visible &&
           <>
@@ -162,42 +163,46 @@ const Booking = ({ court }) => {
               className='d-flex flex-column border rounded bg-dark bg-opacity-50 reserveInstructionsWrapper'>
 
               <div
-                className='d-flex align-items-center flex-wrap justify-content-center p-3 m-1'>
+                className='d-flex align-items-center flex-wrap justify-content-center p-3 m-3 bg-dark'>
                 <p
                   className='p-2 rounded m-0 text-center shadow fw-bold bg-light m-1'>
-                  1 .Selecciona en el calendario la fecha y la hora de inicio de tu reserva y presiona el botón
-                  <b
-                    className='text-success'>
-                    Confirmar hora de inicio
-                  </b>
+                  1 .Selecciona en el calendario la fecha y la hora de inicio de tu reserva y presiona el botón:
                 </p>
+                <b
+                  className='text-success mx-1 border p-1 rounded shadow bg-light'>
+                  Confirmar hora de inicio
+                  <i className="bi bi-stopwatch mx-1 text-dark"></i>
+                </b>
 
               </div>
 
               <div
-                className='d-flex align-items-center flex-wrap justify-content-center p-3 m-1'>
+                className='d-flex align-items-center flex-wrap justify-content-center p-3 m-3 bg-dark'>
 
                 <p
                   className='p-2 rounded m-0 text-center shadow fw-bold bg-light m-1'>
-                  2. Selecciona la hora de finalización de tu reserva y presiona el botón
-                  <b
-                    className='text-success'>
-                    Confirmar hora de finalización
-                  </b>
+                  2. Selecciona la hora de finalización de tu reserva y presiona el botón:
                 </p>
+                <b
+                  className='text-success mx-1 border p-1 rounded shadow bg-light'>
+                  Confirmar hora de finalización
+                  <i className="bi bi-stopwatch-fill mx-1 text-dark"></i>
+                </b>
 
               </div>
 
               <div
-                className='d-flex align-items-center flex-wrap justify-content-center p-3 m-1'>
+                className='d-flex align-items-center flex-wrap justify-content-center p-3 m-3 bg-dark'>
 
                 <p
                   className='p-2 rounded m-0 text-center shadow fw-bold bg-light m-1'>
-                  3. Por ultimo presiona el boton
-                  <b
-                    className='text-success'>
-                    Confirmar reserva</b>
+                  3. Por ultimo presiona el botón:
                 </p>
+                <b
+                  className='text-success mx-1 border p-1 rounded shadow bg-light'>
+                  Confirmar reserva
+                  <i className="bi bi-check-circle-fill mx-1 text-dark"></i>
+                </b>
 
               </div>
 
@@ -205,7 +210,11 @@ const Booking = ({ court }) => {
 
             <CourtBookingDatePicker
               setInitialTime={setInitialTime}
+              initialTime={initialTime}
               setFinalTime={setFinalTime}
+              finalTime={finalTime}
+              setConfirmReserve={setConfirmReserve}
+              confirmReserve={confirmReserve}
               handleBooking={handleBooking}
               setDay={setDay}
               day={day} />

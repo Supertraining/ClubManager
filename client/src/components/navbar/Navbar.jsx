@@ -18,6 +18,7 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const { user, dispatch } = useContext(AuthContext);
+ 
   const { setReserveDeleted } = useContext(ReserveBoardContext)
 
   const handleUserReserves = async () => {

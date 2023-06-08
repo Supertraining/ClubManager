@@ -115,7 +115,7 @@ export default class UserRouter {
                 .getByUserName
 
         );
-        
+
         router.get(
 
             '/getAll',

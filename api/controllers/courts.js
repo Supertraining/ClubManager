@@ -49,7 +49,7 @@ export default class CourtsControllers {
     }
 
     reserveDate = async (req, res) => {
-       
+        
         try {
             let data = await this.courtsService
                 .reserveDate(req.body);

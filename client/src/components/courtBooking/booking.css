@@ -1,14 +1,7 @@
 
-.btn-success:hover {
-    
-    background-color: black;
-    color: white;
-
-}
-
 .calendarContainer{
 
-    height: 930px;
+    height: 1170px;
     
 }
 
@@ -22,6 +15,11 @@ button:active {
     height: fit-content;
 }
 
-.datePickerContainer {
-    height: 350px;
-}
+.btn-pressed{
+    box-shadow: 2px 2px 1px black;
+  }
+
+.btn-pressed:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 1px black;
+  }

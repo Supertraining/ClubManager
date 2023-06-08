@@ -36,14 +36,8 @@ export default class UsersServices {
     }
 
     async insertUser(data) {
-
+        
         try {
-
-            if (!data.username || !data.password || !data.nombre || !data.apellido || !data.edad || 100 >= data.edad <= 0 || isNaN(data.edad) || !data.telefono) {
-
-                return null
-
-            }
 
             const newUser = await this.DAO
                 .insertUser(

@@ -1,37 +1,22 @@
-import './register.css'
-import axios from '../../../utils/axiosInstance.js'
-import { useContext, useState } from 'react'
-import { AuthContext } from '../../context/AuthContext'
-import { useNavigate } from 'react-router-dom'
+import './register.css';
+import axios from '../../../utils/axiosInstance.js';
+import { useContext } from 'react';
+import { AuthContext } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { isStrongPassword } from 'validator';
+import { useForm } from 'react-hook-form';
 
 const Register = () => {
-
-  const { loading, error, dispatch } = useContext(AuthContext)
-
-  const [credentials, setCredentials] = useState({
-
-    username: undefined,
-    password: undefined,
-    nombre: undefined,
-    apellido: undefined,
-    edad: undefined,
-    telefono: undefined,
-
-  })
-
+  const { loading, error, dispatch } = useContext(AuthContext);
   const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-  const handleChange = (e) => {
-    setCredentials({ ...credentials, [e.target.name]: e.target.value })
-  }
-
-  const handleClick = async (e) => {
-    console.log(credentials)
+  const onSubmit = async (data) => {
     try {
-
-      e.preventDefault()
-
       const passwordValidationOptions = {
         minLength: 8,
         minLowercase: 0,
@@ -40,27 +25,18 @@ const Register = () => {
         minSymbols: 1,
       };
 
-      if (!isStrongPassword(credentials.password, passwordValidationOptions)) {
-
-        dispatch({ type: 'LOGIN_FAILURE', payload: 'Error de contraseña' })
-        return
+      if (!isStrongPassword(data.password, passwordValidationOptions)) {
+        dispatch({ type: 'LOGIN_FAILURE', payload: 'Error de contraseña' });
+        return;
       }
 
-
-      const res = await axios.post('/register', credentials)
-
-      dispatch({ type: 'LOGIN_SUCCESS', payload: res.data })
-
-      navigate('/')
-
+      const res = await axios.post('/register', data);
+      dispatch({ type: 'LOGIN_SUCCESS', payload: res.data });
+      navigate('/');
     } catch (error) {
-
-      dispatch({ type: 'LOGIN_FAILURE', payload: error })
-
+      dispatch({ type: 'LOGIN_FAILURE', payload: error });
     }
-
-
-  }
+  };
 
   return (
 
@@ -82,7 +58,9 @@ const Register = () => {
       <form
         className="form d-flex flex-column col-8"
         role="form"
-        autoComplete="on">
+        autoComplete="on"
+        onSubmit={handleSubmit(onSubmit)}
+      >
 
         <div
           className="input-group align-items-center">
@@ -101,10 +79,11 @@ const Register = () => {
             name='username'
             placeholder="Email"
             className="form-control my-2 text-center border-0 border-bottom" type="email"
-            onChange={handleChange}
-            required
+            {...register('username', { required: true })}
           />
-
+          {errors.username && (
+            <small className="text-danger">Este campo es obligatorio</small>
+          )}
         </div>
 
         <div
@@ -125,12 +104,14 @@ const Register = () => {
             name='password'
             placeholder="Password"
             className="form-control my-2 text-center border-0 border-bottom" type="password"
-            onChange={handleChange}
-            required={true}
+            {...register('password', { required: true })}
           />
+          {errors.password && (
+            <small className="text-danger">Este campo es obligatorio</small>
+          )}
 
         </div>
-        
+
         <small className='text-center text-success'>
           La contraseña debe tener al menos 8 caracteres y, debe incluir como mínimo una mayúscula, un número y un caracter especial
         </small>
@@ -153,11 +134,12 @@ const Register = () => {
             name='nombre'
             placeholder="Nombre"
             className="form-control my-2 text-center border-0 border-bottom" type="text"
-            onChange={handleChange}
-            required
+            {...register('nombre', { required: true })}
           />
-
         </div>
+        {errors.nombre && (
+          <small className="text-danger text-center">Este campo es obligatorio</small>
+        )}
 
         <div
           className="input-group align-items-center">
@@ -176,11 +158,13 @@ const Register = () => {
             name='apellido'
             placeholder="Apellido"
             className="form-control my-2 text-center border-0 border-bottom" type="text"
-            onChange={handleChange}
-            required
-          />
+            {...register('apellido', { required: true })}
 
+          />
         </div>
+        {errors.apellido && (
+          <small className="text-danger text-center">Este campo es obligatorio</small>
+        )}
 
         <div
           className="input-group align-items-center">
@@ -200,12 +184,13 @@ const Register = () => {
             name='edad'
             placeholder="Edad"
             className="form-control my-2 text-center border-0 border-bottom" type="number"
-            onChange={handleChange}
             min={0} max={99}
-            required
+            {...register('edad', { required: true })}
           />
-
         </div>
+        {errors.edad && (
+          <small className="text-danger text-center">Este campo es obligatorio</small>
+        )}
 
         <div
           className="input-group align-items-center">
@@ -224,11 +209,12 @@ const Register = () => {
             name='telefono'
             placeholder="Telefono"
             className="form-control my-2 text-center border-0 border-bottom" type="text"
-            onChange={handleChange}
-            required
+            {...register('telefono', { required: true })}
           />
-
         </div>
+        {errors.telefono && (
+          <small className="text-danger text-center">Este campo es obligatorio</small>
+        )}
 
         <div
           className="input-group my-2 justify-content-center align-items-center">
@@ -246,7 +232,6 @@ const Register = () => {
             className="my-2 text-center border border-success w-25 rounded bg-white text-secondary p-2"
             type="submit"
             value='Registrarme'
-            onClick={handleClick}
             disabled={loading}
           />
 
@@ -254,7 +239,9 @@ const Register = () => {
 
       </form>
 
-      {error && <div className='text-danger p-1 m-1'>Algun error</div>}
+      {error && <div className='text-danger p-1 m-1'>
+        Ha ocurrido un error, por favor vuelva a intentarlo
+      </div>}
 
     </div>
   )

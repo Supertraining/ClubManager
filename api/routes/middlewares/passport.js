@@ -9,7 +9,7 @@ const userServices = new UsersServices();
 passport.serializeUser(async (user, done) => {
 
     try {
-       
+
         let username = await user.username
 
         done(null, username);
@@ -39,98 +39,100 @@ passport.deserializeUser(async (username, done) => {
 
 export const passportRegister = async (req, res, next) => {
 
-  try {
+    try {
+      
+        passport.use(
 
-      passport.use(
+            'register',
 
-          'register',
+            new LocalStrategy(
 
-          new LocalStrategy(
+                {
+                    passReqToCallback: true,
+                },
 
-              {
-                  passReqToCallback: true,
-              },
+               
+                async (req, username, password, done) => {
+                   
+                    const usuario = await userServices
+                        .getByUserName(username);
 
-              async (req, username, password, done) => {
-                    
-                  const usuario = await userServices
-                      .getByUserName(username);
-                  
-                  if (usuario) {
-                      
-                      return done(null, false);
+                    if (usuario) {
 
-                  }
-                  
-                  let newUser = await userServices
-                      .insertUser(
+                        return done(null, false);
 
-                          {
-                              username,
-                              password,
-                              ...req.body,
-                              admin: req.body.admin || false
-                          }
+                    }
 
-                      );
+                    let newUser = await userServices
+                        .insertUser(
 
-                  done(null, newUser);
+                            {
+                                username,
+                                password,
+                                ...req.body,
+                                admin: req.body.admin || false
+                            }
 
-              }
-          )
-      );
+                        );
 
-  } catch (error) {
+                    done(null, newUser);
 
-      routeLogger(req, 'error', error);
+                }
+            )
+        );
 
-  }
+    } catch (error) {
 
-  next();
+        routeLogger(req, 'error', error);
+
+    }
+
+    next();
 }
 
 export const passportLogin = async (req, res, next) => {
 
     try {
-      
-      passport.use(
 
-          'login',
+        passport.use(
 
-          new LocalStrategy(
+            'login',
 
-              async (username, password, done) => {
-               
-                  let usuario = await userServices.getByUserName(username);
-                    
-                  if (!usuario) {
+            new LocalStrategy(
 
-                      return done(null, false);
+                async (username, password, done) => {
 
-                  }
+                    let usuario = await userServices.getByUserName(username);
 
-                  let auth = await authHash(password, usuario);
-                  
-                  if (!auth) {
+                    if (!usuario) {
 
-                      return done(null, false);
+                        return done(null, false);
 
-                  }
-                  
-                  req.logIn(usuario, (error) => {
-                      if (error) return done(error);
-                     
-                      return done(null, usuario);
-                  });
-              })
-      );
+                    }
 
-  } catch (error) {
+                    let auth = await authHash(password, usuario);
 
-      routeLogger(req, 'error', error);
+                    if (!auth) {
 
-  }
- 
-  next();
+                        return done(null, false);
+
+                    }
+
+                    req.logIn(usuario, (error) => {
+                        
+                        if (error) return done(error);
+
+                        return done(null, usuario);
+                    });
+                })
+        );
+
+    } catch (error) {
+
+        routeLogger(req, 'error', error);
+
+    }
+
+    next();
 }
 

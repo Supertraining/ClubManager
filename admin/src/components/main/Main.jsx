@@ -6,6 +6,7 @@ const Main = () => {
 
       <h1 className='title text-center text-success'>
         Bienvenido a Club Manager
+        horarios fijos?
       </h1>
 
     </div>

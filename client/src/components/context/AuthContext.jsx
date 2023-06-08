@@ -1,4 +1,4 @@
-import { useReducer, createContext } from "react";
+import { useReducer, createContext, useEffect } from "react";
 import useFetch from "../../hooks/useFetch.jsx";
 
 const INITIAL_STATE = {
@@ -46,16 +46,18 @@ export const AuthContextProvider = ({ children }) => {
   const { data } = useFetch('http://localhost:8080/home')
 
   const [state, dispatch] = useReducer(AuthReducer, INITIAL_STATE)
-  
 
-  
- if (data.username) {
-    state.user = data
-  }
-  console.log(state)
 
-  
- 
+  useEffect(() => {
+
+    dispatch({
+      type: 'LOGIN_SUCCESS',
+      payload: data
+    })
+
+  }, [data])
+
+
   return (
     <AuthContext.Provider value={{ user: state.user, loading: state.loading, error: state.error, dispatch }}>
       {children}
