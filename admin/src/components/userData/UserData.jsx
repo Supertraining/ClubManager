@@ -3,10 +3,6 @@ import { ToastContainer } from 'react-toastify'
 import './UserData.css'
 const UserData = ({ user, handleUpdateUser, handleDeleteUser, setConfirmDelete, confirmDelete }) => {
 
-  console.log(confirmDelete)
-  console.log(setConfirmDelete)
-
-
   const [credentials, setCredentials] = useState(
     {
       username: user.username,
@@ -16,7 +12,7 @@ const UserData = ({ user, handleUpdateUser, handleDeleteUser, setConfirmDelete, 
       telefono: user.telefono,
       admin: user.admin
     })
-
+console.log(credentials);
   const [showForm, setShowForm] = useState(false)
 
   const handleChange = (e) => {
@@ -175,7 +171,7 @@ const UserData = ({ user, handleUpdateUser, handleDeleteUser, setConfirmDelete, 
               <input
                 className='mx-2 text-warning text-center border-0 border-bottom border-primary col-12'
                 type="text"
-                name="apelldio"
+                name="apellido"
                 id="apellido"
                 placeholder='Apellido'
                 onChange={handleChange}

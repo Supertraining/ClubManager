@@ -21,7 +21,7 @@ const User = ({ setUser, user, handleDeleteReserve, handleUpdateUser, handleDele
       </div>
 
       <div
-        className="col-12 h-75 p-1 border border-dark d-flex flex-column gap-3">
+        className="col-12 h-auto p-1 border border-dark d-flex flex-column gap-3">
 
         <div
           className='row justify-content-center'>

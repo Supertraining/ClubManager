@@ -1,6 +1,6 @@
 import axios from '../../utils/axiosInstance'
-import React, { useContext } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../context/AuthContext'
 import './login.css'
 import { useForm } from 'react-hook-form'

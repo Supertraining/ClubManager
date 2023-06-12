@@ -30,7 +30,7 @@ const GetAllUsers = ({ setMenu, menu, allUsers, handleDeleteReserve, user, setUs
             <thead>
 
               <tr
-                className="text-center ">
+                className="text-center text-dark">
 
                 <th
                   scope="col">

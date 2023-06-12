@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import 'react-date-time-picker-popup/dist/index.css'
-import axios from 'axios'
+import axios from '../../utils/axiosInstance'
 import useFetch from '../../hooks/useFetch'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -13,14 +13,14 @@ import unidecode from 'unidecode';
 import CourtBookingDatePicker from '../courtBookingDatePicker/CourtBookingDatePicker';
 
 
-const Booking = ({ court }) => {
+const Booking = ({ setCourt, court }) => {
 
   const [visible, setVisible] = useState(false);
   const [day, setDay] = useState(new Date());
   const [initialTime, setInitialTime] = useState();
   const [finalTime, setFinalTime] = useState();
   const [confirmReserve, setConfirmReserve] = useState(false)
-
+  const [permanent, setPermanent] = useState(false)
 
   let { data, reFetch } = useFetch(`http://localhost:8080/courts/${court}`)
 
@@ -30,6 +30,7 @@ const Booking = ({ court }) => {
 
   const notifyFail = () => toast("HORARIO NO DISPONIBLE");
   const notifySuccess = () => toast.success("Reserva Confirmada", { position: 'bottom-right', autoClose: 1000, theme: 'dark' });;
+  const notifyTryAgainLater = () => toast.warn("Hubo un problema, por favor intente nuevamente mas tarde", { position: 'bottom-right', autoClose: 2000, theme: 'dark' });
 
   const handleBooking = async (selectedDay) => {
 
@@ -71,7 +72,7 @@ const Booking = ({ court }) => {
         const unaccentedDate = unidecode(date);
         const UUID = uuidv4();
 
-        await axios.put('http://localhost:8080/courts/reserve',
+        await axios.put('/courts/reserve',
           {
             name: `${court}`,
             selectedDates:
@@ -82,11 +83,11 @@ const Booking = ({ court }) => {
               finalTime: finalTime,
               user: user?.username,
               id: UUID,
-              permanent: false
+              permanent: permanent
             }
           })
 
-        await axios.put(`http://localhost:8080/reserves/${user?.username}`,
+        await axios.put(`/reserves/${user?.username}`,
           {
             court: `${court}`,
             weekday: unaccentedWeekday,
@@ -94,7 +95,7 @@ const Booking = ({ court }) => {
             initialTime: initialTime,
             finalTime: finalTime,
             id: UUID,
-            permanent: false
+            permanent: permanent
           })
 
         notifySuccess()
@@ -110,6 +111,36 @@ const Booking = ({ court }) => {
     } catch (error) {
 
       console.log(error)
+
+    }
+
+  }
+ 
+  const notifyDeletedReserve = () => toast.error("Reserva Eliminada", { position: 'bottom-right', autoClose: 1000, theme: 'dark' });
+  const handleDeleteReserve = async (court, day, id, username) => {
+    console.log(court, day, id, username)
+    
+    try {
+
+
+      await axios.put(`/courts/reserve/delete`, {
+        courtName: court,
+        reserveDay: day,
+        reserveId: id
+      });
+
+      await axios.put(`/reserves/delete`, {
+        username: username,
+        reserveId: id
+      });
+
+      reFetch()
+      notifyDeletedReserve();
+
+    } catch (error) {
+
+      console.log(error);
+      notifyTryAgainLater();
 
     }
 
@@ -142,9 +173,22 @@ const Booking = ({ court }) => {
     dateListLc.push(unaccentedWeekday);
     weekDaysList.push(unaccentedDay);
   }
-
+ 
   return (
     <>
+
+      <div
+        className='my-3'>
+
+        <button
+          to={'/'}
+          className='btn btn-close border border-dark p-2'
+          onClick={() => setCourt(false)}>
+        </button>
+
+      </div>
+
+      <h1 className='text-info'>@{court}</h1>
 
       <div
         className='col-12 p-2 text-center border rounded mt-3'>
@@ -167,45 +211,21 @@ const Booking = ({ court }) => {
 
               <div
                 className='d-flex align-items-center flex-wrap justify-content-center p-3 m-3 bg-dark'>
-                <p
+
+                <ul
                   className='p-2 rounded m-0 text-center shadow fw-bold bg-light m-1'>
-                  1 .Selecciona en el calendario la fecha y la hora de inicio de tu reserva y presiona el botón:
-                </p>
-                <b
-                  className='text-success mx-1 border p-1 rounded shadow bg-light'>
-                  Confirmar hora de inicio
-                  <i className="bi bi-stopwatch mx-1 text-dark"></i>
-                </b>
 
-              </div>
+                  <li> 1 .Selecciona en el calendario la fecha y la hora de inicio de tu reserva y presiona el botón
+                    <i
+                      className='text-success'> Confirmar hora de inicio</i></li>
+                  <li>2. Selecciona la hora de finalización de tu reserva y presiona el botón
+                    <i
+                      className='text-success'> Confirmar hora de finalización</i ></li>
+                  <li>3. Por ultimo presiona el botón:
+                    <i
+                      className='text-success'> Confirmar reserva</i></li>
 
-              <div
-                className='d-flex align-items-center flex-wrap justify-content-center p-3 m-3 bg-dark'>
-
-                <p
-                  className='p-2 rounded m-0 text-center shadow fw-bold bg-light m-1'>
-                  2. Selecciona la hora de finalización de tu reserva y presiona el botón:
-                </p>
-                <b
-                  className='text-success mx-1 border p-1 rounded shadow bg-light'>
-                  Confirmar hora de finalización
-                  <i className="bi bi-stopwatch-fill mx-1 text-dark"></i>
-                </b>
-
-              </div>
-
-              <div
-                className='d-flex align-items-center flex-wrap justify-content-center p-3 m-3 bg-dark'>
-
-                <p
-                  className='p-2 rounded m-0 text-center shadow fw-bold bg-light m-1'>
-                  3. Por ultimo presiona el botón:
-                </p>
-                <b
-                  className='text-success mx-1 border p-1 rounded shadow bg-light'>
-                  Confirmar reserva
-                  <i className="bi bi-check-circle-fill mx-1 text-dark"></i>
-                </b>
+                </ul>
 
               </div>
 
@@ -220,8 +240,9 @@ const Booking = ({ court }) => {
               confirmReserve={confirmReserve}
               handleBooking={handleBooking}
               setDay={setDay}
-              day={day} />
-
+              day={day}
+              setPermanent={setPermanent}
+              permanent={permanent} />
             <div>
               <ToastContainer />
             </div>
@@ -230,7 +251,7 @@ const Booking = ({ court }) => {
         }
       </div>
 
-      <CourtBookingBoard data={data} dateList={dateList} dateListLc={dateListLc} weekDaysList={weekDaysList} />
+      <CourtBookingBoard data={data} dateList={dateList} dateListLc={dateListLc} weekDaysList={weekDaysList} handleDeleteReserve={handleDeleteReserve} court={court} />
 
     </>
   )

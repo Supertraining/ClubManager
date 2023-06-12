@@ -1,9 +1,8 @@
 import { DatePicker } from 'react-date-time-picker-popup'
 import './courtBookingDatePicker.css'
-import { useState } from 'react'
 
 const CourtBookingDatePicker = (
-  { setInitialTime, initialTime, setFinalTime, finalTime, setConfirmReserve, confirmReserve, handleBooking, setDay, day }
+  { setInitialTime, initialTime, setFinalTime, finalTime, setConfirmReserve, confirmReserve, handleBooking, setDay, day, setPermanent, permanent }
 ) => {
 
   const enableConfirmReserveBtn = !(initialTime && finalTime)
@@ -79,20 +78,24 @@ const CourtBookingDatePicker = (
             onClick={() => { handleBooking(new Date(day).getDay()), setConfirmReserve(true) }} disabled={enableConfirmReserveBtn || confirmReserve}>
             Confirmar Reserva
           </button>
-          {(initialTime && finalTime && confirmReserve) &&
-            <div className='btn-reserve-clicked d-flex justify-content-evenly align-items-center col-6 h-100'>
 
-              <i
-                className="bi bi-check-circle-fill mx-1 text-dark fs-5"></i>
+          {!permanent
+            ? <i className="bi bi-toggle-off fs-4 mx-2 text-success" onClick={()=>setPermanent(true)} ></i>
+            : <i className="bi bi-toggle-on fs-4 mx-2 text-danger" onClick={()=>setPermanent(false)}></i>
+          }
+
+
+
+          {(initialTime && finalTime && confirmReserve) &&
+            <div className='btn-reserve-clicked d-flex justify-content-evenly align-items-center col-4 h-100'>
 
               <button
                 className='btn p-0 mx-1'
-                onClick={() => {setInitialTime(), setFinalTime(), setConfirmReserve(false)}}>
+                onClick={() => { setInitialTime(), setFinalTime(), setConfirmReserve(false), setPermanent(false) }}>
                 <i
                   className="bi bi-plus-circle fs-1 text-primary">
                 </i>
               </button>
-
 
             </div>
 

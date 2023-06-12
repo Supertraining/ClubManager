@@ -233,14 +233,18 @@ const Home = () => {
   }
 
   const conditionalRender = () => {
+   
     if (auth?.user === null) {
       return <div
         className="spinner-grow text-success m-5"
         role="status">
       </div>
-    } else if (auth?.user?.admin === false || auth?.user === false) {
+    } else if (auth?.user?.admin === false) {
       return <FailLogin />
+    } else if (auth?.user === false) {
+      navigate('/login')
     }
+
 
   }
 
@@ -291,9 +295,9 @@ const Home = () => {
         </div >
         :
         <>
-            {conditionalRender()}
+          {conditionalRender()}
         </>
-       
+
       }
     </>
 

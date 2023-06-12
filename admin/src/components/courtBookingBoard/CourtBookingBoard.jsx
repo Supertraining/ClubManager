@@ -1,10 +1,6 @@
 import './CourtBookingBoard.css'
-import unidecode from 'unidecode';
 
-
-const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
-
-  
+const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, handleDeleteReserve }) => {
 
   return (
     <div
@@ -31,7 +27,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
 
                   <li
                     key={i}
-                    className='text-center border border-light'>
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
                       className='text-info'>
@@ -46,7 +42,14 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
                         [], { timeStyle: 'short' }
                       )
                       }]
+
+                      <i
+                        className="bi bi-x-circle-fill text-danger mx-1 cursor"
+                        onClick={() => handleDeleteReserve(court, reserve.weekday, reserve.id, reserve.user)}></i>
+
                     </div>
+
+
 
                   </li>
 
@@ -74,7 +77,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
 
                   <li
                     key={i}
-                    className='text-center border border-light'>
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
                       className='text-info'>
@@ -89,7 +92,14 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
                         [], { timeStyle: 'short' }
                       )
                       }]
+
+                      <i
+                        className="bi bi-x-circle-fill text-danger mx-1 cursor"
+                        onClick={() => handleDeleteReserve(court, reserve.weekday, reserve.id, reserve.user)}></i>
+
                     </div>
+
+
 
                   </li>
 
@@ -117,7 +127,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
 
                   <li
                     key={i}
-                    className='text-center border border-light'>
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
                       className='text-info'>
@@ -132,7 +142,14 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
                         [], { timeStyle: 'short' }
                       )
                       }]
+
+                      <i
+                        className="bi bi-x-circle-fill text-danger mx-1 cursor"
+                        onClick={() => handleDeleteReserve(court, reserve.weekday, reserve.id, reserve.user)}></i>
+
                     </div>
+
+
 
                   </li>
 
@@ -160,7 +177,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
 
                   <li
                     key={i}
-                    className='text-center border border-light'>
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
                       className='text-info'>
@@ -175,6 +192,11 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
                         [], { timeStyle: 'short' }
                       )
                       }]
+
+                      <i
+                        className="bi bi-x-circle-fill text-danger mx-1 cursor"
+                        onClick={() => handleDeleteReserve(court, reserve.weekday, reserve.id, reserve.user)}></i>
+
                     </div>
 
                   </li>
@@ -203,7 +225,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
 
                   <li
                     key={i}
-                    className='text-center border border-light'>
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
                       className='text-info'>
@@ -218,6 +240,11 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
                         [], { timeStyle: 'short' }
                       )
                       }]
+
+                      <i
+                        className="bi bi-x-circle-fill text-danger mx-1 cursor"
+                        onClick={() => handleDeleteReserve(court, reserve.weekday, reserve.id, reserve.user)}></i>
+
                     </div>
 
                   </li>
@@ -246,7 +273,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
 
                   <li
                     key={i}
-                    className='text-center border border-light'>
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
                       className='text-info'>
@@ -261,6 +288,11 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
                         [], { timeStyle: 'short' }
                       )
                       }]
+
+                      <i
+                        className="bi bi-x-circle-fill text-danger mx-1 cursor"
+                        onClick={() => handleDeleteReserve(court, reserve.weekday, reserve.id, reserve.user)}></i>
+
                     </div>
 
                   </li>
@@ -289,20 +321,27 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
 
                   <li
                     key={i}
-                    className='text-center border border-light'>
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
                       className='text-info'>
                       {reserve.user}
                     </span>
 
-                    <div>[{new Date(reserve.initialTime).toLocaleTimeString(
-                      [], { timeStyle: 'short' }
-                    )
-                    }-{new Date(reserve.finalTime).toLocaleTimeString(
-                      [], { timeStyle: 'short' }
-                    )
-                      }]</div>
+                    <div>
+                      [{new Date(reserve.initialTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }-{new Date(reserve.finalTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }]
+
+                      <i
+                        className="bi bi-x-circle-fill text-danger mx-1 cursor"
+                        onClick={() => handleDeleteReserve(court, reserve.weekday, reserve.id, reserve.user)}></i>
+
+                    </div>
 
                   </li>
 
@@ -335,20 +374,26 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
 
                   <li
                     key={i}
-                    className='text-center border border-light'>
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
                       className='text-info'>
                       {reserve.user}
                     </span>
 
-                    <div>[{new Date(reserve.initialTime).toLocaleTimeString(
-                      [], { timeStyle: 'short' }
-                    )
-                    }-{new Date(reserve.finalTime).toLocaleTimeString(
-                      [], { timeStyle: 'short' }
-                    )
+                    <div>
+                      [{new Date(reserve.initialTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }-{new Date(reserve.finalTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
                       }]
+
+                      <i
+                        className="bi bi-x-circle-fill text-danger mx-1 cursor"
+                        onClick={() => handleDeleteReserve(court, reserve.weekday, reserve.id, reserve.user)}></i>
+
                     </div>
 
                   </li>
@@ -377,20 +422,26 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
 
                   <li
                     key={i}
-                    className='text-center border border-light'>
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
                       className='text-info'>
                       {reserve.user}
                     </span>
 
-                    <div>[{new Date(reserve.initialTime).toLocaleTimeString(
-                      [], { timeStyle: 'short' }
-                    )
-                    }-{new Date(reserve.finalTime).toLocaleTimeString(
-                      [], { timeStyle: 'short' }
-                    )
+                    <div>
+                      [{new Date(reserve.initialTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }-{new Date(reserve.finalTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
                       }]
+
+                      <i
+                        className="bi bi-x-circle-fill text-danger mx-1 cursor"
+                        onClick={() => handleDeleteReserve(court, reserve.weekday, reserve.id, reserve.user)}></i>
+
                     </div>
 
                   </li>
@@ -419,7 +470,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
 
                   <li
                     key={i}
-                    className='text-center border border-light'>
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
                       className='text-info'>
@@ -434,6 +485,11 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
                         [], { timeStyle: 'short' }
                       )
                       }]
+
+                      <i
+                        className="bi bi-x-circle-fill text-danger mx-1 cursor"
+                        onClick={() => handleDeleteReserve(court, reserve.weekday, reserve.id, reserve.user)}></i>
+
                     </div>
 
                   </li>
@@ -462,7 +518,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
 
                   <li
                     key={i}
-                    className='text-center border border-light'>
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
                       className='text-info'>
@@ -477,6 +533,10 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
                         [], { timeStyle: 'short' }
                       )
                       }]
+                      <i
+                        className="bi bi-x-circle-fill text-danger mx-1 cursor"
+                        onClick={() => handleDeleteReserve(court, reserve.weekday, reserve.id, reserve.user)}></i>
+
                     </div>
 
                   </li>
@@ -505,7 +565,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
 
                   <li
                     key={i}
-                    className='text-center border border-light'>
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
                       className='text-info'>
@@ -520,6 +580,11 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
                         [], { timeStyle: 'short' }
                       )
                       }]
+
+                      <i
+                        className="bi bi-x-circle-fill text-danger mx-1 cursor"
+                        onClick={() => handleDeleteReserve(court, reserve.weekday, reserve.id, reserve.user)}></i>
+
                     </div>
 
                   </li>
@@ -548,7 +613,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
 
                   <li
                     key={i}
-                    className='text-center border border-light'>
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
                       className='text-info'>
@@ -563,6 +628,11 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
                         [], { timeStyle: 'short' }
                       )
                       }]
+
+                      <i
+                        className="bi bi-x-circle-fill text-danger mx-1 cursor"
+                        onClick={() => handleDeleteReserve(court, reserve.weekday, reserve.id, reserve.user)}></i>
+
                     </div>
 
                   </li>
@@ -591,7 +661,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
 
                   <li
                     key={i}
-                    className='text-center border border-light'>
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
                       className='text-info'>
@@ -606,6 +676,11 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
                         [], { timeStyle: 'short' }
                       )
                       }]
+
+                      <i
+                        className="bi bi-x-circle-fill text-danger mx-1 cursor"
+                        onClick={() => handleDeleteReserve(court, reserve.weekday, reserve.id, reserve.user)}></i>
+
                     </div>
 
                   </li>
@@ -621,7 +696,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
 
       </div>
 
-    </div>
+    </div >
   )
 }
 

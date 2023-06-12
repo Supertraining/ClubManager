@@ -2,10 +2,10 @@ import './getAllCourts.css'
 import { Link } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify';
 import CreateCourt from '../CreateCourt/CreateCourt';
-import  Football  from '../football/Football';
-import  Paleta  from '../pelotaPaleta/Paleta';
-import  Paddle  from '../paddle/Paddle';
-import  Squash  from '../squash/Squash';
+import Football from '../football/Football';
+import Paleta from '../pelotaPaleta/Paleta';
+import Paddle from '../paddle/Paddle';
+import Squash from '../squash/Squash';
 
 const GetAllCourts = ({ setMenu, menu, allCourts, court, setCourt, handleCreateCourt, handleDeleteCourt, courtId, setCourtId }) => {
 
@@ -13,9 +13,6 @@ const GetAllCourts = ({ setMenu, menu, allCourts, court, setCourt, handleCreateC
   return (
     <div
       className="col-9 p-1">
-
-
-      <CreateCourt handleCreateCourt={handleCreateCourt} />
 
       {!court
         ? <>
@@ -31,13 +28,15 @@ const GetAllCourts = ({ setMenu, menu, allCourts, court, setCourt, handleCreateC
 
           </div>
 
+          <CreateCourt handleCreateCourt={handleCreateCourt} />
+
           <table
             className="table table-responsive">
 
             <thead>
 
               <tr
-                className="text-center ">
+                className="text-center text-dark">
 
                 <th
                   scope="col">
@@ -134,10 +133,10 @@ const GetAllCourts = ({ setMenu, menu, allCourts, court, setCourt, handleCreateC
 
         </>
         : <>
-          {court?.name === 'futbol' && <Football court={court?.name} />}
-          {court?.name === 'paleta' && <Paleta court={court?.name} />}
-          {court?.name === 'paddle' && <Paddle court={court?.name} />}
-          {court?.name === 'squash' && <Squash court={court?.name} />}
+          {court?.name === 'futbol' && <Football setCourt={setCourt} court={court?.name} />}
+          {court?.name === 'paleta' && <Paleta setCourt={setCourt} court={court?.name} />}
+          {court?.name === 'paddle' && <Paddle setCourt={setCourt} court={court?.name} />}
+          {court?.name === 'squash' && <Squash setCourt={setCourt} court={court?.name} />}
         </>
 
 

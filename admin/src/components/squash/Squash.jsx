@@ -1,13 +1,13 @@
 import Booking from '../courtBooking/Booking'
 import './squash.css'
 
-const Squash = ({ court }) => {
+const Squash = ({ court, setCourt, handleDeleteReserve }) => {
   return (
     <div className='squashContainer'>
 
-    <Booking court={court} />
-    
-  </div>
+      <Booking court={court} setCourt={setCourt} />
+
+    </div>
   )
 }
 
