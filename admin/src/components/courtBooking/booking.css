@@ -1,0 +1,25 @@
+
+.calendarContainer{
+
+    height: 1170px;
+    
+}
+
+button:active {
+
+    transform: translate(1px, 1px) 
+
+}
+
+.reserveInstructionsWrapper {
+    height: fit-content;
+}
+
+.btn-pressed{
+    box-shadow: 2px 2px 1px black;
+  }
+
+.btn-pressed:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 1px black;
+  }

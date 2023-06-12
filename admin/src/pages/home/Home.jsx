@@ -3,74 +3,87 @@ import { Routes, Route, useNavigate } from 'react-router-dom';
 import './home.css';
 import CreateUser from '../../components/createUser/CreateUser';
 import GetAllUsers from '../../components/getAllUsers/GetAllUsers'
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import axios from '../../utils/axiosInstance.js'
 import OldReservesDeleted from '../../components/oldReservesDeleted/OldReservesDeleted';
 import { toast } from 'react-toastify';
-import CreateCourt from '../../components/CreateCourt/CreateCourt';
 import Main from '../../components/main/Main';
 import GetAllCourts from '../../components/getAllCourts/GetAllCourts';
+import { AuthContext } from '../../components/context/AuthContext';
+import FailLogin from '../../components/faillogin/FailLogin';
 
 
 const Home = () => {
+
+  const auth = useContext(AuthContext)
 
   const menuFeatures = {
     createUser: false,
     getAllUsers: false,
     deleteReserves: false,
-    createCourt: false,
     getAllCourts: false,
     main: true
   }
   const [menu, setMenu] = useState(menuFeatures)
 
+  const [allUsers, setAllUsers] = useState([])
   const [user, setUser] = useState(false)
 
-  const [allUsers, setAllUsers] = useState([])
-
-  const [court, setCourt] = useState(false)
-
   const [allCourts, setAllCourts] = useState([])
+  const [court, setCourt] = useState(false)
+  const [courtId, setCourtId] = useState()
 
   const [confirmDelete, setConfirmDelete] = useState(false)
 
   const navigate = useNavigate()
 
+  const notifyTryAgainLater = () => toast.warn("Hubo un problema, por favor intente nuevamente mas tarde", { position: 'bottom-right', autoClose: 2000, theme: 'dark' });
+
   const handleGetAllUsers = async () => {
 
     try {
 
-      const allUsers = await axios.get('/getAll')
+      const allUsers = await axios.get('/getAll');
 
-      setAllUsers(allUsers.data)
+      setAllUsers(allUsers.data);
 
     } catch (error) {
 
-      console.log(error)
+      notifyTryAgainLater();
+      console.log(error);
 
     }
 
   };
 
-  
   const notifyDeletedReserve = () => toast.error("Reserva Eliminada", { position: 'bottom-right', autoClose: 1000, theme: 'dark' });
   const handleDeleteReserve = async (court, day, id, userid) => {
 
-    await axios.put(`/courts/reserve/delete`, {
-      courtName: court,
-      reserveDay: day,
-      reserveId: id
-    });
+    try {
 
-    await axios.put(`/reserves/delete`, {
-      username: user.username,
-      reserveId: id
-    });
 
-    const userById = await axios.get(`http://localhost:8080/user/${userid}`);
+      await axios.put(`/courts/reserve/delete`, {
+        courtName: court,
+        reserveDay: day,
+        reserveId: id
+      });
 
-    setUser(userById.data)
-    notifyDeletedReserve();
+      await axios.put(`/reserves/delete`, {
+        username: user.username,
+        reserveId: id
+      });
+
+      const userById = await axios.get(`http://localhost:8080/user/${userid}`);
+
+      setUser(userById.data)
+      notifyDeletedReserve();
+
+    } catch (error) {
+
+      console.log(error);
+      notifyTryAgainLater();
+
+    }
 
   }
 
@@ -90,6 +103,7 @@ const Home = () => {
     } catch (error) {
 
       console.log(error)
+      notifyTryAgainLater();
 
     }
 
@@ -112,15 +126,16 @@ const Home = () => {
       notifyUserDeleted();
 
       setTimeout(() => {
-        setAllUsers([])
+        handleGetAllUsers()
         setUser(false)
-        navigate('/')
+        navigate('/getAllUsers')
       }, 2000)
 
 
     } catch (error) {
 
       console.log(error)
+      notifyTryAgainLater();
 
     }
   }
@@ -132,39 +147,82 @@ const Home = () => {
 
       e.preventDefault()
 
-      const res = await axios.post('/courts/createCourt', name)
+      await axios.post('/courts/createCourt', name)
 
       notifyCourtCreated();
+
+      handleGetAllCourts()
 
     } catch (error) {
 
       console.log(error)
+      notifyTryAgainLater();
 
     }
   }
 
   const handleGetAllCourts = async () => {
-    
+
     try {
 
       const allCourts = await axios.get('/courts/')
 
       setAllCourts(allCourts.data)
-      
+
     } catch (error) {
 
       console.log(error)
-      
+      notifyTryAgainLater();
+
     }
 
   }
 
+  const notifyCourtDeleted = () => toast.error("Cancha Eliminada", { position: 'bottom-right', autoClose: 1000, theme: 'dark' });
+  const handleDeleteCourt = async (id) => {
+    try {
 
+      await axios.delete(`/courts/delete/${id}`)
+
+      notifyCourtDeleted()
+
+      handleGetAllCourts()
+
+    } catch (error) {
+
+      notifyTryAgainLater()
+      console.log(error);
+
+    }
+  }
+
+  const notifyOldReservesDeleted = () => toast.error("Historial de reservas Eliminado", { position: 'bottom-right', autoClose: 1000, theme: 'dark' });
   const handleDeleteOldReserves = async () => {
 
     try {
 
       await axios.put('/courts/reserve/clean')
+      notifyOldReservesDeleted();
+
+    } catch (error) {
+
+      console.log(error);
+      notifyTryAgainLater();
+
+    }
+
+  }
+
+  const handleCloseSession = async () => {
+
+    try {
+
+      navigate('/login')
+
+      auth.dispatch({ type: 'LOGOUT' })
+
+      const log = await axios.post('http://localhost:8080/logout', {}, { withCredentials: true })
+
 
     } catch (error) {
 
@@ -173,53 +231,71 @@ const Home = () => {
     }
 
   }
+
+  const conditionalRender = () => {
+    if (auth?.user === null) {
+      return <div
+        className="spinner-grow text-success m-5"
+        role="status">
+      </div>
+    } else if (auth?.user?.admin === false || auth?.user === false) {
+      return <FailLogin />
+    }
+
+  }
+
   return (
+    <>
+      {!conditionalRender()
+        ?
+        <div className='home d-flex'>
 
-    <div className='home d-flex'>
+          <Menu
+            menu={menu}
+            setMenu={setMenu}
+            handleGetAllUsers={handleGetAllUsers}
+            setConfirmDelete={setConfirmDelete}
+            handleGetAllCourts={handleGetAllCourts}
+            handleCloseSession={handleCloseSession}
+          />
+          {
+            menu.main &&
+            <Main />
+          }
 
-      <Menu
-        menu={menu}
-        setMenu={setMenu}
-        handleGetAllUsers={handleGetAllUsers}
-        setConfirmDelete={setConfirmDelete}
-        handleGetAllCourts={handleGetAllCourts}
-      />
-      {
-        menu.main &&
-        <Main />
+
+          <Routes>
+
+            <Route
+              exact path='/createUser'
+              element={<CreateUser setMenu={setMenu} menu={menu} />}
+            />
+
+            <Route
+              exact path='/getAllUsers'
+              element={<GetAllUsers setMenu={setMenu} menu={menu} allUsers={allUsers} handleDeleteReserve={handleDeleteReserve} user={user} setUser={setUser} handleUpdateUser={handleUpdateUser} handleDeleteUser={handleDeleteUser} setConfirmDelete={setConfirmDelete} confirmDelete={confirmDelete} />}
+            />
+
+            <Route
+              exact path='/courts'
+              element={<GetAllCourts setMenu={setMenu} menu={menu} allCourts={allCourts} court={court} setCourt={setCourt} handleCreateCourt={handleCreateCourt} handleDeleteCourt={handleDeleteCourt} setConfirmDelete={setConfirmDelete} confirmDelete={confirmDelete} setCourtId={setCourtId} courtId={courtId} />}
+            />
+
+            <Route
+              exact path='/oldReservesDeleted'
+              element={<OldReservesDeleted setMenu={setMenu} menu={menu} setConfirmDelete={setConfirmDelete} confirmDelete={confirmDelete} handleDeleteOldReserves={handleDeleteOldReserves} />}
+            />
+
+          </Routes>
+
+        </div >
+        :
+        <>
+            {conditionalRender()}
+        </>
+       
       }
-
-
-      <Routes>
-
-        <Route
-          exact path='/createUser'
-          element={<CreateUser setMenu={setMenu} menu={menu} />}
-        />
-
-        <Route
-          exact path='/getAllUsers'
-          element={<GetAllUsers setMenu={setMenu} menu={menu} allUsers={allUsers} handleDeleteReserve={handleDeleteReserve} user={user} setUser={setUser} handleUpdateUser={handleUpdateUser} handleDeleteUser={handleDeleteUser} />}
-        />
-
-        <Route
-          exact path='/getAllCourts'
-          element={<GetAllCourts setMenu={setMenu} menu={menu} allCourts={allCourts} court={court} setCourt={setCourt} />}
-        />
-
-        <Route
-          exact path='/createCourt'
-          element={<CreateCourt setMenu={setMenu} handleCreateCourt={handleCreateCourt} />}
-        />
-
-        <Route
-          exact path='/oldReservesDeleted'
-          element={<OldReservesDeleted setMenu={setMenu} menu={menu} setConfirmDelete={setConfirmDelete} confirmDelete={confirmDelete} handleDeleteOldReserves={handleDeleteOldReserves} />}
-        />
-
-      </Routes>
-
-    </div>
+    </>
 
   )
 

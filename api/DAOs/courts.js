@@ -39,6 +39,21 @@ export default class CourtsDAO {
         }
     }
 
+    deleteCourtById = async (id) => {
+        try {
+
+            let data = await model
+                .courtModel
+                .deleteOne({ _id: id });
+            
+            return data;
+            
+        } catch (error) {
+
+            logger.error(error);
+
+        }
+    }
     getUnavailableDatesByName = async (name) => {
 
         try {
@@ -115,26 +130,30 @@ export default class CourtsDAO {
             // Get yesterday's date
             const yesterday = new Date();
             yesterday.setDate(yesterday.getDate() - 1);
-
+    
             // Iterate over each court and remove reserves from yesterday
             const courts = await model.courtModel.find();
             for (const court of courts) {
                 for (const [dayOfWeek, reserves] of Object.entries(court.unavailableDates)) {
+                    
                     court.unavailableDates[dayOfWeek] = reserves.filter((reserve) => {
-                        return reserve.initialTime > yesterday.getTime();
+                       console.log('filter:', !reserve.permanent) 
+                        return (reserve.permanent) || (reserve.initialTime > yesterday.getTime())
                     });
+    
                 }
+                
                 const result = await model.courtModel.updateOne(
                     { _id: court._id },
                     { $set: { unavailableDates: court.unavailableDates } }
                 );
-                return (result.modifiedCount + ' reserves deleted from ' + court.name);
+               
+                logger.info(result.modifiedCount + ' reserves deleted from ' + court.name);
             }
         } catch (error) {
             logger.error(error);
         }
     }
-
 
     updateById = async (id, newData) => {
         try {

@@ -42,6 +42,21 @@ export default class CourtServices {
         }
     }
 
+    deleteCourtById = async (id) => {
+        try {
+            
+            let data = await this.courtsDAO
+                .deleteCourtById(id)
+
+            return data
+
+        } catch (error) {
+
+            logger.error(error)
+            
+        }
+    }
+
     getUnavailableDatesByName = async (name) => {
 
         try {
@@ -100,9 +115,9 @@ export default class CourtServices {
             
             return data;
             
-        } catch (erroror) {
+        } catch (error) {
             
-            console.log(erroror)
+            console.log(error)
 
         }
     }

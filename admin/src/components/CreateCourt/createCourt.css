@@ -1,0 +1,5 @@
+input[type=submit]:not([disabled]):hover {
+  background-color: #146c4383 !important;
+  transition: 1s;
+  color: white !important;
+}

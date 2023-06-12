@@ -2,7 +2,7 @@ import './menu.css'
 import { Link } from 'react-router-dom'
 
 
-const Menu = ({ menu, setMenu, handleGetAllUsers, handleGetAllCourts }) => {
+const Menu = ({ menu, setMenu, handleGetAllUsers, handleGetAllCourts, handleCloseSession }) => {
 
   return (
 
@@ -25,7 +25,6 @@ const Menu = ({ menu, setMenu, handleGetAllUsers, handleGetAllCourts }) => {
                 createUser: true,
                 getAllUsers: false,
                 deleteReserves: false,
-                createCourt: false,
                 getAllCourts: false,
                 main: false
               })
@@ -53,7 +52,6 @@ const Menu = ({ menu, setMenu, handleGetAllUsers, handleGetAllCourts }) => {
                 createUser: false,
                 getAllUsers: true,
                 deleteReserves: false,
-                createCourt: false,
                 getAllCourts: false,
                 main: false
               }),
@@ -73,35 +71,7 @@ const Menu = ({ menu, setMenu, handleGetAllUsers, handleGetAllCourts }) => {
           className='d-flex align-items-center'>
 
           <Link
-            to={'/createCourt'}
-            className={menu.createCourt
-              ? 'btn btn-success'
-              : 'btn btn-success bg-transparent'}
-            onClick={() => {
-              setMenu({
-                createUser: false,
-                getAllUsers: false,
-                deleteReserves: false,
-                createCourt: true,
-                getAllCourts: false,
-                main: false
-              })
-            }}>
-            Create court
-          </Link>
-
-          <i
-            className={menu.createCourt
-              ? 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-active text-success' : 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-inActive'}>
-          </i>
-
-        </li>
-
-        <li
-          className='d-flex align-items-center'>
-
-          <Link
-            to={'/getAllCourts'}
+            to={'/courts'}
             className={menu.getAllCourts
               ? 'btn btn-success'
               : 'btn btn-success bg-transparent'}
@@ -110,7 +80,6 @@ const Menu = ({ menu, setMenu, handleGetAllUsers, handleGetAllCourts }) => {
                 createUser: false,
                 getAllUsers: false,
                 deleteReserves: false,
-                createCourt: false,
                 getAllCourts: true,
                 main: false
               }),
@@ -155,7 +124,6 @@ const Menu = ({ menu, setMenu, handleGetAllUsers, handleGetAllCourts }) => {
                 createUser: false,
                 getAllUsers: false,
                 deleteReserves: true,
-                createCourt: false,
                 getAllCourts: false,
                 main: false
               })
@@ -170,8 +138,16 @@ const Menu = ({ menu, setMenu, handleGetAllUsers, handleGetAllCourts }) => {
 
         </li>
 
-      </ul>
+        <li
+          className='d-flex align-items-center'>
+          <button className='btn btn-danger m-auto' onClick={handleCloseSession}>
+            Cerrar sesión
+          </button>
 
+        </li>
+
+      </ul>
+      
     </div>
 
   )

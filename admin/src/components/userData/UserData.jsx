@@ -1,8 +1,12 @@
 import { useState } from 'react'
 import { ToastContainer } from 'react-toastify'
 import './UserData.css'
-const UserData = ({ user, handleUpdateUser, handleDeleteUser }) => {
-  
+const UserData = ({ user, handleUpdateUser, handleDeleteUser, setConfirmDelete, confirmDelete }) => {
+
+  console.log(confirmDelete)
+  console.log(setConfirmDelete)
+
+
   const [credentials, setCredentials] = useState(
     {
       username: user.username,
@@ -22,14 +26,15 @@ const UserData = ({ user, handleUpdateUser, handleDeleteUser }) => {
     })
   }
 
-
   return (
     <div>
+
       <div>
 
         <ToastContainer />
 
       </div>
+
       <h3>@User Data</h3>
       <div className='d-flex'>
 
@@ -38,7 +43,7 @@ const UserData = ({ user, handleUpdateUser, handleDeleteUser }) => {
 
           <li className='border-bottom'>
 
-          <i
+            <i
               className="bi bi-envelope-at"
               id="basic-addon1">
             </i>
@@ -228,15 +233,40 @@ const UserData = ({ user, handleUpdateUser, handleDeleteUser }) => {
 
       </div>
       {!showForm && (
-        <div className='d-flex justify-content-evenly mt-2'>
+        <div
+          className='d-flex justify-content-evenly mt-2'>
 
-          <button className='btn btn-dark' onClick={() => setShowForm(true)}>
+          <button
+            className='btn btn-dark'
+            onClick={() => setShowForm(true)}>
             Editar
           </button>
 
-          <button className='btn btn-danger' onClick={() => handleDeleteUser(user)}>
-            Eliminar
-          </button>
+          {!confirmDelete
+
+            ? <button
+              className='btn btn-danger'
+              onClick={() => setConfirmDelete(true)}>
+              Eliminar
+            </button>
+
+            : <div
+              className='alert alert-danger d-flex p-1 m-0'>
+
+              <button
+                className='btn btn-sm btn-danger mx-1'
+                onClick={() => handleDeleteUser(user)}>
+                Confirmar
+              </button>
+
+              <button
+                className='btn btn-sm btn-success mx-1'
+                onClick={() => setConfirmDelete(false)}>
+                Cancelar
+              </button>
+
+            </div>
+          }
 
         </div>
       )}

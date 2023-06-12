@@ -1,0 +1,51 @@
+.tableContainer {
+  overflow-x: auto;
+}
+
+.table {
+
+  font-size: clamp(12px, 2vw, 100%);
+  background-color: #2c4c68a1;
+  color: white;
+  width: 100%;
+}
+
+.thead {
+
+ display: flex;
+ justify-content: space-evenly;
+ width: 100%;
+
+}
+
+.tr {
+
+  display: flex;
+  justify-content: space-evenly;
+  min-width: 1150px;
+}
+
+.tc{
+
+  padding: 2px;
+  text-align: center;
+  width: calc(100% / 7);
+
+}
+
+ul {
+
+  list-style-type: none;
+  width: fit-content;
+  padding: 0px;
+  margin: auto;
+
+}
+
+li {
+
+  width: fit-content;
+  margin: 5px;
+  padding: 5px;
+  
+}

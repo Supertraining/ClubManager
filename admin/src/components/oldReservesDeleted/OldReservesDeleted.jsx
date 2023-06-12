@@ -1,3 +1,4 @@
+import { ToastContainer } from 'react-toastify';
 import './oldReservesDeleted.css';
 import { Link } from 'react-router-dom';
 
@@ -56,6 +57,11 @@ const OldReservesDeleted = (
             </div>
           </>
       }
+      <div>
+
+        <ToastContainer />
+
+      </div>
     </div>
 
   )

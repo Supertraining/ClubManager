@@ -3,7 +3,7 @@ import './getAllUsers.css'
 import User from '../user/User'
 import { ToastContainer } from 'react-toastify';
 
-const GetAllUsers = ({ setMenu, menu, allUsers, handleDeleteReserve, user, setUser, handleUpdateUser, handleDeleteUser }) => {
+const GetAllUsers = ({ setMenu, menu, allUsers, handleDeleteReserve, user, setUser, handleUpdateUser, handleDeleteUser, setConfirmDelete, confirmDelete }) => {
 
   return (
 
@@ -97,7 +97,9 @@ const GetAllUsers = ({ setMenu, menu, allUsers, handleDeleteReserve, user, setUs
                     className="text-center">
 
                     <td>
-                      {i + 1}
+                      <div className='btn'>
+                        {i + 1}
+                      </div>
                     </td>
 
                     <td>
@@ -111,37 +113,51 @@ const GetAllUsers = ({ setMenu, menu, allUsers, handleDeleteReserve, user, setUs
                     </td>
 
                     <td>
-                      {user.nombre}
+                      <div className='btn'>
+                        {user.nombre}
+                      </div>
                     </td>
 
                     <td>
-                      {user.apellido}
+                      <div className='btn'>
+                        {user.apellido}
+                      </div>
                     </td>
 
                     <td>
-                      {user.edad}
+                      <div className='btn'>
+                        {user.edad}
+                      </div>
                     </td>
 
                     <td>
-                      {user.telefono}
+                      <div className='btn'>
+                        {user.telefono}
+                      </div>
                     </td>
 
                     {user.reserves.length === 0
-                      ? <td
-                        className='text-danger fw-bold'>
-                        Sin reservas
+                      ? <td>
+                        <div className='btn text-danger fw-bold'>
+                          Sin reservas
+                        </div>
                       </td>
-                      : <td
-                        className='text-success fw-bold'>
-                        Reservas activas
+                      : <td>
+                        <div className='btn text-success fw-bold'>
+                          Reservas activas
+                        </div>
                       </td>}
 
                     <td>
-                      @actividades
+                      <div className='btn'>
+                        @actividades
+                      </div>
                     </td>
 
                     <td>
-                      {user.admin.toString()}
+                      <div className='btn'>
+                        {user.admin.toString()}
+                      </div>
                     </td>
 
                   </tr>
@@ -152,7 +168,7 @@ const GetAllUsers = ({ setMenu, menu, allUsers, handleDeleteReserve, user, setUs
           </table>
 
         </>
-        : <User setUser={setUser} user={user} handleDeleteReserve={handleDeleteReserve} handleUpdateUser={handleUpdateUser} handleDeleteUser={handleDeleteUser} />
+        : <User setUser={setUser} user={user} handleDeleteReserve={handleDeleteReserve} handleUpdateUser={handleUpdateUser} handleDeleteUser={handleDeleteUser} setConfirmDelete={setConfirmDelete} confirmDelete={confirmDelete} />
       }
 
       <div>

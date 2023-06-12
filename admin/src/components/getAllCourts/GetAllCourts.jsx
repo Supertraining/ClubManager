@@ -1,13 +1,21 @@
 import './getAllCourts.css'
 import { Link } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify';
+import CreateCourt from '../CreateCourt/CreateCourt';
+import  Football  from '../football/Football';
+import  Paleta  from '../pelotaPaleta/Paleta';
+import  Paddle  from '../paddle/Paddle';
+import  Squash  from '../squash/Squash';
+
+const GetAllCourts = ({ setMenu, menu, allCourts, court, setCourt, handleCreateCourt, handleDeleteCourt, courtId, setCourtId }) => {
 
 
-const GetAllCourts = ({ setMenu, menu, allCourts, court, setCourt }) => {
-  
   return (
     <div
       className="col-9 p-1">
+
+
+      <CreateCourt handleCreateCourt={handleCreateCourt} />
 
       {!court
         ? <>
@@ -46,6 +54,11 @@ const GetAllCourts = ({ setMenu, menu, allCourts, court, setCourt }) => {
                   reservas
                 </th>
 
+                <th
+                  scope="col">
+                  Eliminar
+                </th>
+
               </tr>
 
             </thead>
@@ -54,10 +67,10 @@ const GetAllCourts = ({ setMenu, menu, allCourts, court, setCourt }) => {
 
               {allCourts.length === 0
 
-                ? <div
+                ? <tr
                   className="spinner-grow text-success m-5"
                   role="status">
-                </div>
+                </tr>
 
                 : allCourts.map((court, i) => (
 
@@ -84,15 +97,50 @@ const GetAllCourts = ({ setMenu, menu, allCourts, court, setCourt }) => {
                     ) : (
                       <td className="text-danger fw-bold">Sin reservas</td>
                     )}
-                  </tr>
 
+                    <td>
+                      {!courtId &&
+                        <button
+                          to={'/courts'}
+                          className='btn btn-outline-danger m-auto'
+                          onClick={() => { setCourtId(court._id) }}>
+                          Eliminar Cancha
+                        </button>
+                      }
+                      {courtId === court._id &&
+                        <>
+                          <Link
+                            to={'/courts'}
+                            className='btn btn-sm btn-success m-1'
+                            onClick={() => setCourtId()}>
+                            Cancelar
+                          </Link>
+
+                          <Link
+                            to={'/courts'}
+                            className='btn btn-sm btn-danger m-1'
+                            onClick={() => { handleDeleteCourt(courtId), setCourtId() }}>
+                            Borrar
+                          </Link>
+                        </>
+                      }
+                    </td>
+                  </tr>
                 ))}
+
             </tbody>
 
           </table>
 
         </>
-        : <User setUser={setUser} user={user} handleDeleteReserve={handleDeleteReserve} handleUpdateUser={handleUpdateUser} handleDeleteUser={handleDeleteUser} />
+        : <>
+          {court?.name === 'futbol' && <Football court={court?.name} />}
+          {court?.name === 'paleta' && <Paleta court={court?.name} />}
+          {court?.name === 'paddle' && <Paddle court={court?.name} />}
+          {court?.name === 'squash' && <Squash court={court?.name} />}
+        </>
+
+
       }
 
       <div>

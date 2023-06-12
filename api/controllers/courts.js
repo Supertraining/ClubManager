@@ -38,6 +38,23 @@ export default class CourtsControllers {
         }
     }
 
+    deleteCourtById = async (req, res) => {
+        try {
+
+            let data = await this.courtsService
+                .deleteCourtById(req.params.id);
+            data.deletedCount > 0
+            ? res.json(true)
+            : res.json(false)
+            
+            
+        } catch (error) {
+
+            routeLogger(req, 'error', error);
+            
+        }
+    }
+
     getUnavailableDatesByName = async (req, res) => {
  
         try {

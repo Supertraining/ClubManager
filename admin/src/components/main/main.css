@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;500&display=swap');
+
 .background {
 
   background-image: url('../../assets/sportIconBg(1).webp');
@@ -11,6 +13,8 @@
   font-size: 3rem;
   animation-name: title3d;
   animation-duration: 3s;
+  font-family: 'Roboto Slab', serif;
+
 }
 
 @keyframes title3d {

@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import './createCourt.css';
-import { Link } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-const CreateCourt = ({ setMenu, menu, handleCreateCourt }) => {
+
+const CreateCourt = ({ handleCreateCourt }) => {
 
   const [court, setCourt] = useState({ name: '' })
 
@@ -10,48 +10,75 @@ const CreateCourt = ({ setMenu, menu, handleCreateCourt }) => {
 
     setCourt({
       ...court,
-      [e.target.name]: e.target.value
+      [e.target.name]: (e.target.value).toLowerCase()
     })
 
   }
-
+ 
   return (
 
     <div
-      className='col-9 d-flex flex-column align-items-center p-1'>
+      className='col-12 d-flex flex-column align-items-center justify-content-center p-1'>
 
-      <div
-        className='col-12 my-3'>
+      <div className='border p-3 shadow rounded'>
 
-        <Link
-          to={'/'}
-          className='btn btn-close border border-dark p-2'
-          onClick={() => { setMenu({ ...menu, main: true, createCourt: false}) }}>
-        </Link>
+        <h3 className='text-center'>Crear cancha</h3>
+        <form
+          className='m-auto d-flex flex-column align-items-center'>
+          <div
+            className="input-group align-items-center">
+
+            <div
+              className="input-group-prepend mx-1 p-1">
+
+              <i
+                className="bi bi-card-list fs-4">
+              </i>
+
+            </div>
+
+            <input
+              id="name"
+              name='name'
+              placeholder='Nombre de la cancha'
+              className='form-control my-2 text-center border-0 border-bottom' type='text'
+              value={court.name}
+              onChange={handleChange}
+            />
+
+          </div>
+
+          <div
+            className="input-group my-2 justify-content-center align-items-center">
+
+            <div
+              className="input-group-prepend mx-2">
+              {
+                court.name === ''
+                  ? <i
+                    className="bi bi-plus-square fs-4">
+                  </i>
+                  : <i
+                    className="bi bi-plus-square-fill fs-4">
+                    </i>
+              }
+
+
+            </div>
+
+            <input
+              className="my-2 text-center border border-success w-25 rounded bg-white text-secondary p-2"
+              type="submit"
+              value='Crear'
+              disabled={court.name === ''}
+              onClick={(e) => { handleCreateCourt(e, court), setCourt({ name: '' }) }}
+            />
+
+          </div>
+
+        </form>
 
       </div>
-
-      <form
-        className='m-auto'>
-
-        <label
-          className='text-success fw-bold mx-1'
-          htmlFor="name">
-          Cancha que deseas crear
-        </label>
-
-        <input
-          className='p-2'
-          type="text"
-          name="name"
-          id="name"
-          placeholder='Nombre de la cancha'
-          onChange={handleChange}
-        />
-
-        <input type="submit" value="Crear" onClick={(e) => handleCreateCourt(e,court)} />
-
-      </form>
 
       <div>
         <ToastContainer />

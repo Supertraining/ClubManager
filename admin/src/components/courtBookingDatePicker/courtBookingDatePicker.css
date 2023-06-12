@@ -1,0 +1,33 @@
+.btn-success:hover {
+    
+  background-color: black;
+  color: white;
+
+}
+
+.datePickerContainer {
+  height: 350px;
+}
+
+.btn-reserve-clicked{
+  animation-name: fade-in;
+  animation-duration: 2s;
+
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.bi-plus-circle {
+  text-shadow: 1px 1px 0px black;
+}
+.btn:active {
+  transform: translate(1px, 1px);
+  border: 0;
+}

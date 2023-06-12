@@ -3,7 +3,8 @@ import UserReserves from '../userReserves/UserReserves';
 import UserActivities from '../userActivities/UserActivities';
 import UserData from '../userData/UserData';
 
-const User = ({ setUser, user, handleDeleteReserve, handleUpdateUser, handleDeleteUser }) => {
+const User = ({ setUser, user, handleDeleteReserve, handleUpdateUser, handleDeleteUser, setConfirmDelete, confirmDelete }) => {
+
 
   return (
 
@@ -32,6 +33,8 @@ const User = ({ setUser, user, handleDeleteReserve, handleUpdateUser, handleDele
               user={user}
               handleUpdateUser={handleUpdateUser}
               handleDeleteUser={handleDeleteUser}
+              setConfirmDelete={setConfirmDelete}
+              confirmDelete={confirmDelete}
             />
 
           </div>
