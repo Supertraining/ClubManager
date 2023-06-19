@@ -156,7 +156,10 @@ const GetAllUsers = ({ setMenu, menu, allUsers, handleDeleteReserve, user, setUs
 
                     <td>
                       <div className='btn'>
-                        {user.admin.toString()}
+                        {user.admin
+                          ? <i className="bi bi-check-circle-fill text-success"></i>
+                          : <i className="bi bi-x-circle-fill text-danger"></i>
+                        }
                       </div>
                     </td>
 

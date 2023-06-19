@@ -1,3 +1,4 @@
+import './navBarOffCanvasEnd.css'
 import { ToastContainer, toast } from 'react-toastify';
 import MyUser from '../myUser/MyUser'
 
@@ -25,7 +26,7 @@ const NavBarOffCanvasEnd = ({ setShowProfile, handleDeleteAccount, showProfile, 
           className="offcanvas-header">
 
           <h5
-            className="offcanvas-title m-1 text-white" id="offcanvasExampleLabel">
+            className="offcanvas-title m-1 text-white offcanvas-Header-Title" id="offcanvasExampleLabel">
             {user?.username}
           </h5>
 
@@ -55,10 +56,10 @@ const NavBarOffCanvasEnd = ({ setShowProfile, handleDeleteAccount, showProfile, 
               <div
                 className='rounded bg-dark p-1 text-center'>
 
-                <h5
-                  className='text-success fw-bold'>
+                <h6
+                  className='text-success fw-bold p-2 m-0'>
                   Mis reservas:
-                </h5>
+                </h6>
 
                 {!allArrays
                   && (<div

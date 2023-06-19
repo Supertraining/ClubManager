@@ -13,7 +13,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
       <div
         className='table rounded tableContainer'>
 
-        <div
+<div
           className='tr'>
 
           <div
@@ -31,7 +31,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
 
                   <li
                     key={i}
-                    className='text-center border border-light'>
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
                       className='text-info'>
@@ -46,7 +46,11 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
                         [], { timeStyle: 'short' }
                       )
                       }]
+
+
                     </div>
+
+
 
                   </li>
 
@@ -74,7 +78,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
 
                   <li
                     key={i}
-                    className='text-center border border-light'>
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
                       className='text-info'>
@@ -89,7 +93,11 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
                         [], { timeStyle: 'short' }
                       )
                       }]
+
+
                     </div>
+
+
 
                   </li>
 
@@ -117,7 +125,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
 
                   <li
                     key={i}
-                    className='text-center border border-light'>
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
                       className='text-info'>
@@ -132,7 +140,11 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
                         [], { timeStyle: 'short' }
                       )
                       }]
+
+
                     </div>
+
+
 
                   </li>
 
@@ -160,7 +172,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
 
                   <li
                     key={i}
-                    className='text-center border border-light'>
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
                       className='text-info'>
@@ -175,6 +187,8 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
                         [], { timeStyle: 'short' }
                       )
                       }]
+
+
                     </div>
 
                   </li>
@@ -203,7 +217,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
 
                   <li
                     key={i}
-                    className='text-center border border-light'>
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
                       className='text-info'>
@@ -218,6 +232,8 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
                         [], { timeStyle: 'short' }
                       )
                       }]
+
+
                     </div>
 
                   </li>
@@ -246,7 +262,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
 
                   <li
                     key={i}
-                    className='text-center border border-light'>
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
                       className='text-info'>
@@ -261,6 +277,8 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
                         [], { timeStyle: 'short' }
                       )
                       }]
+
+
                     </div>
 
                   </li>
@@ -289,20 +307,24 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
 
                   <li
                     key={i}
-                    className='text-center border border-light'>
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
                       className='text-info'>
                       {reserve.user}
                     </span>
 
-                    <div>[{new Date(reserve.initialTime).toLocaleTimeString(
-                      [], { timeStyle: 'short' }
-                    )
-                    }-{new Date(reserve.finalTime).toLocaleTimeString(
-                      [], { timeStyle: 'short' }
-                    )
-                      }]</div>
+                    <div>
+                      [{new Date(reserve.initialTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }-{new Date(reserve.finalTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }]
+
+
+                    </div>
 
                   </li>
 
@@ -335,20 +357,23 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
 
                   <li
                     key={i}
-                    className='text-center border border-light'>
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
                       className='text-info'>
                       {reserve.user}
                     </span>
 
-                    <div>[{new Date(reserve.initialTime).toLocaleTimeString(
-                      [], { timeStyle: 'short' }
-                    )
-                    }-{new Date(reserve.finalTime).toLocaleTimeString(
-                      [], { timeStyle: 'short' }
-                    )
+                    <div>
+                      [{new Date(reserve.initialTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }-{new Date(reserve.finalTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
                       }]
+
+
                     </div>
 
                   </li>
@@ -377,20 +402,23 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
 
                   <li
                     key={i}
-                    className='text-center border border-light'>
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
                       className='text-info'>
                       {reserve.user}
                     </span>
 
-                    <div>[{new Date(reserve.initialTime).toLocaleTimeString(
-                      [], { timeStyle: 'short' }
-                    )
-                    }-{new Date(reserve.finalTime).toLocaleTimeString(
-                      [], { timeStyle: 'short' }
-                    )
+                    <div>
+                      [{new Date(reserve.initialTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }-{new Date(reserve.finalTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
                       }]
+
+
                     </div>
 
                   </li>
@@ -419,7 +447,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
 
                   <li
                     key={i}
-                    className='text-center border border-light'>
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
                       className='text-info'>
@@ -434,6 +462,8 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
                         [], { timeStyle: 'short' }
                       )
                       }]
+
+
                     </div>
 
                   </li>
@@ -462,7 +492,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
 
                   <li
                     key={i}
-                    className='text-center border border-light'>
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
                       className='text-info'>
@@ -477,6 +507,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
                         [], { timeStyle: 'short' }
                       )
                       }]
+
                     </div>
 
                   </li>
@@ -505,7 +536,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
 
                   <li
                     key={i}
-                    className='text-center border border-light'>
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
                       className='text-info'>
@@ -520,6 +551,8 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
                         [], { timeStyle: 'short' }
                       )
                       }]
+
+
                     </div>
 
                   </li>
@@ -548,7 +581,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
 
                   <li
                     key={i}
-                    className='text-center border border-light'>
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
                       className='text-info'>
@@ -563,6 +596,8 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
                         [], { timeStyle: 'short' }
                       )
                       }]
+
+
                     </div>
 
                   </li>
@@ -591,7 +626,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
 
                   <li
                     key={i}
-                    className='text-center border border-light'>
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
                       className='text-info'>
@@ -606,6 +641,8 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList  }) => {
                         [], { timeStyle: 'short' }
                       )
                       }]
+
+
                     </div>
 
                   </li>

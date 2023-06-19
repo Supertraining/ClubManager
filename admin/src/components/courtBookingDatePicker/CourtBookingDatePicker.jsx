@@ -75,16 +75,16 @@ const CourtBookingDatePicker = (
 
           <button
             className='btn btn-success btn-pressed fw-bold col-6 h-100'
-            onClick={() => { handleBooking(new Date(day).getDay()), setConfirmReserve(true) }} disabled={enableConfirmReserveBtn || confirmReserve}>
+            onClick={() => { handleBooking(new Date(day).getDay()), setConfirmReserve(true) }}
+            disabled={enableConfirmReserveBtn || confirmReserve}
+          >
             Confirmar Reserva
           </button>
 
           {!permanent
-            ? <i className="bi bi-toggle-off fs-4 mx-2 text-success" onClick={()=>setPermanent(true)} ></i>
-            : <i className="bi bi-toggle-on fs-4 mx-2 text-danger" onClick={()=>setPermanent(false)}></i>
+            ? <i className="bi bi-toggle-off fs-4 mx-2 text-success" onClick={() => setPermanent(true)} ></i>
+            : <i className="bi bi-toggle-on fs-4 mx-2 text-danger" onClick={() => setPermanent(false)}></i>
           }
-
-
 
           {(initialTime && finalTime && confirmReserve) &&
             <div className='btn-reserve-clicked d-flex justify-content-evenly align-items-center col-4 h-100'>

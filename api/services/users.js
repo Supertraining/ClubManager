@@ -166,7 +166,7 @@ export default class UsersServices {
 
     }
     async updateUserReserves(username, reserveData) {
-
+        
         try {
             const updateUser = await this.DAO
                 .updateUserReserves(username, reserveData);

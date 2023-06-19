@@ -98,9 +98,9 @@ export default class CourtServices {
             
             return data
 
-        } catch (erroror) {
+        } catch (error) {
 
-            console.log(erroror);
+            console.log(error);
 
             
         }

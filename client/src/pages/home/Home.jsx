@@ -1,16 +1,15 @@
+import HomeCarousel from '../../components/homeCarousel/HomeCarousel'
+import HomeText from '../../components/homeText/HomeText'
 import './home.css'
 
 const Home = () => {
 
-  
+
 
   return (
     <div >
-      <ul style={{marginTop: '650px'}}>
-        <li>HISTORIA</li>
-        <li>ACTUALIDAD</li>
-        <li>FOTOS</li>
-      </ul>
+      <HomeCarousel />
+      <HomeText />
     </div>
   )
 }

@@ -12,7 +12,7 @@ const UserData = ({ user, handleUpdateUser, handleDeleteUser, setConfirmDelete, 
       telefono: user.telefono,
       admin: user.admin
     })
-console.log(credentials);
+
   const [showForm, setShowForm] = useState(false)
 
   const handleChange = (e) => {

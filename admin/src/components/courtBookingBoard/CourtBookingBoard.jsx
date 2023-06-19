@@ -1,6 +1,6 @@
 import './CourtBookingBoard.css'
 
-const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, handleDeleteReserve }) => {
+const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, handleDeleteReserve, setPermanent, permanent }) => {
 
   return (
     <div

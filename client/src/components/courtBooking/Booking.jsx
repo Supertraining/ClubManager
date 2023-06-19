@@ -28,7 +28,7 @@ const Booking = ({ court }) => {
   const { user } = useContext(AuthContext)
   const { reserveDeleted, setReserveDeleted } = useContext(ReserveBoardContext)
 
-  const notifyFail = () => toast("HORARIO NO DISPONIBLE");
+  const notifyFail = () => toast("HORARIO NO DISPONIBLE", {autoClose: 2000});
   const notifySuccess = () => toast.success("Reserva Confirmada", { position: 'bottom-right', autoClose: 1000, theme: 'dark' });;
 
   const handleBooking = async (selectedDay) => {
@@ -58,7 +58,7 @@ const Booking = ({ court }) => {
       //!Un turno se puede reservar en un rango maximo de una semana
       //!La duracion maxima de un turno es de 1 hora 30 minutos
 
-      const reservedDates = reserveData?.some((reserve) => initialTime === reserve.initialTime && finalTime === reserve.finalTime || initialTime === reserve.initialTime + 1800000 || initialTime === reserve.initialTime - 1800000 || initialTime === reserve.finalTime - 1800000 || finalTime === initialTime + 1800000 || finalTime < initialTime || finalTime === reserve.finalTime + 1800000 || finalTime === reserve.finalTime - 1800000 || finalTime > initialTime + 5400000)
+      const reservedDates = reserveData?.some((reserve) => initialTime === reserve.initialTime && finalTime === reserve.finalTime || initialTime === reserve.initialTime + 1800000 || initialTime === reserve.initialTime - 1800000 || initialTime === reserve.finalTime - 1800000 || finalTime === initialTime + 1800000 || finalTime < initialTime || finalTime === reserve.finalTime + 1800000 || finalTime === reserve.finalTime - 1800000 || finalTime > initialTime + 5400000 || new Date(initialTime).getDate() < new Date().getDate() || new Date(finalTime).getDate() < new Date().getDate()) || new Date(initialTime).getTime() <= Date.now() || new Date(finalTime).getTime() <= Date.now();
 
       const oneWeekFromNow = new Date();
       oneWeekFromNow.setDate(oneWeekFromNow.getDate() + 7)
@@ -167,45 +167,21 @@ const Booking = ({ court }) => {
 
               <div
                 className='d-flex align-items-center flex-wrap justify-content-center p-3 m-3 bg-dark'>
-                <p
+
+                <ul
                   className='p-2 rounded m-0 text-center shadow fw-bold bg-light m-1'>
-                  1 .Selecciona en el calendario la fecha y la hora de inicio de tu reserva y presiona el botón:
-                </p>
-                <b
-                  className='text-success mx-1 border p-1 rounded shadow bg-light'>
-                  Confirmar hora de inicio
-                  <i className="bi bi-stopwatch mx-1 text-dark"></i>
-                </b>
 
-              </div>
+                  <li> 1 .Selecciona en el calendario la fecha y la hora de inicio de tu reserva y presiona el botón
+                    <i
+                      className='text-success'> Confirmar hora de inicio</i></li>
+                  <li>2. Selecciona la hora de finalización de tu reserva y presiona el botón
+                    <i
+                      className='text-success'> Confirmar hora de finalización</i ></li>
+                  <li>3. Por ultimo presiona el botón:
+                    <i
+                      className='text-success'> Confirmar reserva</i></li>
 
-              <div
-                className='d-flex align-items-center flex-wrap justify-content-center p-3 m-3 bg-dark'>
-
-                <p
-                  className='p-2 rounded m-0 text-center shadow fw-bold bg-light m-1'>
-                  2. Selecciona la hora de finalización de tu reserva y presiona el botón:
-                </p>
-                <b
-                  className='text-success mx-1 border p-1 rounded shadow bg-light'>
-                  Confirmar hora de finalización
-                  <i className="bi bi-stopwatch-fill mx-1 text-dark"></i>
-                </b>
-
-              </div>
-
-              <div
-                className='d-flex align-items-center flex-wrap justify-content-center p-3 m-3 bg-dark'>
-
-                <p
-                  className='p-2 rounded m-0 text-center shadow fw-bold bg-light m-1'>
-                  3. Por ultimo presiona el botón:
-                </p>
-                <b
-                  className='text-success mx-1 border p-1 rounded shadow bg-light'>
-                  Confirmar reserva
-                  <i className="bi bi-check-circle-fill mx-1 text-dark"></i>
-                </b>
+                </ul>
 
               </div>
 

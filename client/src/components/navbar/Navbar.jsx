@@ -1,5 +1,5 @@
 import './navbar.css'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { useContext, useState } from 'react'
 import { AuthContext } from '../context/AuthContext'
 import axios from 'axios'
@@ -126,18 +126,19 @@ const Navbar = () => {
   return (
 
     <div
-      className="navBarContainer">
+      className="navBarContainer col-12 sticky-top container-fluid">
 
       <nav
-        className="navbar navbar-dark bg-dark sticky-top h-100">
+        className="navbar navbar-dark bg-dark h-100 row">
 
         <div
-          className="container-fluid">
+          className="d-flex justify-content-between col-12">
 
-          <a
-            className="navbar-brand" href="#">
-            Club xxxx
-          </a>
+          <Link
+            to="/"
+            className="navbar-brand title">
+            Club Ranelagh
+          </Link>
 
           <button
             className="navbar-toggler"

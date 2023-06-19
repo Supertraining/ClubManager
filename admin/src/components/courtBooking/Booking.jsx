@@ -28,8 +28,8 @@ const Booking = ({ setCourt, court }) => {
   const { user } = useContext(AuthContext)
   const { reserveDeleted, setReserveDeleted } = useContext(ReserveBoardContext)
 
-  const notifyFail = () => toast("HORARIO NO DISPONIBLE");
-  const notifySuccess = () => toast.success("Reserva Confirmada", { position: 'bottom-right', autoClose: 1000, theme: 'dark' });;
+  const notifyFail = () => toast("HORARIO NO DISPONIBLE", { autoClose: 1000 });
+  const notifySuccess = () => toast.success("Reserva Confirmada", { position: 'bottom-right', autoClose: 1000, theme: 'dark' });
   const notifyTryAgainLater = () => toast.warn("Hubo un problema, por favor intente nuevamente mas tarde", { position: 'bottom-right', autoClose: 2000, theme: 'dark' });
 
   const handleBooking = async (selectedDay) => {
@@ -39,6 +39,7 @@ const Booking = ({ setCourt, court }) => {
       let reserveData;
 
       switch (selectedDay) {
+
         case 0: reserveData = data.domingo
           break;
         case 1: reserveData = data.lunes
@@ -57,14 +58,13 @@ const Booking = ({ setCourt, court }) => {
       }
 
       //!Un turno se puede reservar en un rango maximo de una semana
-      //!La duracion maxima de un turno es de 1 hora 30 minutos
 
-      const reservedDates = reserveData?.some((reserve) => initialTime === reserve.initialTime && finalTime === reserve.finalTime || initialTime === reserve.initialTime + 1800000 || initialTime === reserve.initialTime - 1800000 || initialTime === reserve.finalTime - 1800000 || finalTime === initialTime + 1800000 || finalTime < initialTime || finalTime === reserve.finalTime + 1800000 || finalTime === reserve.finalTime - 1800000 || finalTime > initialTime + 5400000)
+      const reservedDates = reserveData?.some((reserve) => initialTime === reserve.initialTime && finalTime === reserve.finalTime || initialTime === reserve.initialTime + 1800000 || initialTime === reserve.initialTime - 1800000 || initialTime === reserve.finalTime - 1800000 || finalTime === initialTime + 1800000 || finalTime < initialTime || finalTime === reserve.finalTime + 1800000 || finalTime === reserve.finalTime - 1800000 || new Date(initialTime).getDate() < new Date().getDate() || new Date(finalTime).getDate() < new Date().getDate()) || new Date(initialTime).getTime() <= Date.now() || new Date(finalTime).getTime() <= Date.now();
 
       const oneWeekFromNow = new Date();
       oneWeekFromNow.setDate(oneWeekFromNow.getDate() + 7)
 
-      if (!reservedDates && (day < oneWeekFromNow)) {
+      if (!reservedDates) {
 
         const weekday = new Date(initialTime).toLocaleDateString('es-AR', { weekday: 'long' });
         const unaccentedWeekday = unidecode(weekday);
@@ -98,6 +98,38 @@ const Booking = ({ setCourt, court }) => {
             permanent: permanent
           })
 
+        if (permanent) {
+          const today = new Date(initialTime); 
+          const oneWeekFromNow = today.setDate(today.getDate() + 7);
+          const dateOneWeekFromNow = unidecode(new Date(oneWeekFromNow).toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'numeric' }));
+          
+          await axios.put('/courts/reserve',
+            {
+              name: `${court}`,
+              selectedDates:
+              {
+                weekday: unaccentedWeekday,
+                date: dateOneWeekFromNow,
+                initialTime: initialTime,
+                finalTime: finalTime,
+                user: user?.username,
+                id: UUID,
+                permanent: permanent
+              }
+            })
+
+          await axios.put(`/reserves/${user?.username}`,
+            {
+              court: `${court}`,
+              weekday: unaccentedWeekday,
+              date: dateOneWeekFromNow,
+              initialTime: initialTime,
+              finalTime: finalTime,
+              id: UUID,
+              permanent: permanent
+            })
+        }
+
         notifySuccess()
 
       } else {
@@ -115,11 +147,10 @@ const Booking = ({ setCourt, court }) => {
     }
 
   }
- 
+
   const notifyDeletedReserve = () => toast.error("Reserva Eliminada", { position: 'bottom-right', autoClose: 1000, theme: 'dark' });
   const handleDeleteReserve = async (court, day, id, username) => {
-    console.log(court, day, id, username)
-    
+
     try {
 
 
@@ -173,7 +204,7 @@ const Booking = ({ setCourt, court }) => {
     dateListLc.push(unaccentedWeekday);
     weekDaysList.push(unaccentedDay);
   }
- 
+
   return (
     <>
 
@@ -251,7 +282,7 @@ const Booking = ({ setCourt, court }) => {
         }
       </div>
 
-      <CourtBookingBoard data={data} dateList={dateList} dateListLc={dateListLc} weekDaysList={weekDaysList} handleDeleteReserve={handleDeleteReserve} court={court} />
+      <CourtBookingBoard data={data} dateList={dateList} dateListLc={dateListLc} weekDaysList={weekDaysList} handleDeleteReserve={handleDeleteReserve} court={court} setPermanent={setPermanent} permanent={permanent} />
 
     </>
   )

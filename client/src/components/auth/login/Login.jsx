@@ -27,16 +27,20 @@ const Login = () => {
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)}>
+
         <div className="d-flex align-items-center">
-          <i className="bi bi-person-check" id="basic-addon1"></i>
+
+          <i className="bi bi-person-check text-white fs-4" id="basic-addon1"></i>
+
           <input
             id="username"
             name="username"
             placeholder="Username"
-            className="form-control m-3 bg-transparent border-0 border-bottom"
+            className="form-control m-3 bg-transparent border-0 border-bottom text-white"
             type="email"
             {...register('username', { required: true })}
           />
+
         </div>
         {errors.username && (
           <div className="text-center">
@@ -47,12 +51,12 @@ const Login = () => {
         )}
 
         <div className="d-flex align-items-center">
-          <i className="bi bi-asterisk" id="basic-addon1"></i>
+          <i className="bi bi-asterisk text-white" id="basic-addon1"></i>
           <input
             id="password"
             name="password"
             placeholder="Password"
-            className="form-control m-3 bg-transparent border-0 border-bottom"
+            className="form-control m-3 bg-transparent border-0 border-bottom text-white"
             type="password"
             {...register('password', { required: true })}
           />
@@ -67,10 +71,10 @@ const Login = () => {
         )}
 
         <div className="d-flex flex-column align-items-center justify-content-center m-3">
-          <i className="bi bi-plug"></i>
+          <i className="bi bi-plug text-white"></i>
           <button
             type="submit"
-            className="btn btn-success bg-transparent text-black loginBtn"
+            className="btn btn-success bg-transparent text-black loginBtn text-white"
             disabled={loading}
           >
             Log In
@@ -87,7 +91,7 @@ const Login = () => {
         <i className="bi bi-list-check mx-1"></i>
         <Link
           to={'/register'}
-          className="nav-link text-black text-decoration-underline"
+          className="nav-link text-black text-decoration-underline text-white"
         >
           Register
         </Link>

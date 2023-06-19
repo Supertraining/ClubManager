@@ -3,6 +3,7 @@ import passport from 'passport';
 import UsersController from '../controllers/users.js';
 import { passportRegister, passportLogin } from './middlewares/passport.js';
 import { requireAuthentication } from './middlewares/isAuthenticated.js';
+import { validateUserReservation } from "./middlewares/reservesValidator.js";
 
 const router = Router();
 
@@ -155,6 +156,8 @@ export default class UserRouter {
         router.put(
 
             '/reserves/:username',
+
+            validateUserReservation,
 
             this.controllers
                 .updateUserReserves

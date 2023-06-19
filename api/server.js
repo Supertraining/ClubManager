@@ -8,6 +8,8 @@ import CourtsRouter from './routes/courts.js';
 import UserRouter from './routes/users.js';
 import logger from './utils/logger.js';
 import helmet from "helmet";
+import cron from 'node-cron';
+import { repeatPermanentReservations } from './utils/updatePermanentReservations.js';
 
 const app = express();
 
@@ -28,6 +30,9 @@ const courtsRouter = new CourtsRouter();
 const userRouter = new UserRouter();
 app.use(userRouter.start());
 app.use('/courts', courtsRouter.start());
+
+process.env.TZ = 'America/Argentina/Buenos_Aires';
+cron.schedule('01 00 * * *', repeatPermanentReservations);
 
 app.listen(config.port, () => {
     connect(config.mongoUrl)

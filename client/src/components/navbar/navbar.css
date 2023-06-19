@@ -1,3 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;500&display=swap');
+
+.title {
+  font-size: clamp(1rem, 5vw, 2rem);
+  font-family: 'Roboto Slab', serif;
+
+}
 .navBarContainer {
     height: 100px;
 }
