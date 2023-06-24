@@ -28,7 +28,7 @@ const Booking = ({ court }) => {
   const { user } = useContext(AuthContext)
   const { reserveDeleted, setReserveDeleted } = useContext(ReserveBoardContext)
 
-  const notifyFail = () => toast("HORARIO NO DISPONIBLE", {autoClose: 2000});
+  const notifyFail = () => toast("HORARIO NO DISPONIBLE", { autoClose: 2000 });
   const notifySuccess = () => toast.success("Reserva Confirmada", { position: 'bottom-right', autoClose: 1000, theme: 'dark' });;
 
   const handleBooking = async (selectedDay) => {
@@ -173,13 +173,18 @@ const Booking = ({ court }) => {
 
                   <li> 1 .Selecciona en el calendario la fecha y la hora de inicio de tu reserva y presiona el botón
                     <i
-                      className='text-success'> Confirmar hora de inicio</i></li>
+                      className='text-success'> Confirmar hora de inicio</i>
+                </li>
+                
                   <li>2. Selecciona la hora de finalización de tu reserva y presiona el botón
                     <i
-                      className='text-success'> Confirmar hora de finalización</i ></li>
+                      className='text-success'> Confirmar hora de finalización</i >
+                </li>
+                
                   <li>3. Por ultimo presiona el botón:
                     <i
-                      className='text-success'> Confirmar reserva</i></li>
+                      className='text-success'> Confirmar reserva</i>
+                  </li>
 
                 </ul>
 

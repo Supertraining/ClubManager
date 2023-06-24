@@ -78,14 +78,13 @@ const Register = () => {
             id="username"
             name='username'
             placeholder="Email"
-            className="form-control my-2 text-center border-0 border-bottom" type="email"
+            className="form-control my-2 text-center border-0 border-bottom ph" type="email"
             {...register('username', { required: true })}
           />
-          {errors.username && (
-            <small className="text-danger">Este campo es obligatorio</small>
-          )}
         </div>
-
+        {errors.username && (
+          <small className="text-danger text-center">Este campo es obligatorio</small>
+        )}
         <div
           className="input-group align-items-center">
 
@@ -102,15 +101,14 @@ const Register = () => {
           <input
             id="password"
             name='password'
-            placeholder="Password"
-            className="form-control my-2 text-center border-0 border-bottom" type="password"
+            placeholder="Contraseña"
+            className="form-control my-2 text-center border-0 border-bottom ph" type="password"
             {...register('password', { required: true })}
           />
-          {errors.password && (
-            <small className="text-danger">Este campo es obligatorio</small>
-          )}
-
         </div>
+        {errors.password && (
+          <small className="text-danger text-center">Este campo es obligatorio</small>
+        )}
 
         <small className='text-center text-success'>
           La contraseña debe tener al menos 8 caracteres y, debe incluir como mínimo una mayúscula, un número y un caracter especial
@@ -133,7 +131,7 @@ const Register = () => {
             id="nombre"
             name='nombre'
             placeholder="Nombre"
-            className="form-control my-2 text-center border-0 border-bottom" type="text"
+            className="form-control my-2 text-center border-0 border-bottom ph" type="text"
             {...register('nombre', { required: true })}
           />
         </div>
@@ -157,7 +155,7 @@ const Register = () => {
             id="apellido"
             name='apellido'
             placeholder="Apellido"
-            className="form-control my-2 text-center border-0 border-bottom" type="text"
+            className="form-control my-2 text-center border-0 border-bottom ph" type="text"
             {...register('apellido', { required: true })}
 
           />
@@ -183,7 +181,7 @@ const Register = () => {
             id="edad"
             name='edad'
             placeholder="Edad"
-            className="form-control my-2 text-center border-0 border-bottom" type="number"
+            className="form-control my-2 text-center border-0 border-bottom ph" type="number"
             min={0} max={99}
             {...register('edad', { required: true })}
           />
@@ -208,7 +206,7 @@ const Register = () => {
             id="telefono"
             name='telefono'
             placeholder="Telefono"
-            className="form-control my-2 text-center border-0 border-bottom" type="text"
+            className="form-control my-2 text-center border-0 border-bottom ph" type="text"
             {...register('telefono', { required: true })}
           />
         </div>

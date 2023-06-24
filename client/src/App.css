@@ -4,20 +4,23 @@
     display: flex !important;
     flex-direction: column !important;
     justify-content: space-between !important;
-}
+}/*Dias de la semana(lun-mart-etc)*/
 ._2ommc {
   margin: auto !important;
   width: 90% !important;
 }
+._2ommc :nth-child(7){
+  display: none;
+}  
 
+/*Columnas con las fechas*/
 ._2umuz { 
   margin: auto !important;
   width: 90% !important;
-}
-
-._2umuz{
-  margin: auto !important;
   padding: 0% !important;
+}
+._2umuz :nth-child(7){
+  display: none !important;
 }
 
 ._1qf7m {
@@ -50,6 +53,13 @@
 ._8EDxV {
   background-color: rgba(32, 178, 171, 0.74) !important;
 }
+
+/*horarios*/
+._3XUP3 :nth-child(n+10){
+  display: none;
+}
+
+
 /*weekDays*/
 ._2WxJS {
   color:#1ad1c8 !important;
