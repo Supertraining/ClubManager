@@ -41,7 +41,7 @@ const Register = () => {
   return (
 
     <div
-      className="container-fluid my-5 rounded col-10 d-flex flex-column align-items-center">
+      className="my-5 rounded col-12 d-flex flex-column align-items-center">
 
       <div
         className='text-success text-center my-4 d-flex align-items-center'>
@@ -56,7 +56,7 @@ const Register = () => {
 
 
       <form
-        className="form d-flex flex-column col-8"
+        className="form d-flex flex-column align-items-center col-12 col-sm-8 col-md-6"
         role="form"
         autoComplete="on"
         onSubmit={handleSubmit(onSubmit)}
@@ -106,13 +106,15 @@ const Register = () => {
             {...register('password', { required: true })}
           />
         </div>
+          <small className='text-center text-success col-9 text-center'>
+            La contraseña debe tener al menos 8 caracteres y, debe incluir como mínimo una mayúscula, un número y un caracter especial
+          </small>
+
         {errors.password && (
           <small className="text-danger text-center">Este campo es obligatorio</small>
         )}
 
-        <small className='text-center text-success'>
-          La contraseña debe tener al menos 8 caracteres y, debe incluir como mínimo una mayúscula, un número y un caracter especial
-        </small>
+
 
         <div
           className="input-group align-items-center">
