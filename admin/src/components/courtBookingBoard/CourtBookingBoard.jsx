@@ -1,6 +1,6 @@
 import './CourtBookingBoard.css'
 
-const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, handleDeleteReserve, setPermanent, permanent }) => {
+const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, handleDeleteReserve }) => {
 
   return (
     <div
@@ -49,8 +49,6 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
 
                     </div>
 
-
-
                   </li>
 
                 ))}
@@ -98,8 +96,6 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
                         onClick={() => handleDeleteReserve(court, reserve.weekday, reserve.id, reserve.user)}></i>
 
                     </div>
-
-
 
                   </li>
 
@@ -694,9 +690,688 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
 
         </div>
 
+        <div
+          className='tr'>
+
+          <div
+            className='tc'>
+
+            <div>
+              {dateList[14]}
+            </div>
+
+            <div
+              className='p-0 text-center'>
+
+              <ul>
+                {data[weekDaysList[14]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
+
+                  reserve.date === dateListLc[14] &&
+
+                  <li
+                    key={i}
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
+
+                    <span
+                      className='text-info'>
+                      {reserve.user}
+                    </span>
+
+                    <div>
+                      [{new Date(reserve.initialTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }-{new Date(reserve.finalTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }]
+
+                      <i
+                        className="bi bi-x-circle-fill text-danger mx-1 cursor"
+                        onClick={() => handleDeleteReserve(court, reserve.weekday, reserve.id, reserve.user)}></i>
+
+                    </div>
+
+                  </li>
+
+                ))}
+              </ul>
+
+            </div>
+
+          </div>
+
+          <div
+            className='tc'>
+
+            <div >
+              {dateList[15]}
+            </div>
+
+            <div
+              className='p-0 text-center'>
+
+              <ul>
+                {data[weekDaysList[15]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
+
+                  reserve.date === dateListLc[8] &&
+
+                  <li
+                    key={i}
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
+
+                    <span
+                      className='text-info'>
+                      {reserve.user}
+                    </span>
+
+                    <div>
+                      [{new Date(reserve.initialTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }-{new Date(reserve.finalTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }]
+
+                      <i
+                        className="bi bi-x-circle-fill text-danger mx-1 cursor"
+                        onClick={() => handleDeleteReserve(court, reserve.weekday, reserve.id, reserve.user)}></i>
+
+                    </div>
+
+                  </li>
+
+                ))}
+              </ul>
+
+            </div>
+
+          </div>
+
+          <div
+            className='tc'>
+
+            <div>
+              {dateList[16]}
+            </div>
+
+            <div
+              className='p-0 text-center'>
+
+              <ul>
+                {data[weekDaysList[16]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
+
+                  reserve.date === dateListLc[9] &&
+
+                  <li
+                    key={i}
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
+
+                    <span
+                      className='text-info'>
+                      {reserve.user}
+                    </span>
+
+                    <div>
+                      [{new Date(reserve.initialTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }-{new Date(reserve.finalTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }]
+
+                      <i
+                        className="bi bi-x-circle-fill text-danger mx-1 cursor"
+                        onClick={() => handleDeleteReserve(court, reserve.weekday, reserve.id, reserve.user)}></i>
+
+                    </div>
+
+                  </li>
+
+                ))}
+              </ul>
+
+            </div>
+
+          </div>
+
+          <div
+            className='tc'>
+
+            <div>
+              {dateList[17]}
+            </div>
+
+            <div
+              className='p-0 text-center'>
+
+              <ul>
+                {data[weekDaysList[17]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
+
+                  reserve.date === dateListLc[10] &&
+
+                  <li
+                    key={i}
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
+
+                    <span
+                      className='text-info'>
+                      {reserve.user}
+                    </span>
+
+                    <div>
+                      [{new Date(reserve.initialTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }-{new Date(reserve.finalTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }]
+                      <i
+                        className="bi bi-x-circle-fill text-danger mx-1 cursor"
+                        onClick={() => handleDeleteReserve(court, reserve.weekday, reserve.id, reserve.user)}></i>
+
+                    </div>
+
+                  </li>
+
+                ))}
+              </ul>
+
+            </div>
+
+          </div>
+
+          <div
+            className='tc'>
+
+            <div>
+              {dateList[18]}
+            </div>
+
+            <div
+              className='p-0 text-center'>
+
+              <ul>
+                {data[weekDaysList[18]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
+
+                  reserve.date === dateListLc[11] &&
+
+                  <li
+                    key={i}
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
+
+                    <span
+                      className='text-info'>
+                      {reserve.user}
+                    </span>
+
+                    <div>
+                      [{new Date(reserve.initialTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }-{new Date(reserve.finalTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }]
+
+                      <i
+                        className="bi bi-x-circle-fill text-danger mx-1 cursor"
+                        onClick={() => handleDeleteReserve(court, reserve.weekday, reserve.id, reserve.user)}></i>
+
+                    </div>
+
+                  </li>
+
+                ))}
+              </ul>
+
+            </div>
+
+          </div>
+
+          <div
+            className='tc'>
+
+            <div>
+              {dateList[19]}
+            </div>
+
+            <div
+              className='p-0 text-center'>
+
+              <ul>
+                {data[weekDaysList[19]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
+
+                  reserve.date === dateListLc[19] &&
+
+                  <li
+                    key={i}
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
+
+                    <span
+                      className='text-info'>
+                      {reserve.user}
+                    </span>
+
+                    <div>
+                      [{new Date(reserve.initialTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }-{new Date(reserve.finalTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }]
+
+                      <i
+                        className="bi bi-x-circle-fill text-danger mx-1 cursor"
+                        onClick={() => handleDeleteReserve(court, reserve.weekday, reserve.id, reserve.user)}></i>
+
+                    </div>
+
+                  </li>
+
+                ))}
+              </ul>
+
+            </div>
+
+          </div>
+
+          <div
+            className='tc'>
+
+            <div>
+              {dateList[20]}
+            </div>
+
+            <div
+              className='p-0 text-center'>
+
+              <ul>
+                {data[weekDaysList[20]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
+
+                  reserve.date === dateListLc[13] &&
+
+                  <li
+                    key={i}
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
+
+                    <span
+                      className='text-info'>
+                      {reserve.user}
+                    </span>
+
+                    <div>
+                      [{new Date(reserve.initialTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }-{new Date(reserve.finalTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }]
+
+                      <i
+                        className="bi bi-x-circle-fill text-danger mx-1 cursor"
+                        onClick={() => handleDeleteReserve(court, reserve.weekday, reserve.id, reserve.user)}></i>
+
+                    </div>
+
+                  </li>
+
+                ))}
+              </ul>
+
+            </div>
+
+          </div>
+        </div>
+
+        <div
+          className='tr'>
+
+          <div
+            className='tc'>
+
+            <div>
+              {dateList[21]}
+            </div>
+
+            <div
+              className='p-0 text-center'>
+
+              <ul>
+                {data[weekDaysList[21]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
+
+                  reserve.date === dateListLc[14] &&
+
+                  <li
+                    key={i}
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
+
+                    <span
+                      className='text-info'>
+                      {reserve.user}
+                    </span>
+
+                    <div>
+                      [{new Date(reserve.initialTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }-{new Date(reserve.finalTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }]
+
+                      <i
+                        className="bi bi-x-circle-fill text-danger mx-1 cursor"
+                        onClick={() => handleDeleteReserve(court, reserve.weekday, reserve.id, reserve.user)}></i>
+
+                    </div>
+
+                  </li>
+
+                ))}
+              </ul>
+
+            </div>
+
+          </div>
+
+          <div
+            className='tc'>
+
+            <div >
+              {dateList[22]}
+            </div>
+
+            <div
+              className='p-0 text-center'>
+
+              <ul>
+                {data[weekDaysList[22]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
+
+                  reserve.date === dateListLc[8] &&
+
+                  <li
+                    key={i}
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
+
+                    <span
+                      className='text-info'>
+                      {reserve.user}
+                    </span>
+
+                    <div>
+                      [{new Date(reserve.initialTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }-{new Date(reserve.finalTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }]
+
+                      <i
+                        className="bi bi-x-circle-fill text-danger mx-1 cursor"
+                        onClick={() => handleDeleteReserve(court, reserve.weekday, reserve.id, reserve.user)}></i>
+
+                    </div>
+
+                  </li>
+
+                ))}
+              </ul>
+
+            </div>
+
+          </div>
+
+          <div
+            className='tc'>
+
+            <div>
+              {dateList[23]}
+            </div>
+
+            <div
+              className='p-0 text-center'>
+
+              <ul>
+                {data[weekDaysList[23]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
+
+                  reserve.date === dateListLc[9] &&
+
+                  <li
+                    key={i}
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
+
+                    <span
+                      className='text-info'>
+                      {reserve.user}
+                    </span>
+
+                    <div>
+                      [{new Date(reserve.initialTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }-{new Date(reserve.finalTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }]
+
+                      <i
+                        className="bi bi-x-circle-fill text-danger mx-1 cursor"
+                        onClick={() => handleDeleteReserve(court, reserve.weekday, reserve.id, reserve.user)}></i>
+
+                    </div>
+
+                  </li>
+
+                ))}
+              </ul>
+
+            </div>
+
+          </div>
+
+          <div
+            className='tc'>
+
+            <div>
+              {dateList[24]}
+            </div>
+
+            <div
+              className='p-0 text-center'>
+
+              <ul>
+                {data[weekDaysList[24]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
+
+                  reserve.date === dateListLc[10] &&
+
+                  <li
+                    key={i}
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
+
+                    <span
+                      className='text-info'>
+                      {reserve.user}
+                    </span>
+
+                    <div>
+                      [{new Date(reserve.initialTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }-{new Date(reserve.finalTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }]
+                      <i
+                        className="bi bi-x-circle-fill text-danger mx-1 cursor"
+                        onClick={() => handleDeleteReserve(court, reserve.weekday, reserve.id, reserve.user)}></i>
+
+                    </div>
+
+                  </li>
+
+                ))}
+              </ul>
+
+            </div>
+
+          </div>
+
+          <div
+            className='tc'>
+
+            <div>
+              {dateList[25]}
+            </div>
+
+            <div
+              className='p-0 text-center'>
+
+              <ul>
+                {data[weekDaysList[25]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
+
+                  reserve.date === dateListLc[11] &&
+
+                  <li
+                    key={i}
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
+
+                    <span
+                      className='text-info'>
+                      {reserve.user}
+                    </span>
+
+                    <div>
+                      [{new Date(reserve.initialTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }-{new Date(reserve.finalTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }]
+
+                      <i
+                        className="bi bi-x-circle-fill text-danger mx-1 cursor"
+                        onClick={() => handleDeleteReserve(court, reserve.weekday, reserve.id, reserve.user)}></i>
+
+                    </div>
+
+                  </li>
+
+                ))}
+              </ul>
+
+            </div>
+
+          </div>
+
+          <div
+            className='tc'>
+
+            <div>
+              {dateList[26]}
+            </div>
+
+            <div
+              className='p-0 text-center'>
+
+              <ul>
+                {data[weekDaysList[26]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
+
+                  reserve.date === dateListLc[19] &&
+
+                  <li
+                    key={i}
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
+
+                    <span
+                      className='text-info'>
+                      {reserve.user}
+                    </span>
+
+                    <div>
+                      [{new Date(reserve.initialTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }-{new Date(reserve.finalTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }]
+
+                      <i
+                        className="bi bi-x-circle-fill text-danger mx-1 cursor"
+                        onClick={() => handleDeleteReserve(court, reserve.weekday, reserve.id, reserve.user)}></i>
+
+                    </div>
+
+                  </li>
+
+                ))}
+              </ul>
+
+            </div>
+
+          </div>
+
+          <div
+            className='tc'>
+
+            <div>
+              {dateList[27]}
+            </div>
+
+            <div
+              className='p-0 text-center'>
+
+              <ul>
+                {data[weekDaysList[27]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
+
+                  reserve.date === dateListLc[13] &&
+
+                  <li
+                    key={i}
+                    className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
+
+                    <span
+                      className='text-info'>
+                      {reserve.user}
+                    </span>
+
+                    <div>
+                      [{new Date(reserve.initialTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }-{new Date(reserve.finalTime).toLocaleTimeString(
+                        [], { timeStyle: 'short' }
+                      )
+                      }]
+
+                      <i
+                        className="bi bi-x-circle-fill text-danger mx-1 cursor"
+                        onClick={() => handleDeleteReserve(court, reserve.weekday, reserve.id, reserve.user)}></i>
+
+                    </div>
+
+                  </li>
+
+                ))}
+              </ul>
+
+            </div>
+
+          </div>
+
+        </div>
+
       </div>
 
-    </div >
+    </div>
   )
 }
 

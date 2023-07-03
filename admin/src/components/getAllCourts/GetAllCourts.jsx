@@ -31,7 +31,7 @@ const GetAllCourts = ({ setMenu, menu, allCourts, court, setCourt, handleCreateC
           <CreateCourt handleCreateCourt={handleCreateCourt} />
 
           <table
-            className="table table-responsive">
+            className="table bg-white table-responsive">
 
             <thead>
 

@@ -1,48 +1,29 @@
 import './createUser.css'
-import axios from '../../utils/axiosInstance.js'
-import { useState } from 'react'
+import axios from '../../utils/axiosInstance.js';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+
 
 const CreateUser = ({ setMenu, menu }) => {
 
-  const [credentials, setCredentials] = useState({
-    username: '',
-    password: '',
-    nombre: '',
-    apellido: '',
-    edad: '',
-    telefono: '',
-    admin: ''
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-  })
 
-  const notify = () => toast.success("User Created", {autoClose: 1000});
-  const handleChange = (e) => {
-    setCredentials({ ...credentials, [e.target.name]: e.target.value })
-  }
+  const notify = () => toast.success("User Created", { autoClose: 1000 });
 
-  const handleClick = async (e) => {
+
+  const onSubmit = async (data) => {
 
     try {
 
-      e.preventDefault()
-
-      await axios.post('/register', credentials)
-
-      notify()
-      setCredentials({
-        username: '',
-        password: '',
-        nombre: '',
-        apellido: '',
-        edad: '',
-        telefono: '',
-        admin: ''
-    
-      })
-      
+      await axios.post('/register', data);
+      notify();
 
     } catch (error) {
 
@@ -50,8 +31,7 @@ const CreateUser = ({ setMenu, menu }) => {
 
     }
 
-
-  }
+  };
 
   return (
 
@@ -64,7 +44,7 @@ const CreateUser = ({ setMenu, menu }) => {
         <Link
           to={'/'}
           className='btn btn-close border border-dark p-2'
-          onClick={() => setMenu({...menu, main: true, createUser: false})}>
+          onClick={() => setMenu({ ...menu, main: true, createUser: false })}>
         </Link>
 
       </div>
@@ -91,7 +71,7 @@ const CreateUser = ({ setMenu, menu }) => {
         className="form d-flex flex-column col-8"
         role="form"
         autoComplete="on"
-        encType="multipart/form-data">
+        onSubmit={handleSubmit(onSubmit)}>
 
         <div
           className="input-group align-items-center">
@@ -111,12 +91,13 @@ const CreateUser = ({ setMenu, menu }) => {
             name='username'
             placeholder="Email"
             className="form-control my-2 text-center border-0 border-bottom" type="email"
-            value={credentials?.username}
-            onChange={handleChange}
-            required
+            {...register('username', { required: true })}
           />
 
         </div>
+        {errors.username && (
+          <small className="text-danger text-center">Este campo es obligatorio</small>
+        )}
 
         <div
           className="input-group align-items-center">
@@ -136,12 +117,13 @@ const CreateUser = ({ setMenu, menu }) => {
             name='password'
             placeholder="Password"
             className="form-control my-2 text-center border-0 border-bottom" type="password"
-            value={credentials?.password}
-            onChange={handleChange}
-            required
+            {...register('password', { required: true })}
           />
 
         </div>
+        {errors.password && (
+          <small className="text-danger text-center">Este campo es obligatorio</small>
+        )}
 
         <div
           className="input-group align-items-center">
@@ -160,12 +142,13 @@ const CreateUser = ({ setMenu, menu }) => {
             name='nombre'
             placeholder="Nombre"
             className="form-control my-2 text-center border-0 border-bottom" type="text"
-            value={credentials?.nombre}
-            onChange={handleChange}
-            required
+            {...register('nombre', { required: true })}
           />
 
         </div>
+        {errors.nombre && (
+          <small className="text-danger text-center">Este campo es obligatorio</small>
+        )}
 
         <div
           className="input-group align-items-center">
@@ -185,12 +168,14 @@ const CreateUser = ({ setMenu, menu }) => {
             name='apellido'
             placeholder="Apellido"
             className="form-control my-2 text-center border-0 border-bottom"
-            value={credentials?.apellido}
-            type="text" onChange={handleChange}
-            required
+            type="text"
+            {...register('apellido', { required: true })}
           />
 
         </div>
+        {errors.apellido && (
+          <small className="text-danger text-center">Este campo es obligatorio</small>
+        )}
 
         <div
           className="input-group align-items-center">
@@ -210,12 +195,14 @@ const CreateUser = ({ setMenu, menu }) => {
             name='edad'
             placeholder="Edad"
             className="form-control my-2 text-center border-0 border-bottom" type="number"
-            value={credentials?.edad}
-            onChange={handleChange} min={0} max={99}
-            required
+            min={0} max={99}
+            {...register('edad', { required: true })}
           />
 
         </div>
+        {errors.edad && (
+          <small className="text-danger text-center">Este campo es obligatorio</small>
+        )}
 
         <div
           className="input-group align-items-center">
@@ -235,12 +222,13 @@ const CreateUser = ({ setMenu, menu }) => {
             name='telefono'
             placeholder="Telefono"
             className="form-control my-2 text-center border-0 border-bottom" type="text"
-            onChange={handleChange}
-            value={credentials?.telefono}
-            required
+            {...register('telefono', { required: true })}
           />
 
         </div>
+        {errors.telefono && (
+          <small className="text-danger text-center">Este campo es obligatorio</small>
+        )}
 
         <div
           className="input-group align-items-center justify-content-center">
@@ -263,7 +251,7 @@ const CreateUser = ({ setMenu, menu }) => {
               className="custom-control-input"
               id="customCheck1"
               value={true}
-              onChange={handleChange}
+              {...register('admin', { required: true })}
             />
 
             <label
@@ -290,8 +278,7 @@ const CreateUser = ({ setMenu, menu }) => {
           <input
             className="my-2 text-center border border-success w-25 rounded bg-white text-secondary p-2"
             type="submit"
-            value='Registrarse'
-            onClick={handleClick}
+            value='Crear usuario'
           />
 
         </div>

@@ -2,7 +2,7 @@ import './menu.css'
 import { Link } from 'react-router-dom'
 
 
-const Menu = ({ menu, setMenu, handleGetAllUsers, handleGetAllCourts, handleCloseSession }) => {
+const Menu = ({ menu, setMenu, handleGetAllUsers, handleGetAllCourts, handleCloseSession, handleMenuClick }) => {
 
   return (
 
@@ -21,15 +21,9 @@ const Menu = ({ menu, setMenu, handleGetAllUsers, handleGetAllCourts, handleClos
               ? 'btn btn-success'
               : 'btn btn-success bg-transparent'}
             onClick={() => {
-              setMenu({
-                createUser: true,
-                getAllUsers: false,
-                deleteReserves: false,
-                getAllCourts: false,
-                main: false
-              })
+              handleMenuClick('createUser')
             }}>
-            Create user
+            Crear usuario
           </Link>
 
           <i
@@ -48,16 +42,10 @@ const Menu = ({ menu, setMenu, handleGetAllUsers, handleGetAllCourts, handleClos
               ? 'btn btn-success'
               : 'btn btn-success bg-transparent'}
             onClick={() => {
-              setMenu({
-                createUser: false,
-                getAllUsers: true,
-                deleteReserves: false,
-                getAllCourts: false,
-                main: false
-              }),
+              handleMenuClick('getAllUsers'),
                 handleGetAllUsers()
             }}>
-            All Users
+            Todos los usuarios
           </Link>
 
           <i
@@ -76,16 +64,10 @@ const Menu = ({ menu, setMenu, handleGetAllUsers, handleGetAllCourts, handleClos
               ? 'btn btn-success'
               : 'btn btn-success bg-transparent'}
             onClick={() => {
-              setMenu({
-                createUser: false,
-                getAllUsers: false,
-                deleteReserves: false,
-                getAllCourts: true,
-                main: false
-              }),
+              handleMenuClick('getAllCourts'),
                 handleGetAllCourts()
             }}>
-            All Courts
+            Canchas
           </Link>
 
           <i
@@ -99,13 +81,19 @@ const Menu = ({ menu, setMenu, handleGetAllUsers, handleGetAllCourts, handleClos
           className='d-flex align-items-center'>
 
           <Link
-            className='btn btn-success bg-transparent'
-          >
-            Delete User
+            to={'/events'}
+            className={menu.events
+              ? 'btn btn-success'
+              : 'btn btn-success bg-transparent'}
+            onClick={() => {
+              handleMenuClick('events')
+            }}>
+            Eventos
           </Link>
 
-          <i className={open
-            ? 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-active text-success' : 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-inActive'}>
+          <i className={menu.events
+            ? 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-active text-success'
+            : 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-inActive'}>
           </i>
 
         </li>
@@ -120,15 +108,9 @@ const Menu = ({ menu, setMenu, handleGetAllUsers, handleGetAllCourts, handleClos
               ? 'btn btn-success'
               : 'btn btn-success bg-transparent'}
             onClick={() => {
-              setMenu({
-                createUser: false,
-                getAllUsers: false,
-                deleteReserves: true,
-                getAllCourts: false,
-                main: false
-              })
+              handleMenuClick('deleteReserves')
             }}>
-            Delete reserves history
+            Borrar historial de reservas
           </Link>
 
           <i
@@ -147,7 +129,7 @@ const Menu = ({ menu, setMenu, handleGetAllUsers, handleGetAllCourts, handleClos
         </li>
 
       </ul>
-      
+
     </div>
 
   )

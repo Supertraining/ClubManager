@@ -1,0 +1,11 @@
+.delete-event-btn {
+  color: red;
+  border-radius: 5%;
+}
+.delete-event-btn:hover {
+  background-color: red;
+  color: white;
+}
+.table-coments {
+  font-size: 10px;
+}

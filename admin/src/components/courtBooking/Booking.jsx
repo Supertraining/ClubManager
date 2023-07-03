@@ -15,14 +15,13 @@ import CourtBookingDatePicker from '../courtBookingDatePicker/CourtBookingDatePi
 
 const Booking = ({ setCourt, court }) => {
 
-  const [visible, setVisible] = useState(false);
   const [day, setDay] = useState(new Date());
   const [initialTime, setInitialTime] = useState();
   const [finalTime, setFinalTime] = useState();
   const [confirmReserve, setConfirmReserve] = useState(false)
   const [permanent, setPermanent] = useState(false)
 
-  let { data, reFetch } = useFetch(`http://localhost:8080/courts/${court}`)
+  let { data, reFetch } = useFetch(`/courts/${court}`)
 
 
   const { user } = useContext(AuthContext)
@@ -184,7 +183,7 @@ const Booking = ({ setCourt, court }) => {
 
   const startDate = new Date();
   const endDate = new Date();
-  endDate.setDate(endDate.getDate() + 13);
+  endDate.setDate(endDate.getDate() + 27);
 
   const dateList = [];
   const dateListLc = [];
@@ -221,22 +220,10 @@ const Booking = ({ setCourt, court }) => {
 
       <h1 className='text-info'>@{court}</h1>
 
-      <div
-        className='col-12 p-2 text-center border rounded mt-3'>
-
-        <button
-          className='col-8 rounded btn btn-light btn-pressed fw-bold p-2 m-1' onClick={() => { setVisible(!visible), setInitialTime(), setFinalTime(), setConfirmReserve(false) }}>
-          Reservar
-        </button>
-
-      </div>
-
 
       <div
         className='calendarContainer d-flex flex-column col-12'>
 
-        {visible &&
-          <>
             <div
               className='d-flex flex-column border rounded bg-dark bg-opacity-50 reserveInstructionsWrapper'>
 
@@ -278,8 +265,6 @@ const Booking = ({ setCourt, court }) => {
               <ToastContainer />
             </div>
 
-          </>
-        }
       </div>
 
       <CourtBookingBoard data={data} dateList={dateList} dateListLc={dateListLc} weekDaysList={weekDaysList} handleDeleteReserve={handleDeleteReserve} court={court} setPermanent={setPermanent} permanent={permanent} />

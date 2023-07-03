@@ -11,6 +11,7 @@ import Main from '../../components/main/Main';
 import GetAllCourts from '../../components/getAllCourts/GetAllCourts';
 import { AuthContext } from '../../components/context/AuthContext';
 import FailLogin from '../../components/faillogin/FailLogin';
+import Eventos from '../../components/eventos/Eventos';
 
 
 const Home = () => {
@@ -20,6 +21,7 @@ const Home = () => {
   const menuFeatures = {
     createUser: false,
     getAllUsers: false,
+    events: false,
     deleteReserves: false,
     getAllCourts: false,
     main: true
@@ -28,17 +30,29 @@ const Home = () => {
 
   const [allUsers, setAllUsers] = useState([])
   const [user, setUser] = useState(false)
-
+  
   const [allCourts, setAllCourts] = useState([])
   const [court, setCourt] = useState(false)
   const [courtId, setCourtId] = useState()
-
+  
   const [confirmDelete, setConfirmDelete] = useState(false)
-
+  
   const navigate = useNavigate()
-
+  
   const notifyTryAgainLater = () => toast.warn("Hubo un problema, por favor intente nuevamente mas tarde", { position: 'bottom-right', autoClose: 2000, theme: 'dark' });
-
+  
+  const handleMenuClick = (option) => {
+    setMenu({
+      createUser: false,
+      getAllUsers: false,
+      events: false,
+      deleteReserves: false,
+      getAllCourts: false,
+      main: false,
+      [option]: true
+    });
+  };
+  
   const handleGetAllUsers = async () => {
 
     try {
@@ -73,7 +87,7 @@ const Home = () => {
         reserveId: id
       });
 
-      const userById = await axios.get(`http://localhost:8080/user/${userid}`);
+      const userById = await axios.get(`/user/${userid}`);
 
       setUser(userById.data)
       notifyDeletedReserve();
@@ -257,6 +271,7 @@ const Home = () => {
           <Menu
             menu={menu}
             setMenu={setMenu}
+            handleMenuClick={handleMenuClick}
             handleGetAllUsers={handleGetAllUsers}
             setConfirmDelete={setConfirmDelete}
             handleGetAllCourts={handleGetAllCourts}
@@ -283,6 +298,11 @@ const Home = () => {
             <Route
               exact path='/courts'
               element={<GetAllCourts setMenu={setMenu} menu={menu} allCourts={allCourts} court={court} setCourt={setCourt} handleCreateCourt={handleCreateCourt} handleDeleteCourt={handleDeleteCourt} setConfirmDelete={setConfirmDelete} confirmDelete={confirmDelete} setCourtId={setCourtId} courtId={courtId} />}
+            />
+
+            <Route
+              exact path='/events'
+              element={<Eventos setMenu={setMenu} menu={menu} />}
             />
 
             <Route

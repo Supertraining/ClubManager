@@ -3,5 +3,8 @@
     "prettier.proseWrap": "preserve",
     "prettier.singleAttributePerLine": false,
     "prettier.singleQuote": true,
-    "prettier.printWidth": 100
+    "prettier.printWidth": 100,
+    "cSpell.words": [
+        "daygrid"
+    ]
 }

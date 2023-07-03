@@ -25,7 +25,7 @@ const GetAllUsers = ({ setMenu, menu, allUsers, handleDeleteReserve, user, setUs
           </div>
 
           <table
-            className="table table-responsive">
+            className="table bg-white table-responsive">
 
             <thead>
 
@@ -97,7 +97,7 @@ const GetAllUsers = ({ setMenu, menu, allUsers, handleDeleteReserve, user, setUs
                     className="text-center">
 
                     <td>
-                      <div className='btn'>
+                      <div className='text-dark'>
                         {i + 1}
                       </div>
                     </td>
@@ -105,7 +105,7 @@ const GetAllUsers = ({ setMenu, menu, allUsers, handleDeleteReserve, user, setUs
                     <td>
 
                       <button
-                        className='btn text-primary'
+                        className='text-primary'
                         onClick={() => setUser(user)}>
                         {user.username}
                       </button>
@@ -113,49 +113,49 @@ const GetAllUsers = ({ setMenu, menu, allUsers, handleDeleteReserve, user, setUs
                     </td>
 
                     <td>
-                      <div className='btn'>
+                      <div className='text-dark'>
                         {user.nombre}
                       </div>
                     </td>
 
                     <td>
-                      <div className='btn'>
+                      <div className='text-dark'>
                         {user.apellido}
                       </div>
                     </td>
 
                     <td>
-                      <div className='btn'>
+                      <div className='text-dark'>
                         {user.edad}
                       </div>
                     </td>
 
                     <td>
-                      <div className='btn'>
+                      <div className='text-dark'>
                         {user.telefono}
                       </div>
                     </td>
 
                     {user.reserves.length === 0
                       ? <td>
-                        <div className='btn text-danger fw-bold'>
+                        <div className='text-danger fw-bold'>
                           Sin reservas
                         </div>
                       </td>
                       : <td>
-                        <div className='btn text-success fw-bold'>
+                        <div className='text-success fw-bold'>
                           Reservas activas
                         </div>
                       </td>}
 
                     <td>
-                      <div className='btn'>
+                      <div className='text-dark'>
                         @actividades
                       </div>
                     </td>
 
                     <td>
-                      <div className='btn'>
+                      <div className='text-dark'>
                         {user.admin
                           ? <i className="bi bi-check-circle-fill text-success"></i>
                           : <i className="bi bi-x-circle-fill text-danger"></i>
