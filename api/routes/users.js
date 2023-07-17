@@ -163,12 +163,24 @@ export default class UserRouter {
                 .updateUserReserves
 
         );
+
+        router.put(
+
+            '/update',
+
+            this.controllers
+                .updateUserPassword
+
+        );
+
         router.put(
 
             '/update/:id',
 
             this.controllers
                 .updateUser
+
+
 
         );
 

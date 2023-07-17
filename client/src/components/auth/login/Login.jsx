@@ -6,31 +6,40 @@ import './login.css'
 import { useForm } from 'react-hook-form'
 
 const Login = () => {
-  const { register, handleSubmit, formState: { errors }, reset } = useForm()
+  
+  const { register, handleSubmit, formState: { errors } } = useForm()
   const { loading, error, dispatch } = useContext(AuthContext)
   const navigate = useNavigate()
 
   const onSubmit = async (data) => {
+
     try {
+
       dispatch({ type: 'LOGIN_START' })
 
       const res = await axios.post('/login', data)
-    
+
       dispatch({ type: 'LOGIN_SUCCESS', payload: res.data })
 
       navigate('/')
+
     } catch (error) {
+
       dispatch({ type: 'LOGIN_FAILURE', payload: error })
+
     }
+
   }
 
   return (
+
     <div>
+
       <form onSubmit={handleSubmit(onSubmit)}>
 
         <div className="d-flex align-items-center">
 
-          <i className="bi bi-person-check text-white fs-4" id="basic-addon1"></i>
+          <i className="bi bi-person-check text-white fs-5" id="basic-addon2"></i>
 
           <input
             id="username"
@@ -70,33 +79,42 @@ const Login = () => {
 
         )}
 
-        <div className="d-flex flex-column align-items-center justify-content-center m-3">
-          <i className="bi bi-plug text-white"></i>
+        <div
+          className="d-flex flex-column align-items-center justify-content-center m-3">
+
+          <i
+            className="fa-solid fa-plug-circle-check text-white my-2">
+          </i>
+
           <button
             type="submit"
-            className="btn btn-success bg-transparent text-black loginBtn text-white"
-            disabled={loading}
-          >
-            Log In
+            className="btn btn-success bg-transparent text-black login-Btn text-white"
+            disabled={loading} >
+            Iniciar sesión
           </button>
+
           {error && (
-            <div className="text-danger p-1 m-1">
+            <div
+              className="text-danger p-1 m-1">
               Error en Usuario o Contraseña
             </div>
           )}
+
         </div>
+
       </form>
-      
+
       <div className="d-flex align-items-center">
         <i className="bi bi-list-check mx-1"></i>
         <Link
           to={'/register'}
-          className="nav-link text-black text-decoration-underline text-white"
-        >
-          Register
+          className="nav-link text-black text-decoration-underline text-white">
+          Registrarme
         </Link>
       </div>
+
     </div>
+    
   )
 }
 

@@ -142,6 +142,27 @@ export default class UsersController {
 
 	}
 
+	updateUserPassword = async (req, res) => {
+
+		try {
+			
+			const updatedUser = await this.userServices
+				.updateUserPassword(req.body);
+			
+			updatedUser
+
+				? res.json(updatedUser)
+
+				: res.status(404).json(updatedUser);
+
+		} catch (error) {
+
+			routeLogger(req, 'error', error);
+
+		}
+
+	}
+	
 	updateUser = async (req, res) => {
 
 		try {
@@ -162,6 +183,7 @@ export default class UsersController {
 		}
 
 	}
+	
 	updateUserReserves = async (req, res) => {
 
 		try {

@@ -70,3 +70,18 @@
 ._2WxJS {
   color:#1ad1c8 !important;
 }
+
+/*Asterik-icon*/
+#basic-addon1{
+  font-size: 10px !important;
+}
+
+.btn-success:hover {
+  background-color: black;
+  color: white;
+}
+.btn-danger:hover {
+  background-color: black;
+  color: white;
+}
+

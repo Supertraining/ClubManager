@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import logger from '../utils/logger.js'
 
 export const connect = async (url) => {
     try {
@@ -6,15 +7,15 @@ export const connect = async (url) => {
             useNewUrlParser: true,
             useUnifiedTopology: true
         })
-        console.log('Conected to MongoDB');
+        logger.info('Conected to MongoDB');
     } catch (error) {
         throw error
     }
 }
 
 mongoose.connection.on('disconnected', () => {
-    console.log('MongoDB disconnected');
+    logger.info('MongoDB disconnected');
 })
 mongoose.connection.on('connected', () => {
-    console.log('MongoDB connected');
+    logger.info('MongoDB connected');
 })

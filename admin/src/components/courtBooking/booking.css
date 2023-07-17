@@ -24,6 +24,11 @@ button:active {
     box-shadow: 1px 1px 1px black;
   }
 
+  h1 {
+    font-size: xx-large !important;
+    margin: 10px 0px !important;
+  }
+
   h1::first-letter{
     text-transform: uppercase;
   }

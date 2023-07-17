@@ -94,6 +94,23 @@ export default class UsersDAO {
     }
   }
 
+  async updateUserPassword(data) {
+
+    try {
+      
+      const updatedUser = await model
+        .usermodel
+        .updateOne({ _id: data._id }, { $set: data });
+      
+      return updatedUser;
+
+    } catch (err) {
+
+      logger.error(err);
+
+    }
+
+  }
   async updateUser(id, data) {
 
     try {

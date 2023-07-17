@@ -100,7 +100,7 @@ export default class CourtServices {
 
         } catch (error) {
 
-            console.log(error);
+            logger.log(error);
 
             
         }
@@ -117,8 +117,23 @@ export default class CourtServices {
             
         } catch (error) {
             
-            console.log(error)
+            logger.log(error)
 
+        }
+    }
+
+    updateReservesUser = async (user) => {
+        try {
+            
+            let data = await this.courtsDAO
+                .updateReservesUser(user);
+            
+            return data
+            
+        } catch (error) {
+
+            logger.error(error);
+            
         }
     }
 

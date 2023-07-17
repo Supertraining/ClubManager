@@ -23,3 +23,12 @@ export const sessionConfig = {
   saveUninitialized: false,
 }
 
+export const gmailData = {
+  gmailService: process.env.SERVICE,
+ gmailPort: process.env.GMAILPORT,
+ gmailUser: process.env.GMAILUSER,
+ gmailPass: process.env.GMAILPASS,
+}
+
+
+

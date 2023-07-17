@@ -1,10 +1,9 @@
 {
-    "prettier.jsxSingleQuote": true,
-    "prettier.proseWrap": "preserve",
-    "prettier.singleAttributePerLine": false,
-    "prettier.singleQuote": true,
-    "prettier.printWidth": 100,
-    "cSpell.words": [
-        "daygrid"
-    ]
+  "prettier.jsxSingleQuote": true,
+  "prettier.proseWrap": "preserve",
+  "prettier.singleAttributePerLine": false,
+  "prettier.singleQuote": true,
+  "prettier.printWidth": 100,
+  "cSpell.words": ["daygrid"],
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
 }

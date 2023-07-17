@@ -154,22 +154,34 @@ export default class CourtsDAO {
         }
     }
 
-    updateById = async (id, newData) => {
+    updateReservesUser = async (user) => {
+
         try {
+          
+            const courts = await model.courtModel.find();
+            for (const court of courts) {
+                for (const [dayOfWeek, reserves] of Object.entries(court.unavailableDates)) {
 
-            let data = await model
-                .courtModel
-                .findByIdAndUpdate(id, newData);
+                    court.unavailableDates[dayOfWeek].forEach(async (reserve) => {
+                        if (reserve.user == user.user) {
+                        
+                            await model.courtModel.updateOne(
+                                { _id: court._id },
+                                { $set: { [`unavailableDates.${dayOfWeek}.$[elem].user`]: user.newUser } },
+                                { arrayFilters: [{ "elem.user": user.user }] }
+                            );
+                            
+                        }
+                    })
 
-            return data;
-
+                }
+                
+            }
+              
         } catch (error) {
-
             logger.error(error);
-
         }
     }
-
 
 }
 

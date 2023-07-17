@@ -96,7 +96,7 @@ const Booking = ({ setCourt, court }) => {
             id: UUID,
             permanent: permanent
           })
-
+          
         if (permanent) {
           const today = new Date(initialTime); 
           const oneWeekFromNow = today.setDate(today.getDate() + 7);

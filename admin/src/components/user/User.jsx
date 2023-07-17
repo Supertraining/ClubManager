@@ -21,13 +21,13 @@ const User = ({ setUser, user, handleDeleteReserve, handleUpdateUser, handleDele
       </div>
 
       <div
-        className="col-12 h-auto p-1 border border-dark d-flex flex-column gap-3">
+        className="col-12 h-auto p-1 border border-dark d-flex flex-column align-items-center gap-3">
 
         <div
-          className='row justify-content-center'>
+          className='col-10'>
 
           <div
-            className='col-7 border border-dark shadow p-3'>
+            className='col-12 border border-dark shadow p-3'>
             
             <UserData
               user={user}
@@ -42,7 +42,7 @@ const User = ({ setUser, user, handleDeleteReserve, handleUpdateUser, handleDele
         </div>
 
         <div
-          className='row justify-content-evenly'>
+          className='d-flex justify-content-evenly col-12'>
 
           <div
             className='col-5 border border-dark shadow'>

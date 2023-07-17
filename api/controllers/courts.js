@@ -68,6 +68,7 @@ export default class CourtsControllers {
     reserveDate = async (req, res) => {
         
         try {
+        
             let data = await this.courtsService
                 .reserveDate(req.body);
 
@@ -109,6 +110,22 @@ export default class CourtsControllers {
             routeLogger(req, 'error', error);
 
         }
+    }
+
+    updateReservesUser = async (req, res) => {
+        try {
+          
+            let data = await this.courtsService
+                .updateReservesUser(req.body);
+            
+            res.json(data);
+            
+        } catch (error) {
+
+            routeLogger(req, 'error', error);
+            
+        }
+
     }
 
 }

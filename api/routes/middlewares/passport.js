@@ -3,6 +3,7 @@ import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import logger, { routeLogger } from '../../utils/logger.js';
 import { authHash } from '../../utils/authHash.js';
+import { emailNewUserNotification } from '../../utils/emailNotifications.js';
 
 const userServices = new UsersServices();
 
@@ -74,7 +75,8 @@ export const passportRegister = async (req, res, next) => {
                             }
 
                         );
-
+                    newUser && emailNewUserNotification(username, req.body);
+                    
                     done(null, newUser);
 
                 }

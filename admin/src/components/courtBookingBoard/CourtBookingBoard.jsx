@@ -754,7 +754,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
               <ul>
                 {data[weekDaysList[15]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
 
-                  reserve.date === dateListLc[8] &&
+                  reserve.date === dateListLc[15] &&
 
                   <li
                     key={i}
@@ -802,7 +802,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
               <ul>
                 {data[weekDaysList[16]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
 
-                  reserve.date === dateListLc[9] &&
+                  reserve.date === dateListLc[16] &&
 
                   <li
                     key={i}
@@ -850,7 +850,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
               <ul>
                 {data[weekDaysList[17]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
 
-                  reserve.date === dateListLc[10] &&
+                  reserve.date === dateListLc[17] &&
 
                   <li
                     key={i}
@@ -897,7 +897,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
               <ul>
                 {data[weekDaysList[18]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
 
-                  reserve.date === dateListLc[11] &&
+                  reserve.date === dateListLc[18] &&
 
                   <li
                     key={i}
@@ -993,7 +993,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
               <ul>
                 {data[weekDaysList[20]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
 
-                  reserve.date === dateListLc[13] &&
+                  reserve.date === dateListLc[20] &&
 
                   <li
                     key={i}
@@ -1045,7 +1045,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
               <ul>
                 {data[weekDaysList[21]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
 
-                  reserve.date === dateListLc[14] &&
+                  reserve.date === dateListLc[21] &&
 
                   <li
                     key={i}
@@ -1093,7 +1093,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
               <ul>
                 {data[weekDaysList[22]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
 
-                  reserve.date === dateListLc[8] &&
+                  reserve.date === dateListLc[22] &&
 
                   <li
                     key={i}
@@ -1141,7 +1141,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
               <ul>
                 {data[weekDaysList[23]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
 
-                  reserve.date === dateListLc[9] &&
+                  reserve.date === dateListLc[23] &&
 
                   <li
                     key={i}
@@ -1189,7 +1189,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
               <ul>
                 {data[weekDaysList[24]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
 
-                  reserve.date === dateListLc[10] &&
+                  reserve.date === dateListLc[24] &&
 
                   <li
                     key={i}
@@ -1236,7 +1236,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
               <ul>
                 {data[weekDaysList[25]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
 
-                  reserve.date === dateListLc[11] &&
+                  reserve.date === dateListLc[25] &&
 
                   <li
                     key={i}
@@ -1284,7 +1284,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
               <ul>
                 {data[weekDaysList[26]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
 
-                  reserve.date === dateListLc[19] &&
+                  reserve.date === dateListLc[26] &&
 
                   <li
                     key={i}
@@ -1332,7 +1332,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
               <ul>
                 {data[weekDaysList[27]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
 
-                  reserve.date === dateListLc[13] &&
+                  reserve.date === dateListLc[27] &&
 
                   <li
                     key={i}

@@ -1,0 +1,16 @@
+-Horarios fijos/cumpleaños verlos de aca a meses - DONE
+-Acitividades pequeña descripcion y  link con horarios - DONE
+-IMG en fondo de CANVA de actividades -  DONE
+-Horarios de reservas de las canchas por dia 15 a 23. sin domingos almanaque y reserva para usuarios. - DONE
+-Almanaques el admin debe poder ver de aca a un mes el bookingBoard. - DONE
+-Usuario pueda modificar sus datos. -DONE
+- Usuario pueda modificar su contraseña. -DONE
+- Enviar Mail al nuevo usuario. - DONE
+- Enviar Mail al usuario cuando cambia su contraseña. - DONE
+- Boton de WhatsApp en el Home.
+- Comprimir imagenes del Home
+-Subir imagenes a una db?
+
+
+
+

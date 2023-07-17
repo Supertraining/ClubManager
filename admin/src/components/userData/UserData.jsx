@@ -23,6 +23,7 @@ const UserData = ({ user, handleUpdateUser, handleDeleteUser, setConfirmDelete, 
   }
 
   return (
+    
     <div>
 
       <div>
@@ -31,7 +32,11 @@ const UserData = ({ user, handleUpdateUser, handleDeleteUser, setConfirmDelete, 
 
       </div>
 
-      <h3>@User Data</h3>
+      <h3
+        className='text-primary fw-bold my-2'>
+        @User Data
+      </h3>
+
       <div className='d-flex'>
 
         <ul
@@ -145,13 +150,14 @@ const UserData = ({ user, handleUpdateUser, handleDeleteUser, setConfirmDelete, 
           </li>
 
         </ul>
+
         {showForm && (
           <>
 
             <form className='text-center col-6'>
 
               <input
-                className='mx-2 text-warning text-center border-0 border-bottom border-primary col-12'
+                className='mx-2 mt-3 text-warning text-center border-0 border-bottom border-primary col-12'
                 type="text"
                 name="username"
                 id="username"
@@ -160,7 +166,7 @@ const UserData = ({ user, handleUpdateUser, handleDeleteUser, setConfirmDelete, 
               />
 
               <input
-                className='mx-2 text-warning text-center border-0 border-bottom border-primary col-12'
+                className='mx-2 mt-3 text-warning text-center border-0 border-bottom border-primary col-12'
                 type="text"
                 name="nombre"
                 id="nombre"
@@ -169,7 +175,7 @@ const UserData = ({ user, handleUpdateUser, handleDeleteUser, setConfirmDelete, 
               />
 
               <input
-                className='mx-2 text-warning text-center border-0 border-bottom border-primary col-12'
+                className='mx-2 mt-3 text-warning text-center border-0 border-bottom border-primary col-12'
                 type="text"
                 name="apellido"
                 id="apellido"
@@ -178,7 +184,7 @@ const UserData = ({ user, handleUpdateUser, handleDeleteUser, setConfirmDelete, 
               />
 
               <input
-                className='mx-2 text-warning text-center border-0 border-bottom border-primary col-12'
+                className='mx-2 mt-3 text-warning text-center border-0 border-bottom border-primary col-12'
                 type="text"
                 name="edad"
                 id="edad"
@@ -187,7 +193,7 @@ const UserData = ({ user, handleUpdateUser, handleDeleteUser, setConfirmDelete, 
               />
 
               <input
-                className='mx-2 text-warning text-center border-0 border-bottom border-primary col-12'
+                className='mx-2 mt-3 text-warning text-center border-0 border-bottom border-primary col-12'
                 type="text"
                 name="telefono"
                 id="telefono"
@@ -196,7 +202,7 @@ const UserData = ({ user, handleUpdateUser, handleDeleteUser, setConfirmDelete, 
               />
 
               <input
-                className='mx-2 text-warning text-center border-0 border-bottom border-primary col-12'
+                className='mx-2 mt-2 text-warning text-center border-0 border-bottom border-primary col-12'
                 type="text"
                 name="admin"
                 id="admin"
@@ -224,50 +230,64 @@ const UserData = ({ user, handleUpdateUser, handleDeleteUser, setConfirmDelete, 
               </div>
 
             </form>
+            
           </>
         )}
 
       </div>
-      {!showForm && (
-        <div
-          className='d-flex justify-content-evenly mt-2'>
+
+      <div className='d-flex justify-content-evenly'>
+
+        {(!showForm && !confirmDelete) && (
 
           <button
-            className='btn btn-dark'
+            className='btn btn-success'
             onClick={() => setShowForm(true)}>
             Editar
           </button>
 
-          {!confirmDelete
+        )}
 
-            ? <button
-              className='btn btn-danger'
-              onClick={() => setConfirmDelete(true)}>
-              Eliminar
+        {(!confirmDelete && !showForm) && (
+
+          <button
+            className='btn btn-danger'
+            onClick={() => setConfirmDelete(true)}>
+            Eliminar
+          </button>
+        )}
+
+      </div>
+
+      {confirmDelete && (
+
+        <div
+          className='alert alert-danger d-flex flex-column align-items-center p-1 m-0'>
+
+          <div>
+            ¿Estas seguro?
+          </div>
+
+          <div className='d-flex mt-3 justify-content-evenly col-6'>
+
+            <button
+              className='btn btn-sm btn-danger mx-1'
+              onClick={() => handleDeleteUser(user)}>
+              Confirmar
             </button>
 
-            : <div
-              className='alert alert-danger d-flex p-1 m-0'>
-
-              <button
-                className='btn btn-sm btn-danger mx-1'
-                onClick={() => handleDeleteUser(user)}>
-                Confirmar
-              </button>
-
-              <button
-                className='btn btn-sm btn-success mx-1'
-                onClick={() => setConfirmDelete(false)}>
-                Cancelar
-              </button>
-
-            </div>
-          }
+            <button
+              className='btn btn-sm btn-success mx-1'
+              onClick={() => setConfirmDelete(false)}>
+              Cancelar
+            </button>
+          </div>
 
         </div>
       )}
 
     </div>
+
   )
 }
 

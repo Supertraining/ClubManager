@@ -11,19 +11,20 @@ const CreateUser = ({ setMenu, menu }) => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
 
+  
 
-  const notify = () => toast.success("User Created", { autoClose: 1000 });
-
-
+  const notifyUsuarioCreado = () => toast.success("Usuario creado", { autoClose: 1000 });
   const onSubmit = async (data) => {
 
     try {
 
       await axios.post('/register', data);
-      notify();
+      notifyUsuarioCreado();
+      reset();
 
     } catch (error) {
 
@@ -120,6 +121,13 @@ const CreateUser = ({ setMenu, menu }) => {
             {...register('password', { required: true })}
           />
 
+        </div>
+
+        <div className='text-center'>
+
+          <small className='text-success col-9 text-center'>
+            La contraseña debe tener al menos 8 caracteres y, debe incluir como mínimo una MAYÚSCULA, un número y un caracter especial. <strong><i className='text-decoration-underline'>Ejemplo:</i> Nombre@1980</strong>
+          </small>
         </div>
         {errors.password && (
           <small className="text-danger text-center">Este campo es obligatorio</small>

@@ -3,3 +3,11 @@
   background-color: #212529;
   width: fit-content;
 }
+
+.input-text{
+  font-size: clamp(0.9rem, 1vw, 2rem);
+}
+
+.myUser-form-buttons{
+  margin-left: 35px;
+}

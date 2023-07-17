@@ -74,7 +74,14 @@ export default class CourtsRouter {
             
         )
         
-        // router.put("/",)
+        router.put(
+
+            '/reserve/userUpdate',
+
+            this.controllers
+                .updateReservesUser
+            
+        )
 
         return router
     }

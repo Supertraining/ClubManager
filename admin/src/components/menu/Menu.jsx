@@ -2,7 +2,7 @@ import './menu.css'
 import { Link } from 'react-router-dom'
 
 
-const Menu = ({ menu, setMenu, handleGetAllUsers, handleGetAllCourts, handleCloseSession, handleMenuClick }) => {
+const Menu = ({ menu, handleGetAllUsers, handleGetAllCourts, handleCloseSession, handleMenuClick }) => {
 
   return (
 

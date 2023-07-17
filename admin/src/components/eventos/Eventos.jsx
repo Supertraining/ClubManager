@@ -6,23 +6,28 @@ import { ReactFullYearScheduler } from "react-full-year-scheduler";
 import axios from '../../utils/axiosInstance'
 import "react-full-year-scheduler/dist/style.css";
 import useFetch from '../../hooks/useFetch';
+import { ToastContainer, toast } from 'react-toastify';
 
 
 
 const Eventos = (setMenu, menu) => {
 
+
   const { data, loading, error, reFetch } = useFetch('/events')
-  
+
   useEffect(() => {
     reFetch();
-  },[data])
+  }, [data])
 
+  const notifyFetchError = () => toast.warning("Ha ocurrido un error, por favor intente nuevamente mas tarde", { position: 'bottom-right', autoClose: 2000, theme: 'dark' });
   const calendarArray = [];
-  data.forEach((event) => {
-    event.calendarData.forEach((calendarData) => {
-      calendarArray.push(calendarData)
+  !error
+    ? data.forEach((event) => {
+      event.calendarData.forEach((calendarData) => {
+        calendarArray.push(calendarData)
+      })
     })
-  })
+    : notifyFetchError()
 
   let eventDataInitialState = {
     evento: "",
@@ -52,12 +57,13 @@ const Eventos = (setMenu, menu) => {
 
   }
 
-  const handleClick = async (id) => {
+  const notifyEventDeleted = () => toast.success("Evento Eliminado", { position: 'bottom-right', autoClose: 2000, theme: 'dark' });
+  const handleDeleteReserve = async (id) => {
     try {
 
       await axios.delete(`/events/deleteById/${id}`);
 
-      console.log('borrado')
+      notifyEventDeleted();
 
       reFetch();
 
@@ -68,14 +74,22 @@ const Eventos = (setMenu, menu) => {
     }
 
   }
-  
+
+  const notifyEventCreated = () => toast.success("Evento Creado", { position: 'bottom-right', autoClose: 2000, theme: 'dark' });
+  const notifyEventIncomplete = () => toast.warning("Evento Incompleto", { position: 'bottom-right', autoClose: 2000, theme: 'dark' });
   const eventsBooking = async (date, calendarData) => {
 
     try {
 
+      const completeEvent = Object.values(eventData).some((el) => el.length === 0)
+      if (completeEvent) {
+        notifyEventIncomplete();
+        return;
+      }
+
       await axios.post(`/events/createEvent`, { ...eventData, date: new Date(date).toLocaleDateString(), calendarData: calendarData })
 
-      console.log('creado')
+      notifyEventCreated();
 
     } catch (error) {
 
@@ -298,7 +312,7 @@ const Eventos = (setMenu, menu) => {
             id="comentarios"
             name='comentarios'
             placeholder="Comentarios"
-            rows={5}
+            rows={1}
             cols={40}
             className="my-2 text-center border form-control"
             value={eventData.comentarios}
@@ -352,10 +366,7 @@ const Eventos = (setMenu, menu) => {
             clearSelectedCell()
 
             setEventData(eventDataInitialState)
-           
-          }}
-          onEventSinglePickInterception={(date, eventName, clearSelectedCell) => {
-            console.table([eventName, date.toDate()]);
+
           }}
 
         />
@@ -363,7 +374,7 @@ const Eventos = (setMenu, menu) => {
 
       <table className='table table-responsive bg-dark'>
         <thead>
-          <tr className='text-center'>
+          <tr className='text-center tableHead-fontSize'>
 
             <th>
               Fecha
@@ -412,7 +423,7 @@ const Eventos = (setMenu, menu) => {
 
         </thead>
 
-        <tbody>
+        <tbody className='tableBody-fontSize'>
           {data.map((event) => (
 
             <tr key={event._id} className='text-center'>
@@ -428,14 +439,17 @@ const Eventos = (setMenu, menu) => {
               <td>{event.horasAdicional}</td>
               <td>{event.camareraAdicional}</td>
               <td className='table-coments'>{event.comentarios}</td>
-              <td>{event.seña}</td> 
-              <td>{event.saldado}</td> 
+              <td>{event.seña}</td>
+              <td>{event.saldado
+                ? <i className="bi bi-check-circle-fill text-success"></i>
+                : <i className="bi bi-x-circle-fill text-danger"></i>
+              }</td>
 
               <td>
 
                 <button
                   className='delete-event-btn rounded px-1'
-                  onClick={() => handleClick(event._id)}>
+                  onClick={() => handleDeleteReserve(event._id)}>
                   <i
                     className="bi bi-exclamation-triangle">
                   </i>
@@ -448,8 +462,9 @@ const Eventos = (setMenu, menu) => {
         </tbody>
       </table>
 
-    </div >
+      <ToastContainer />
 
+    </div >
 
   )
 }

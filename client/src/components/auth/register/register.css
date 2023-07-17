@@ -1,8 +1,41 @@
-.bi-asterisk{
-  font-size: 1.5rem!important;
+.bi-asterisk {
+  font-size: 1.5rem !important;
 }
 
-.ph::placeholder{
+.ph::placeholder {
   color: silver !important;
 }
 
+.welcome-background {
+
+  background-image: url('../../../assets/home/sportIconBg(1).webp');
+  background-position: center;
+  background-size: cover;
+  height: 50vh;
+}
+
+.welcome-title {
+  text-shadow: -3px 4px 4px black;
+  font-size: 3rem;
+  animation-name: title3d;
+  animation-duration: 1.9s;
+  font-family: 'Roboto Slab', serif;
+  font-size: clamp(1rem, 10vw, 4rem);
+}
+
+@keyframes title3d {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.register-Btn:hover {
+  transition: 0.5s !important;
+  background-color: #146c4365 !important;
+}

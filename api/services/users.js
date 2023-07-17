@@ -1,7 +1,7 @@
 import UsersDAO from "../DAOs/users.js";
+import { emailUpdatePasswordNotification } from "../utils/emailNotifications.js";
 import logger from "../utils/logger.js";
 import bcrypt from 'bcrypt';
-import { v4 as uuidv4 } from 'uuid';
 
 export default class UsersServices {
 
@@ -36,7 +36,7 @@ export default class UsersServices {
     }
 
     async insertUser(data) {
-        
+
         try {
 
             const newUser = await this.DAO
@@ -100,7 +100,7 @@ export default class UsersServices {
                 logger.info('No hay usuarios registrados');
 
                 return data
-                   
+
             }
 
             return data;
@@ -136,22 +136,37 @@ export default class UsersServices {
         }
     }
 
+    async updateUserPassword(data) {
+
+        try {
+           
+            const updateUser = await this.DAO
+                .updateUserPassword( {
+                    ...data,
+                    password: bcrypt.hashSync(data.password,
+                        bcrypt.genSaltSync(10))
+                });
+            
+            if(updateUser)
+            emailUpdatePasswordNotification(data);
+            const updatedUser = await this.DAO
+                .getById(data._id);
+
+            return updatedUser
+
+        } catch (err) {
+
+            logger.error(err);
+
+        }
+
+    }
     async updateUser(id, data) {
 
         try {
 
             const updateUser = await this.DAO
-                .updateUser(id,
-                    data
-                );
-
-            if (updateUser.matchedCount === 0) {
-
-                logger.info(`El usuario con el Id: ${id} no encontrado`);
-
-                return false
-
-            }
+                .updateUser(id, data);
 
             const updatedUser = await this.DAO
                 .getById(id);
@@ -166,7 +181,7 @@ export default class UsersServices {
 
     }
     async updateUserReserves(username, reserveData) {
-        
+
         try {
             const updateUser = await this.DAO
                 .updateUserReserves(username, reserveData);

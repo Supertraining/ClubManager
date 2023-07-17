@@ -1,321 +1,164 @@
-import './navBarOffCanvasEnd.css'
-import { ToastContainer, toast } from 'react-toastify';
-import MyUser from '../myUser/MyUser'
+import './navBarOffCanvasEnd.css';
+import { ToastContainer } from 'react-toastify';
+import MyUser from '../myUser/MyUser';
+import { useState } from 'react';
+import MyUserReserves from '../myUserReserves/MyUserReserves';
 
+const NavBarOffCanvasEnd = (props) => {
+  const initialState = {
+    password: '',
+    newPassword: '',
+  };
 
-const NavBarOffCanvasEnd = ({ setShowProfile, handleDeleteAccount, showProfile, allArrays, futbolReserves, paddleReserves, squashReserves, paletaReserves, user, handleDeleteReserve }) => {
+  const [passwordData, setPasswordData] = useState(initialState);
 
+  const handleChange = (e) => {
+    setPasswordData({
+      username: props?.user.username,
+      ...passwordData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   return (
-
     <>
-
       <div
-        className="offcanvas offcanvas-end offCanvasBg"
-        tabIndex="-1"
-        id="offcanvasExample"
-        aria-labelledby="offcanvasExampleLabel">
-
+        className='offcanvas offcanvas-end offCanvasBg'
+        tabIndex='-1'
+        id='offcanvasExample'
+        aria-labelledby='offcanvasExampleLabel'
+      >
         <div>
-
           <ToastContainer />
-
         </div>
 
-        <div
-          className="offcanvas-header">
-
+        <div className='offcanvas-header'>
           <h5
-            className="offcanvas-title m-1 text-white offcanvas-Header-Title" id="offcanvasExampleLabel">
-            {user?.username}
+            className='offcanvas-title m-1 text-white offcanvas-Header-Title'
+            id='offcanvasExampleLabel'
+          >
+            {props?.user?.username}
           </h5>
 
           <button
-            className='btn btn-success m-1 p-1'
-            onClick={() => setShowProfile(!showProfile)}>
-            Mi perfil
-          </button>
-
-          <button
-            type="button"
-            className="btn-close btn-close-white m-1" data-bs-dismiss="offcanvas"
-            aria-label="Close">
-          </button>
-
+            type='button'
+            className='btn-close btn-close-white m-1'
+            data-bs-dismiss='offcanvas'
+            aria-label='Close'
+          ></button>
         </div>
 
-        <div
-          className="offcanvas-body">
+        <div className='offcanvas-body'>
+          <div className='d-flex flex-column align-items-start my-2'>
+            <button
+              className='btn btn-outline-success m-1 p-1 border-0'
+              onClick={() => {
+                props.setShowProfile(!props.showProfile), props.setShowReserves(false);
+              }}
+            >
+              <i className='bi bi-person-bounding-box mx-1'></i>
+              Mi perfil
+            </button>
 
-          <div
-            className='my-4 d-flex flex-column align-items-center'>
-
-            {showProfile && <MyUser handleDeleteAccount={handleDeleteAccount}/>}
-
-            {!showProfile &&
-              <div
-                className='rounded bg-dark p-1 text-center'>
-
-                <h6
-                  className='text-success fw-bold p-2 m-0'>
-                  Mis reservas:
-                </h6>
-
-                {!allArrays
-                  && (<div
-                    className='text-white'>
-                    No tienes reservas activas
-                  </div>)}
-              </div>
-            }
-
+            <button
+              className='btn btn-outline-success m-1 p-1 border-0'
+              onClick={() => {
+                props.setShowReserves(!props.showReserves), props.setShowProfile(false);
+              }}
+            >
+              <i className='bi bi-table mx-1'></i>
+              Mis reservas
+            </button>
           </div>
 
-          {(allArrays && !showProfile) &&
-            <div
-              className='d-flex flex-column align-items-center border border-dark p-1 my-2'>
+          <div className='my-4 d-flex flex-column align-items-center'>
+            {props.showProfile && (
+              <MyUser
+                handleDeleteAccount={props.handleDeleteAccount}
+                handleUpdateUser={props.handleUpdateUser}
+                setShowProfile={props.setShowProfile}
+                setShowChangePasswordForm={props.setShowChangePasswordForm}
+              />
+            )}
 
-              <table
-                className='table table-responsive w-100'>
+            {!props.allArrays && props.showReserves && (
+              <div className='rounded bg-dark p-1 text-center'>
+                <div className='text-white'>No tienes reservas activas</div>
+              </div>
+            )}
 
-                <thead
-                  className='bg-dark text-white text-center'>
+            {props.showChangePasswordForm && !props.showProfile && !props.showReserves && (
+              <div>
+                <form className='d-flex flex-column align-items-center'>
+                  <input
+                    className='my-2 rounded border-0 bg-success p-1'
+                    type='password'
+                    name='password'
+                    id='password'
+                    placeholder='Tu contraseña actual'
+                    value={passwordData.password}
+                    onChange={handleChange}
+                  />
 
-                  <tr>
+                  <input
+                    className='my-2 rounded border-0 bg-success p-1'
+                    type='password'
+                    name='newPassword'
+                    id='newPassword'
+                    placeholder='Nueva contraseña'
+                    value={passwordData.newPassword}
+                    onChange={handleChange}
+                  />
 
-                    <th
-                      scope='col'
-                      className='text-center'>
-                      Actividad
-                    </th>
-                    <th
-                      scope='col'
-                      className='text-center'>
-                      fecha
-                    </th>
-                    <th
-                      scope='col'
-                      className='text-center'>
-                      Inicia
-                    </th>
-                    <th
-                      scope='col'
-                      className='text-center'>
-                      Finaliza
-                    </th>
-                    <th
-                      scope='col'
-                      className='text-center'>
-                      Anular
-                    </th>
+                  <div>
+                    <button
+                      className='btn btn-outline-danger m-1 p-1'
+                      onClick={(e) => {
+                        props.handleUpdatePassword(e, passwordData), setPasswordData(initialState);
+                      }}
+                    >
+                      Confirmar
+                    </button>
 
-                  </tr>
+                    <button
+                      className='btn btn-outline-secondary m-1 p-1'
+                      onClick={() => {
+                        props.setShowChangePasswordForm(false), setPasswordData(initialState);
+                      }}
+                    >
+                      Cancelar
+                    </button>
+                  </div>
 
-                </thead>
+                  <small
+                    className={
+                      props.strongPassword
+                        ? 'text-center text-success col-9 text-center'
+                        : 'text-center text-danger col-9 text-center'
+                    }
+                  >
+                    La contraseña debe tener al menos 8 caracteres y, debe incluir como mínimo una
+                    MAYÚSCULA, un número y un caracter especial. <br />
+                    <strong>(Ej.: Nombre@1980)</strong>
+                  </small>
+                </form>
+              </div>
+            )}
+          </div>
 
-                <tbody>
-                  {futbolReserves?.map((res, i) => (
-
-                    <tr
-                      className='bg-success fw-bold my-1 text-dark text-center' key={i}>
-
-                      <td>
-                        {res.court}
-                      </td>
-
-                      <td>
-                        {res.date}
-                      </td>
-
-                      <td>
-                        {new Date(res.initialTime).toLocaleTimeString(
-                          [], { timeStyle: 'short' }
-                        )
-                        }
-                      </td>
-
-                      <td>
-                        {new Date(res.finalTime).toLocaleTimeString(
-                          [], { timeStyle: 'short' }
-                        )
-                        }
-                      </td>
-
-                      <td>
-
-                        <button
-                          className='alert alert-danger m-0 px-2 py-0'
-                          onClick={() => handleDeleteReserve(res.court, res.weekday, res.id)}>
-
-                          <i
-                            className="bi bi-exclamation-triangle">
-                          </i>
-
-                        </button>
-
-                      </td>
-
-                    </tr>
-                  ))}
-                  {paddleReserves?.map((res, i) => (
-
-                    <tr
-                      className='bg-primary fw-bold my-1 text-dark'
-                      key={i}>
-
-                      <td
-                        className='text-center'>
-                        {res.court}
-                      </td>
-
-                      <td
-                        className='text-center'>
-                        {res.date}
-                      </td>
-
-                      <td
-                        className='text-center'>
-                        {new Date(res.initialTime).toLocaleTimeString(
-                          [], { timeStyle: 'short' }
-                        )
-                        }
-                      </td>
-
-                      <td
-                        className='text-center'>
-                        {new Date(res.finalTime).toLocaleTimeString(
-                          [], { timeStyle: 'short' }
-                        )
-                        }
-                      </td>
-
-                      <td
-                        className='text-center'>
-
-                        <button
-                          className='alert alert-danger m-0 px-2 py-0'
-                          onClick={() => handleDeleteReserve(res.court, res.weekday, res.id)}>
-
-                          <i
-                            className="bi bi-exclamation-triangle">
-                          </i>
-
-                        </button>
-
-                      </td>
-                    </tr>
-                  ))}
-                  {squashReserves?.map((res, i) => (
-
-                    <tr
-                      className='bg-info fw-bold my-1 text-dark'
-                      key={i}>
-
-                      <td
-                        className='text-center'>
-                        {res.court}
-                      </td>
-
-                      <td
-                        className='text-center'>
-                        {res.date}
-                      </td>
-
-                      <td
-                        className='text-center'>
-                        {new Date(res.initialTime).toLocaleTimeString(
-                          [], { timeStyle: 'short' }
-                        )
-                        }
-                      </td>
-
-                      <td
-                        className='text-center'>
-                        {new Date(res.finalTime).toLocaleTimeString(
-                          [], { timeStyle: 'short' }
-                        )
-                        }
-                      </td>
-
-                      <td
-                        className='text-center'>
-
-                        <button
-                          className='alert alert-danger m-0 px-2 py-0'
-                          onClick={() => handleDeleteReserve(res.court, res.weekday, res.id)}>
-
-                          <i
-                            className="bi bi-exclamation-triangle">
-                          </i>
-
-                        </button>
-
-                      </td>
-
-                    </tr>
-                  ))}
-                  {paletaReserves?.map((res, i) => (
-
-                    <tr
-                      className='bg-light fw-bold my-1 text-dark'
-                      key={i}>
-
-                      <td
-                        className='text-center'>
-                        {res.court}
-                      </td>
-
-                      <td
-                        className='text-center'>
-                        {res.date}
-                      </td>
-
-                      <td
-                        className='text-center'>
-                        {new Date(res.initialTime).toLocaleTimeString(
-                          [], { timeStyle: 'short' }
-                        )
-                        }
-                      </td>
-
-                      <td
-                        className='text-center'>
-                        {new Date(res.finalTime).toLocaleTimeString(
-                          [], { timeStyle: 'short' }
-                        )
-                        }
-                      </td>
-
-                      <td
-                        className='text-center'>
-
-                        <button
-                          className='alert alert-danger m-0 px-2 py-0'
-                          onClick={() => handleDeleteReserve(res.court, res.weekday, res.id)}>
-
-                          <i
-                            className="bi bi-exclamation-triangle">
-                          </i>
-
-                        </button>
-
-                      </td>
-
-                    </tr>
-                  ))}
-
-                </tbody>
-
-              </table>
-
-            </div>}
-
+          {props.allArrays && props.showReserves && (
+            <MyUserReserves
+              futbolReserves={props?.futbolReserves}
+              paddleReserves={props?.paddleReserves}
+              squashReserves={props?.squashReserves}
+              paletaReserves={props?.paletaReserves}
+              handleDeleteReserve={props.handleDeleteReserve}
+            />
+          )}
         </div>
-
       </div>
-
     </>
-  )
-}
+  );
+};
 
-export default NavBarOffCanvasEnd
+export default NavBarOffCanvasEnd;

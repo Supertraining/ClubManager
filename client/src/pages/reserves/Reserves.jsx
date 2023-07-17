@@ -8,7 +8,6 @@ import { useEffect, useState } from "react"
 
 const Reserves = () => {
 
-  const [court, setcourt] = useState()
   const location = useLocation()
   const id = location.state?.court
   const navigate = useNavigate()
@@ -19,13 +18,6 @@ const Reserves = () => {
 
   }, [])
 
-
-
-  useEffect(() => {
-
-    setcourt(id)
-
-  })
 
   return (
     <>

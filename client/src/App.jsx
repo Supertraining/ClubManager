@@ -19,7 +19,9 @@ function App() {
     <div className="App col-12">
 
       <Router>
+
         <Navbar />
+        
         <Routes>
 
           <Route
@@ -43,7 +45,9 @@ function App() {
           />
 
         </Routes>
+
         <Footer />
+
       </Router>
 
     </div>

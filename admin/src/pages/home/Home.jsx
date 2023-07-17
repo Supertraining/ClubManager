@@ -263,7 +263,9 @@ const Home = () => {
   }
 
   return (
+
     <>
+      
       {!conditionalRender()
         ?
         <div className='home d-flex'>
@@ -319,6 +321,7 @@ const Home = () => {
         </>
 
       }
+      
     </>
 
   )

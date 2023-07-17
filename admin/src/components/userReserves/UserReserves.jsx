@@ -6,15 +6,14 @@ const UserReserves = ({ user, handleDeleteReserve }) => {
 
   return (
 
-    <div
-      className='userReserveTable'>
+    <div>
 
-      <h3>
+      <h3 className='text-primary fw-bold my-2'>
         @Reservas
       </h3>
 
       <table
-        className='table table-responsive w-100'>
+        className='table table-responsive w-100 bg-transparent'>
 
         <thead
           className='bg-dark text-white text-center'>
