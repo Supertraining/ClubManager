@@ -88,7 +88,7 @@ const NavBarOffCanvasEnd = (props) => {
             )}
 
             {props.showChangePasswordForm && !props.showProfile && !props.showReserves && (
-              <div>
+              <div className='rounded bg-dark p-2 text-center'>
                 <form className='d-flex flex-column align-items-center'>
                   <input
                     className='my-2 rounded border-0 bg-success p-1'

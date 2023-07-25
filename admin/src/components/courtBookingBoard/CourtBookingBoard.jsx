@@ -4,10 +4,10 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
 
   return (
     <div
-      className='col-12 p-2'>
+      className='col-12 p-2 tableContainer'>
 
       <div
-        className='table rounded tableContainer'>
+        className='table rounded'>
 
         <div
           className='tr'>

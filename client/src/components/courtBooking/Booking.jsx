@@ -13,6 +13,7 @@ import unidecode from 'unidecode';
 import CourtBookingDatePicker from '../courtBookingDatePicker/CourtBookingDatePicker';
 
 const Booking = ({ court }) => {
+
   const [day, setDay] = useState(new Date());
   const [initialTime, setInitialTime] = useState();
   const [finalTime, setFinalTime] = useState();
@@ -159,48 +160,50 @@ const Booking = ({ court }) => {
   }
 
   return (
+
     <>
+
       <div className='calendarContainer d-flex flex-column col-12'>
-        <>
-          <div className='d-flex flex-column border rounded bg-dark bg-opacity-50 reserveInstructionsWrapper'>
-            <div className='d-flex align-items-center flex-wrap justify-content-center p-3 m-3 bg-dark'>
-              <ul className='p-2 rounded m-0 text-center shadow fw-bold bg-light m-1'>
-                <li>
-                  {' '}
-                  1 .Selecciona en el calendario la fecha y la hora de inicio de tu reserva y
-                  presiona el botón
-                  <i className='text-success'> Confirmar hora de inicio</i>
-                </li>
 
-                <li>
-                  2. Selecciona la hora de finalización de tu reserva y presiona el botón
-                  <i className='text-success'> Confirmar hora de finalización</i>
-                </li>
+        <div className='d-flex flex-column border rounded bg-dark bg-opacity-50 reserveInstructionsWrapper'>
+          <div className='d-flex align-items-center flex-wrap justify-content-center p-3 m-3 bg-dark'>
+            <ul className='p-2 rounded m-0 text-center shadow fw-bold bg-light m-1'>
+              <li>
+                {' '}
+                1 .Selecciona en el calendario la fecha y la hora de inicio de tu reserva y
+                presiona el botón
+                <i className='text-success'> Confirmar hora de inicio</i>
+              </li>
 
-                <li>
-                  3. Por ultimo presiona el botón:
-                  <i className='text-success'> Confirmar reserva</i>
-                </li>
-              </ul>
-            </div>
+              <li>
+                2. Selecciona la hora de finalización de tu reserva y presiona el botón
+                <i className='text-success'> Confirmar hora de finalización</i>
+              </li>
+
+              <li>
+                3. Por ultimo presiona el botón:
+                <i className='text-success'> Confirmar reserva</i>
+              </li>
+            </ul>
           </div>
+        </div>
 
-          <CourtBookingDatePicker
-            setInitialTime={setInitialTime}
-            initialTime={initialTime}
-            setFinalTime={setFinalTime}
-            finalTime={finalTime}
-            setConfirmReserve={setConfirmReserve}
-            confirmReserve={confirmReserve}
-            handleBooking={handleBooking}
-            setDay={setDay}
-            day={day}
-          />
+        <CourtBookingDatePicker
+          setInitialTime={setInitialTime}
+          initialTime={initialTime}
+          setFinalTime={setFinalTime}
+          finalTime={finalTime}
+          setConfirmReserve={setConfirmReserve}
+          confirmReserve={confirmReserve}
+          handleBooking={handleBooking}
+          setDay={setDay}
+          day={day}
+        />
 
-          <div>
-            <ToastContainer />
-          </div>
-        </>
+        <div>
+          <ToastContainer />
+        </div>
+
       </div>
 
       <CourtBookingBoard

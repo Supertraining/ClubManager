@@ -56,7 +56,7 @@ const Booking = ({ setCourt, court }) => {
 
       }
 
-      //!Un turno se puede reservar en un rango maximo de una semana
+      //!Un turno se puede reservar en un rango máximo de una semana
 
       const reservedDates = reserveData?.some((reserve) => initialTime === reserve.initialTime && finalTime === reserve.finalTime || initialTime === reserve.initialTime + 1800000 || initialTime === reserve.initialTime - 1800000 || initialTime === reserve.finalTime - 1800000 || finalTime === initialTime + 1800000 || finalTime < initialTime || finalTime === reserve.finalTime + 1800000 || finalTime === reserve.finalTime - 1800000 || new Date(initialTime).getDate() < new Date().getDate() || new Date(finalTime).getDate() < new Date().getDate()) || new Date(initialTime).getTime() <= Date.now() || new Date(finalTime).getTime() <= Date.now();
 
@@ -96,12 +96,12 @@ const Booking = ({ setCourt, court }) => {
             id: UUID,
             permanent: permanent
           })
-          
+
         if (permanent) {
-          const today = new Date(initialTime); 
+          const today = new Date(initialTime);
           const oneWeekFromNow = today.setDate(today.getDate() + 7);
           const dateOneWeekFromNow = unidecode(new Date(oneWeekFromNow).toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'numeric' }));
-          
+
           await axios.put('/courts/reserve',
             {
               name: `${court}`,
@@ -224,46 +224,46 @@ const Booking = ({ setCourt, court }) => {
       <div
         className='calendarContainer d-flex flex-column col-12'>
 
-            <div
-              className='d-flex flex-column border rounded bg-dark bg-opacity-50 reserveInstructionsWrapper'>
+        <div
+          className='d-flex flex-column border rounded bg-dark bg-opacity-50 reserveInstructionsWrapper'>
 
-              <div
-                className='d-flex align-items-center flex-wrap justify-content-center p-3 m-3 bg-dark'>
+          <div
+            className='d-flex align-items-center flex-wrap justify-content-center p-3 m-3 bg-dark'>
 
-                <ul
-                  className='p-2 rounded m-0 text-center shadow fw-bold bg-light m-1'>
+            <ul
+              className='p-2 rounded m-0 text-center shadow fw-bold bg-light m-1'>
 
-                  <li> 1 .Selecciona en el calendario la fecha y la hora de inicio de tu reserva y presiona el botón
-                    <i
-                      className='text-success'> Confirmar hora de inicio</i></li>
-                  <li>2. Selecciona la hora de finalización de tu reserva y presiona el botón
-                    <i
-                      className='text-success'> Confirmar hora de finalización</i ></li>
-                  <li>3. Por ultimo presiona el botón:
-                    <i
-                      className='text-success'> Confirmar reserva</i></li>
+              <li> 1 .Selecciona en el calendario la fecha y la hora de inicio de tu reserva y presiona el botón
+                <i
+                  className='text-success'> Confirmar hora de inicio</i></li>
+              <li>2. Selecciona la hora de finalización de tu reserva y presiona el botón
+                <i
+                  className='text-success'> Confirmar hora de finalización</i ></li>
+              <li>3. Por ultimo presiona el botón:
+                <i
+                  className='text-success'> Confirmar reserva</i></li>
 
-                </ul>
+            </ul>
 
-              </div>
+          </div>
 
-            </div>
+        </div>
 
-            <CourtBookingDatePicker
-              setInitialTime={setInitialTime}
-              initialTime={initialTime}
-              setFinalTime={setFinalTime}
-              finalTime={finalTime}
-              setConfirmReserve={setConfirmReserve}
-              confirmReserve={confirmReserve}
-              handleBooking={handleBooking}
-              setDay={setDay}
-              day={day}
-              setPermanent={setPermanent}
-              permanent={permanent} />
-            <div>
-              <ToastContainer />
-            </div>
+        <CourtBookingDatePicker
+          setInitialTime={setInitialTime}
+          initialTime={initialTime}
+          setFinalTime={setFinalTime}
+          finalTime={finalTime}
+          setConfirmReserve={setConfirmReserve}
+          confirmReserve={confirmReserve}
+          handleBooking={handleBooking}
+          setDay={setDay}
+          day={day}
+          setPermanent={setPermanent}
+          permanent={permanent} />
+        <div>
+          <ToastContainer />
+        </div>
 
       </div>
 

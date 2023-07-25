@@ -1,7 +1,11 @@
+import { useState } from 'react';
 import Login from '../auth/login/Login';
 import { Link } from 'react-router-dom';
 
 const NavBarOffCanvasStart = (props) => {
+
+  const [showCanvasStart, setShowCanvasStart] = useState(false)
+
   return (
     <>
       <div
@@ -24,11 +28,17 @@ const NavBarOffCanvasStart = (props) => {
             <li className='nav-item d-flex align-items-center my-4'>
               <i className='bi bi-house mx-1 text-white'></i>
               <Link
-                className='nav-link text-white text-decoration-underline'
+                className='nav-link '
                 aria-current='page'
                 to='/'
               >
-                Inicio
+                <button
+                  className='btn text-white text-decoration-underline'
+                  data-bs-toggle='offcanvas'
+                >
+                  Inicio
+                </button>
+
               </Link>
             </li>
 
@@ -67,23 +77,38 @@ const NavBarOffCanvasStart = (props) => {
                     <li>
                       <i className='bi bi-caret-right-fill text-info'></i>
 
-                      <Link className='dropdownitem' to='reserves' state={{ court: 'futbol' }}>
-                        Futbol
+                      <Link to='reserves' state={{ court: 'futbol' }}>
+                        <button
+                          className='btn dropdownitem'
+                          data-bs-toggle='offcanvas'
+                        >
+                          Futbol
+                        </button>
                       </Link>
                     </li>
 
                     <li>
                       <i className='bi bi-caret-right-fill text-info'></i>
-                      <Link className='dropdownitem' to='reserves' state={{ court: 'paleta' }}>
-                        Pelota Paleta
+                      <Link to='reserves' state={{ court: 'paleta' }}>
+                        <button
+                          className='btn dropdownitem'
+                          data-bs-toggle='offcanvas'
+                        >
+                          Pelota Paleta
+                        </button>
                       </Link>
                     </li>
 
                     <li>
                       <i className='bi bi-caret-right-fill text-info'></i>
 
-                      <Link className='dropdownitem' to='reserves' state={{ court: 'paddle' }}>
-                        Paddle
+                      <Link to='reserves' state={{ court: 'paddle' }}>
+                        <button
+                          className='btn dropdownitem'
+                          data-bs-toggle='offcanvas'
+                        >
+                          Paddle
+                        </button>
                       </Link>
                     </li>
 
@@ -91,7 +116,12 @@ const NavBarOffCanvasStart = (props) => {
                       <i className='bi bi-caret-right-fill text-info'></i>
 
                       <Link className='dropdownitem' to='reserves' state={{ court: 'squash' }}>
-                        Squash
+                        <button
+                          className='btn dropdownitem'
+                          data-bs-toggle='offcanvas'
+                        >
+                          Squash
+                        </button>
                       </Link>
                     </li>
                   </ul>

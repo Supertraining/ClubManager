@@ -3,11 +3,16 @@ import './squash.css'
 
 const Squash = ({ court }) => {
   return (
-    <div className='squashContainer'>
+    <div className='squashContainer rounded'>
 
-    <Booking court={court} />
-    
-  </div>
+      <h1
+        className='court-title text-center m-0 text-success bg-white p-2'>
+        Squash
+      </h1>
+
+      <Booking court={court} />
+
+    </div>
   )
 }
 

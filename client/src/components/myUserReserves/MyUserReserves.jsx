@@ -1,9 +1,10 @@
-import React from 'react'
+import './myUserReserves.css';
+
 
 const MyUserReserves = (props) => {
   return (
 
-    <>
+    <div className='bg-dark'>
 
       <h6
         className='text-success fw-bold p-2 m-0'>
@@ -23,27 +24,27 @@ const MyUserReserves = (props) => {
 
               <th
                 scope='col'
-                className='text-center fw-light'>
+                className='text-center fw-light p-0'>
                 Actividad
               </th>
               <th
                 scope='col'
-                className='text-center fw-light'>
+                className='text-center fw-light p-0'>
                 fecha
               </th>
               <th
                 scope='col'
-                className='text-center fw-light'>
+                className='text-center fw-light p-0'>
                 Inicia
               </th>
               <th
                 scope='col'
-                className='text-center fw-light'>
+                className='text-center fw-light p-0'>
                 Finaliza
               </th>
               <th
                 scope='col'
-                className='text-center fw-light'>
+                className='text-center fw-light p-0'>
                 Anular
               </th>
 
@@ -58,29 +59,29 @@ const MyUserReserves = (props) => {
               <tr
                 className='my-1 text-success text-center border border-success tableData-text' key={i}>
 
-                <td>
+                <td className='tableData'>
                   {res.court}
                 </td>
 
-                <td>
+                <td className='tableData'>
                   {res.date}
                 </td>
 
-                <td>
+                <td className='tableData'>
                   {new Date(res.initialTime).toLocaleTimeString(
                     [], { timeStyle: 'short' }
                   )
                   }
                 </td>
 
-                <td>
+                <td className='tableData'>
                   {new Date(res.finalTime).toLocaleTimeString(
                     [], { timeStyle: 'short' }
                   )
                   }
                 </td>
 
-                <td>
+                <td className='tableData'>
 
                   <button
                     className='btn m-0 px-2 py-0'
@@ -248,7 +249,7 @@ const MyUserReserves = (props) => {
         </table>
 
       </div>
-    </>
+    </div>
 
   )
 }

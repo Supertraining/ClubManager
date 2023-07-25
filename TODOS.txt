@@ -7,10 +7,8 @@
 - Usuario pueda modificar su contraseña. -DONE
 - Enviar Mail al nuevo usuario. - DONE
 - Enviar Mail al usuario cuando cambia su contraseña. - DONE
-- Boton de WhatsApp en el Home.
+- Boton de WhatsApp en el Home - DONE
 - Comprimir imagenes del Home
 -Subir imagenes a una db?
-
-
-
-
+-Ver offcanvasEnd diseño celu colores contraste - DONE
+-SEO HTML.

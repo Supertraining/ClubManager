@@ -1,6 +1,8 @@
 import './footer.css';
-import whatsapp from '../../assets/footer/icons/whatsapp.png';
+import facebook from '../../assets/footer/icons/facebook.png';
 import instagram from '../../assets/footer/icons/instagram.png';
+import gmail from '../../assets/footer/icons/gmail.png';
+
 
 function Footer() {
 
@@ -47,20 +49,28 @@ function Footer() {
 
         <div className='m-2'>
 
-          <a href='https://wa.me/######'>
-            <img src={whatsapp} alt='whatsapp' className='whatsappImg' />
+          <a target='_blank' href='https://www.instagram.com/ranelagh.club/'>
+            <img src={instagram} alt='instagram' className='instagramImg' />
           </a>
 
         </div>
 
         <div className='m-2'>
 
-          <a href=''>
-            <img src={instagram} alt='instagram' className='instagramImg' />
+          <a target='_blank' href='https://www.facebook.com/profile.php?id=100064211970969'>
+            <img src={facebook} alt='facebook' className='instagramImg' />
           </a>
 
         </div>
-        
+
+        <div className='m-2'>
+
+          <a target='_blank' href='https://www.facebook.com/profile.php?id=100064211970969'>
+            <img src={gmail} alt='gmail' className='instagramImg' />
+          </a>
+
+        </div>
+
       </div>
 
     </div>
