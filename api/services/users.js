@@ -7,7 +7,7 @@ export default class UsersServices {
 
     constructor() {
 
-        this.DAO = new UsersDAO();
+        this.DAO = UsersDAO.getInstance();
 
     }
 
@@ -38,7 +38,7 @@ export default class UsersServices {
     async insertUser(data) {
 
         try {
-
+        
             const newUser = await this.DAO
                 .insertUser(
 
@@ -49,7 +49,7 @@ export default class UsersServices {
                     }
 
                 );
-
+    
             return newUser[0];
 
 

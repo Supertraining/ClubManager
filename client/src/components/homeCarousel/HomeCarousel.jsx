@@ -2,7 +2,7 @@ import './HomeCarousel.css'
 import patinaje from '../../assets/home/child-roller-skates.webp'
 import gimnasia from '../../assets/home/child-gymnastics-1.webp'
 import futbol from '../../assets/home/child-football-1.webp'
-import functional from '../../assets/home/functional.jpg'
+import functional from '../../assets/home/functional.webp'
 
 
 const HomeCarousel = () => {

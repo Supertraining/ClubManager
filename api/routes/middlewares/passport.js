@@ -57,12 +57,13 @@ export const passportRegister = async (req, res, next) => {
                    
                     const usuario = await userServices
                         .getByUserName(username);
-
+                   
                     if (usuario) {
 
                         return done(null, false);
 
                     }
+                    
 
                     let newUser = await userServices
                         .insertUser(

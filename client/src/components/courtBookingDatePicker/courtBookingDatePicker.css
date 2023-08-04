@@ -25,3 +25,10 @@
   transform: translate(1px, 1px);
   border: 0;
 }
+
+/* .btn-datePicker-small {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  border-radius: 0.25rem;
+  font-size: clamp(3vw, 0.875rem, 1rem) !important;
+} */

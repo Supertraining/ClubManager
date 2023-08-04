@@ -5,6 +5,7 @@ let instance = null;
 
 export default class UsersDAO {
 
+
   async getByUserName(username) {
 
     try {
@@ -24,9 +25,9 @@ export default class UsersDAO {
   }
 
   async insertUser(data) {
-
+    console.log(data)
     try {
-
+      
       let newUser = await model
         .usermodel
         .insertMany(data);
@@ -187,7 +188,7 @@ export default class UsersDAO {
     }
   }
 
-  static async getInstance() {
+  static getInstance() {
     try {
 
       if (!instance) {
@@ -200,7 +201,7 @@ export default class UsersDAO {
 
       logger.info('Se ha utilizado una instancia ya creada de usersDAO');
 
-      return await instance;
+      return instance;
 
     } catch (error) {
 

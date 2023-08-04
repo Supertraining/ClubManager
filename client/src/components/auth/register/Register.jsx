@@ -252,7 +252,7 @@ const Register = () => {
               </div>
 
               <input
-                className="my-2 text-center border border-success w-25 rounded bg-white text-secondary p-2 register-Btn"
+                className="my-2 text-center border border-success col-6 rounded bg-white text-secondary p-2 register-Btn"
                 type="submit"
                 value='Registrarme'
                 disabled={loading}

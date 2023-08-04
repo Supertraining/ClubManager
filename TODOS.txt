@@ -8,7 +8,8 @@
 - Enviar Mail al nuevo usuario. - DONE
 - Enviar Mail al usuario cuando cambia su contraseña. - DONE
 - Boton de WhatsApp en el Home - DONE
-- Comprimir imagenes del Home
+- Comprimir imagenes del Home - DONE
 -Subir imagenes a una db?
 -Ver offcanvasEnd diseño celu colores contraste - DONE
 -SEO HTML.
+-Probar si los BTN small en el date picker en el celu (los de anular) se ven bien sino usar la clase button-datepicker-small que esta comentada

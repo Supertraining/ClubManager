@@ -5,7 +5,7 @@ export default class EventServices {
 
   constructor() {
 
-    this.EventDAO = new EventDAO();
+    this.EventDAO = EventDAO.getInstance();
 
   }
 

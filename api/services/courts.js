@@ -5,7 +5,7 @@ export default class CourtServices {
 
     constructor() {
 
-        this.courtsDAO = new CourtsDAO();
+        this.courtsDAO = CourtsDAO.getInstance();
 
     }
 

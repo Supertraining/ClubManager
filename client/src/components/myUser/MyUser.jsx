@@ -7,9 +7,9 @@ import { useInView } from 'react-intersection-observer';
 const MyUser = (props) => {
   const { user } = useContext(AuthContext);
 
-  const [showForm, setShowForm] = useState(false);
-  const [confirmDelete, setConfirmDelete] = useState(false);
-  const [credentials, setCredentials] = useState({
+  const [ showForm, setShowForm ] = useState(false);
+  const [ confirmDelete, setConfirmDelete ] = useState(false);
+  const [ credentials, setCredentials ] = useState({
     username: '',
     nombre: '',
     apellido: '',
@@ -24,48 +24,48 @@ const MyUser = (props) => {
   const handleChange = (e) => {
     setCredentials({
       ...user,
-      [e.target.name]: e.target.value,
+      [ e.target.name ]: e.target.value,
     });
   };
 
   return (
     user && (
-      <div ref={ref} className={inView ? 'myUserContainer rounded p-2' : undefined}>
+      <div ref={ ref } className={ inView ? 'myUserContainer rounded p-2' : undefined }>
         <h6 className='text-white'>Datos de mi cuenta:</h6>
 
         <ul>
           <li>
             <i className='bi bi-caret-right-fill text-info'></i>
             <b className='text-success'>Usuario: </b>
-            <span className='text-white'>{user?.username}</span>
+            <span className='text-white'>{ user?.username }</span>
           </li>
 
           <li>
             <i className='bi bi-caret-right-fill text-info'></i>
             <b className='text-success'>Nombre: </b>
-            <span className='text-white'>{user?.nombre}</span>
+            <span className='text-white'>{ user?.nombre }</span>
           </li>
 
           <li>
             <i className='bi bi-caret-right-fill text-info'></i>
             <b className='text-success'>Apellido: </b>
-            <span className='text-white'>{user?.apellido}</span>
+            <span className='text-white'>{ user?.apellido }</span>
           </li>
 
           <li>
             <i className='bi bi-caret-right-fill text-info'></i>
             <b className='text-success'>Edad: </b>
-            <span className='text-white'>{user?.edad} años</span>
+            <span className='text-white'>{ user?.edad } años</span>
           </li>
 
           <li>
             <i className='bi bi-caret-right-fill text-info'></i>
             <b className='text-success'>Teléfono: </b>
-            <span className='text-white'>{user?.telefono}</span>
+            <span className='text-white'>{ user?.telefono }</span>
           </li>
         </ul>
 
-        {showForm && (
+        { showForm && (
           <>
             <form className='text-center d-flex flex-column align-items-center justify-content-center col-10'>
               <div className='d-flex align-items-center'>
@@ -76,7 +76,7 @@ const MyUser = (props) => {
                   name='username'
                   id='username'
                   placeholder='Usuario'
-                  onChange={handleChange}
+                  onChange={ handleChange }
                 />
               </div>
 
@@ -88,7 +88,7 @@ const MyUser = (props) => {
                   name='nombre'
                   id='nombre'
                   placeholder='Nombre'
-                  onChange={handleChange}
+                  onChange={ handleChange }
                 />
               </div>
 
@@ -100,7 +100,7 @@ const MyUser = (props) => {
                   name='apellido'
                   id='apellido'
                   placeholder='Apellido'
-                  onChange={handleChange}
+                  onChange={ handleChange }
                 />
               </div>
 
@@ -112,7 +112,7 @@ const MyUser = (props) => {
                   name='edad'
                   id='edad'
                   placeholder='Edad'
-                  onChange={handleChange}
+                  onChange={ handleChange }
                 />
               </div>
 
@@ -124,76 +124,76 @@ const MyUser = (props) => {
                   name='telefono'
                   id='telefono'
                   placeholder='Telefono'
-                  onChange={handleChange}
+                  onChange={ handleChange }
                 />
               </div>
 
-              <div className='d-flex justify-content-end col-12 mt-2 myUser-form-buttons'>
-                <input
-                  type='submit'
-                  value='Actualizar'
-                  className='btn btn-sm btn-outline-danger m-1'
-                  onClick={(e) => {
-                    props.handleUpdateUser(e, credentials, user._id), setShowForm(false);
-                  }}
-                />
-
-                <button
-                  className='btn btn-sm btn-outline-success m-1'
-                  onClick={() => setShowForm(false)}
-                >
-                  Cancelar
-                </button>
-              </div>
             </form>
+            <div className='d-flex justify-content-center col-12 mt-2'>
+              <button
+                className='btn btn-sm btn-outline-danger m-1'
+                onClick={ (e) => {
+                  props.handleUpdateUser(e, credentials, user._id), setShowForm(false);
+                } }
+              >
+                Actualizar
+              </button>
+
+              <button
+                className='btn btn-sm btn-outline-success m-1'
+                onClick={ () => setShowForm(false) }
+              >
+                Cancelar
+              </button>
+            </div>
           </>
-        )}
+        ) }
 
         <div className='d-flex justify-content-evenly align-items-center'>
-          {!showForm && !confirmDelete && (
+          { !showForm && !confirmDelete && (
             <div>
-              <button className='btn btn-success' onClick={() => setShowForm(true)}>
+              <button className='btn btn-success' onClick={ () => setShowForm(true) }>
                 Editar
               </button>
             </div>
-          )}
+          ) }
 
           <div>
-            {!confirmDelete && !showForm && (
-              <button className='btn btn-danger' onClick={() => setConfirmDelete(true)}>
+            { !confirmDelete && !showForm && (
+              <button className='btn btn-danger' onClick={ () => setConfirmDelete(true) }>
                 Eliminar
               </button>
-            )}
+            ) }
 
-            {confirmDelete && (
+            { confirmDelete && (
               <div className='alert alert-danger text-center p-1 m-0'>
                 ¿Estas seguro?
                 <div className='d-flex'>
                   <button
                     className='btn btn-sm btn-danger mx-1'
-                    onClick={() => props.handleDeleteAccount(user?._id)}
+                    onClick={ () => props.handleDeleteAccount(user?._id) }
                   >
                     Confirmar
                   </button>
 
                   <button
                     className='btn btn-sm btn-success mx-1'
-                    onClick={() => setConfirmDelete(false)}
+                    onClick={ () => setConfirmDelete(false) }
                   >
                     Cancelar
                   </button>
                 </div>
               </div>
-            )}
+            ) }
           </div>
         </div>
 
         <i className='bi bi-asterisk text-white' id='basic-addon1'></i>
         <button
           className='btn text-primary text-decoration-underline my-2'
-          onClick={() => {
+          onClick={ () => {
             props.setShowProfile(false), props.setShowChangePasswordForm(true);
-          }}
+          } }
         >
           Cambiar contraseña
         </button>

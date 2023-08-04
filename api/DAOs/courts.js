@@ -92,7 +92,7 @@ export default class CourtsDAO {
                         $push:
                         {
 
-                            [`unavailableDates.${reserve.selectedDates.weekday}`]: reserve.selectedDates,
+                            [ `unavailableDates.${reserve.selectedDates.weekday}` ]: reserve.selectedDates,
 
                         }
                     }
@@ -112,7 +112,7 @@ export default class CourtsDAO {
             let data = await model.courtModel
                 .updateOne(
                     { name: courtName },
-                    { $pull: { [`unavailableDates.${reserveDay}`]: { id: reserveId } } }
+                    { $pull: { [ `unavailableDates.${reserveDay}` ]: { id: reserveId } } }
                 );
 
             return data;
@@ -134,14 +134,14 @@ export default class CourtsDAO {
             // Iterate over each court and remove reserves from yesterday
             const courts = await model.courtModel.find();
             for (const court of courts) {
-                for (const [dayOfWeek, reserves] of Object.entries(court.unavailableDates)) {
+                for (const [ dayOfWeek, reserves ] of Object.entries(court.unavailableDates)) {
 
-                    court.unavailableDates[dayOfWeek] = reserves.filter((reserve) => {
+                    court.unavailableDates[ dayOfWeek ] = reserves.filter((reserve) => {
 
-                        return reserve.initialTime < yesterday.getTime()
+                        return reserve.initialTime > yesterday.getTime()
                     });
                 }
-
+               
                 const result = await model.courtModel.updateOne(
                     { _id: court._id },
                     { $set: { unavailableDates: court.unavailableDates } }
@@ -157,29 +157,51 @@ export default class CourtsDAO {
     updateReservesUser = async (user) => {
 
         try {
-          
+
             const courts = await model.courtModel.find();
             for (const court of courts) {
-                for (const [dayOfWeek, reserves] of Object.entries(court.unavailableDates)) {
+                for (const [ dayOfWeek, reserves ] of Object.entries(court.unavailableDates)) {
 
-                    court.unavailableDates[dayOfWeek].forEach(async (reserve) => {
+                    court.unavailableDates[ dayOfWeek ].forEach(async (reserve) => {
                         if (reserve.user == user.user) {
-                        
+
                             await model.courtModel.updateOne(
                                 { _id: court._id },
-                                { $set: { [`unavailableDates.${dayOfWeek}.$[elem].user`]: user.newUser } },
-                                { arrayFilters: [{ "elem.user": user.user }] }
+                                { $set: { [ `unavailableDates.${dayOfWeek}.$[elem].user` ]: user.newUser } },
+                                { arrayFilters: [ { "elem.user": user.user } ] }
                             );
-                            
+
                         }
                     })
 
                 }
-                
+
             }
-              
+
         } catch (error) {
             logger.error(error);
+        }
+    }
+
+    static getInstance() {
+        try {
+
+            if (!instance) {
+
+                instance = new CourtsDAO();
+
+                logger.info('Se ha creado una instancia de CourtsDAO');
+
+            }
+
+            logger.info('Se ha utilizado una instancia ya creada de CourtsDAO');
+
+            return instance;
+
+        } catch (error) {
+
+            logger.error(error);
+
         }
     }
 
