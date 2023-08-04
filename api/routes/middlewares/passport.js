@@ -104,9 +104,10 @@ export const passportLogin = async (req, res, next) => {
             new LocalStrategy(
 
                 async (username, password, done) => {
-
+                    console.log('PASSPORT username', username)
+                    console.log('PASSPORT password', password)
                     let usuario = await userServices.getByUserName(username);
-
+                    console.log('PASSPORT usuario', usuario)
                     if (!usuario) {
 
                         return done(null, false);
