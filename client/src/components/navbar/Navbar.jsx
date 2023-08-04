@@ -20,7 +20,7 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const { user, dispatch } = useContext(AuthContext);
-
+  console.log('NavBar', user)
   const { setReserveDeleted } = useContext(ReserveBoardContext);
 
   const notifyTryAgainLater = () =>

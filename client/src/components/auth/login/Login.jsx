@@ -17,7 +17,7 @@ const Login = () => {
   const onSubmit = async (data) => {
     try {
       dispatch({ type: 'LOGIN_START' });
-
+      console.log(data)
       const res = await axios.post('/login', data);
       console.log(res)
       dispatch({ type: 'LOGIN_SUCCESS', payload: res.data });
@@ -31,7 +31,8 @@ const Login = () => {
   return (
     <div>
       
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={ handleSubmit(onSubmit) }>
+        
         <div className='d-flex align-items-center'>
           <i className='bi bi-person-check text-white fs-5' id='basic-addon2'></i>
 

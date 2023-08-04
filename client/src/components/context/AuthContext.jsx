@@ -49,10 +49,12 @@ let AuthReducer = (state, action) => {
 
 export const AuthContextProvider = ({ children }) => {
 
-  const { data } = useFetch('https://club-manager-backend-m4ol.onrender.com/home')
+  const { data, error } = useFetch('/home')
 
   const [state, dispatch] = useReducer(AuthReducer, INITIAL_STATE)
 
+  console.log('authContext', data)
+  console.log('authContextERROR', error)
 
   useEffect(() => {
 

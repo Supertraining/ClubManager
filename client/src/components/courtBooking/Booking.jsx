@@ -19,7 +19,7 @@ const Booking = ({ court }) => {
   const [finalTime, setFinalTime] = useState();
   const [confirmReserve, setConfirmReserve] = useState(false);
 
-  let { data, reFetch } = useFetch(`https://club-manager-backend-m4ol.onrender.com/courts/${court}`);
+  let { data, reFetch } = useFetch(`/courts/${court}`);
 
   const { user } = useContext(AuthContext);
   const { reserveDeleted, setReserveDeleted } = useContext(ReserveBoardContext);
