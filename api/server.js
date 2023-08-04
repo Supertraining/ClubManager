@@ -11,6 +11,7 @@ import logger from './utils/logger.js';
 import helmet from "helmet";
 import cron from 'node-cron';
 import { repeatPermanentReservations } from './utils/updatePermanentReservations.js';
+import { cookie } from 'express-validator';
 
 const app = express();
 
@@ -22,7 +23,12 @@ app.use(cors({
     credentials: true,
 }));
 
-app.use(session(config.sessionConfig));
+app.use(
+    session(config.sessionConfig,
+  
+    )
+
+);
 app.use(passport.initialize());
 app.use(passport.session());
 

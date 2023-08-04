@@ -10,8 +10,7 @@ const useFetch = (url) => {
         const fetchData = async () => {
             setLoading(true)
             try {
-                axios.defaults.withCredentials = true;
-                const res = await axios.get(url, {withCredentials: true});
+                const res = await axios.get(url);
                 setData(res.data);
             } catch (error) {
                 setError(error)
