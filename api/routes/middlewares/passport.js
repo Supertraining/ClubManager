@@ -115,7 +115,7 @@ export const passportLogin = async (req, res, next) => {
                     }
 
                     let auth = await authHash(password, usuario);
-
+                    console.log(auth)
                     if (!auth) {
 
                         return done(null, false);

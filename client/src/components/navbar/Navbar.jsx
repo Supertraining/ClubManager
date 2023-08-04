@@ -20,7 +20,6 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const { user, dispatch } = useContext(AuthContext);
-  console.log('NavBar', user)
   const { setReserveDeleted } = useContext(ReserveBoardContext);
 
   const notifyTryAgainLater = () =>
@@ -98,7 +97,6 @@ const Navbar = () => {
   const handleDeleteAccount = async (id) => {
     try {
       const res = await axios.delete(`/eliminar/${id}`);
-      console.log(res.data);
 
       if (res.data === true) {
         dispatch({ type: 'LOGOUT' });

@@ -3,7 +3,7 @@ import Login from '../auth/login/Login';
 import { Link } from 'react-router-dom';
 
 const NavBarOffCanvasStart = (props) => {
-  console.log('offCanvas', props.user)
+ 
   return (
     <>
       <div

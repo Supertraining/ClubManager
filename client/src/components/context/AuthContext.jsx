@@ -53,8 +53,6 @@ export const AuthContextProvider = ({ children }) => {
 
   const [state, dispatch] = useReducer(AuthReducer, INITIAL_STATE)
 
-  console.log('authContext', data)
-  console.log('authContextERROR', error)
 
   useEffect(() => {
 
