@@ -1,4 +1,4 @@
-import Football from "../../components/Football/Football"
+import Football from "../../components/football/Football"
 import Paleta from '../../components/pelotaPaleta/Paleta'
 import Paddle from '../../components/paddle/Paddle'
 import Squash from '../../components/squash/Squash'
