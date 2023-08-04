@@ -104,8 +104,7 @@ export const passportLogin = async (req, res, next) => {
             new LocalStrategy(
 
                 async (username, password, done) => {
-                    console.log('PASSPORT username', username)
-                    console.log('PASSPORT password', password)
+                    
                     let usuario = await userServices.getByUserName(username);
                     console.log('PASSPORT usuario', usuario)
                     if (!usuario) {
@@ -115,19 +114,18 @@ export const passportLogin = async (req, res, next) => {
                     }
 
                     let auth = await authHash(password, usuario);
-                    console.log(auth)
+                  
                     if (!auth) {
 
                         return done(null, false);
 
                     }
-                    return done(null, usuario);
-                    // req.logIn(usuario, (error) => {
+                    req.logIn(usuario, (error) => {
                         
-                    //     if (error) return done(error);
+                        if (error) return done(error);
 
-                    //     return done(null, usuario);
-                    // });
+                        return done(null, usuario);
+                    });
                 })
         );
 
