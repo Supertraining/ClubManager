@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 
 const NavBarOffCanvasStart = (props) => {
 
-  const [showCanvasStart, setShowCanvasStart] = useState(false)
   console.log(props.user)
   return (
     <>
