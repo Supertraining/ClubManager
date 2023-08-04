@@ -121,13 +121,13 @@ export const passportLogin = async (req, res, next) => {
                         return done(null, false);
 
                     }
-
-                    req.logIn(usuario, (error) => {
+                    return done(null, usuario);
+                    // req.logIn(usuario, (error) => {
                         
-                        if (error) return done(error);
+                    //     if (error) return done(error);
 
-                        return done(null, usuario);
-                    });
+                    //     return done(null, usuario);
+                    // });
                 })
         );
 
