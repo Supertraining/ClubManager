@@ -235,7 +235,7 @@ const Home = () => {
 
       auth.dispatch({ type: 'LOGOUT' })
 
-      const log = await axios.post('http://localhost:8080/logout', {}, { withCredentials: true })
+      const log = await axios.post('/logout', {}, { withCredentials: true })
 
 
     } catch (error) {

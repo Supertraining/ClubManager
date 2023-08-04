@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import 'react-date-time-picker-popup/dist/index.css';
-import axios from 'axios';
+import axios from '../../utils/axiosInstance.js';
 import useFetch from '../../hooks/useFetch';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -19,7 +19,7 @@ const Booking = ({ court }) => {
   const [finalTime, setFinalTime] = useState();
   const [confirmReserve, setConfirmReserve] = useState(false);
 
-  let { data, reFetch } = useFetch(`http://localhost:8080/courts/${court}`);
+  let { data, reFetch } = useFetch(`https://club-manager-backend-m4ol.onrender.com/courts/${court}`);
 
   const { user } = useContext(AuthContext);
   const { reserveDeleted, setReserveDeleted } = useContext(ReserveBoardContext);
@@ -98,7 +98,7 @@ const Booking = ({ court }) => {
         const unaccentedDate = unidecode(date);
         const UUID = uuidv4();
 
-        await axios.put('http://localhost:8080/courts/reserve', {
+        await axios.put('/courts/reserve', {
           name: `${court}`,
           selectedDates: {
             weekday: unaccentedWeekday,
@@ -111,7 +111,7 @@ const Booking = ({ court }) => {
           },
         });
 
-        await axios.put(`http://localhost:8080/reserves/${user?.username}`, {
+        await axios.put(`/reserves/${user?.username}`, {
           court: `${court}`,
           weekday: unaccentedWeekday,
           date: unaccentedDate,

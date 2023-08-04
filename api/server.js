@@ -17,7 +17,7 @@ const app = express();
 app.use(helmet());
 
 app.use(cors({
-    origin: [ 'http://localhost:5173', 'http://localhost:5174' ], 
+    origin: [ 'https://club-manager-admin.netlify.app/', 'https://club-manager-client.netlify.app/' ], 
     credentials: true
 }));
 app.use(session(config.sessionConfig));
