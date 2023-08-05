@@ -11,7 +11,6 @@ import logger from './utils/logger.js';
 import helmet from "helmet";
 import cron from 'node-cron';
 import { repeatPermanentReservations } from './utils/updatePermanentReservations.js';
-import { cookie } from 'express-validator';
 
 const app = express();
 

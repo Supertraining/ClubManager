@@ -21,10 +21,6 @@ export const sessionConfig = {
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
-  cookie: {
-    sameSite: 'none',
-    secure: true,
-  },
 };
 
 export const gmailData = {
