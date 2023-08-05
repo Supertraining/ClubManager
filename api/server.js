@@ -19,8 +19,7 @@ app.use(helmet());
 
 
 app.use(cors({
-    origin: [ 'https://club-manager-admin.netlify.app/', 'https://club-manager-client.netlify.app/', 'http://localhost:5173/', 'http://localhost:5174/' ],
-    credentials: true,
+    origin: '*'
 }));
 
 app.use(
