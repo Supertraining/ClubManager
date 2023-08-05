@@ -106,7 +106,7 @@ export const passportLogin = async (req, res, next) => {
                 async (username, password, done) => {
                     
                     let usuario = await userServices.getByUserName(username);
-                    console.log('PASSPORT usuario', usuario)
+                    
                     if (!usuario) {
 
                         return done(null, false);
