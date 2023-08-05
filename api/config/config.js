@@ -21,13 +21,17 @@ export const sessionConfig = {
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
-}
+  cookie: {
+    sameSite: 'none',
+    secure: true,
+  },
+};
 
 export const gmailData = {
   gmailService: process.env.SERVICE,
- gmailPort: process.env.GMAILPORT,
- gmailUser: process.env.GMAILUSER,
- gmailPass: process.env.GMAILPASS,
+  gmailPort: process.env.GMAILPORT,
+  gmailUser: process.env.GMAILUSER,
+  gmailPass: process.env.GMAILPASS,
 }
 
 

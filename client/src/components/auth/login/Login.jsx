@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext.jsx';
 import './login.css';
 import { useForm } from 'react-hook-form';
+import { AxiosHeaders } from 'axios';
 
 const Login = () => {
   const {
@@ -17,7 +18,7 @@ const Login = () => {
   const onSubmit = async (data) => {
     try {
       dispatch({ type: 'LOGIN_START' });
-      
+
       console.log(data)
 
       const res = await axios.post('/login', data);
