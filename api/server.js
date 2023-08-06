@@ -18,9 +18,11 @@ app.use(helmet());
 
 
 app.use(cors({
-    origin: [ 'https://club-manager-admin.netlify.app', 'https://club-manager-client.netlify.app', 'http://localhost:5173', 'http://localhost:5174' ],
+    origin: ['https://club-manager-admin.netlify.app', 'https://club-manager-client.netlify.app', 'http://localhost:5173', 'http://localhost:5174'],
     credentials: true,
-}));
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],  
+    allowedHeaders: ['Content-Type', 'Authorization'], 
+  }));
 
 app.use(session(config.sessionConfig));
 app.use(passport.initialize());
