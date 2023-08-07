@@ -20,7 +20,7 @@ export const sessionConfig = {
   ),
   cookie: {
     sameSite: 'none',
-    secure: false,
+    secure: true,
   },
   secret: process.env.SESSION_SECRET,
   resave: false,
