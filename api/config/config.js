@@ -19,7 +19,8 @@ export const sessionConfig = {
     },
   ),
   cookie: {
-    sameSite: 'none'
+    sameSite: 'none',
+    secure: false,
   },
   secret: process.env.SESSION_SECRET,
   resave: false,
