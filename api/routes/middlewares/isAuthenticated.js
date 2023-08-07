@@ -3,7 +3,7 @@ import { routeLogger } from "../../utils/logger.js";
 export const requireAuthentication = async (req, res, next) => {
 
     try {
-
+        console.log('REQ SESSION', req.session);
         console.log('REQUIRE AUTH', req.isAuthenticated());
         if (req.isAuthenticated()) {
 
