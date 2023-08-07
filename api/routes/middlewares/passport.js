@@ -41,7 +41,7 @@ passport.deserializeUser(async (username, done) => {
 export const passportRegister = async (req, res, next) => {
 
     try {
-      
+
         passport.use(
 
             'register',
@@ -52,18 +52,18 @@ export const passportRegister = async (req, res, next) => {
                     passReqToCallback: true,
                 },
 
-               
+
                 async (req, username, password, done) => {
-                   
+
                     const usuario = await userServices
                         .getByUserName(username);
-                   
+
                     if (usuario) {
 
                         return done(null, false);
 
                     }
-                    
+
 
                     let newUser = await userServices
                         .insertUser(
@@ -77,7 +77,7 @@ export const passportRegister = async (req, res, next) => {
 
                         );
                     newUser && emailNewUserNotification(username, req.body);
-                    
+
                     done(null, newUser);
 
                 }
@@ -104,9 +104,9 @@ export const passportLogin = async (req, res, next) => {
             new LocalStrategy(
 
                 async (username, password, done) => {
-                    
+
                     let usuario = await userServices.getByUserName(username);
-                    
+
                     if (!usuario) {
 
                         return done(null, false);
@@ -114,19 +114,20 @@ export const passportLogin = async (req, res, next) => {
                     }
 
                     let auth = await authHash(password, usuario);
-                  
+
                     if (!auth) {
 
                         return done(null, false);
 
                     }
                     req.logIn(usuario, (error) => {
-                       
+
                         if (error) return done(error);
 
                         return done(null, usuario);
                     });
-                })
+                }
+            )
         );
 
     } catch (error) {

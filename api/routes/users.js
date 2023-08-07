@@ -64,7 +64,6 @@ export default class UserRouter {
 
             passportLogin,
 
-
             passport
                 .authenticate('login',
 
