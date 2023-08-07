@@ -16,8 +16,11 @@ export const sessionConfig = {
       mongoOptions: advancedOptions,
       collectionName: 'sessions',
       ttl: 600,
-    }
+    },
   ),
+  cookie: {
+    sameSite: 'none'
+  },
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
