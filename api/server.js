@@ -18,7 +18,8 @@ app.use(helmet());
 
 
 app.use(cors({
-    origin: ['https://club-manager-admin.onrender.com', 'https://club-manager-client.onrender.com']
+  origin: [ 'https://club-manager-admin.onrender.com', 'https://club-manager-client.onrender.com' ],
+  credentials: true
     }));
 
 app.use(session(config.sessionConfig));

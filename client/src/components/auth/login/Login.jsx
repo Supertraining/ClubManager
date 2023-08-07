@@ -4,7 +4,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext.jsx';
 import './login.css';
 import { useForm } from 'react-hook-form';
-import { AxiosHeaders } from 'axios';
 
 const Login = () => {
   const {
