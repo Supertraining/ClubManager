@@ -18,9 +18,9 @@ app.use(helmet());
 
 
 app.use(cors({
-  origin: [ 'https://club-manager-admin.onrender.com', 'https://club-manager-client.onrender.com', 'http://localhost:5173', 'http://localhost:5174'  ],
+  origin: [ 'https://clubmanagerclient.000webhostapp.com/', 'http://localhost:5173', 'http://localhost:5174' ],
   credentials: true
-    }));
+}));
 
 app.use(session(config.sessionConfig));
 app.use(passport.initialize());
@@ -41,7 +41,7 @@ cron.schedule('01 00 * * *', repeatPermanentReservations);
 const PORT = process.argv[ 2 ] || config.port;
 
 app.listen(PORT, () => {
-    connect(config.mongoUrl)
-    logger.info(`Club Manager app listening at ${PORT}`);
+  connect(config.mongoUrl)
+  logger.info(`Club Manager app listening at ${PORT}`);
 })
 
