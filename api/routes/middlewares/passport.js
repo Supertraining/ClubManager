@@ -96,7 +96,7 @@ export const passportRegister = async (req, res, next) => {
 export const passportLogin = async (req, res, next) => {
 
     try {
-       
+
         passport.use(
 
             'login',
@@ -120,7 +120,7 @@ export const passportLogin = async (req, res, next) => {
 
                     }
                     req.logIn(usuario, (error) => {
-                        console.log(usuario, error);
+
                         if (error) return done(error);
 
                         return done(null, usuario);
