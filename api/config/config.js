@@ -18,10 +18,10 @@ export const sessionConfig = {
       ttl: 600,
     },
   ),
-  cookie: {
-    sameSite: 'none',
-    secure: true,
-  },
+  // cookie: {
+  //   sameSite: 'none',
+  //   secure: true,
+  // },
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
