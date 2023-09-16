@@ -21,7 +21,9 @@ export const sessionConfig = {
   //Esta conf de cookie es solo para deploy, comentar en local sin req.isAuthticated() devuelve false
   cookie: {
     sameSite: 'none',
-    secure: true,
+    // secure: true,
+    httpOnly: true,
+    expires: 600000
   },
   secret: process.env.SESSION_SECRET,
   resave: false,
