@@ -15,7 +15,6 @@ export default class UsersController {
 
 			const usuario = await this.userServices
 				.getByUserName(req.user?.username);
-			console.log('GetByUserName', usuario);
 			usuario
 				? res.json(usuario)
 				: res.status(404).json(usuario)

@@ -106,10 +106,7 @@ export default class UserRouter {
         );
 
         router.get(
-
             '/home',
-
-
             this.controllers
                 .getByUserName
 
