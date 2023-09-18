@@ -108,8 +108,7 @@ export default class UserRouter {
         router.get(
 
             '/home',
-           
-            requireAuthentication,
+
 
             this.controllers
                 .getByUserName
