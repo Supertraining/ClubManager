@@ -67,7 +67,7 @@ const NavBarOffCanvasStart = (props) => {
                     data-bs-toggle='dropdown'
                     aria-expanded='false'
                   >
-                    Reservas
+                    Reservar cancha
                   </Link>
 
                   <ul className='dropdown-menu bg-transparent'>
