@@ -12,10 +12,9 @@ export default class UsersController {
 	getByUserName = async (req, res) => {
 
 		try {
-			console.log('CONTROLLER REQ:', req.user);
+			
 			const usuario = await this.userServices
 				.getByUserName(req.user?.username);
-				console.log('CONTROLLER USUARIO:', usuario);
 			
 			res.json(usuario);	
 
