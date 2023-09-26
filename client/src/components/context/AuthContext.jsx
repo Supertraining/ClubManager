@@ -50,9 +50,8 @@ let AuthReducer = (state, action) => {
 export const AuthContextProvider = ({ children }) => {
 
   const { data, error } = useFetch('/home')
-
+ 
   const [state, dispatch] = useReducer(AuthReducer, INITIAL_STATE)
-
 
   useEffect(() => {
 

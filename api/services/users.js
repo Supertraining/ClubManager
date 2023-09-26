@@ -17,7 +17,7 @@ export default class UsersServices {
 
             const user = await this.DAO
                 .getByUserName(username);
-            console.log('USUARIO',user);
+          
             if (user.length === 0) {
 
                 logger.info(`No existe el usuario ${username}`);
