@@ -13,7 +13,7 @@ const FailLogin = () => {
           <Link to="/login" className="btn btn-outline-primary my-2">
             aquí
           </Link>
-          para volver a intentarlo
+          para ingresar con sus credenciales
         </div>
 
       </div>

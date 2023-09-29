@@ -6,7 +6,7 @@ import './login.css'
 import { useForm } from 'react-hook-form'
 
 const Login = () => {
-  
+
   const {
     register,
     handleSubmit,
@@ -14,15 +14,16 @@ const Login = () => {
   } = useForm()
 
   const { loading, error, dispatch } = useContext(AuthContext)
-
+  
   const navigate = useNavigate()
 
   const onSubmit = async (credentials) => {
     try {
+
       dispatch({ type: 'LOGIN_START' })
 
       const { data } = await axios.post('/login', credentials)
-
+   
       dispatch({ type: 'LOGIN_SUCCESS', payload: data })
 
       data.admin

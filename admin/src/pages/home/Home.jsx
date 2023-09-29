@@ -12,6 +12,7 @@ import GetAllCourts from '../../components/getAllCourts/GetAllCourts';
 import { AuthContext } from '../../components/context/AuthContext';
 import FailLogin from '../../components/faillogin/FailLogin';
 import Eventos from '../../components/eventos/Eventos';
+import { useEffect } from 'react';
 
 
 const Home = () => {
@@ -240,16 +241,21 @@ const Home = () => {
     }
 
   }
-
-  const conditionalRender = () => {
-
-    if (auth?.user === null) {
+  useEffect(() => {
+    if (auth.user === null) {
       navigate('/login')
+    }
+  }, [auth.user, navigate])
+
+  console.log(auth.user)
+  const conditionalRender = () => {
+    if (auth?.user === null) {
+      return true
     } else if (auth?.user?.admin === false) {
       return <FailLogin />
     }
-
   }
+
 
 
   return (

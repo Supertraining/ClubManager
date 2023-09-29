@@ -154,7 +154,7 @@ const Register = () => {
 
               <input
                 id="nombre"
-                name='nombre'
+                name="nombre"
                 placeholder="Nombre"
                 className="form-control my-2 text-center border-0 border-bottom ph" type="text"
                 {...register('nombre', { required: true })}
@@ -178,7 +178,7 @@ const Register = () => {
 
               <input
                 id="apellido"
-                name='apellido'
+                name="apellido"
                 placeholder="Apellido"
                 className="form-control my-2 text-center border-0 border-bottom ph" type="text"
                 {...register('apellido', { required: true })}
