@@ -26,21 +26,21 @@ const Home = () => {
     getAllCourts: false,
     main: true
   }
-  const [menu, setMenu] = useState(menuFeatures)
+  const [ menu, setMenu ] = useState(menuFeatures)
 
-  const [allUsers, setAllUsers] = useState([])
-  const [user, setUser] = useState(false)
-  
-  const [allCourts, setAllCourts] = useState([])
-  const [court, setCourt] = useState(false)
-  const [courtId, setCourtId] = useState()
-  
-  const [confirmDelete, setConfirmDelete] = useState(false)
-  
+  const [ allUsers, setAllUsers ] = useState([])
+  const [ user, setUser ] = useState(false)
+
+  const [ allCourts, setAllCourts ] = useState([])
+  const [ court, setCourt ] = useState(false)
+  const [ courtId, setCourtId ] = useState()
+
+  const [ confirmDelete, setConfirmDelete ] = useState(false)
+
   const navigate = useNavigate()
-  
+
   const notifyTryAgainLater = () => toast.warn("Hubo un problema, por favor intente nuevamente mas tarde", { position: 'bottom-right', autoClose: 2000, theme: 'dark' });
-  
+
   const handleMenuClick = (option) => {
     setMenu({
       createUser: false,
@@ -49,10 +49,10 @@ const Home = () => {
       deleteReserves: false,
       getAllCourts: false,
       main: false,
-      [option]: true
+      [ option ]: true
     });
   };
-  
+
   const handleGetAllUsers = async () => {
 
     try {
@@ -231,12 +231,7 @@ const Home = () => {
 
     try {
 
-      navigate('/login')
-
-      auth.dispatch({ type: 'LOGOUT' })
-
-      const log = await axios.post('/logout', {}, { withCredentials: true })
-
+      auth.dispatch({ type: 'LOGOUT' });
 
     } catch (error) {
 
@@ -247,37 +242,32 @@ const Home = () => {
   }
 
   const conditionalRender = () => {
-   
+
     if (auth?.user === null) {
-      return <div
-        className="spinner-grow text-success m-5"
-        role="status">
-      </div>
+      navigate('/login')
     } else if (auth?.user?.admin === false) {
       return <FailLogin />
-    } else if (auth?.user === false) {
-      navigate('/login')
     }
 
-
   }
+
 
   return (
 
     <>
-      
-      {!conditionalRender()
+
+      { !conditionalRender()
         ?
         <div className='home d-flex'>
 
           <Menu
-            menu={menu}
-            setMenu={setMenu}
-            handleMenuClick={handleMenuClick}
-            handleGetAllUsers={handleGetAllUsers}
-            setConfirmDelete={setConfirmDelete}
-            handleGetAllCourts={handleGetAllCourts}
-            handleCloseSession={handleCloseSession}
+            menu={ menu }
+            setMenu={ setMenu }
+            handleMenuClick={ handleMenuClick }
+            handleGetAllUsers={ handleGetAllUsers }
+            setConfirmDelete={ setConfirmDelete }
+            handleGetAllCourts={ handleGetAllCourts }
+            handleCloseSession={ handleCloseSession }
           />
           {
             menu.main &&
@@ -289,27 +279,27 @@ const Home = () => {
 
             <Route
               exact path='/createUser'
-              element={<CreateUser setMenu={setMenu} menu={menu} />}
+              element={ <CreateUser setMenu={ setMenu } menu={ menu } /> }
             />
 
             <Route
               exact path='/getAllUsers'
-              element={<GetAllUsers setMenu={setMenu} menu={menu} allUsers={allUsers} handleDeleteReserve={handleDeleteReserve} user={user} setUser={setUser} handleUpdateUser={handleUpdateUser} handleDeleteUser={handleDeleteUser} setConfirmDelete={setConfirmDelete} confirmDelete={confirmDelete} />}
+              element={ <GetAllUsers setMenu={ setMenu } menu={ menu } allUsers={ allUsers } handleDeleteReserve={ handleDeleteReserve } user={ user } setUser={ setUser } handleUpdateUser={ handleUpdateUser } handleDeleteUser={ handleDeleteUser } setConfirmDelete={ setConfirmDelete } confirmDelete={ confirmDelete } /> }
             />
 
             <Route
               exact path='/courts'
-              element={<GetAllCourts setMenu={setMenu} menu={menu} allCourts={allCourts} court={court} setCourt={setCourt} handleCreateCourt={handleCreateCourt} handleDeleteCourt={handleDeleteCourt} setConfirmDelete={setConfirmDelete} confirmDelete={confirmDelete} setCourtId={setCourtId} courtId={courtId} />}
+              element={ <GetAllCourts setMenu={ setMenu } menu={ menu } allCourts={ allCourts } court={ court } setCourt={ setCourt } handleCreateCourt={ handleCreateCourt } handleDeleteCourt={ handleDeleteCourt } setConfirmDelete={ setConfirmDelete } confirmDelete={ confirmDelete } setCourtId={ setCourtId } courtId={ courtId } /> }
             />
 
             <Route
               exact path='/events'
-              element={<Eventos setMenu={setMenu} menu={menu} />}
+              element={ <Eventos setMenu={ setMenu } menu={ menu } /> }
             />
 
             <Route
               exact path='/oldReservesDeleted'
-              element={<OldReservesDeleted setMenu={setMenu} menu={menu} setConfirmDelete={setConfirmDelete} confirmDelete={confirmDelete} handleDeleteOldReserves={handleDeleteOldReserves} />}
+              element={ <OldReservesDeleted setMenu={ setMenu } menu={ menu } setConfirmDelete={ setConfirmDelete } confirmDelete={ confirmDelete } handleDeleteOldReserves={ handleDeleteOldReserves } /> }
             />
 
           </Routes>
@@ -317,11 +307,11 @@ const Home = () => {
         </div >
         :
         <>
-          {conditionalRender()}
+          { conditionalRender() }
         </>
 
       }
-      
+
     </>
 
   )

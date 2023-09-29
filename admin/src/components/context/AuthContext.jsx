@@ -36,7 +36,7 @@ let AuthReducer = (state, action) => {
       };
     default:
       return state;
-  };
+  }
 };
 
 
