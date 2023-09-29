@@ -52,7 +52,7 @@ const Navbar = () => {
     try {
       dispatch({ type: 'LOGOUT' });
 
-      const log = await axios.post('/logout', {}, { withCredentials: true });
+      localStorage.removeItem('user');
 
       navigate('/');
     } catch (error) {
