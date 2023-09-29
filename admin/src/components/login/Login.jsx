@@ -6,7 +6,13 @@ import './login.css'
 import { useForm } from 'react-hook-form'
 
 const Login = () => {
-  const { register, handleSubmit, formState: { errors }, reset } = useForm()
+  
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm()
+
   const { loading, error, dispatch } = useContext(AuthContext)
 
   const navigate = useNavigate()
@@ -24,7 +30,9 @@ const Login = () => {
         : navigate('/failLogin')
 
     } catch (error) {
+
       dispatch({ type: 'LOGIN_FAILURE', payload: error })
+
     }
   }
 
@@ -36,7 +44,7 @@ const Login = () => {
       <h1
         className='title'>CLub Manager</h1>
 
-      <form onSubmit={handleSubmit(onSubmit)}
+      <form onSubmit={ handleSubmit(onSubmit) }
         className='col-4 rounded p-3 my-3 login-form'
       >
         <div
@@ -53,12 +61,12 @@ const Login = () => {
             placeholder="Username"
             className="form-control m-3 bg-transparent border-0 border-bottom"
             type="email"
-            {...register('username', { required: true })}
+            { ...register('username', { required: true }) }
           />
 
         </div>
 
-        {errors.username && (
+        { errors.username && (
           <div
             className="text-center">
 
@@ -68,7 +76,7 @@ const Login = () => {
             </small>
 
           </div>
-        )}
+        ) }
 
         <div
           className="d-flex align-items-center">
@@ -83,12 +91,12 @@ const Login = () => {
             placeholder="Password"
             className="form-control m-3 bg-transparent border-0 border-bottom"
             type="password"
-            {...register('password', { required: true })}
+            { ...register('password', { required: true }) }
           />
 
         </div>
 
-        {errors.password && (
+        { errors.password && (
           <div
             className='text-center'>
             <small
@@ -97,7 +105,7 @@ const Login = () => {
             </small>
 
           </div>
-        )}
+        ) }
 
         <div
           className="d-flex flex-column align-items-center justify-content-center m-3">
@@ -109,15 +117,15 @@ const Login = () => {
           <button
             type="submit"
             className="btn btn-success bg-transparent text-black loginBtn"
-            disabled={loading}
+            disabled={ loading }
           >
             Log In
           </button>
-          {error && (
+          { error && (
             <div className="text-danger p-1 m-1">
               Error en Usuario o Contraseña
             </div>
-          )}
+          ) }
         </div>
 
       </form>

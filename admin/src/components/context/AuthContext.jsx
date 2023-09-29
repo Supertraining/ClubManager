@@ -1,10 +1,9 @@
 import { useReducer, createContext, useEffect } from "react";
-import useFetch from "../../hooks/useFetch.jsx";
 
 const INITIAL_STATE = {
-  user: null,
-  loading: false,
-  error: null,
+	user: JSON.parse(localStorage.getItem('user')) || null,
+	loading: false,
+	error: null,
 };
 
 export const AuthContext = createContext();
@@ -43,19 +42,12 @@ let AuthReducer = (state, action) => {
 
 export const AuthContextProvider = ({ children }) => {
 
-  const { data } = useFetch('https://club-manager-backend-m4ol.onrender.com/home')
-
   const [state, dispatch] = useReducer(AuthReducer, INITIAL_STATE)
 
 
   useEffect(() => {
-
-    dispatch({
-      type: 'LOGIN_SUCCESS',
-      payload: data
-    })
-
-  }, [data])
+    localStorage.setItem('user', JSON.stringify(state.user))
+  }, [state.user])
 
 
   return (

@@ -6,12 +6,15 @@ import './login.css';
 import { useForm } from 'react-hook-form';
 
 const Login = () => {
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+
   const { loading, error, dispatch } = useContext(AuthContext);
+
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
@@ -19,7 +22,7 @@ const Login = () => {
       dispatch({ type: 'LOGIN_START' });
      
       const res = await axios.post('/login', data);
-      console.log(res)
+     
       dispatch({ type: 'LOGIN_SUCCESS', payload: res.data });
 
       navigate('/');
