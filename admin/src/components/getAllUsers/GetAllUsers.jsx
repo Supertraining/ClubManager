@@ -8,7 +8,7 @@ const GetAllUsers = ({ setMenu, menu, allUsers, handleDeleteReserve, user, setUs
   return (
 
     <div
-      className="col-9 p-1">
+      className="col-12 p-1">
 
       {!user
         ? <>

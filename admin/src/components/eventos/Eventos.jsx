@@ -102,7 +102,7 @@ const Eventos = (setMenu, menu) => {
 
   return (
     <div
-      className='col-9 p-1'>
+      className='col-12 p-1'>
 
       <div
         className='my-3'>

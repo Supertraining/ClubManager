@@ -37,7 +37,7 @@ const CreateUser = ({ setMenu, menu }) => {
   return (
 
     <div
-      className="rounded col-9 d-flex flex-column align-items-center p-1">
+      className="rounded col-12 d-flex flex-column align-items-center p-1">
 
       <div
         className='col-12 my-3'>
