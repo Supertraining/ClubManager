@@ -12,7 +12,10 @@
 -Subir imagenes a una db?
 -Ver offcanvasEnd diseño celu colores contraste - DONE
 -SEO HTML.
--Probar si los BTN small en el date picker en el celu (los de anular) se ven bien sino usar la clase button-datepicker-small que esta comentada
--VALIDAR EL MAIL SI EL USUARIO INGRESA UNA MAYUSCULA. toLowercase.
+-Probar si los BTN small en el date picker en el celu (los de anular) se ven bien sino usar la clase button-datepicker-small que esta comentada -DONE
+-VALIDAR EL MAIL SI EL USUARIO INGRESA UNA MAYUSCULA. toLowercase. - DONE
 -probar otros colores de tipografia al momento que el usuario edita los datos de la cuenta.
 -Cuando un usuario elimina su cuenta que se eliminen sus reservas.
+-en ADMIN: la tabla de eventos se hizo responsive con overflow-x-auto pero tal vez sea mejor en una proxima version que al crear el evento se genere un link que me lleve a otra pantalla con los detalles del evento.
+-En el HOME las actividades tal vez quedarian mejor con cards, se suben las actividades a una bd y de ahi obtengo la data para crearlas.
+-EVENTOS ADMIN habria que agregar un boton a la tabla o a la pantalla futura de los detalles del evento que permita dejar el evento saldado cuando el cliente paga el total.
