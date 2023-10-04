@@ -121,3 +121,8 @@
   background-color: green !important;
   border-radius: 10px !important;
 }
+
+/* ReactFullYearScheduler */
+.z-\[10000\] {
+  z-index: 1000 !important;
+}

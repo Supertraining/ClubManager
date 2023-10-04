@@ -60,6 +60,7 @@ const CreateUser = ({ setMenu, menu }) => {
         <h1>
           REGISTER
         </h1>
+        
 
       </div>
 
@@ -69,7 +70,7 @@ const CreateUser = ({ setMenu, menu }) => {
 
 
       <form
-        className="form d-flex flex-column col-8"
+        className="form d-flex flex-column col-12 col-sm-8 col-md-6 col-lg-4"
         role="form"
         autoComplete="on"
         onSubmit={handleSubmit(onSubmit)}>
@@ -284,7 +285,7 @@ const CreateUser = ({ setMenu, menu }) => {
           </div>
 
           <input
-            className="my-2 text-center border border-success w-25 rounded bg-white text-secondary p-2"
+            className="my-2 text-center border border-success w-50 rounded bg-white text-secondary p-2"
             type="submit"
             value='Crear usuario'
           />

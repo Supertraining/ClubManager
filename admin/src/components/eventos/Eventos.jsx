@@ -122,7 +122,7 @@ const Eventos = (setMenu, menu) => {
       >
 
         <div
-          className="col-12 col-sm-8 col-md-3 mx-1">
+          className="col-11 col-sm-8 col-md-3 mx-1">
 
           <input
             id="evento"
@@ -136,7 +136,7 @@ const Eventos = (setMenu, menu) => {
         </div>
 
         <div
-          className="col-12 col-sm-8 col-md-3 mx-1">
+          className="col-11 col-sm-8 col-md-3 mx-1">
 
           <input
             id="nombre"
@@ -150,7 +150,7 @@ const Eventos = (setMenu, menu) => {
         </div>
 
         <div
-          className="col-12 col-sm-8 col-md-3 mx-1">
+          className="col-11 col-sm-8 col-md-3 mx-1">
 
           <input
             id="apellido"
@@ -166,7 +166,7 @@ const Eventos = (setMenu, menu) => {
 
 
         <div
-          className="col-12 col-sm-8 col-md-3 mx-1">
+          className="col-11 col-sm-8 col-md-3 mx-1">
 
           <input
             id="telefono"
@@ -181,7 +181,7 @@ const Eventos = (setMenu, menu) => {
 
 
         <div
-          className="col-12 col-sm-8 col-md-3 mx-1">
+          className="col-11 col-sm-8 col-md-3 mx-1">
 
           <input
             id="adultos"
@@ -195,7 +195,7 @@ const Eventos = (setMenu, menu) => {
         </div>
 
         <div
-          className="col-12 col-sm-8 col-md-3 mx-1">
+          className="col-11 col-sm-8 col-md-3 mx-1">
 
           <input
             id="menores"
@@ -209,7 +209,7 @@ const Eventos = (setMenu, menu) => {
         </div>
 
         <div
-          className="col-12 col-sm-8 col-md-3 mx-1">
+          className="col-11 col-sm-8 col-md-3 mx-1">
 
           <input
             id="opcion"
@@ -223,7 +223,7 @@ const Eventos = (setMenu, menu) => {
         </div>
 
         <div
-          className="col-12 col-sm-8 col-md-3 mx-1">
+          className="col-11 col-sm-8 col-md-3 mx-1">
 
           <input
             id="camareraAdicional"
@@ -237,7 +237,7 @@ const Eventos = (setMenu, menu) => {
         </div>
 
         <div
-          className="col-12 col-sm-8 col-md-3 mx-1">
+          className="col-11 col-sm-8 col-md-3 mx-1">
 
           <input
             id="horaInicia"
@@ -251,7 +251,7 @@ const Eventos = (setMenu, menu) => {
         </div>
 
         <div
-          className="col-12 col-sm-8 col-md-3 mx-1">
+          className="col-11 col-sm-8 col-md-3 mx-1">
 
           <input
             id="horaFinaliza"
@@ -266,7 +266,7 @@ const Eventos = (setMenu, menu) => {
 
 
         <div
-          className="col-12 col-sm-8 col-md-3 mx-1">
+          className="col-11 col-sm-8 col-md-3 mx-1">
 
           <input
             id="horasAdicional"
@@ -280,7 +280,7 @@ const Eventos = (setMenu, menu) => {
         </div>
 
         <div
-          className="col-12 col-sm-8 col-md-3 mx-1">
+          className="col-11 col-sm-8 col-md-3 mx-1">
 
           <input
             id="seña"
@@ -294,7 +294,7 @@ const Eventos = (setMenu, menu) => {
         </div>
 
         <div
-          className="col-12 col-sm-8 col-md-3 mx-1">
+          className="col-11 col-sm-8 col-md-3 mx-1">
           <label htmlFor="saldado" className='p-3'>Saldado</label>
 
           {!eventData.saldado
