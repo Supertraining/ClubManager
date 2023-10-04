@@ -23,7 +23,7 @@ const Login = () => {
       dispatch({ type: 'LOGIN_START' })
 
       const { data } = await axios.post('/login', credentials)
-   
+     
       dispatch({ type: 'LOGIN_SUCCESS', payload: data })
 
       data.admin
@@ -46,7 +46,7 @@ const Login = () => {
         className='title'>CLub Manager</h1>
 
       <form onSubmit={ handleSubmit(onSubmit) }
-        className='col-4 rounded p-3 my-3 login-form'
+        className='col-10 col-sm-7 col-md-5 col-lg-4 col-xl-4 rounded p-3 my-3 login-form'
       >
         <div
           className="d-flex align-items-center">

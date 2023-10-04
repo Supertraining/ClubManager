@@ -1,9 +1,8 @@
 .background {
-
   background-image: url('../../assets/sportIconBg(1).webp');
   background-position: center;
   background-size: cover;
-
+  min-height: 100vh;
 }
 
 .title {
@@ -12,7 +11,6 @@
   animation-name: title3d;
   animation-duration: 3s;
   font-family: 'Roboto Slab', serif;
-
 }
 
 @keyframes title3d {

@@ -6,7 +6,6 @@ import {
   Route,
   BrowserRouter as Router, Routes,
 } from 'react-router-dom'
-import CreateUser from './components/createUser/CreateUser'
 
 function App() {
 

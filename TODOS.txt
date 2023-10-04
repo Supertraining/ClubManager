@@ -13,3 +13,6 @@
 -Ver offcanvasEnd diseño celu colores contraste - DONE
 -SEO HTML.
 -Probar si los BTN small en el date picker en el celu (los de anular) se ven bien sino usar la clase button-datepicker-small que esta comentada
+-VALIDAR EL MAIL SI EL USUARIO INGRESA UNA MAYUSCULA. toLowercase.
+-probar otros colores de tipografia al momento que el usuario edita los datos de la cuenta.
+-Cuando un usuario elimina su cuenta que se eliminen sus reservas.
