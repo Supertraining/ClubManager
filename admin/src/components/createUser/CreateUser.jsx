@@ -21,8 +21,9 @@ const CreateUser = ({ setMenu, menu }) => {
   const onSubmit = async (data) => {
 
     try {
-
-      await axios.post('/register', data);
+      console.log(data)
+      const response = await axios.post('/register', data);
+      console.log('RESPONSE:', response)
       notifyUsuarioCreado();
       reset();
 
@@ -266,7 +267,7 @@ const CreateUser = ({ setMenu, menu }) => {
               className="custom-control-input"
               id="customCheck1"
               value={true}
-              {...register('admin', { required: true })}
+              {...register('admin')}
             />
 
             <label
