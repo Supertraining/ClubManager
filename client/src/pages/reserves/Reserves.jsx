@@ -3,20 +3,22 @@ import Paleta from '../../components/pelotaPaleta/Paleta'
 import Paddle from '../../components/paddle/Paddle'
 import Squash from '../../components/squash/Squash'
 import { useNavigate, useLocation } from "react-router-dom"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
+import { AuthContext } from "../../components/context/AuthContext"
 
 
 const Reserves = () => {
-
+  const { user } = useContext(AuthContext)
+  
   const location = useLocation()
   const id = location.state?.court
   const navigate = useNavigate()
   
   useEffect(() => {
 
-    !id && navigate('/')
+    if (!id || !user) navigate('/')
 
-  }, [])
+  }, [user])
 
 
   return (

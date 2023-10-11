@@ -77,7 +77,7 @@ const NavBarOffCanvasEnd = (props) => {
                 handleDeleteAccount={props.handleDeleteAccount}
                 handleUpdateUser={props.handleUpdateUser}
                 setShowProfile={props.setShowProfile}
-                setShowChangePasswordForm={props.setShowChangePasswordForm}
+                setShowChangePasswordForm={ props.setShowChangePasswordForm }
               />
             )}
 

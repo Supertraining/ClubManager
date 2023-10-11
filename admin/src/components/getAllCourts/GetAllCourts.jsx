@@ -1,7 +1,6 @@
 import './getAllCourts.css'
 import { Link } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify';
-import CreateCourt from '../CreateCourt/CreateCourt';
 import Football from '../football/Football';
 import Paleta from '../pelotaPaleta/Paleta';
 import Paddle from '../paddle/Paddle';
@@ -27,8 +26,6 @@ const GetAllCourts = ({ setMenu, menu, allCourts, court, setCourt, handleCreateC
             </Link>
 
           </div>
-
-          <CreateCourt handleCreateCourt={handleCreateCourt} />
 
           <table
             className="table bg-white table-responsive">

@@ -58,9 +58,20 @@ const Home = () => {
 
     try {
 
-      const allUsers = await axios.get('/getAll');
+      const {data : allUsers} = await axios.get('/getAll');
+      
+      allUsers.sort((a, b) => {
 
-      setAllUsers(allUsers.data);
+        if (a.apellido > b.apellido) {
+          return 1;
+        }
+        if (a.apellido < b.apellido) {
+          return -1;
+        }
+        return 0;
+      })
+      
+      setAllUsers(allUsers);
 
     } catch (error) {
 
@@ -231,8 +242,10 @@ const Home = () => {
   const handleCloseSession = async () => {
 
     try {
-
+     
       auth.dispatch({ type: 'LOGOUT' });
+      sessionStorage.removeItem('user');
+      localStorage.removeItem('user');
 
     } catch (error) {
 

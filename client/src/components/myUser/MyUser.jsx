@@ -171,7 +171,7 @@ const MyUser = (props) => {
                 <div className='d-flex'>
                   <button
                     className='btn btn-sm btn-danger mx-1'
-                    onClick={ () => props.handleDeleteAccount(user?._id) }
+                    onClick={ () => props.handleDeleteAccount(user) }
                   >
                     Confirmar
                   </button>

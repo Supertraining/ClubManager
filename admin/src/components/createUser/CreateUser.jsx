@@ -92,6 +92,7 @@ const CreateUser = ({ setMenu, menu }) => {
             id="username"
             name='username'
             placeholder="Email"
+            autoComplete='on'
             className="form-control my-2 text-center border-0 border-bottom" type="email"
             {...register('username', { required: true })}
           />
@@ -118,6 +119,7 @@ const CreateUser = ({ setMenu, menu }) => {
             id="password"
             name='password'
             placeholder="Password"
+            autoComplete='on'
             className="form-control my-2 text-center border-0 border-bottom" type="password"
             {...register('password', { required: true })}
           />
@@ -150,6 +152,7 @@ const CreateUser = ({ setMenu, menu }) => {
             id="nombre"
             name='nombre'
             placeholder="Nombre"
+            autoComplete='on'
             className="form-control my-2 text-center border-0 border-bottom" type="text"
             {...register('nombre', { required: true })}
           />
@@ -176,6 +179,7 @@ const CreateUser = ({ setMenu, menu }) => {
             id="apellido"
             name='apellido'
             placeholder="Apellido"
+            autoComplete='on'
             className="form-control my-2 text-center border-0 border-bottom"
             type="text"
             {...register('apellido', { required: true })}
@@ -203,6 +207,7 @@ const CreateUser = ({ setMenu, menu }) => {
             id="edad"
             name='edad'
             placeholder="Edad"
+            autoComplete='on'
             className="form-control my-2 text-center border-0 border-bottom" type="number"
             min={0} max={99}
             {...register('edad', { required: true })}
@@ -230,6 +235,7 @@ const CreateUser = ({ setMenu, menu }) => {
             id="telefono"
             name='telefono'
             placeholder="Telefono"
+            autoComplete='on'
             className="form-control my-2 text-center border-0 border-bottom" type="text"
             {...register('telefono', { required: true })}
           />

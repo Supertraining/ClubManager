@@ -18,7 +18,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
             <div>{dateList[0]}</div>
 
             <div
-              className='p-0 text-center'>
+              className='p-0 text-center d-flex justify-content-center align-items-center'>
 
               <ul>
                 {data[weekDaysList[0]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
@@ -30,7 +30,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -66,7 +66,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
             </div>
 
             <div
-              className='p-0 text-center'>
+              className='p-0 text-center d-flex justify-content-center align-items-center'>
 
               <ul>
                 {data[weekDaysList[1]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
@@ -78,7 +78,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -114,7 +114,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
             </div>
 
             <div
-              className='p-0 text-center'>
+              className='p-0 text-center d-flex justify-content-center align-items-center'>
 
               <ul>
                 {data[weekDaysList[2]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
@@ -126,7 +126,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -164,7 +164,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
             </div>
 
             <div
-              className='p-0 text-center'>
+              className='p-0 text-center d-flex justify-content-center align-items-center'>
 
               <ul>
                 {data[weekDaysList[3]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
@@ -176,7 +176,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -212,7 +212,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
             </div>
 
             <div
-              className='p-0 text-center'>
+              className='p-0 text-center d-flex justify-content-center align-items-center'>
 
               <ul>
                 {data[weekDaysList[4]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
@@ -224,7 +224,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -260,7 +260,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
             </div>
 
             <div
-              className='p-0 text-center'>
+              className='p-0 text-center d-flex justify-content-center align-items-center'>
 
               <ul>
                 {data[weekDaysList[5]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
@@ -272,7 +272,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -308,7 +308,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
             </div>
 
             <div
-              className='p-0 text-center'>
+              className='p-0 text-center d-flex justify-content-center align-items-center'>
 
               <ul>
                 {data[weekDaysList[6]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
@@ -320,7 +320,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -361,7 +361,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
             </div>
 
             <div
-              className='p-0 text-center'>
+              className='p-0 text-center d-flex justify-content-center align-items-center'>
 
               <ul>
                 {data[weekDaysList[7]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
@@ -373,7 +373,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -409,7 +409,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
             </div>
 
             <div
-              className='p-0 text-center'>
+              className='p-0 text-center d-flex justify-content-center align-items-center'>
 
               <ul>
                 {data[weekDaysList[8]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
@@ -421,7 +421,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -457,7 +457,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
             </div>
 
             <div
-              className='p-0 text-center'>
+              className='p-0 text-center d-flex justify-content-center align-items-center'>
 
               <ul>
                 {data[weekDaysList[9]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
@@ -469,7 +469,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -505,7 +505,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
             </div>
 
             <div
-              className='p-0 text-center'>
+              className='p-0 text-center d-flex justify-content-center align-items-center'>
 
               <ul>
                 {data[weekDaysList[10]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
@@ -517,7 +517,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -552,7 +552,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
             </div>
 
             <div
-              className='p-0 text-center'>
+              className='p-0 text-center d-flex justify-content-center align-items-center'>
 
               <ul>
                 {data[weekDaysList[11]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
@@ -564,7 +564,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -600,7 +600,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
             </div>
 
             <div
-              className='p-0 text-center'>
+              className='p-0 text-center d-flex justify-content-center align-items-center'>
 
               <ul>
                 {data[weekDaysList[12]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
@@ -612,7 +612,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -648,7 +648,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
             </div>
 
             <div
-              className='p-0 text-center'>
+              className='p-0 text-center d-flex justify-content-center align-items-center'>
 
               <ul>
                 {data[weekDaysList[13]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
@@ -660,7 +660,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -701,7 +701,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
             </div>
 
             <div
-              className='p-0 text-center'>
+              className='p-0 text-center d-flex justify-content-center align-items-center'>
 
               <ul>
                 {data[weekDaysList[14]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
@@ -713,7 +713,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -749,7 +749,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
             </div>
 
             <div
-              className='p-0 text-center'>
+              className='p-0 text-center d-flex justify-content-center align-items-center'>
 
               <ul>
                 {data[weekDaysList[15]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
@@ -761,7 +761,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -797,7 +797,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
             </div>
 
             <div
-              className='p-0 text-center'>
+              className='p-0 text-center d-flex justify-content-center align-items-center'>
 
               <ul>
                 {data[weekDaysList[16]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
@@ -809,7 +809,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -845,7 +845,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
             </div>
 
             <div
-              className='p-0 text-center'>
+              className='p-0 text-center d-flex justify-content-center align-items-center'>
 
               <ul>
                 {data[weekDaysList[17]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
@@ -857,7 +857,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -892,7 +892,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
             </div>
 
             <div
-              className='p-0 text-center'>
+              className='p-0 text-center d-flex justify-content-center align-items-center'>
 
               <ul>
                 {data[weekDaysList[18]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
@@ -904,7 +904,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -940,7 +940,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
             </div>
 
             <div
-              className='p-0 text-center'>
+              className='p-0 text-center d-flex justify-content-center align-items-center'>
 
               <ul>
                 {data[weekDaysList[19]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
@@ -952,7 +952,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -988,7 +988,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
             </div>
 
             <div
-              className='p-0 text-center'>
+              className='p-0 text-center d-flex justify-content-center align-items-center'>
 
               <ul>
                 {data[weekDaysList[20]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
@@ -1000,7 +1000,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -1040,7 +1040,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
             </div>
 
             <div
-              className='p-0 text-center'>
+              className='p-0 text-center d-flex justify-content-center align-items-center'>
 
               <ul>
                 {data[weekDaysList[21]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
@@ -1052,7 +1052,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -1088,7 +1088,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
             </div>
 
             <div
-              className='p-0 text-center'>
+              className='p-0 text-center d-flex justify-content-center align-items-center'>
 
               <ul>
                 {data[weekDaysList[22]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
@@ -1100,7 +1100,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -1136,7 +1136,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
             </div>
 
             <div
-              className='p-0 text-center'>
+              className='p-0 text-center d-flex justify-content-center align-items-center'>
 
               <ul>
                 {data[weekDaysList[23]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
@@ -1148,7 +1148,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -1184,7 +1184,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
             </div>
 
             <div
-              className='p-0 text-center'>
+              className='p-0 text-center d-flex justify-content-center align-items-center'>
 
               <ul>
                 {data[weekDaysList[24]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
@@ -1196,7 +1196,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -1231,7 +1231,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
             </div>
 
             <div
-              className='p-0 text-center'>
+              className='p-0 text-center d-flex justify-content-center align-items-center'>
 
               <ul>
                 {data[weekDaysList[25]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
@@ -1243,7 +1243,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -1279,7 +1279,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
             </div>
 
             <div
-              className='p-0 text-center'>
+              className='p-0 text-center d-flex justify-content-center align-items-center'>
 
               <ul>
                 {data[weekDaysList[26]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
@@ -1291,7 +1291,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -1327,7 +1327,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
             </div>
 
             <div
-              className='p-0 text-center'>
+              className='p-0 text-center d-flex justify-content-center align-items-center'>
 
               <ul>
                 {data[weekDaysList[27]]?.sort((a, b) => a.initialTime - b.initialTime).map((reserve, i) => (
@@ -1339,7 +1339,7 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 

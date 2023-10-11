@@ -32,7 +32,7 @@ const CourtBookingBoard = (props) => {
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -77,7 +77,7 @@ const CourtBookingBoard = (props) => {
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -124,7 +124,7 @@ const CourtBookingBoard = (props) => {
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -171,7 +171,7 @@ const CourtBookingBoard = (props) => {
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -216,7 +216,7 @@ const CourtBookingBoard = (props) => {
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -261,7 +261,7 @@ const CourtBookingBoard = (props) => {
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -306,7 +306,7 @@ const CourtBookingBoard = (props) => {
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -356,7 +356,7 @@ const CourtBookingBoard = (props) => {
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -401,7 +401,7 @@ const CourtBookingBoard = (props) => {
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -446,7 +446,7 @@ const CourtBookingBoard = (props) => {
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -491,7 +491,7 @@ const CourtBookingBoard = (props) => {
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -535,7 +535,7 @@ const CourtBookingBoard = (props) => {
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -580,7 +580,7 @@ const CourtBookingBoard = (props) => {
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 
@@ -625,7 +625,7 @@ const CourtBookingBoard = (props) => {
                     className={!reserve.permanent ? 'text-center border border-light' : 'text-center border border-danger'}>
 
                     <span
-                      className='text-info'>
+                      className='text-info small'>
                       {reserve.user}
                     </span>
 

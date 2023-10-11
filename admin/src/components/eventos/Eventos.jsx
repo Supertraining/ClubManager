@@ -1,7 +1,7 @@
 import './eventos.css';
 import { Link } from 'react-router-dom';
 import dayjs from "dayjs";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { ReactFullYearScheduler } from "react-full-year-scheduler";
 import axios from '../../utils/axiosInstance'
 import "react-full-year-scheduler/dist/style.css";
@@ -15,11 +15,8 @@ const Eventos = (setMenu, menu) => {
 
   const { data, loading, error, reFetch } = useFetch('/events')
 
-  useEffect(() => {
-    reFetch();
-  }, [data])
-
   const notifyFetchError = () => toast.warning("Ha ocurrido un error, por favor intente nuevamente mas tarde", { position: 'bottom-right', autoClose: 2000, theme: 'dark' });
+
   const calendarArray = [];
   !error
     ? data.forEach((event) => {
@@ -46,13 +43,13 @@ const Eventos = (setMenu, menu) => {
     saldado: false,
   }
 
-  const [eventData, setEventData] = useState(eventDataInitialState);
+  const [ eventData, setEventData ] = useState(eventDataInitialState);
   const handleChange = (e) => {
 
     setEventData(
       {
         ...eventData,
-        [e.target.name]: e.target.value
+        [ e.target.name ]: e.target.value
       });
 
   }
@@ -98,7 +95,17 @@ const Eventos = (setMenu, menu) => {
     }
 
   }
+  const handleIsEventSettled = async (id, isSettled) => {
 
+    try {
+
+      const res = await axios.put('/events/updateEvent', { id: id, saldado: isSettled })
+      console.log('RES:', res)
+      reFetch()
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <div
@@ -108,9 +115,9 @@ const Eventos = (setMenu, menu) => {
         className='my-3'>
 
         <Link
-          to={'/'}
+          to={ '/' }
           className='btn btn-close border border-dark p-2'
-          onClick={() => setMenu({ ...menu, main: true, events: false })}>
+          onClick={ () => setMenu({ ...menu, main: true, events: false }) }>
         </Link>
 
       </div>
@@ -129,8 +136,8 @@ const Eventos = (setMenu, menu) => {
             name='evento'
             placeholder="evento"
             className="form-control my-2 text-center border-0 border-bottom" type="text"
-            value={eventData.evento}
-            onChange={handleChange}
+            value={ eventData.evento }
+            onChange={ handleChange }
           />
 
         </div>
@@ -143,8 +150,8 @@ const Eventos = (setMenu, menu) => {
             name='nombre'
             placeholder="Nombre"
             className="form-control my-2 text-center border-0 border-bottom" type="text"
-            value={eventData.nombre}
-            onChange={handleChange}
+            value={ eventData.nombre }
+            onChange={ handleChange }
           />
 
         </div>
@@ -158,8 +165,8 @@ const Eventos = (setMenu, menu) => {
             placeholder="Apellido"
             className="form-control my-2 text-center border-0 border-bottom"
             type="text"
-            value={eventData.apellido}
-            onChange={handleChange}
+            value={ eventData.apellido }
+            onChange={ handleChange }
           />
 
         </div>
@@ -173,8 +180,8 @@ const Eventos = (setMenu, menu) => {
             name='telefono'
             placeholder="Telefono"
             className="form-control my-2 text-center border-0 border-bottom" type="text"
-            value={eventData.telefono}
-            onChange={handleChange}
+            value={ eventData.telefono }
+            onChange={ handleChange }
           />
 
         </div>
@@ -188,8 +195,8 @@ const Eventos = (setMenu, menu) => {
             name='adultos'
             placeholder="Adultos"
             className="form-control my-2 text-center border-0 border-bottom" type="text"
-            value={eventData.adultos}
-            onChange={handleChange}
+            value={ eventData.adultos }
+            onChange={ handleChange }
           />
 
         </div>
@@ -202,8 +209,8 @@ const Eventos = (setMenu, menu) => {
             name='menores'
             placeholder="Menores"
             className="form-control my-2 text-center border-0 border-bottom" type="text"
-            value={eventData.menores}
-            onChange={handleChange}
+            value={ eventData.menores }
+            onChange={ handleChange }
           />
 
         </div>
@@ -216,8 +223,8 @@ const Eventos = (setMenu, menu) => {
             name='opcion'
             placeholder="Opcion"
             className="form-control my-2 text-center border-0 border-bottom" type="text"
-            value={eventData.opcion}
-            onChange={handleChange}
+            value={ eventData.opcion }
+            onChange={ handleChange }
           />
 
         </div>
@@ -230,8 +237,8 @@ const Eventos = (setMenu, menu) => {
             name='camareraAdicional'
             placeholder="Camarera adicional"
             className="form-control my-2 text-center border-0 border-bottom" type="text"
-            value={eventData.camareraAdicional}
-            onChange={handleChange}
+            value={ eventData.camareraAdicional }
+            onChange={ handleChange }
           />
 
         </div>
@@ -244,8 +251,8 @@ const Eventos = (setMenu, menu) => {
             name='horaInicia'
             placeholder="Hora de inicio"
             className="form-control my-2 text-center border-0 border-bottom" type="time"
-            value={eventData.horaInicia}
-            onChange={handleChange}
+            value={ eventData.horaInicia }
+            onChange={ handleChange }
           />
 
         </div>
@@ -258,8 +265,8 @@ const Eventos = (setMenu, menu) => {
             name='horaFinaliza'
             placeholder="Horario de finalización"
             className="form-control my-2 text-center border-0 border-bottom" type="time"
-            value={eventData.horaFinaliza}
-            onChange={handleChange}
+            value={ eventData.horaFinaliza }
+            onChange={ handleChange }
           />
 
         </div>
@@ -273,8 +280,8 @@ const Eventos = (setMenu, menu) => {
             name='horasAdicional'
             placeholder="Hora adicional"
             className="form-control my-2 text-center border-0 border-bottom" type="text"
-            value={eventData.horasAdicional}
-            onChange={handleChange}
+            value={ eventData.horasAdicional }
+            onChange={ handleChange }
           />
 
         </div>
@@ -287,8 +294,8 @@ const Eventos = (setMenu, menu) => {
             name='seña'
             placeholder="Seña"
             className="form-control my-2 text-center border-0 border-bottom" type="text"
-            value={eventData.seña}
-            onChange={handleChange}
+            value={ eventData.seña }
+            onChange={ handleChange }
           />
 
         </div>
@@ -297,9 +304,9 @@ const Eventos = (setMenu, menu) => {
           className="col-11 col-sm-8 col-md-3 mx-1">
           <label htmlFor="saldado" className='p-3'>Saldado</label>
 
-          {!eventData.saldado
-            ? <i className="bi bi-toggle-off fs-4 mx-2 text-danger" onClick={() => setEventData({ ...eventData, saldado: true })} ></i>
-            : <i className="bi bi-toggle-on fs-4 mx-2 text-success" onClick={() => setEventData({ ...eventData, saldado: false })}></i>
+          { !eventData.saldado
+            ? <i className="bi bi-toggle-off fs-4 mx-2 text-danger pointer" onClick={ () => setEventData({ ...eventData, saldado: true }) } ></i>
+            : <i className="bi bi-toggle-on fs-4 mx-2 text-success pointer" onClick={ () => setEventData({ ...eventData, saldado: false }) }></i>
           }
 
         </div>
@@ -312,24 +319,25 @@ const Eventos = (setMenu, menu) => {
             id="comentarios"
             name='comentarios'
             placeholder="Comentarios"
-            rows={1}
-            cols={40}
+            rows={ 1 }
+            cols={ 40 }
             className="my-2 text-center border form-control"
-            value={eventData.comentarios}
-            onChange={handleChange}
+            value={ eventData.comentarios }
+            onChange={ handleChange }
           />
 
         </div>
 
       </form>
 
+
       <div className='col-12 p-2 react-full-year-scheduler-container'>
 
         <ReactFullYearScheduler
-          events={calendarArray}
+          events={ calendarArray }
           locale="es"
           dateTooltipTheme="translucent"
-          weekSeparatorWidth={10}
+          weekSeparatorWidth={ 10 }
           weekSeparatorColor="#198754"
           headerWeekDayBgColor="#198754"
           headerWeekendBgColor="#121212"
@@ -339,20 +347,20 @@ const Eventos = (setMenu, menu) => {
           weekDayCellTextColor="white"
           selectionColor="black"
           selectionTextColor="white"
-          maxRangeSelection={1}
-          minRangeSelection={1}
+          maxRangeSelection={ 1 }
+          minRangeSelection={ 1 }
           firstDayOfWeek="Monday"
-          maxYear={2030}
-          minYear={2022}
-          readonlyCalendar={false}
-          showWeekSeparator={true}
-          showTodayButton={true}
-          enableYearToYearSelection={false}
-          enableWeekendSelection={true}
-          minCellWidth={50}
-          showSeparatorInHeader={false}
-          enableEventOverwriting={true}
-          onDatePick={(eventDate, clearSelectedCell) => {
+          maxYear={ 2025 }
+          minYear={ 2022 }
+          readonlyCalendar={ false }
+          showWeekSeparator={ true }
+          showTodayButton={ true }
+          enableYearToYearSelection={ false }
+          enableWeekendSelection={ true }
+          minCellWidth={ 50 }
+          showSeparatorInHeader={ false }
+          enableEventOverwriting={ true }
+          onDatePick={ (eventDate, clearSelectedCell) => {
 
             const event = {
               eventName: `Evento: ${eventData.evento}. ${eventData.nombre} ${eventData.apellido}`,
@@ -367,107 +375,100 @@ const Eventos = (setMenu, menu) => {
 
             setEventData(eventDataInitialState)
 
-          }}
-
+          } }
         />
+
       </div>
 
       <div className='overflow-x-auto'>
-      <table className='table table-responsive bg-dark'>
-        <thead>
-          <tr className='text-center tableHead-fontSize'>
+        <table className='table table-responsive bg-dark'>
+          <thead>
+            <tr className='text-center tableHead-fontSize'>
 
-            <th>
-              Fecha
-            </th>
-            <th>
-              Horario
-            </th>
-            <th>
-              Nombre
-            </th>
-            <th>
-              Apellido
-            </th>
-            <th>
-              Teléfono
-            </th>
-            <th>
-              Evento
-            </th>
-            <th>
-              Invitados
-            </th>
-            <th>
-              Opc.
-            </th>
-            <th>
-              Ad. Hrs.
-            </th>
-            <th>
-              Ad. Cam.
-            </th>
-            <th>
-              Comentarios
-            </th>
-            <th>
-              Seña
-            </th>
-            <th>
-              Saldado
-            </th>
-            <th>
-              Eliminar
-            </th>
-
-          </tr>
-
-        </thead>
-
-        <tbody className='tableBody-fontSize'>
-          {data.map((event) => (
-
-            <tr key={event._id} className='text-center'>
-
-              <td>{event.date}</td>
-              <td>{event.horaInicia}-{event.horaFinaliza}</td>
-              <td>{event.nombre}</td>
-              <td>{event.apellido}</td>
-              <td>{event.telefono}</td>
-              <td>{event.evento}</td>
-              <td>A:{event.adultos} M:{event.menores}</td>
-              <td>{event.opcion}</td>
-              <td>{event.horasAdicional}</td>
-              <td>{event.camareraAdicional}</td>
-              <td className='table-coments'>{event.comentarios}</td>
-              <td>{event.seña}</td>
-              <td>{event.saldado
-                ? <i className="bi bi-check-circle-fill text-success"></i>
-                : <i className="bi bi-x-circle-fill text-danger"></i>
-              }</td>
-
-              <td>
-
-                <button
-                  className='delete-event-btn rounded px-1'
-                  onClick={() => handleDeleteReserve(event._id)}>
-                  <i
-                    className="bi bi-exclamation-triangle">
-                  </i>
-                </button>
-              </td>
+              <th>
+                Fecha
+              </th>
+              <th>
+                Horario
+              </th>
+              <th>
+                Nombre
+              </th>
+              <th>
+                Apellido
+              </th>
+              <th>
+                Teléfono
+              </th>
+              <th>
+                Evento
+              </th>
+              <th>
+                Invitados
+              </th>
+              <th>
+                Opc.
+              </th>
+              <th>
+                Ad. Hrs.
+              </th>
+              <th>
+                Ad. Cam.
+              </th>
+              <th>
+                Comentarios
+              </th>
+              <th>
+                Seña
+              </th>
+              <th>
+                Saldado
+              </th>
+              <th>
+                Eliminar
+              </th>
 
             </tr>
 
-          ))}
-        </tbody>
-      </table>
-      </div>   
+          </thead>
+
+          <tbody className='tableBody-fontSize'>
+            { data.map((event) => (
+
+              <tr key={ event._id } className='text-center'>
+
+                <td>{ event.date }</td>
+                <td>{ event.horaInicia }-{ event.horaFinaliza }</td>
+                <td>{ event.nombre }</td>
+                <td>{ event.apellido }</td>
+                <td>{ event.telefono }</td>
+                <td>{ event.evento }</td>
+                <td>A:{ event.adultos } M:{ event.menores }</td>
+                <td>{ event.opcion }</td>
+                <td>{ event.horasAdicional }</td>
+                <td>{ event.camareraAdicional }</td>
+                <td className='table-coments'>{ event.comentarios }</td>
+                <td>{ event.seña }</td>
+                <td> { !event.saldado
+                  ? <i className="bi bi-toggle-off fs-4 mx-2 text-danger pointer" onClick={ () => handleIsEventSettled(event._id, !event.saldado) } ></i>
+                  : <i className="bi bi-toggle-on fs-4 mx-2 text-success pointer" onClick={ () => handleIsEventSettled(event._id, !event.saldado) }></i>
+                }</td>
+                <td>
+                  <i
+                    className="bi bi-exclamation-triangle fs-4 mx-2 text-danger pointer" onClick={ () => handleDeleteReserve(event._id) }>
+                  </i>
+                </td>
+
+              </tr>
+
+            )) }
+          </tbody>
+        </table>
+      </div>
 
       <ToastContainer />
 
     </div >
-
   )
 }
 

@@ -10,16 +10,16 @@ const GetAllUsers = ({ setMenu, menu, allUsers, handleDeleteReserve, user, setUs
     <div
       className="col-12 p-1">
 
-      {!user
+      { !user
         ? <>
 
           <div
             className='my-3'>
 
             <Link
-              to={'/'}
+              to={ '/' }
               className='btn btn-close border border-dark p-2'
-              onClick={() => setMenu({ ...menu, main: true, getAllUsers: false })}>
+              onClick={ () => setMenu({ ...menu, main: true, getAllUsers: false }) }>
             </Link>
 
           </div>
@@ -83,7 +83,7 @@ const GetAllUsers = ({ setMenu, menu, allUsers, handleDeleteReserve, user, setUs
 
             <tbody>
 
-              {allUsers.length === 0
+              { allUsers.length === 0
 
                 ? <tr
                   className="spinner-grow text-success m-5"
@@ -93,12 +93,12 @@ const GetAllUsers = ({ setMenu, menu, allUsers, handleDeleteReserve, user, setUs
                 : allUsers.map((user, i) => (
 
                   <tr
-                    key={user._id}
+                    key={ user._id }
                     className="text-center">
 
                     <td>
                       <div className='text-dark'>
-                        {i + 1}
+                        { i + 1 }
                       </div>
                     </td>
 
@@ -106,37 +106,37 @@ const GetAllUsers = ({ setMenu, menu, allUsers, handleDeleteReserve, user, setUs
 
                       <button
                         className='text-primary'
-                        onClick={() => setUser(user)}>
-                        {user.username}
+                        onClick={ () => setUser(user) }>
+                        { user.username }
                       </button>
 
                     </td>
 
                     <td>
                       <div className='text-dark'>
-                        {user.nombre}
+                        { user.nombre }
                       </div>
                     </td>
 
                     <td>
                       <div className='text-dark'>
-                        {user.apellido}
+                        { user.apellido }
                       </div>
                     </td>
 
                     <td>
                       <div className='text-dark'>
-                        {user.edad}
+                        { user.edad }
                       </div>
                     </td>
 
                     <td>
                       <div className='text-dark'>
-                        {user.telefono}
+                        { user.telefono }
                       </div>
                     </td>
 
-                    {user.reserves.length === 0
+                    { user.reserves.length === 0
                       ? <td>
                         <div className='text-danger fw-bold'>
                           Sin reservas
@@ -146,7 +146,7 @@ const GetAllUsers = ({ setMenu, menu, allUsers, handleDeleteReserve, user, setUs
                         <div className='text-success fw-bold'>
                           Reservas activas
                         </div>
-                      </td>}
+                      </td> }
 
                     <td>
                       <div className='text-dark'>
@@ -156,7 +156,7 @@ const GetAllUsers = ({ setMenu, menu, allUsers, handleDeleteReserve, user, setUs
 
                     <td>
                       <div className='text-dark'>
-                        {user.admin
+                        { user.admin
                           ? <i className="bi bi-check-circle-fill text-success"></i>
                           : <i className="bi bi-x-circle-fill text-danger"></i>
                         }
@@ -165,13 +165,13 @@ const GetAllUsers = ({ setMenu, menu, allUsers, handleDeleteReserve, user, setUs
 
                   </tr>
 
-                ))}
+                )) }
             </tbody>
 
           </table>
 
         </>
-        : <User setUser={setUser} user={user} handleDeleteReserve={handleDeleteReserve} handleUpdateUser={handleUpdateUser} handleDeleteUser={handleDeleteUser} setConfirmDelete={setConfirmDelete} confirmDelete={confirmDelete} />
+        : <User setUser={ setUser } user={ user } handleDeleteReserve={ handleDeleteReserve } handleUpdateUser={ handleUpdateUser } handleDeleteUser={ handleDeleteUser } setConfirmDelete={ setConfirmDelete } confirmDelete={ confirmDelete } />
       }
 
       <div>

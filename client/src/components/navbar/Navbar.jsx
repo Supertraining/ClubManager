@@ -11,11 +11,11 @@ import NavBarOffCanvasStart from '../navBarOffCanvasStart/NavBarOffCanvasStart';
 import NavBarOffCanvasEnd from '../navBarOffCanvasEnd/NavBarOffCanvasEnd';
 
 const Navbar = () => {
-  const [userReserves, setUserReserves] = useState([]);
-  const [showProfile, setShowProfile] = useState(false);
-  const [showChangePasswordForm, setShowChangePasswordForm] = useState(false);
-  const [strongPassword, setStrongPassword] = useState(true);
-  const [showReserves, setShowReserves] = useState(false);
+  const [ userReserves, setUserReserves ] = useState([]);
+  const [ showProfile, setShowProfile ] = useState(false);
+  const [ showChangePasswordForm, setShowChangePasswordForm ] = useState(false);
+  const [ strongPassword, setStrongPassword ] = useState(true);
+  const [ showReserves, setShowReserves ] = useState(false);
 
   const navigate = useNavigate();
 
@@ -44,7 +44,7 @@ const Navbar = () => {
   const squashReserves = userReserves?.filter((res) => res.court === 'squash');
   const paletaReserves = userReserves?.filter((res) => res.court === 'paleta');
 
-  const allArrays = [futbolReserves, paddleReserves, squashReserves, paletaReserves].some(
+  const allArrays = [ futbolReserves, paddleReserves, squashReserves, paletaReserves ].some(
     (arr) => arr.length > 0
   );
 
@@ -94,10 +94,13 @@ const Navbar = () => {
 
   const notifyDeletedAccount = () =>
     toast.error('Cuenta Eliminada', { position: 'bottom-right', autoClose: 1000, theme: 'dark' });
-  const handleDeleteAccount = async (id) => {
+  const handleDeleteAccount = async (user) => {
     try {
-      const res = await axios.delete(`/eliminar/${id}`);
 
+      await axios.put('/courts/reserve/deleteByUsername', { username: user.username })
+      
+      const res = await axios.delete(`/eliminar/${user._id}`);
+      setUserReserves([])
       if (res.data === true) {
         dispatch({ type: 'LOGOUT' });
 
@@ -200,34 +203,34 @@ const Navbar = () => {
           </button>
 
           <NavBarOffCanvasStart
-            handleCloseSession={handleCloseSession}
-            handleUserReserves={handleUserReserves}
-            user={user}
+            handleCloseSession={ handleCloseSession }
+            handleUserReserves={ handleUserReserves }
+            user={ user }
           />
         </div>
 
         <NavBarOffCanvasEnd
-          setShowProfile={setShowProfile}
-          showProfile={showProfile}
-          setShowReserves={setShowReserves}
-          showReserves={showReserves}
-          handleUpdateUser={handleUpdateUser}
-          handleDeleteAccount={handleDeleteAccount}
-          handleDeleteReserve={handleDeleteReserve}
-          allArrays={allArrays}
-          futbolReserves={futbolReserves}
-          paddleReserves={paddleReserves}
-          squashReserves={squashReserves}
-          paletaReserves={paletaReserves}
-          user={user}
-          setShowChangePasswordForm={setShowChangePasswordForm}
-          showChangePasswordForm={showChangePasswordForm}
-          handleUpdatePassword={handleUpdatePassword}
-          strongPassword={strongPassword}
+          setShowProfile={ setShowProfile }
+          showProfile={ showProfile }
+          setShowReserves={ setShowReserves }
+          showReserves={ showReserves }
+          handleUpdateUser={ handleUpdateUser }
+          handleDeleteAccount={ handleDeleteAccount }
+          handleDeleteReserve={ handleDeleteReserve }
+          allArrays={ allArrays }
+          futbolReserves={ futbolReserves }
+          paddleReserves={ paddleReserves }
+          squashReserves={ squashReserves }
+          paletaReserves={ paletaReserves }
+          user={ user }
+          setShowChangePasswordForm={ setShowChangePasswordForm }
+          showChangePasswordForm={ showChangePasswordForm }
+          handleUpdatePassword={ handleUpdatePassword }
+          strongPassword={ strongPassword }
         />
       </nav>
     </div>
-    
+
   );
 };
 

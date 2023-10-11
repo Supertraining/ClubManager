@@ -1,9 +1,22 @@
 import { useReducer, createContext, useEffect } from "react";
+// import axios from '../../utils/axiosInstance';
+
+//__Esta funcion solo es util si configuro un tiempo de vida a la cookie, entonces cuando este termina, se elimina la cookie y se elimina el localStorage
+// const user = JSON.parse(localStorage.getItem('user'))
+// const { data } = await axios.get('/',
+//   {
+//     headers: {
+//       Authorization: user?.username
+//     }
+//   });
+// if (!data) {
+//   localStorage.removeItem('user')
+// }
 
 const INITIAL_STATE = {
-	user: JSON.parse(localStorage.getItem('user')) || null,
-	loading: false,
-	error: null,
+  user: JSON.parse(localStorage.getItem('user')) || JSON.parse(sessionStorage.getItem('user')) || null,
+  loading: false,
+  error: null,
 };
 
 export const AuthContext = createContext();
@@ -13,24 +26,28 @@ let AuthReducer = (state, action) => {
     case 'LOGIN_START':
       return {
         user: null,
+        permanentLog: false,
         loading: true,
         error: null
       };
     case 'LOGIN_SUCCESS':
       return {
         user: action.payload,
+        permanentLog: action.payload.permanentLog,
         loading: false,
         error: null
       };
     case 'LOGIN_FAILURE':
       return {
         user: null,
+        permanentLog: false,
         loading: false,
         error: action.payload
       };
     case 'LOGOUT':
       return {
         user: null,
+        permanentLog: false,
         loading: false,
         error: null
       };
@@ -42,17 +59,19 @@ let AuthReducer = (state, action) => {
 
 export const AuthContextProvider = ({ children }) => {
 
-  const [state, dispatch] = useReducer(AuthReducer, INITIAL_STATE)
+  const [ state, dispatch ] = useReducer(AuthReducer, INITIAL_STATE)
 
-
+ 
   useEffect(() => {
-    localStorage.setItem('user', JSON.stringify(state.user))
-  }, [state.user])
+    state.permanentLog
+      ? localStorage.setItem('user', JSON.stringify(state.user))
+      : sessionStorage.setItem('user', JSON.stringify(state.user))
+  }, [ state.user, state.permanentLog ])
 
 
   return (
-    <AuthContext.Provider value={{ user: state.user, loading: state.loading, error: state.error, dispatch }}>
-      {children}
+    <AuthContext.Provider value={ { user: state.user, loading: state.loading, error: state.error, dispatch } }>
+      { children }
     </AuthContext.Provider>
   )
 }

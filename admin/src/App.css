@@ -126,3 +126,12 @@
 .z-\[10000\] {
   z-index: 1000 !important;
 }
+
+/* bootstrap small */
+.small {
+  font-size: 0.8rem !important;
+}
+
+.pointer {
+  cursor: pointer;
+}
