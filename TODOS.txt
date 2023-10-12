@@ -20,5 +20,5 @@
 -EVENTOS ADMIN habria que agregar un boton a la tabla o a la pantalla futura de los detalles del evento que permita dejar el evento saldado cuando el cliente paga el total. - DONE BOTON, NO LA PANTALLA APARTE
 - Se podria agregar un input en el login que te permita quedar logueado, localStorage o sino que loguee en sesionStorage solo en ADMMIN. EL USER QUEDA LOGUEADO. - Done
 - A FUTURO SI SE INCORPORAN PAGOS HABRIA QUE REGULAR EL TIEMPO DE SESION ABIERTA EN EL USER.
--PASAR FOTOS DE FONDO DE CANCHAS A WEBP 
+-PASAR FOTOS DE FONDO DE CANCHAS A WEBP - DONE
 - SUBIRLAS A CLODUINARY?
