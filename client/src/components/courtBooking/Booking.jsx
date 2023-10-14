@@ -109,7 +109,7 @@ const Booking = ({ court }) => {
           },
         });
 
-        await axios.put(`/reserves/${user?.username}`, {
+        await axios.put(`/users/reserves/${user?.username}`, {
           court: `${court}`,
           weekday: unaccentedWeekday,
           date: unaccentedDate,

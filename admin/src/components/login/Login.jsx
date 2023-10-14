@@ -21,7 +21,7 @@ const Login = () => {
 
       dispatch({ type: 'LOGIN_START' })
 
-      const { data } = await axios.post('/login', credentials)
+      const { data } = await axios.post('/users/login', credentials)
 
       dispatch({ type: 'LOGIN_SUCCESS', payload: { ...data, permanentLog: credentials.permanentLog } })
 

@@ -58,7 +58,7 @@ const Home = () => {
 
     try {
 
-      const {data : allUsers} = await axios.get('/getAll');
+      const {data : allUsers} = await axios.get('/users/getAll');
       
       allUsers.sort((a, b) => {
 
@@ -94,12 +94,12 @@ const Home = () => {
         reserveId: id
       });
 
-      await axios.put(`/reserves/delete`, {
+      await axios.put(`/users/reserves/delete`, {
         username: user.username,
         reserveId: id
       });
 
-      const userById = await axios.get(`/user/${userid}`);
+      const userById = await axios.get(`/users/user/${userid}`);
 
       setUser(userById.data)
       notifyDeletedReserve();
@@ -119,9 +119,9 @@ const Home = () => {
     try {
       e.preventDefault()
 
-      await axios.put(`/update/${id}`, credentials);
+      await axios.put(`/users/update/${id}`, credentials);
 
-      const userById = await axios.get(`/user/${id}`);
+      const userById = await axios.get(`/users/user/${id}`);
 
       setUser(userById.data)
       notifyUserUpdated();
@@ -139,7 +139,7 @@ const Home = () => {
   const handleDeleteUser = async (user) => {
     try {
 
-      await axios.delete(`/eliminar/${user._id}`);
+      await axios.delete(`/users/eliminar/${user._id}`);
 
       user.reserves.forEach(async (res) => {
         await axios.put(`/courts/reserve/delete`, {

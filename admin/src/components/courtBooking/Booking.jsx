@@ -96,7 +96,7 @@ const Booking = ({ setCourt, court }) => {
             }
           })
 
-        await axios.put(`/reserves/${user?.username}`,
+        await axios.put(`/users/reserves/${user?.username}`,
           {
             court: `${court}`,
             weekday: unaccentedWeekday,
@@ -130,7 +130,7 @@ const Booking = ({ setCourt, court }) => {
               }
             })
 
-          await axios.put(`/reserves/${user?.username}`,
+          await axios.put(`/users/reserves/${user?.username}`,
             {
               court: `${court}`,
               weekday: unaccentedWeekday,
@@ -172,7 +172,7 @@ const Booking = ({ setCourt, court }) => {
         reserveId: id
       });
 
-      await axios.put(`/reserves/delete`, {
+      await axios.put(`/users/reserves/delete`, {
         username: username,
         reserveId: id
       });

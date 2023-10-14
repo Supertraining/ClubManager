@@ -35,7 +35,7 @@ const Register = () => {
         return;
       }
 
-      const res = await axios.post('/register', data);
+      const res = await axios.post('/users/register', data);
 
       dispatch({ type: 'LOGIN_SUCCESS', payload: res.data });
 

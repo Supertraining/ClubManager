@@ -21,7 +21,7 @@ const Login = () => {
     try {
       dispatch({ type: 'LOGIN_START' });
      
-      const res = await axios.post('/login', data);
+      const res = await axios.post('/users/login', data);
      
       dispatch({ type: 'LOGIN_SUCCESS', payload: res.data });
 

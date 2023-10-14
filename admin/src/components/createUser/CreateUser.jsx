@@ -22,7 +22,7 @@ const CreateUser = ({ setMenu, menu }) => {
 
     try {
       console.log(data)
-      const response = await axios.post('/register', data);
+      const response = await axios.post('/users/register', data);
       console.log('RESPONSE:', response)
       notifyUsuarioCreado();
       reset();

@@ -31,7 +31,7 @@ const Navbar = () => {
 
   const handleUserReserves = async () => {
     try {
-      const { data } = await axios.get(`user/${user?._id}`);
+      const { data } = await axios.get(`/users/user/${user?._id}`);
 
       setUserReserves(data.reserves);
     } catch (error) {
@@ -70,14 +70,14 @@ const Navbar = () => {
     try {
       e.preventDefault();
 
-      await axios.put(`/update/${credentials._id}`, { ...credentials, reserves: userReserves });
+      await axios.put(`/users/update/${credentials._id}`, { ...credentials, reserves: userReserves });
 
       await axios.put('/courts/reserve/userUpdate', {
         user: user.username,
         newUser: credentials.username,
       });
 
-      const userById = await axios.get(`/user/${credentials._id}`);
+      const userById = await axios.get(`/users/user/${credentials._id}`);
 
       await dispatch({ type: 'UPDATE_USER', payload: userById.data });
 
@@ -99,7 +99,7 @@ const Navbar = () => {
 
       await axios.put('/courts/reserve/deleteByUsername', { username: user.username })
       
-      const res = await axios.delete(`/eliminar/${user._id}`);
+      const res = await axios.delete(`/users/eliminar/${user._id}`);
       setUserReserves([])
       if (res.data === true) {
         dispatch({ type: 'LOGOUT' });
@@ -125,7 +125,7 @@ const Navbar = () => {
         reserveId: id,
       });
 
-      await axios.put(`/reserves/delete`, {
+      await axios.put(`/users/reserves/delete`, {
         username: user.username,
         reserveId: id,
       });
@@ -170,9 +170,9 @@ const Navbar = () => {
 
       setStrongPassword(true);
 
-      const res = await axios.post('/login', { username: user.username, password: data.password });
+      const res = await axios.post('/users/login', { username: user.username, password: data.password });
 
-      if (res.status === 200) await axios.put('/update', { ...user, password: data.newPassword });
+      if (res.status === 200) await axios.put('/users/update', { ...user, password: data.newPassword });
 
       notifyPasswordUpdated();
 
