@@ -15,11 +15,11 @@ import CourtBookingDatePicker from '../courtBookingDatePicker/CourtBookingDatePi
 
 const Booking = ({ setCourt, court }) => {
 
-  const [day, setDay] = useState(new Date());
-  const [initialTime, setInitialTime] = useState();
-  const [finalTime, setFinalTime] = useState();
-  const [confirmReserve, setConfirmReserve] = useState(false)
-  const [permanent, setPermanent] = useState(false)
+  const [ day, setDay ] = useState(new Date());
+  const [ initialTime, setInitialTime ] = useState();
+  const [ finalTime, setFinalTime ] = useState();
+  const [ confirmReserve, setConfirmReserve ] = useState(false)
+  const [ permanent, setPermanent ] = useState(false)
 
   let { data, reFetch } = useFetch(`/courts/${court}`)
 
@@ -58,10 +58,20 @@ const Booking = ({ setCourt, court }) => {
 
       //!Un turno se puede reservar en un rango máximo de una semana
 
-      const reservedDates = reserveData?.some((reserve) => initialTime === reserve.initialTime && finalTime === reserve.finalTime || initialTime === reserve.initialTime + 1800000 || initialTime === reserve.initialTime - 1800000 || initialTime === reserve.finalTime - 1800000 || finalTime === initialTime + 1800000 || finalTime < initialTime || finalTime === reserve.finalTime + 1800000 || finalTime === reserve.finalTime - 1800000 || new Date(initialTime).getDate() < new Date().getDate() || new Date(finalTime).getDate() < new Date().getDate()) || new Date(initialTime).getTime() <= Date.now() || new Date(finalTime).getTime() <= Date.now();
+      const reservedDates = reserveData?.some((reserve) =>
+        initialTime === reserve.initialTime && finalTime === reserve.finalTime ||
+        initialTime === reserve.initialTime + 1800000 ||
+        initialTime === reserve.initialTime - 1800000 ||
+        initialTime === reserve.finalTime - 1800000 ||
+        finalTime === initialTime + 1800000 ||
+        finalTime < initialTime ||
+        finalTime === reserve.finalTime + 1800000 ||
+        finalTime === reserve.finalTime - 1800000 ||
+        new Date(initialTime).getDate() < new Date().getDate() ||
+        new Date(finalTime).getDate() < new Date().getDate() ||
+        new Date(initialTime).getTime() <= Date.now() ||
+        new Date(finalTime).getTime() <= Date.now());
 
-      const oneWeekFromNow = new Date();
-      oneWeekFromNow.setDate(oneWeekFromNow.getDate() + 7)
 
       if (!reservedDates) {
 
@@ -98,10 +108,13 @@ const Booking = ({ setCourt, court }) => {
           })
 
         if (permanent) {
+
           const today = new Date(initialTime);
           const oneWeekFromNow = today.setDate(today.getDate() + 7);
           const dateOneWeekFromNow = unidecode(new Date(oneWeekFromNow).toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'numeric' }));
-
+          const initialTimeWeekFromNow = new Date(today.getTime());
+          const todayFinalTime = new Date(finalTime);
+          const finalTimeWeekFromNow = new Date(todayFinalTime.getTime() + 7 * 24 * 60 * 60 * 1000).getTime();
           await axios.put('/courts/reserve',
             {
               name: `${court}`,
@@ -109,8 +122,8 @@ const Booking = ({ setCourt, court }) => {
               {
                 weekday: unaccentedWeekday,
                 date: dateOneWeekFromNow,
-                initialTime: initialTime,
-                finalTime: finalTime,
+                initialTime: initialTimeWeekFromNow,
+                finalTime: finalTimeWeekFromNow,
                 user: user?.username,
                 id: UUID,
                 permanent: permanent
@@ -179,7 +192,7 @@ const Booking = ({ setCourt, court }) => {
   useEffect(() => {
     reFetch()
     setReserveDeleted(false)
-  }, [reserveDeleted])
+  }, [ reserveDeleted ])
 
   const startDate = new Date();
   const endDate = new Date();
@@ -211,14 +224,14 @@ const Booking = ({ setCourt, court }) => {
         className='my-3'>
 
         <button
-          to={'/'}
+          to={ '/' }
           className='btn btn-close border border-dark p-2'
-          onClick={() => setCourt(false)}>
+          onClick={ () => setCourt(false) }>
         </button>
 
       </div>
 
-      <h1 className='text-info'>@{court}</h1>
+      <h1 className='text-info'>@{ court }</h1>
 
 
       <div
@@ -250,24 +263,24 @@ const Booking = ({ setCourt, court }) => {
         </div>
 
         <CourtBookingDatePicker
-          setInitialTime={setInitialTime}
-          initialTime={initialTime}
-          setFinalTime={setFinalTime}
-          finalTime={finalTime}
-          setConfirmReserve={setConfirmReserve}
-          confirmReserve={confirmReserve}
-          handleBooking={handleBooking}
-          setDay={setDay}
-          day={day}
-          setPermanent={setPermanent}
-          permanent={permanent} />
+          setInitialTime={ setInitialTime }
+          initialTime={ initialTime }
+          setFinalTime={ setFinalTime }
+          finalTime={ finalTime }
+          setConfirmReserve={ setConfirmReserve }
+          confirmReserve={ confirmReserve }
+          handleBooking={ handleBooking }
+          setDay={ setDay }
+          day={ day }
+          setPermanent={ setPermanent }
+          permanent={ permanent } />
         <div>
           <ToastContainer />
         </div>
 
       </div>
 
-      <CourtBookingBoard data={data} dateList={dateList} dateListLc={dateListLc} weekDaysList={weekDaysList} handleDeleteReserve={handleDeleteReserve} court={court} setPermanent={setPermanent} permanent={permanent} />
+      <CourtBookingBoard data={ data } dateList={ dateList } dateListLc={ dateListLc } weekDaysList={ weekDaysList } handleDeleteReserve={ handleDeleteReserve } court={ court } setPermanent={ setPermanent } permanent={ permanent } />
 
     </>
   )
