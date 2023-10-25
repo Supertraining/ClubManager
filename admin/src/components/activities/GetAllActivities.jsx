@@ -10,8 +10,8 @@ import Modal from './Modal'
 
 const GetAllActivities = ({ handleMenuClick }) => {
 
-  const { data, loading, reFetch } = useFetch('./activities/getAll');
-
+  const { data, loading, reFetch } = useFetch('/activities/getAll');
+  
   const notifyDeleteActivity = () => toast.success("Actividad eliminada", { position: 'bottom-right', autoClose: 1000, theme: 'dark' });
   const deleteActivity = async (id) => {
     try {
@@ -58,7 +58,7 @@ const GetAllActivities = ({ handleMenuClick }) => {
 
       { handleInitialRender() }
 
-      <div className='d-flex justify-content-start justify-content-md-evenly overflow-auto flex-md-wrap gap-1 my-5'>
+      <div className='d-flex justify-content-start justify-content-md-evenly overflow-auto flex-md-wrap gap-2 my-5'>
 
         { data?.map((card) => (
 
