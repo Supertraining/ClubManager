@@ -264,7 +264,7 @@ const Home = () => {
       navigate('/login')
     }
     const { pathname } = window.location
-    if (pathname === '/') {
+    if (pathname === '/home') {
       handleMenuClick('main')
     }
   }, [ auth.user, menuFeatures.main, navigate ]);
