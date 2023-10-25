@@ -21,8 +21,7 @@ import UpdateActivities from '../../components/activities/UpdateActivities';
 
 const Home = () => {
 
-  const auth = useContext(AuthContext)
-
+  const auth = useContext(AuthContext);
   const menuFeatures = {
     createUser: false,
     getAllUsers: false,
@@ -33,17 +32,17 @@ const Home = () => {
     getAllActivities: false,
     main: false
   }
-  const [ menu, setMenu ] = useState(menuFeatures)
-  const [ allUsers, setAllUsers ] = useState([])
-  const [ user, setUser ] = useState(false)
+  const [ menu, setMenu ] = useState(menuFeatures);
+  const [ allUsers, setAllUsers ] = useState([]);
+  const [ user, setUser ] = useState(false);
 
-  const [ allCourts, setAllCourts ] = useState([])
-  const [ court, setCourt ] = useState(false)
-  const [ courtId, setCourtId ] = useState()
+  const [ allCourts, setAllCourts ] = useState([]);
+  const [ court, setCourt ] = useState(false);
+  const [ courtId, setCourtId ] = useState();
 
-  const [ confirmDelete, setConfirmDelete ] = useState(false)
+  const [ confirmDelete, setConfirmDelete ] = useState(false);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const notifyTryAgainLater = () => toast.warn("Hubo un problema, por favor intente nuevamente mas tarde", { position: 'bottom-right', autoClose: 2000, theme: 'dark' });
 
@@ -60,7 +59,6 @@ const Home = () => {
       [ option ]: true
     });
   };
-
   const handleGetAllUsers = async () => {
 
     try {
@@ -118,7 +116,7 @@ const Home = () => {
 
     }
 
-  }
+  };
 
   const notifyUserUpdated = () => toast.success("Usuario Actualizado", { position: 'bottom-right', autoClose: 1000, theme: 'dark' });
   const handleUpdateUser = async (e, credentials, id) => {
@@ -140,7 +138,7 @@ const Home = () => {
 
     }
 
-  }
+  };
 
   const notifyUserDeleted = () => toast.error("Usuario Eliminado", { position: 'bottom-right', autoClose: 1000, theme: 'dark' });
   const handleDeleteUser = async (user) => {
@@ -171,7 +169,7 @@ const Home = () => {
       notifyTryAgainLater();
 
     }
-  }
+  };
 
   const notifyCourtCreated = () => toast.info("Cancha Creada", { position: 'bottom-right', autoClose: 1000, theme: 'dark' });
   const handleCreateCourt = async (e, name) => {
@@ -192,7 +190,7 @@ const Home = () => {
       notifyTryAgainLater();
 
     }
-  }
+  };
 
   const handleGetAllCourts = async () => {
 
@@ -209,7 +207,7 @@ const Home = () => {
 
     }
 
-  }
+  };
 
   const notifyCourtDeleted = () => toast.error("Cancha Eliminada", { position: 'bottom-right', autoClose: 1000, theme: 'dark' });
   const handleDeleteCourt = async (id) => {
@@ -227,7 +225,7 @@ const Home = () => {
       console.log(error);
 
     }
-  }
+  };
 
   const notifyOldReservesDeleted = () => toast.error("Historial de reservas Eliminado", { position: 'bottom-right', autoClose: 1000, theme: 'dark' });
   const handleDeleteOldReserves = async () => {
@@ -244,7 +242,7 @@ const Home = () => {
 
     }
 
-  }
+  };
 
   const handleCloseSession = async () => {
 
@@ -260,12 +258,16 @@ const Home = () => {
 
     }
 
-  }
+  };
   useEffect(() => {
     if (auth.user === null) {
       navigate('/login')
     }
-  }, [ auth.user, navigate ])
+    const { pathname } = window.location
+    if (pathname === '/') {
+      handleMenuClick('main')
+    }
+  }, [ auth.user, menuFeatures.main, navigate ]);
 
   const conditionalRender = () => {
     try {
@@ -277,8 +279,7 @@ const Home = () => {
     } catch (error) {
       console.log(error)
     }
-
-  }
+  };
 
 
   return (
