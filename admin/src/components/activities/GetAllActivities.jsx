@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom'
 import axios from '../../utils/axiosInstance'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useEffect } from 'react'
 import Modal from './Modal'
 
 const GetAllActivities = ({ handleMenuClick }) => {

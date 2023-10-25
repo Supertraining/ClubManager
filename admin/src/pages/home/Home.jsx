@@ -15,7 +15,7 @@ import Events from '../../components/eventos/Events';
 import { useEffect } from 'react';
 import Activities from '../../components/activities/Activities';
 import GetAllActivities from '../../components/activities/GetAllActivities';
-import UpdateActivities from '../../components/activities/updateActivities';
+import UpdateActivities from '../../components/activities/UpdateActivities';
 
 
 
