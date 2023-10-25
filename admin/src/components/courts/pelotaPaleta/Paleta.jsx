@@ -1,7 +1,7 @@
-import Booking from '../courtBooking/Booking'
+import Booking from '../../courtBooking/Booking'
 import './paleta.css'
 
-const Paleta = ({ court, setCourt, handleDeleteReserve }) => {
+const Paleta = ({ court, setCourt }) => {
 
   return (
     <div className='paletaContainer'>

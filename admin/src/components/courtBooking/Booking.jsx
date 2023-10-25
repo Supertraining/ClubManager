@@ -7,10 +7,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import './booking.css'
 import { AuthContext } from '../context/AuthContext'
 import { v4 as uuidv4 } from 'uuid';
-import CourtBookingBoard from '../courtBookingBoard/CourtBookingBoard'
+import CourtBookingBoard from './courtBookingBoard/CourtBookingBoard'
 import { ReserveBoardContext } from '../context/ReserveBoardUpdate'
 import unidecode from 'unidecode';
-import CourtBookingDatePicker from '../courtBookingDatePicker/CourtBookingDatePicker';
+import CourtBookingDatePicker from './courtBookingDatePicker/CourtBookingDatePicker';
 
 
 const Booking = ({ setCourt, court }) => {

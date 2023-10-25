@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 
 const Menu = ({ menu, handleGetAllUsers, handleGetAllCourts, handleCloseSession, handleMenuClick }) => {
-
+  
   return (
     <>
       <div
@@ -110,6 +110,48 @@ const Menu = ({ menu, handleGetAllUsers, handleGetAllCourts, handleCloseSession,
                 </Link>
 
                 <i className={ menu.events
+                  ? 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-active text-success'
+                  : 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-inActive' }>
+                </i>
+
+              </li>
+
+              <li
+                className='d-flex align-items-center'>
+
+                <Link
+                  to={ '/activities' }
+                  className={ menu.activities
+                    ? 'btn btn-success'
+                    : 'btn btn-success bg-transparent' }
+                  onClick={ () => {
+                    handleMenuClick('activities')
+                  } }>
+                  Crear actividades
+                </Link>
+
+                <i className={ menu.activities
+                  ? 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-active text-success'
+                  : 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-inActive' }>
+                </i>
+
+              </li>
+
+              <li
+                className='d-flex align-items-center'>
+
+                <Link
+                  to={ '/getAllActivities' }
+                  className={ menu.getAllActivities
+                    ? 'btn btn-success'
+                    : 'btn btn-success bg-transparent' }
+                  onClick={ () => {
+                    handleMenuClick('getAllActivities')
+                  } }>
+                  Todas las actividades
+                </Link>
+
+                <i className={ menu.activities
                   ? 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-active text-success'
                   : 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-inActive' }>
                 </i>

@@ -2,17 +2,21 @@ import Menu from '../../components/menu/Menu';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import './home.css';
 import CreateUser from '../../components/createUser/CreateUser';
-import GetAllUsers from '../../components/getAllUsers/GetAllUsers'
+import GetAllUsers from '../../components/user/getAllUsers/GetAllUsers'
 import { useContext, useState } from 'react';
 import axios from '../../utils/axiosInstance.js'
 import OldReservesDeleted from '../../components/oldReservesDeleted/OldReservesDeleted';
 import { toast } from 'react-toastify';
 import Main from '../../components/main/Main';
-import GetAllCourts from '../../components/getAllCourts/GetAllCourts';
+import GetAllCourts from '../../components/courts/getAllCourts/GetAllCourts';
 import { AuthContext } from '../../components/context/AuthContext';
-import FailLogin from '../../components/faillogin/FailLogin';
-import Eventos from '../../components/eventos/Eventos';
+import FailLogin from '../../components/auth/faillogin/FailLogin';
+import Events from '../../components/eventos/Events';
 import { useEffect } from 'react';
+import Activities from '../../components/activities/Activities';
+import GetAllActivities from '../../components/activities/GetAllActivities';
+import UpdateActivities from '../../components/activities/updateActivities';
+
 
 
 const Home = () => {
@@ -25,10 +29,11 @@ const Home = () => {
     events: false,
     deleteReserves: false,
     getAllCourts: false,
-    main: true
+    activities: false,
+    getAllActivities: false,
+    main: false
   }
   const [ menu, setMenu ] = useState(menuFeatures)
-
   const [ allUsers, setAllUsers ] = useState([])
   const [ user, setUser ] = useState(false)
 
@@ -49,6 +54,8 @@ const Home = () => {
       events: false,
       deleteReserves: false,
       getAllCourts: false,
+      activities: false,
+      getAllActivities: false,
       main: false,
       [ option ]: true
     });
@@ -58,8 +65,8 @@ const Home = () => {
 
     try {
 
-      const {data : allUsers} = await axios.get('/users/getAll');
-      
+      const { data: allUsers } = await axios.get('/users/getAll');
+
       allUsers.sort((a, b) => {
 
         if (a.apellido > b.apellido) {
@@ -70,7 +77,7 @@ const Home = () => {
         }
         return 0;
       })
-      
+
       setAllUsers(allUsers);
 
     } catch (error) {
@@ -242,7 +249,7 @@ const Home = () => {
   const handleCloseSession = async () => {
 
     try {
-     
+
       auth.dispatch({ type: 'LOGOUT' });
       sessionStorage.removeItem('user');
       localStorage.removeItem('user');
@@ -261,33 +268,37 @@ const Home = () => {
   }, [ auth.user, navigate ])
 
   const conditionalRender = () => {
-    if (auth?.user === null) {
-      return true
-    } else if (auth?.user?.admin === false) {
-      return <FailLogin />
+    try {
+      if (auth?.user) {
+        return true
+      } else if (auth?.user?.admin === false) {
+        return <FailLogin />
+      }
+    } catch (error) {
+      console.log(error)
     }
-  }
 
+  }
 
 
   return (
 
     <>
 
-      { !conditionalRender()
+      { conditionalRender()
         ?
         <>
           <div className='col-2 text-center p-3'>
-          <button
-            className='navbar-toggler'
-            type='button'
-            data-bs-toggle='offcanvas'
-            data-bs-target='#offcanvasDarkNavbar'
-            aria-controls='offcanvasDarkNavbar'
-            aria-label='Toggle navigation'
-          >
-            <i className="bi bi-menu-button-wide fs-1 text-success"></i>
-          </button>
+            <button
+              className='navbar-toggler'
+              type='button'
+              data-bs-toggle='offcanvas'
+              data-bs-target='#offcanvasDarkNavbar'
+              aria-controls='offcanvasDarkNavbar'
+              aria-label='Toggle navigation'
+            >
+              <i className="bi bi-menu-button-wide fs-1 text-success"></i>
+            </button>
           </div>
 
           <div className='home'>
@@ -311,22 +322,59 @@ const Home = () => {
 
               <Route
                 exact path='/createUser'
-                element={ <CreateUser setMenu={ setMenu } menu={ menu } /> }
+                element={ <CreateUser
+                  setMenu={ setMenu }
+                  menu={ menu } /> }
               />
 
               <Route
                 exact path='/getAllUsers'
-                element={ <GetAllUsers setMenu={ setMenu } menu={ menu } allUsers={ allUsers } handleDeleteReserve={ handleDeleteReserve } user={ user } setUser={ setUser } handleUpdateUser={ handleUpdateUser } handleDeleteUser={ handleDeleteUser } setConfirmDelete={ setConfirmDelete } confirmDelete={ confirmDelete } /> }
+                element={ <GetAllUsers
+                  handleMenuClick={ handleMenuClick }
+                  handleGetAllUsers={ handleGetAllUsers }
+                  allUsers={ allUsers }
+                  handleDeleteReserve={ handleDeleteReserve }
+                  user={ user } setUser={ setUser }
+                  handleUpdateUser={ handleUpdateUser }
+                  handleDeleteUser={ handleDeleteUser }
+                  setConfirmDelete={ setConfirmDelete }
+                  confirmDelete={ confirmDelete } /> }
               />
 
               <Route
                 exact path='/courts'
-                element={ <GetAllCourts setMenu={ setMenu } menu={ menu } allCourts={ allCourts } court={ court } setCourt={ setCourt } handleCreateCourt={ handleCreateCourt } handleDeleteCourt={ handleDeleteCourt } setConfirmDelete={ setConfirmDelete } confirmDelete={ confirmDelete } setCourtId={ setCourtId } courtId={ courtId } /> }
+                element={ <GetAllCourts
+                  handleMenuClick={ handleMenuClick }
+                  handleGetAllCourts={ handleGetAllCourts }
+                  allCourts={ allCourts }
+                  court={ court }
+                  setCourt={ setCourt }
+                  handleCreateCourt={ handleCreateCourt }
+                  handleDeleteCourt={ handleDeleteCourt }
+                  setConfirmDelete={ setConfirmDelete }
+                  confirmDelete={ confirmDelete }
+                  setCourtId={ setCourtId }
+                  courtId={ courtId } /> }
               />
 
               <Route
                 exact path='/events'
-                element={ <Eventos setMenu={ setMenu } menu={ menu } /> }
+                element={ <Events
+                  handleMenuClick={ handleMenuClick } /> }
+              />
+
+              <Route
+                exact path='/activities'
+                element={ <Activities setMenu={ setMenu } menu={ menu } /> }
+              />
+              <Route
+                exact path='/getAllActivities'
+                element={ <GetAllActivities setMenu={ setMenu } menu={ menu } handleMenuClick={ handleMenuClick }
+                /> }
+              />
+              <Route
+                exact path='/updateActivities/'
+                element={ <UpdateActivities /> }
               />
 
               <Route

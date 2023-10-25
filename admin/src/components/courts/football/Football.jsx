@@ -1,7 +1,7 @@
-import Booking from '../courtBooking/Booking'
+import Booking from '../../courtBooking/Booking'
 import './football.css'
 
-const Football = ({ setCourt, court, handleDeleteReserve  }) => {
+const Football = ({ setCourt, court }) => {
 
   return (
     <div className='footballContainer'>

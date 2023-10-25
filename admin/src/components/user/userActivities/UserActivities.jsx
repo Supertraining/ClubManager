@@ -1,7 +1,5 @@
 import './UserActivities.css'
 
-import React from 'react'
-
 const UserActivities = () => {
   return (
     <div>

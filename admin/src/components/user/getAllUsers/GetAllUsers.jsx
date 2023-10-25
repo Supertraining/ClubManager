@@ -1,10 +1,16 @@
 import { Link } from 'react-router-dom'
 import './getAllUsers.css'
-import User from '../user/User'
+import User from '../User'
 import { ToastContainer } from 'react-toastify';
+import { useEffect } from 'react';
 
-const GetAllUsers = ({ setMenu, menu, allUsers, handleDeleteReserve, user, setUser, handleUpdateUser, handleDeleteUser, setConfirmDelete, confirmDelete }) => {
+const GetAllUsers = ({handleMenuClick,  allUsers, handleGetAllUsers, handleDeleteReserve, user, setUser, handleUpdateUser, handleDeleteUser, setConfirmDelete, confirmDelete }) => {
 
+  useEffect(() => {
+    handleGetAllUsers()
+  }, [allUsers, handleGetAllUsers])
+  
+ 
   return (
 
     <div
@@ -19,7 +25,7 @@ const GetAllUsers = ({ setMenu, menu, allUsers, handleDeleteReserve, user, setUs
             <Link
               to={ '/' }
               className='btn btn-close border border-dark p-2'
-              onClick={ () => setMenu({ ...menu, main: true, getAllUsers: false }) }>
+              onClick={ () =>  handleMenuClick('main')  }>
             </Link>
 
           </div>

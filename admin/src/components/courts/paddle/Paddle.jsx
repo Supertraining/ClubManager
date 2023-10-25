@@ -1,7 +1,7 @@
-import Booking from '../courtBooking/Booking'
+import Booking from '../../courtBooking/Booking'
 import './paddle.css'
 
-const Paddle = ({ court, setCourt, handleDeleteReserve }) => {
+const Paddle = ({ court, setCourt }) => {
   return (
     <div className='paddleContainer'>
 

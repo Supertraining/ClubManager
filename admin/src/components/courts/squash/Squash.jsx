@@ -1,7 +1,7 @@
-import Booking from '../courtBooking/Booking'
+import Booking from '../../courtBooking/Booking'
 import './squash.css'
 
-const Squash = ({ court, setCourt, handleDeleteReserve }) => {
+const Squash = ({ court, setCourt }) => {
   return (
     <div className='squashContainer'>
 

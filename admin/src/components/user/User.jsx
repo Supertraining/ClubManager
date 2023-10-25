@@ -1,7 +1,7 @@
 import './user.css';
-import UserReserves from '../userReserves/UserReserves';
-import UserActivities from '../userActivities/UserActivities';
-import UserData from '../userData/UserData';
+import UserReserves from './userReserves/UserReserves';
+import UserActivities from './userActivities/UserActivities';
+import UserData from './userData/UserData';
 
 const User = ({ setUser, user, handleDeleteReserve, handleUpdateUser, handleDeleteUser, setConfirmDelete, confirmDelete }) => {
 

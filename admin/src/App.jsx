@@ -1,7 +1,7 @@
 import './App.css'
-import Login from './components/login/Login'
+import Login from './components/auth/login/Login'
 import Home from './pages/home/Home'
-import FailLogin from './components/faillogin/FailLogin'
+import FailLogin from './components/auth/faillogin/FailLogin'
 import {
   Route,
   BrowserRouter as Router, Routes,

@@ -5,24 +5,29 @@ import Football from '../football/Football';
 import Paleta from '../pelotaPaleta/Paleta';
 import Paddle from '../paddle/Paddle';
 import Squash from '../squash/Squash';
+import { useEffect } from 'react';
 
-const GetAllCourts = ({ setMenu, menu, allCourts, court, setCourt, handleCreateCourt, handleDeleteCourt, courtId, setCourtId }) => {
+const GetAllCourts = ({ allCourts, handleGetAllCourts, court, setCourt, handleCreateCourt, handleDeleteCourt, courtId, setCourtId, handleMenuClick }) => {
 
+  useEffect(() => {
+    handleGetAllCourts()
+  }, [handleGetAllCourts])
+  
 
   return (
     <div
       className="col-12 p-1">
 
-      {!court
+      { !court
         ? <>
 
           <div
             className='my-3'>
 
             <Link
-              to={'/'}
+              to={ '/' }
               className='btn btn-close border border-dark p-2'
-              onClick={() => setMenu({ ...menu, main: true, getAllCourts: false })}>
+              onClick={ () => handleMenuClick('main')  }>
             </Link>
 
           </div>
@@ -61,7 +66,7 @@ const GetAllCourts = ({ setMenu, menu, allCourts, court, setCourt, handleCreateC
 
             <tbody>
 
-              {allCourts.length === 0
+              { allCourts.length === 0
 
                 ? <tr
                   className="spinner-grow text-success m-5"
@@ -71,58 +76,58 @@ const GetAllCourts = ({ setMenu, menu, allCourts, court, setCourt, handleCreateC
                 : allCourts.map((court, i) => (
 
                   <tr
-                    key={court._id}
+                    key={ court._id }
                     className="text-center">
 
                     <td>
-                      {i + 1}
+                      { i + 1 }
                     </td>
 
                     <td>
 
                       <button
                         className='btn text-primary'
-                        onClick={() => setCourt(court)}>
-                        {court.name}
+                        onClick={ () => setCourt(court) }>
+                        { court.name }
                       </button>
 
                     </td>
 
-                    {Object.values(court.unavailableDates).some((reservas) => reservas.length > 0) ? (
+                    { Object.values(court.unavailableDates).some((reservas) => reservas.length > 0) ? (
                       <td className="text-success fw-bold">Reservas activas</td>
                     ) : (
                       <td className="text-danger fw-bold">Sin reservas</td>
-                    )}
+                    ) }
 
                     <td>
-                      {!courtId &&
+                      { !courtId &&
                         <button
-                          to={'/courts'}
+                          to={ '/courts' }
                           className='btn btn-outline-danger m-auto'
-                          onClick={() => { setCourtId(court._id) }}>
+                          onClick={ () => { setCourtId(court._id) } }>
                           Eliminar Cancha
                         </button>
                       }
-                      {courtId === court._id &&
+                      { courtId === court._id &&
                         <>
                           <Link
-                            to={'/courts'}
+                            to={ '/courts' }
                             className='btn btn-sm btn-success m-1'
-                            onClick={() => setCourtId()}>
+                            onClick={ () => setCourtId() }>
                             Cancelar
                           </Link>
 
                           <Link
-                            to={'/courts'}
+                            to={ '/courts' }
                             className='btn btn-sm btn-danger m-1'
-                            onClick={() => { handleDeleteCourt(courtId), setCourtId() }}>
+                            onClick={ () => { handleDeleteCourt(courtId), setCourtId() } }>
                             Borrar
                           </Link>
                         </>
                       }
                     </td>
                   </tr>
-                ))}
+                )) }
 
             </tbody>
 
@@ -130,10 +135,10 @@ const GetAllCourts = ({ setMenu, menu, allCourts, court, setCourt, handleCreateC
 
         </>
         : <>
-          {court?.name === 'futbol' && <Football setCourt={setCourt} court={court?.name} />}
-          {court?.name === 'paleta' && <Paleta setCourt={setCourt} court={court?.name} />}
-          {court?.name === 'paddle' && <Paddle setCourt={setCourt} court={court?.name} />}
-          {court?.name === 'squash' && <Squash setCourt={setCourt} court={court?.name} />}
+          { court?.name === 'futbol' && <Football setCourt={ setCourt } court={ court?.name } /> }
+          { court?.name === 'paleta' && <Paleta setCourt={ setCourt } court={ court?.name } /> }
+          { court?.name === 'paddle' && <Paddle setCourt={ setCourt } court={ court?.name } /> }
+          { court?.name === 'squash' && <Squash setCourt={ setCourt } court={ court?.name } /> }
         </>
 
 

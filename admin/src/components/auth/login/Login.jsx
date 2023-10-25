@@ -1,7 +1,7 @@
-import axios from '../../utils/axiosInstance'
+import axios from '../../../utils/axiosInstance'
 import { useContext, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { AuthContext } from '../context/AuthContext'
+import { AuthContext } from '../../context/AuthContext'
 import './login.css'
 import { useForm } from 'react-hook-form'
 
@@ -23,12 +23,13 @@ const Login = () => {
 
       const { data } = await axios.post('/users/login', credentials)
 
-      dispatch({ type: 'LOGIN_SUCCESS', payload: { ...data, permanentLog: credentials.permanentLog } })
-
-      data.admin
-        ? navigate('/home')
-        : navigate('/failLogin')
-
+      if (data.admin) {
+        dispatch({ type: 'LOGIN_SUCCESS', payload: { ...data, permanentLog: credentials.permanentLog } })
+        navigate('/home')
+      } else {
+        navigate('/failLogin')
+      }
+      
     } catch (error) {
 
       dispatch({ type: 'LOGIN_FAILURE', payload: error })

@@ -14,7 +14,7 @@
 -SEO HTML.
 -Probar si los BTN small en el date picker en el celu (los de anular) se ven bien sino usar la clase button-datepicker-small que esta comentada -DONE
 -VALIDAR EL MAIL SI EL USUARIO INGRESA UNA MAYUSCULA. toLowercase. - DONE
--Cuando un usuario elimina su cuenta que se eliminen sus reservas.
+-Cuando un usuario elimina su cuenta que se eliminen sus reservas. -DONE
 -en ADMIN: la tabla de eventos se hizo responsive con overflow-x-auto pero tal vez sea mejor en una proxima version que al crear el evento se genere un link que me lleve a otra pantalla con los detalles del evento.
 -En el HOME las actividades tal vez quedarian mejor con cards, se suben las actividades a una bd y de ahi obtengo la data para crearlas.
 -EVENTOS ADMIN habria que agregar un boton a la tabla o a la pantalla futura de los detalles del evento que permita dejar el evento saldado cuando el cliente paga el total. - DONE BOTON, NO LA PANTALLA APARTE
@@ -22,3 +22,9 @@
 - A FUTURO SI SE INCORPORAN PAGOS HABRIA QUE REGULAR EL TIEMPO DE SESION ABIERTA EN EL USER.
 -PASAR FOTOS DE FONDO DE CANCHAS A WEBP - DONE
 - SUBIRLAS A CLODUINARY?
+
+-PODER EDITAR LAS ACTIVIDADES.
+-PODER BORRAR TODAS LAS ACTIVIDADES.
+-PASAR LA LOGICA AL COMPONENTE PADRE.
+- PASAR TODAS LAS NOTIFICACIONES A UN ARCHIVO. REALIZAR UNA FUNCION POR CADA TIPO DE NOTIFICACION, POR EJEMPLO: 
+  const successNotification = (text, autoclose, position, theme, resto de los argumentos) => toast.success(`${text}`, { autoclose: `${autoclose}`, position:${position}`, theme:${theme}`, resto de los argumentos  })
