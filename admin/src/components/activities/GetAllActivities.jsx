@@ -38,7 +38,7 @@ const GetAllActivities = ({ handleMenuClick }) => {
 
   return (
 
-    <div className="col-12 col-md-10 d-flex flex-column align-items-start p-1">
+    <div className="col-12 col-md-10 p-1">
 
       <div>
         <ToastContainer />
@@ -61,7 +61,7 @@ const GetAllActivities = ({ handleMenuClick }) => {
 
         { data?.map((card) => (
 
-          <div className='w-auto' key={ card.id }>
+          <div className='col-md-4' key={ card.id }>
 
             <ActividadesCard
               key={ card.id }

@@ -27,7 +27,7 @@ const Activities = ({ setMenu, menu }) => {
   const [ categories, setCategories ] = useState([])
   const [ disableCategory, setDisableCategory ] = useState(true)
   const [ dataTarget, setDataTarget ] = useState('')
-  
+
   const handleCategoryChange = (e) => {
     setCategory({
       ...category,
@@ -88,6 +88,12 @@ const Activities = ({ setMenu, menu }) => {
         data_target: `#${dataTarget}`
       }
 
+      if (Object.values(activityData).some((el) => el.length < 1)) {
+        console.log(activityData)
+        notifyForm('Formulario Incompleto')
+        return
+      }
+
       const { data, status } = await axios.post('/activities/save', activityData);
 
       status === 200 &&
@@ -96,6 +102,10 @@ const Activities = ({ setMenu, menu }) => {
       setDisableCategory(true)
       setCategories([]);
       setDataTarget('')
+
+
+
+      return
 
     } catch (error) {
 
@@ -134,7 +144,7 @@ const Activities = ({ setMenu, menu }) => {
 
       </div>
 
-      <div className='d-flex justify-content-around col-12 flex-wrap'>
+      <div className='d-flex justify-content-center justify-content-lg-around col-12 flex-wrap'>
 
         <div className='d-flex flex-column col-12 col-md-8 col-xl-6'>
 
@@ -210,7 +220,7 @@ const Activities = ({ setMenu, menu }) => {
 
                 <i
                   className="bi bi-heart-pulse fs-4">
-                  </i>
+                </i>
 
               </div>
 
@@ -367,10 +377,10 @@ const Activities = ({ setMenu, menu }) => {
 
             </div>
 
-            <div className='d-flex'>
+            <div className='d-flex flex-column'>
 
               <div
-                className="input-group my-2 justify-content-center align-items-center">
+                className="input-group my-2 justify-content-center align-items-center border border-success rounded">
 
                 <div
                   className="input-group-prepend mx-2">
@@ -392,7 +402,7 @@ const Activities = ({ setMenu, menu }) => {
               </div>
 
               <div
-                className="input-group my-2 justify-content-center align-items-center">
+                className="input-group my-2 justify-content-center align-items-center border border-danger rounded">
 
                 <div
                   className="input-group-prepend mx-2">
