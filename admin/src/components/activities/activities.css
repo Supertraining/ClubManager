@@ -14,3 +14,7 @@
 .card-link:active {
   background-color: #121212;
 }
+
+.disabled {
+  pointer-events: none;
+}

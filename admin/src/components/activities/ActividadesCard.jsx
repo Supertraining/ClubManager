@@ -13,7 +13,10 @@ const ActividadesCard = ({ img, imgText, title, description, data_target, delete
           <p className="card-text">{ description }</p>
         </div>
         <div className="card-footer d-flex align-items-center justify-content-between">
-          <Link data-bs-toggle="modal" data-bs-target={ data_target } className="card-link text-decoration-none text-success border rounded p-2 ">
+          <Link
+            data-bs-toggle="modal"
+            data-bs-target={ data_target }
+            className={ data_target.length == 0 ? `card-link text-decoration-none text-success border rounded p-2 disabled` : `card-link text-decoration-none text-success border rounded p-2` }>
             <i className="bi bi-calendar-week"> Días y horarios
             </i>
           </Link>

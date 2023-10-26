@@ -144,9 +144,9 @@ const Activities = ({ setMenu, menu }) => {
 
       </div>
 
-      <div className='d-flex justify-content-center justify-content-lg-around col-12 flex-wrap'>
+      <div className='d-flex flex-column flex-xl-row align-items-center justify-content-center justify-content-lg-around col-12 flex-wrap'>
 
-        <div className='d-flex flex-column col-12 col-md-8 col-xl-6'>
+        <div className='d-flex flex-column  col-12 col-md-8 col-xl-6'>
 
           <div>
             <ToastContainer />
@@ -377,7 +377,7 @@ const Activities = ({ setMenu, menu }) => {
 
             </div>
 
-            <div className='d-flex flex-column'>
+            <div className='d-flex flex-column col-12'>
 
               <div
                 className="input-group my-2 justify-content-center align-items-center border border-success rounded">
@@ -427,7 +427,7 @@ const Activities = ({ setMenu, menu }) => {
 
         </div>
 
-        <div className='d-flex col-4'>
+        <div className='d-flex justify-content-center col-12 col-xl-4'>
           <ActividadesCard
             key={ activity.img }
             img={ activity.img }
