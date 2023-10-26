@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 
 
-const CreateUser = ({ setMenu, menu }) => {
+const CreateUser = ({ handleMenuClick }) => {
 
   const {
     register,
@@ -21,7 +21,6 @@ const CreateUser = ({ setMenu, menu }) => {
   const onSubmit = async (data) => {
 
     try {
-      console.log(data)
       const response = await axios.post('/users/register', data);
       console.log('RESPONSE:', response)
       notifyUsuarioCreado();
@@ -46,7 +45,7 @@ const CreateUser = ({ setMenu, menu }) => {
         <Link
           to={'/'}
           className='btn btn-close border border-dark p-2'
-          onClick={() => setMenu({ ...menu, main: true, createUser: false })}>
+          onClick={() => handleMenuClick('main')}>
         </Link>
 
       </div>

@@ -324,8 +324,8 @@ const Home = () => {
               <Route
                 exact path='/createUser'
                 element={ <CreateUser
-                  setMenu={ setMenu }
-                  menu={ menu } /> }
+                  handleMenuClick={ handleMenuClick }
+                /> }
               />
 
               <Route
@@ -366,7 +366,8 @@ const Home = () => {
 
               <Route
                 exact path='/activities'
-                element={ <Activities setMenu={ setMenu } menu={ menu } /> }
+                element={ <Activities
+                  handleMenuClick={ handleMenuClick } /> }
               />
               <Route
                 exact path='/getAllActivities'
@@ -380,7 +381,12 @@ const Home = () => {
 
               <Route
                 exact path='/oldReservesDeleted'
-                element={ <OldReservesDeleted setMenu={ setMenu } menu={ menu } setConfirmDelete={ setConfirmDelete } confirmDelete={ confirmDelete } handleDeleteOldReserves={ handleDeleteOldReserves } /> }
+                element={ <OldReservesDeleted
+                  setMenu={ setMenu }
+                  menu={ menu }
+                  setConfirmDelete={ setConfirmDelete }
+                  confirmDelete={ confirmDelete }
+                  handleDeleteOldReserves={ handleDeleteOldReserves } /> }
               />
 
             </Routes>

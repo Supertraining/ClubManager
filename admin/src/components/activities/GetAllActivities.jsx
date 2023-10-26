@@ -6,11 +6,12 @@ import axios from '../../utils/axiosInstance'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Modal from './Modal'
+import PropTypes from 'prop-types'
 
 const GetAllActivities = ({ handleMenuClick }) => {
 
   const { data, loading, reFetch } = useFetch('/activities/getAll');
-  
+
   const notifyDeleteActivity = () => toast.success("Actividad eliminada", { position: 'bottom-right', autoClose: 1000, theme: 'dark' });
   const deleteActivity = async (id) => {
     try {
@@ -21,7 +22,7 @@ const GetAllActivities = ({ handleMenuClick }) => {
       console.log(error)
     }
   }
-  
+
   const handleInitialRender = () => {
     if (loading && data.length === 0) {
       return (
@@ -90,6 +91,10 @@ const GetAllActivities = ({ handleMenuClick }) => {
     </div>
 
   )
+}
+
+GetAllActivities.propTypes = {
+  handleMenuClick: PropTypes.func.isRequired
 }
 
 export default GetAllActivities

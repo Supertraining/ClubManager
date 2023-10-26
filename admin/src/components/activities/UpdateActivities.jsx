@@ -66,7 +66,7 @@ const UpdateActivities = () => {
 
   const notifyCategoriaActualizada = (category) => toast.success(`Categoría ${category} Actualizada`, { autoClose: 1000, position: 'bottom-left' });
 
-  const createCategory = (e, i) => {
+  const updateCategory = (e, i) => {
     try {
 
       e.preventDefault()
@@ -266,7 +266,11 @@ const UpdateActivities = () => {
 
                 <div key={ i }>
 
-                  <p className='mt-3 text-info'><b className='text-success text-decoration-underline'>Categoría:</b> { category.name }</p>
+                    <span
+                      className='p-3 text-success text-decoration-underline'>
+                      Categoría:</span> <span className='badge bg-dark'>
+                      { category.name }
+                    </span>
 
                   <div
                     className="input-group align-items-center">
@@ -380,7 +384,7 @@ const UpdateActivities = () => {
 
                     <button
                       className="my-2 text-center border border-success rounded bg-white text-secondary p-2"
-                      onClick={ (e) => createCategory(e, i) }
+                      onClick={ (e) => updateCategory(e, i) }
                     >
                       Actualizar categoría
                     </button>

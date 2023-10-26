@@ -1,10 +1,11 @@
-import ActividadesModal from "./ActividadesModal"
+import ActividadesModal from "./ActividadesModal";
+import PropTypes from 'prop-types'
 
-const Modal = (props) => {
-  
+const Modal = ({ dataTarget, activity, categories }) => {
+
   return (
 
-    <div className="modal fade" id={ props.dataTarget }
+    <div className="modal fade" id={ dataTarget }
       tabIndex="-1"
       role="dialog"
       aria-labelledby="exampleModalLabel"
@@ -18,7 +19,7 @@ const Modal = (props) => {
           <div className="modal-header">
 
             <h5 className="modal-title fs-5" id="exampleModalLabel">
-              { props.activity }
+              { activity }
             </h5>
 
             <button type="button"
@@ -36,7 +37,7 @@ const Modal = (props) => {
 
           <div className="modal-body">
 
-            <ActividadesModal  categories={ props.categories } />
+            <ActividadesModal categories={ categories } />
 
           </div>
 
@@ -55,6 +56,12 @@ const Modal = (props) => {
     </div>
 
   )
+}
+
+Modal.propTypes = {
+  dataTarget: PropTypes.string.isRequired,
+  activity: PropTypes.string.isRequired,
+  categories: PropTypes.array.isRequired
 }
 
 export default Modal

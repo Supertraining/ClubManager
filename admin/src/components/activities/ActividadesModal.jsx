@@ -1,4 +1,4 @@
-
+import PropTypes from 'prop-types'
 const ActividadesModal = ({ categories }) => {
 
   return (
@@ -24,6 +24,10 @@ const ActividadesModal = ({ categories }) => {
     </>
 
   )
+}
+
+ActividadesModal.propTypes = {
+  categories: PropTypes.array.isRequired
 }
 
 export default ActividadesModal

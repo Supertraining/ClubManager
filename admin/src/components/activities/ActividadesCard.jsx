@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
 const ActividadesCard = ({ img, imgText, title, description, data_target, deleteActivity, id }) => {
 
   return (
@@ -16,7 +17,7 @@ const ActividadesCard = ({ img, imgText, title, description, data_target, delete
           <Link
             data-bs-toggle="modal"
             data-bs-target={ data_target }
-            className={ data_target.length == 0 ? `card-link text-decoration-none text-success border rounded p-2 disabled` : `card-link text-decoration-none text-success border rounded p-2` }>
+            className={ data_target?.length == 0 ? `card-link text-decoration-none text-success border rounded p-2 disabled` : `card-link text-decoration-none text-success border rounded p-2` }>
             <i className="bi bi-calendar-week"> Días y horarios
             </i>
           </Link>
@@ -46,6 +47,16 @@ const ActividadesCard = ({ img, imgText, title, description, data_target, delete
     </div>
 
   )
+}
+
+ActividadesCard.propTypes = {
+  img: PropTypes.string.isRequired,
+  imgText: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  data_target: PropTypes.string.isRequired,
+  deleteActivity: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
 }
 
 export default ActividadesCard

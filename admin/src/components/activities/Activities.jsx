@@ -6,8 +6,9 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import ActividadesCard from './ActividadesCard'
 import Modal from './Modal';
+import PropTypes from 'prop-types'
 
-const Activities = ({ setMenu, menu }) => {
+const Activities = ({ handleMenuClick}) => {
 
   const categoryInitialState = {
     name: '',
@@ -94,7 +95,7 @@ const Activities = ({ setMenu, menu }) => {
         return
       }
 
-      const { data, status } = await axios.post('/activities/save', activityData);
+      const { status } = await axios.post('/activities/save', activityData);
 
       status === 200 &&
         notifyActividadCreada();
@@ -125,7 +126,7 @@ const Activities = ({ setMenu, menu }) => {
         <Link
           to={ '/' }
           className='btn btn-close border border-dark p-2'
-          onClick={ () => setMenu({ ...menu, main: true, activities: false }) }>
+          onClick={ () => handleMenuClick('main') }>
         </Link>
 
       </div>
@@ -445,6 +446,10 @@ const Activities = ({ setMenu, menu }) => {
 
     </div>
   )
+}
+
+Activities.propTypes = {
+  handleMenuClick: PropTypes.func.isRequired
 }
 
 export default Activities
