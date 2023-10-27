@@ -3,7 +3,7 @@ import axios from '../../utils/axiosInstance.js';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link, useLocation } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import ActividadesCard from './ActividadesCard'
 import Modal from './Modal';
 
@@ -13,6 +13,7 @@ const UpdateActivities = () => {
   const [ category, setCategory ] = useState()
   const [ categories, setCategories ] = useState([])
   const [ modalId, setModalId ] = useState()
+  const [ handleShow, setHandleShow ] = useState({ showUpdate: false, showAdd: false })
 
   const errorInitialState = {
     emptyId: null,
@@ -70,6 +71,7 @@ const UpdateActivities = () => {
     try {
 
       e.preventDefault()
+
       if (!category) {
         setError({ ...error, input: 'Debe completar al menos un campo' })
         return
@@ -83,13 +85,35 @@ const UpdateActivities = () => {
       console.log(error)
     }
   }
+  const permanentCategories = useMemo(() => {
+    return categories
+  }, [ categories ])
 
+  const addCategory = (e) => {
+    try {
+      e.preventDefault();
+      if (!category) {
+        setError({ ...error, input: 'Debe completar al menos un campo' })
+        return
+      }
+
+      categories.push(category);
+
+      setCategories(permanentCategories);
+
+      setCategory();
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
   const notifyActividadCreada = () => toast.success("Actividad creada", { autoClose: 1000 });
   const updateActivity = async (e) => {
     try {
+
       e.preventDefault()
 
-      const dt = activity.activity.split(' ').join('')
+      const dt = activity?.activity?.split(' ').join('')
       setModalId(dt)
       const activityData = {
         ...activity,
@@ -100,7 +124,8 @@ const UpdateActivities = () => {
       const { status } = await axios.put(`/activities/update/${id}`, activityData);
 
       status === 200 &&
-        notifyActividadCreada();
+        console.log('entrando aca')
+      notifyActividadCreada();
       setActivity({});
       setCategories([]);
 
@@ -254,148 +279,7 @@ const UpdateActivities = () => {
 
             </div>
 
-            <div
-              className="form d-flex flex-column col-12"
-              role="form"
-              autoComplete="on"
-            >
 
-
-              <hr className='border-3 border-success mb-2' />
-              { categories?.map((category, i) => (
-
-                <div key={ i }>
-
-                    <span
-                      className='p-3 text-success text-decoration-underline'>
-                      Categoría:</span> <span className='badge bg-dark'>
-                      { category.name }
-                    </span>
-
-                  <div
-                    className="input-group align-items-center">
-
-                    <div
-                      className="input-group-prepend mx-1 border rounded p-1">
-
-                      <i
-                        className="bi bi-person-gear fs-4">
-                      </i>
-
-                    </div>
-
-                    <input
-                      id="name"
-                      name='name'
-                      placeholder="nombre de la categoría"
-                      autoComplete='on'
-                      className="form-control my-2 text-center border-0 border-bottom"
-                      type="text"
-                      onChange={ handleCategoryChange }
-                    />
-
-                  </div>
-
-                  <div
-                    className="input-group align-items-center">
-
-                    <div
-                      className="input-group-prepend mx-1 border rounded p-1">
-
-                      <i
-                        className="bi bi-calendar-date fs-4">
-                      </i>
-
-                    </div>
-
-                    <input
-                      id="age_range"
-                      name='age_range'
-                      placeholder="rango de edad"
-                      autoComplete='on'
-                      className="form-control my-2 text-center border-0 border-bottom"
-                      type="text"
-                      onChange={ handleCategoryChange }
-                    />
-
-                  </div>
-
-                  <div
-                    className="input-group align-items-center">
-
-                    <div
-                      className="input-group-prepend mx-1 border rounded p-1">
-
-                      <i
-                        className="bi bi-calendar-week fs-4">
-                      </i>
-
-                    </div>
-
-                    <input
-                      id="days"
-                      name='days'
-                      placeholder="Días"
-                      autoComplete='on'
-                      className="form-control my-2 text-center border-0 border-bottom"
-                      type="text"
-                      onChange={ handleCategoryChange }
-                    />
-
-                  </div>
-
-                  <div
-                    className="input-group align-items-center">
-
-                    <div
-                      className="input-group-prepend mx-1 border rounded p-1">
-
-                      <i
-                        className="bi bi-clock fs-4">
-                      </i>
-
-                    </div>
-
-                    <input
-                      id="schedule"
-                      name='schedule'
-                      placeholder="Horario"
-                      autoComplete='on'
-                      className="form-control my-2 text-center border-0 border-bottom"
-                      type="text"
-                      onChange={ handleCategoryChange }
-                    />
-
-                  </div>
-
-                  <p className='text-danger text-center'>{ error.input }</p>
-
-                  <div
-                    className="input-group my-2 justify-content-center align-items-center">
-
-                    <div
-                      className="input-group-prepend mx-2">
-
-                      <i
-                        className="bi bi-tags fs-4">
-                      </i>
-
-                    </div>
-
-                    <button
-                      className="my-2 text-center border border-success rounded bg-white text-secondary p-2"
-                      onClick={ (e) => updateCategory(e, i) }
-                    >
-                      Actualizar categoría
-                    </button>
-
-                  </div>
-
-                </div>
-              )) }
-
-
-            </div>
 
             <div className='d-flex'>
 
@@ -423,6 +307,301 @@ const UpdateActivities = () => {
             </div>
 
           </form>
+
+          <div
+            className="form d-flex flex-column col-12"
+            role="form"
+            autoComplete="on"
+          >
+            <hr className='border-3 border-success mb-2' />
+
+            <div className='d-flex justify-content-around'>
+
+              <button
+                className='btn btn-warning'
+                onClick={ () => setHandleShow({ showAdd: false, showUpdate: !handleShow.showUpdate }) }
+              >
+                Actualizar
+              </button>
+
+              <button
+                className='btn btn-success'
+                onClick={ () => setHandleShow({ showUpdate: false , showAdd: !handleShow.showAdd }) }
+              >
+                Agregar
+              </button>
+
+            </div>
+
+            { handleShow.showUpdate &&
+
+              <>
+                { categories?.map((category, i) => (
+
+                  <div key={ i }>
+
+                    <hr className='border-3 border-success mb-2' />
+
+                    <span
+                      className='p-3 text-success text-decoration-underline'>
+                      Categoría:</span> <span className='badge bg-dark'>
+                      { category.name }
+                    </span>
+
+                    <div
+                      className="input-group align-items-center">
+
+                      <div
+                        className="input-group-prepend mx-1 border rounded p-1">
+
+                        <i
+                          className="bi bi-person-gear fs-4">
+                        </i>
+
+                      </div>
+
+                      <input
+                        id="name"
+                        name='name'
+                        placeholder="nombre de la categoría"
+                        autoComplete='on'
+                        className="form-control my-2 text-center border-0 border-bottom"
+                        type="text"
+                        onChange={ handleCategoryChange }
+                      />
+
+                    </div>
+
+                    <div
+                      className="input-group align-items-center">
+
+                      <div
+                        className="input-group-prepend mx-1 border rounded p-1">
+
+                        <i
+                          className="bi bi-calendar-date fs-4">
+                        </i>
+
+                      </div>
+
+                      <input
+                        id="age_range"
+                        name='age_range'
+                        placeholder="rango de edad"
+                        autoComplete='on'
+                        className="form-control my-2 text-center border-0 border-bottom"
+                        type="text"
+                        onChange={ handleCategoryChange }
+                      />
+
+                    </div>
+
+                    <div
+                      className="input-group align-items-center">
+
+                      <div
+                        className="input-group-prepend mx-1 border rounded p-1">
+
+                        <i
+                          className="bi bi-calendar-week fs-4">
+                        </i>
+
+                      </div>
+
+                      <input
+                        id="days"
+                        name='days'
+                        placeholder="Días"
+                        autoComplete='on'
+                        className="form-control my-2 text-center border-0 border-bottom"
+                        type="text"
+                        onChange={ handleCategoryChange }
+                      />
+
+                    </div>
+
+                    <div
+                      className="input-group align-items-center">
+
+                      <div
+                        className="input-group-prepend mx-1 border rounded p-1">
+
+                        <i
+                          className="bi bi-clock fs-4">
+                        </i>
+
+                      </div>
+
+                      <input
+                        id="schedule"
+                        name='schedule'
+                        placeholder="Horario"
+                        autoComplete='on'
+                        className="form-control my-2 text-center border-0 border-bottom"
+                        type="text"
+                        onChange={ handleCategoryChange }
+                      />
+
+                    </div>
+
+                    <p className='text-danger text-center'>{ error.input }</p>
+
+                    <div
+                      className="input-group my-2 justify-content-center align-items-center">
+
+                      <div
+                        className="input-group-prepend mx-2">
+
+                        <i
+                          className="bi bi-tags fs-4">
+                        </i>
+
+                      </div>
+
+                      <button
+                        className="my-2 text-center border border-success rounded bg-white text-secondary p-2"
+                        onClick={ (e) => updateCategory(e, i) }
+                      >
+                        Actualizar categoría
+                      </button>
+
+                    </div>
+
+                  </div>
+                )) }
+              </>
+
+            }
+
+
+            { handleShow.showAdd &&
+
+              <>
+                <div
+                  className="input-group align-items-center">
+
+                  <div
+                    className="input-group-prepend mx-1 border rounded p-1">
+
+                    <i
+                      className="bi bi-person-gear fs-4">
+                    </i>
+
+                  </div>
+
+                  <input
+                    id="name"
+                    name='name'
+                    placeholder="nombre de la categoría"
+                    autoComplete='on'
+                    className="form-control my-2 text-center border-0 border-bottom"
+                    type="text"
+                    onChange={ handleCategoryChange }
+                  />
+
+                </div>
+
+                <div
+                  className="input-group align-items-center">
+
+                  <div
+                    className="input-group-prepend mx-1 border rounded p-1">
+
+                    <i
+                      className="bi bi-calendar-date fs-4">
+                    </i>
+
+                  </div>
+
+                  <input
+                    id="age_range"
+                    name='age_range'
+                    placeholder="rango de edad"
+                    autoComplete='on'
+                    className="form-control my-2 text-center border-0 border-bottom"
+                    type="text"
+                    onChange={ handleCategoryChange }
+                  />
+
+                </div>
+
+                <div
+                  className="input-group align-items-center">
+
+                  <div
+                    className="input-group-prepend mx-1 border rounded p-1">
+
+                    <i
+                      className="bi bi-calendar-week fs-4">
+                    </i>
+
+                  </div>
+
+                  <input
+                    id="days"
+                    name='days'
+                    placeholder="Días"
+                    autoComplete='on'
+                    className="form-control my-2 text-center border-0 border-bottom"
+                    type="text"
+                    onChange={ handleCategoryChange }
+                  />
+
+                </div>
+
+                <div
+                  className="input-group align-items-center">
+
+                  <div
+                    className="input-group-prepend mx-1 border rounded p-1">
+
+                    <i
+                      className="bi bi-clock fs-4">
+                    </i>
+
+                  </div>
+
+                  <input
+                    id="schedule"
+                    name='schedule'
+                    placeholder="Horario"
+                    autoComplete='on'
+                    className="form-control my-2 text-center border-0 border-bottom"
+                    type="text"
+                    onChange={ handleCategoryChange }
+                  />
+
+                </div>
+
+                <p className='text-danger text-center'>{ error.input }</p>
+
+                <div
+                  className="input-group my-2 justify-content-center align-items-center">
+
+                  <div
+                    className="input-group-prepend mx-2">
+
+                    <i
+                      className="bi bi-tags fs-4">
+                    </i>
+
+                  </div>
+
+                  <button
+                    className="my-2 text-center border border-success rounded bg-white text-secondary p-2"
+                    onClick={ (e) => addCategory(e) }
+                  >
+                    Agregar categoría
+                  </button>
+
+                </div>
+              </>
+
+            }
+
+
+          </div>
+
 
         </div>
 
