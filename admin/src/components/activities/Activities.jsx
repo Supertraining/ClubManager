@@ -8,7 +8,7 @@ import ActividadesCard from './ActividadesCard'
 import Modal from './Modal';
 import PropTypes from 'prop-types'
 
-const Activities = ({ handleMenuClick}) => {
+const Activities = ({ handleMenuClick }) => {
 
   const categoryInitialState = {
     name: '',
@@ -28,6 +28,7 @@ const Activities = ({ handleMenuClick}) => {
   const [ categories, setCategories ] = useState([])
   const [ disableCategory, setDisableCategory ] = useState(true)
   const [ dataTarget, setDataTarget ] = useState('')
+
 
   const handleCategoryChange = (e) => {
     setCategory({

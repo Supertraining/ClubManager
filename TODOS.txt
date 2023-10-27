@@ -29,3 +29,5 @@
 -PASAR LA LOGICA AL COMPONENTE PADRE.
 - PASAR TODAS LAS NOTIFICACIONES A UN ARCHIVO. REALIZAR UNA FUNCION POR CADA TIPO DE NOTIFICACION, POR EJEMPLO: 
   const successNotification = (text, autoclose, position, theme, resto de los argumentos) => toast.success(`${text}`, { autoclose: `${autoclose}`, position:${position}`, theme:${theme}`, resto de los argumentos  })
+-customHook para el form?
+-useMemo al initial state?

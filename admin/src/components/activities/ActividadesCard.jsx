@@ -55,8 +55,8 @@ ActividadesCard.propTypes = {
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   data_target: PropTypes.string.isRequired,
-  deleteActivity: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
+  deleteActivity: PropTypes.string,
+  id: PropTypes.string,
 }
 
 export default ActividadesCard
