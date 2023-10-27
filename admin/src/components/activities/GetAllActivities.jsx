@@ -58,11 +58,11 @@ const GetAllActivities = ({ handleMenuClick }) => {
 
       { handleInitialRender() }
 
-      <div className='d-flex justify-content-start justify-content-md-evenly overflow-auto flex-md-wrap gap-2 my-5'>
+      <div className='d-flex justify-content-start justify-content-md-evenly cards-container flex-md-wrap gap-2 my-5'>
 
         { data?.map((card) => (
 
-          <div className='col-md-4' key={ card.id }>
+          <div key={ card.id }>
 
             <ActividadesCard
               key={ card.id }
@@ -80,6 +80,7 @@ const GetAllActivities = ({ handleMenuClick }) => {
               dataTarget={ card.activity.split(' ').join('') }
               activity={ card.activity }
               categories={ card.category }
+              img={card.img}
             />
 
           </div>

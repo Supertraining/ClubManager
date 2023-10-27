@@ -1,7 +1,7 @@
 import ActividadesModal from "./ActividadesModal";
 import PropTypes from 'prop-types'
 
-const Modal = ({ dataTarget, activity, categories }) => {
+const Modal = ({ dataTarget, activity, categories, img }) => {
 
   return (
 
@@ -14,11 +14,11 @@ const Modal = ({ dataTarget, activity, categories }) => {
       <div className="modal-dialog"
         role="document">
 
-        <div className="modal-content">
+        <div className="modal-content" style={ { backgroundImage: `url(${img})`, backgroundSize: 'cover' }}>
 
           <div className="modal-header">
 
-            <h5 className="modal-title fs-5" id="exampleModalLabel">
+            <h5 className="modal-title fs-5 p-1" id="exampleModalLabel">
               { activity }
             </h5>
 

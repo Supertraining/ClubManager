@@ -13,3 +13,8 @@
 .card-link:active {
   background-color: #121212;
 }
+
+.modal-body, .modal-title{
+  background-color: #ffffffb3;
+}
+

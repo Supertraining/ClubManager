@@ -28,14 +28,14 @@ const ActividadesList = () => {
               aria-labelledby="exampleModalLabel"
               aria-hidden="true">
 
-              <div className="modal-dialog "
+              <div className="modal-dialog modal-dialog-centered"
                 role="document">
 
-                <div className="modal-content">
+                <div className="modal-content" style={ { backgroundImage: `url(${card.img})`, backgroundSize: 'cover' }}>
 
                   <div className="modal-header">
 
-                    <h5 className="modal-title" id="exampleModalLabel">
+                    <h5 className="modal-title p-1" id="exampleModalLabel">
                       { card.activity }
                     </h5>
 

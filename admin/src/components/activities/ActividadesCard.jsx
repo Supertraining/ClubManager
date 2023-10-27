@@ -4,7 +4,7 @@ const ActividadesCard = ({ img, imgText, title, description, data_target, delete
 
   return (
 
-    <div className='col-md-4 card-wrapper mx-1 shadow'>
+    <div className='card-wrapper mx-1 shadow'>
 
       <div className="card">
         <span className='text-center'>{ id }</span>

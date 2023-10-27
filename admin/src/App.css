@@ -113,13 +113,6 @@
 #ryc-table tr:hover {
   background-color: rgba(75, 68, 83, 0.69) !important;
 }
-::-webkit-scrollbar {
-  height: 15px !important;
-}
-::-webkit-scrollbar-thumb {
-  background-color: green !important;
-  border-radius: 10px !important;
-}
 
 /* ReactFullYearScheduler */
 .z-\[10000\] {
