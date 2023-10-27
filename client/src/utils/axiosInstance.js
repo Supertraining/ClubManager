@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: 'http://localhost:8080',
+  baseURL: 'https://club-manager-api-o1cp.onrender.co',
   headers: { "Content-Type": "application/json" },
   withCredentials: true,
 });
