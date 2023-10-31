@@ -29,3 +29,12 @@
 .modal-body, .modal-title{
   background-color: #ffffffb3;
 }
+
+.moveLeftFormBtnArrow{
+  transform: translateX(-15px);
+  transition: 1s;
+}
+.moveRightFormBtnArrow {
+  transform: translateX(15px);
+  transition: 1s;
+}

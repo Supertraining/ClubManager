@@ -6,10 +6,10 @@ import { useEffect } from 'react';
 
 const GetAllUsers = ({handleMenuClick,  allUsers, handleGetAllUsers, handleDeleteReserve, user, setUser, handleUpdateUser, handleDeleteUser, setConfirmDelete, confirmDelete }) => {
 
+
   useEffect(() => {
     handleGetAllUsers()
-  }, [allUsers, handleGetAllUsers])
-  
+  }, [ handleGetAllUsers])
  
   return (
 

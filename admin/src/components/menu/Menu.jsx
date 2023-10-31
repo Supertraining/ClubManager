@@ -31,7 +31,7 @@ const Menu = ({ menu, handleGetAllUsers, handleGetAllCourts, handleCloseSession,
               className='options-wrapper'>
 
               <li
-                className='d-flex align-items-center'>
+                className='d-flex align-items-center col-12'>
 
                 <Link
                   to='/createUser'
@@ -52,7 +52,7 @@ const Menu = ({ menu, handleGetAllUsers, handleGetAllCourts, handleCloseSession,
               </li>
 
               <li
-                className='d-flex align-items-center'>
+                className='d-flex align-items-center col-12'>
 
                 <Link
                   to={ '/getAllUsers' }
@@ -74,7 +74,7 @@ const Menu = ({ menu, handleGetAllUsers, handleGetAllCourts, handleCloseSession,
               </li>
 
               <li
-                className='d-flex align-items-center'>
+                className='d-flex align-items-center col-12'>
 
                 <Link
                   to={ '/courts' }
@@ -96,7 +96,7 @@ const Menu = ({ menu, handleGetAllUsers, handleGetAllCourts, handleCloseSession,
               </li>
 
               <li
-                className='d-flex align-items-center'>
+                className='d-flex align-items-center col-12'>
 
                 <Link
                   to={ '/events' }
@@ -117,7 +117,7 @@ const Menu = ({ menu, handleGetAllUsers, handleGetAllCourts, handleCloseSession,
               </li>
 
               <li
-                className='d-flex align-items-center'>
+                className='d-flex align-items-center col-12'>
 
                 <Link
                   to={ '/activities' }
@@ -138,7 +138,7 @@ const Menu = ({ menu, handleGetAllUsers, handleGetAllCourts, handleCloseSession,
               </li>
 
               <li
-                className='d-flex align-items-center'>
+                className='d-flex align-items-center col-12'>
 
                 <Link
                   to={ '/getAllActivities' }
@@ -158,9 +158,8 @@ const Menu = ({ menu, handleGetAllUsers, handleGetAllCourts, handleCloseSession,
 
               </li>
 
-
               <li
-                className='d-flex align-items-center'>
+                className='d-flex align-items-center col-12'>
 
                 <Link
                   to={ '/oldReservesDeleted' }

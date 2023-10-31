@@ -16,6 +16,7 @@ import { useEffect } from 'react';
 import Activities from '../../components/activities/Activities';
 import GetAllActivities from '../../components/activities/GetAllActivities';
 import UpdateActivities from '../../components/activities/UpdateActivities';
+import { useCallback } from 'react';
 
 
 
@@ -59,7 +60,8 @@ const Home = () => {
       [ option ]: true
     });
   };
-  const handleGetAllUsers = async () => {
+  
+  const handleGetAllUsers =  useCallback(async () => {
 
     try {
 
@@ -85,8 +87,8 @@ const Home = () => {
 
     }
 
-  };
-
+  }, [ setAllUsers ]);
+  
   const notifyDeletedReserve = () => toast.error("Reserva Eliminada", { position: 'bottom-right', autoClose: 1000, theme: 'dark' });
   const handleDeleteReserve = async (court, day, id, userid) => {
 

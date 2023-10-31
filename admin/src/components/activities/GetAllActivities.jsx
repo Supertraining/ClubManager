@@ -11,7 +11,7 @@ import PropTypes from 'prop-types'
 const GetAllActivities = ({ handleMenuClick }) => {
 
   const { data, loading, reFetch } = useFetch('/activities/getAll');
-
+ 
   const notifyDeleteActivity = () => toast.success("Actividad eliminada", { position: 'bottom-right', autoClose: 1000, theme: 'dark' });
   const deleteActivity = async (id) => {
     try {
@@ -22,7 +22,7 @@ const GetAllActivities = ({ handleMenuClick }) => {
       console.log(error)
     }
   }
-
+  
   const handleInitialRender = () => {
     if (loading && data.length === 0) {
       return (
@@ -60,7 +60,7 @@ const GetAllActivities = ({ handleMenuClick }) => {
 
       <div className='d-flex justify-content-start justify-content-md-evenly cards-container flex-md-wrap gap-2 my-5'>
 
-        { data?.map((card) => (
+        {data?.map((card) => (
 
           <div key={ card.id }>
 

@@ -50,12 +50,12 @@ const ActividadesCard = ({ img, imgText, title, description, data_target, delete
 }
 
 ActividadesCard.propTypes = {
-  img: PropTypes.string.isRequired,
-  imgText: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  data_target: PropTypes.string.isRequired,
-  deleteActivity: PropTypes.string,
+  img: PropTypes.string,
+  imgText: PropTypes.string,
+  title: PropTypes.string,
+  description: PropTypes.string,
+  data_target: PropTypes.string,
+  deleteActivity: PropTypes.func,
   id: PropTypes.string,
 }
 

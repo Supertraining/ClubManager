@@ -59,9 +59,10 @@ const Modal = ({ dataTarget, activity, categories, img }) => {
 }
 
 Modal.propTypes = {
-  dataTarget: PropTypes.string.isRequired,
-  activity: PropTypes.string.isRequired,
-  categories: PropTypes.array.isRequired
+  img: PropTypes.string,
+  dataTarget: PropTypes.string,
+  activity: PropTypes.string,
+  categories: PropTypes.array
 }
 
 export default Modal
