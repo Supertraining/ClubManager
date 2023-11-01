@@ -2,7 +2,7 @@
   min-width: 300px;
 }
 .card {
-  min-height: 450px;
+  height: 450px;
 }
 .card-img {
   max-width: 100%;
