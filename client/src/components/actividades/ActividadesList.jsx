@@ -35,7 +35,7 @@ const ActividadesList = () => {
 
                   <div className="modal-header">
 
-                    <h5 className="modal-title p-1" id="exampleModalLabel">
+                    <h5 className="modal-title p-2 rounded" id="exampleModalLabel">
                       { card.activity }
                     </h5>
 

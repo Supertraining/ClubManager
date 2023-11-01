@@ -18,7 +18,7 @@ const Modal = ({ dataTarget, activity, categories, img }) => {
 
           <div className="modal-header">
 
-            <h5 className="modal-title fs-5 p-1" id="exampleModalLabel">
+            <h5 className="modal-title fs-5 p-2 rounded" id="exampleModalLabel">
               { activity }
             </h5>
 

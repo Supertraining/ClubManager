@@ -26,7 +26,7 @@ const UpdateActivities = () => {
   }
   const [ error, setError ] = useState(errorInitialState)
 
-  const getActivityById = useCallback( async () => {
+  const getActivityById = useCallback(async () => {
     try {
 
       const { status, data } = await axios.get(`/activities/getById/${id}`)
@@ -45,7 +45,7 @@ const UpdateActivities = () => {
     } catch (error) {
       console.log(error)
     }
-  }, [id])
+  }, [ id ])
 
   const handleCategoryChange = (e) => {
     setCategory({
@@ -58,14 +58,14 @@ const UpdateActivities = () => {
 
     getActivityById()
 
-  }, [getActivityById])
+  }, [ getActivityById ])
 
   const notifyCategoriaActualizada = (category) => toast.success(`Categoría ${category} Actualizada`, { autoClose: 1000, position: 'bottom-left' });
   const updateCategory = (e, i) => {
     try {
 
       e.preventDefault()
-     
+
       if (!category) {
         setError({ ...error, input: 'Debe completar al menos un campo' })
         return
@@ -118,7 +118,7 @@ const UpdateActivities = () => {
     try {
 
       e.preventDefault();
-      
+
       categories.splice(i, 1);
 
       setCategories(permanentCategories);
@@ -198,7 +198,7 @@ const UpdateActivities = () => {
 
       </div>
 
-      <div className='d-flex justify-content-around col-12 flex-wrap'>
+      <div className='d-flex justify-content-around col-12 flex-wrap border rounded p-2'>
 
         <div className='d-flex flex-column col-12 col-md-8 col-xl-6'>
 
@@ -377,17 +377,19 @@ const UpdateActivities = () => {
                 Actualizar
               </button>
 
-              <i
-                className={ handleShow.showUpdate
-                  ? `bi bi-arrow-left-square-fill fs-4 text-warning moveLeftFormBtnArrow`
-                  : `bi bi-arrow-left-square-fill fs-4 moveRightFormBtnArrow` }>
-              </i>
-              <p>Categorías</p>
-              <i
-                className={ handleShow.showAdd
-                  ? `bi bi-arrow-right-square-fill fs-4 text-success moveRightFormBtnArrow`
-                  : `bi bi-arrow-right-square-fill fs-4 moveLeftFormBtnArrow` }>
-              </i>
+              <div className='d-flex justify-content-evenly align-items-center my-5 col-sm-6'>
+                <i
+                  className={ handleShow.showUpdate
+                    ? `d-none d-sm-block bi bi-arrow-left-square-fill fs-4 text-warning moveLeftFormBtnArrow`
+                    : `d-none d-sm-block bi bi-arrow-left-square-fill fs-4 moveRightFormBtnArrow` }>
+                </i>
+                <p>Categorías</p>
+                <i
+                  className={ handleShow.showAdd
+                    ? `d-none d-sm-block bi bi-arrow-right-square-fill fs-4 text-success moveRightFormBtnArrow`
+                    : `d-none d-sm-block bi bi-arrow-right-square-fill fs-4 moveLeftFormBtnArrow` }>
+                </i>
+              </div>
 
               <button
                 className='btn btn-success'
