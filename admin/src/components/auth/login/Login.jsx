@@ -9,7 +9,7 @@ const Login = () => {
 
   const navigate = useNavigate()
   const { user, loading, error, dispatch } = useContext(AuthContext)
-
+  
   const {
     register,
     handleSubmit,
