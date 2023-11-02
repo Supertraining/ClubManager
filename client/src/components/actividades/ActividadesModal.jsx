@@ -1,38 +1,73 @@
-import React from 'react'
+import { useId } from "react"
 
 const ActividadesModal = ({ category }) => {
 
   return (
+
     <>
-      { category?.map((category) => (
-        <div key={ category.name }>
+      <table
+        className='table table-responsive bg-transparent w-100'>
 
-          <ul className="d-flex flex-column align-items-center">
-            <h6 className='fs-5 text-decoration-underline'>
-              { category.days }
-            </h6>
-            <li>
-              <b>Categoría: </b>
-              <i className='text-success'>
+        <thead
+          className='bg-success text-white text-center border border-success'>
+
+          <tr>
+
+            <th
+              scope='col'
+              className='text-center fw-light p-0'>
+              Categoría
+            </th>
+            <th
+              scope='col'
+              className='text-center fw-light p-0'>
+              Edad
+            </th>
+            <th
+              scope='col'
+              className='text-center fw-light p-0'>
+              Días
+            </th>
+            <th
+              scope='col'
+              className='text-center fw-light p-0'>
+              Horario
+            </th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          { category?.map((category) => (
+
+            <tr
+              className='my-1 text-center text-dark border border-success' key={ useId() }>
+
+              <td className='tableData'>
                 { category.name }
-              </i>
-            </li>
-            <li>
-              <b>Horario: </b>
-              <i className='text-success'>
-                { category.schedule }
-              </i>
-            </li>
-            <li>
-              <b>Edad: </b>
-              <i className='text-success'>
-                { category.age_range }
-              </i>
-            </li>
-          </ul>
+              </td>
 
-        </div>
-      )) }
+              <td className='tableData'>
+                { category.age_range }
+              </td>
+
+              <td className='tableData'>
+                { category.days }
+              </td>
+
+              <td className='tableData'>
+                { category.schedule } 
+
+              </td>
+
+            </tr>
+          )) }
+
+        </tbody>
+
+      </table>
     </>
 
   )

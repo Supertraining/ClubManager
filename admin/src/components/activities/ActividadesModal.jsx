@@ -3,34 +3,70 @@ const ActividadesModal = ({ categories }) => {
 
   return (
     <>
-      { categories?.map((category) => (
-        <div key={ category.name } className="d-flex flex-column align-items-center">
+      <table
+        className='modal-table table-responsive bg-transparent w-100'>
 
-          <ul className="d-flex flex-column align-items-center">
-            <h6 className='fs-5 text-decoration-underline'>
-              { category.days }
-            </h6>
-            <li>
-              <b>Categoría: </b>
-              <i className='text-success'>
+        <thead
+          className='bg-success text-white text-center border border-success'>
+
+          <tr>
+
+            <th
+              scope='col'
+              className='text-center fw-light p-0'>
+              Categoría
+            </th>
+            <th
+              scope='col'
+              className='text-center fw-light p-0'>
+              Edad
+            </th>
+            <th
+              scope='col'
+              className='text-center fw-light p-0'>
+              Días
+            </th>
+            <th
+              scope='col'
+              className='text-center fw-light p-0'>
+              Horario
+            </th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          { categories?.map((category, i) => (
+
+            <tr
+              className='my-1 text-center text-dark border border-success'
+              key={ i }>
+
+              <td className='tableData'>
                 { category.name }
-              </i>
-            </li>
-            <li>
-              <b>Horario: </b>
-              <i className='text-success'>
-                { category.schedule }
-              </i>
-            </li>
-            <li>
-              <b>Edad: </b>
-              <i className='text-success'>
+              </td>
+
+              <td className='tableData'>
                 { category.age_range }
-              </i>
-            </li>
-          </ul>
-        </div>
-      )) }
+              </td>
+
+              <td className='tableData'>
+                { category.days }
+              </td>
+
+              <td className='tableData'>
+                { category.schedule }
+
+              </td>
+
+            </tr>
+          )) }
+
+        </tbody>
+
+      </table>
     </>
 
   )

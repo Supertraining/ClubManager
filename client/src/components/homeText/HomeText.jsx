@@ -10,10 +10,10 @@ const HomeText = () => {
       <div className='my-3 p-4 text-center shadow'>
 
         <h1>
-          Bienvenidos a la web app del Ranelagh Club!
+          Bienvenidos a la app del Ranelagh Club!
         </h1>
-
-        <h5>Desde el menu puedes reservar tu cancha desde donde estés y obtener información sobre las actividades que brindamos en el club</h5>
+        <h2>¡Hacete una cuenta y reserva tu cancha desde donde estés!</h2>
+        <h5 className='lead text-success d-none d-md-block'>Obtene información sobre las actividades que brindamos en el club o comunicate con nosotros haciendo click en el botón de WhatsApp</h5>
 
       </div>
 
@@ -24,7 +24,7 @@ const HomeText = () => {
         <ActividadesList />
 
       </div>
-      
+
     </div>
   )
 }

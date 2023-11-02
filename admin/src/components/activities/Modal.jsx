@@ -23,7 +23,7 @@ const Modal = ({ dataTarget, activity, categories, img }) => {
             </h5>
 
             <button type="button"
-              className="close btn"
+              className="close btn modal-btn"
               data-bs-dismiss="modal"
               aria-label="Close">
 
@@ -43,7 +43,7 @@ const Modal = ({ dataTarget, activity, categories, img }) => {
 
           <div className="modal-footer">
 
-            <button className="btn btn-secondary" data-bs-dismiss="modal">
+            <button className="btn modal-btn" data-bs-dismiss="modal">
               Cerrar
             </button>
 

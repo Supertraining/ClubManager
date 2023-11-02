@@ -1,8 +1,8 @@
-@media(max-width: 768px) {
-  .cards-container{
+@media (max-width: 768px) {
+  .cards-container {
     overflow-x: auto;
     overflow-y: hidden;
-}
+  }
 }
 
 .card-wrapper {
@@ -26,11 +26,28 @@
   pointer-events: none;
 }
 
-.modal-body, .modal-title{
+.modal-body,
+.modal-title,
+.modal-btn {
   background-color: #ffffffb3;
 }
-
-.moveLeftFormBtnArrow{
+.modal-btn {
+  box-shadow: 2px 2px 2px #198754;
+}
+.modal-table {
+  display: table;
+  font-size: clamp(12px, 2vw, 100%);
+  text-indent: 0;
+  border-collapse: collapse;
+  caption-side: bottom;
+  margin-bottom: 1rem;
+  vertical-align: top;
+  border-spacing: 2px;
+}
+.tableData {
+  font-size: small;
+}
+.moveLeftFormBtnArrow {
   transform: translateX(-15px);
   transition: 1s;
 }

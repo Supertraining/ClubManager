@@ -14,7 +14,9 @@
   background-color: #121212;
 }
 
-.modal-body, .modal-title{
+.modal-body, .modal-title, .modal-btn{
   background-color: #ffffffb3;
 }
-
+.modal-btn {
+  box-shadow: 2px 2px 2px #198754;
+}

@@ -1,4 +1,3 @@
-import React from 'react'
 import ActividadesCard from './ActividadesCard'
 import './actividades.css'
 import useFetch from '../../hooks/useFetch'
@@ -6,7 +5,7 @@ import ActividadesModal from './ActividadesModal'
 const ActividadesList = () => {
 
   const { data } = useFetch('./activities/getAll');
-
+  
   return (
     <>
       <div className='d-flex justify-content-start justify-content-md-evenly overflow-auto flex-md-wrap gap-4 my-5'>
@@ -23,6 +22,7 @@ const ActividadesList = () => {
               data_target={ card.data_target } />
 
             <div className="modal fade" id={ card.activity.split(' ').join('') }
+              key={ card.id }
               tabIndex="-1"
               role="dialog"
               aria-labelledby="exampleModalLabel"
@@ -31,7 +31,7 @@ const ActividadesList = () => {
               <div className="modal-dialog modal-dialog-centered"
                 role="document">
 
-                <div className="modal-content" style={ { backgroundImage: `url(${card.img})`, backgroundSize: 'cover' }}>
+                <div className="modal-content" style={ { backgroundImage: `url(${card.img})`, backgroundSize: 'cover' } }>
 
                   <div className="modal-header">
 
@@ -40,7 +40,7 @@ const ActividadesList = () => {
                     </h5>
 
                     <button type="button"
-                      className="close btn"
+                      className="close btn modal-btn border-success"
                       data-dismiss="modal"
                       aria-label="Close">
 
@@ -53,13 +53,15 @@ const ActividadesList = () => {
                   </div>
                   <div className="modal-body">
 
-                    <ActividadesModal category={ card.category } key={ card.img } />
+                    <ActividadesModal
+                      category={ card.category }
+                      key={ card.img } />
 
                   </div>
                   <div className="modal-footer">
 
                     <button type="button"
-                      className="btn btn-secondary" data-dismiss="modal">
+                      className="btn modal-btn border-success" data-dismiss="modal">
                       Cerrar
                     </button>
 
