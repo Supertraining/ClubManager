@@ -15,7 +15,7 @@ const CreateUser = ({ handleMenuClick, menu }) => {
     reset,
     formState: { errors },
   } = useForm();
-
+ 
   useEffect(() => {
     handleMenuClick('createUser');
   }, [handleMenuClick])

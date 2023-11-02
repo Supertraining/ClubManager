@@ -48,7 +48,7 @@ const Home = () => {
 
   const notifyTryAgainLater = () => toast.warn("Hubo un problema, por favor intente nuevamente mas tarde", { position: 'bottom-right', autoClose: 2000, theme: 'dark' });
 
-  const handleMenuClick = useCallback( (option) => {
+  const handleMenuClick = useCallback((option) => {
     setMenu({
       createUser: false,
       getAllUsers: false,
@@ -60,7 +60,7 @@ const Home = () => {
       main: false,
       [ option ]: true
     });
-  }, [setMenu]);
+  }, [ setMenu ]);
 
   const handleGetAllUsers = useCallback(async () => {
 
@@ -195,7 +195,7 @@ const Home = () => {
     }
   };
 
-  const handleGetAllCourts = useCallback( async () => {
+  const handleGetAllCourts = useCallback(async () => {
 
     try {
 
@@ -210,7 +210,7 @@ const Home = () => {
 
     }
 
-  },[setAllCourts]);
+  }, [ setAllCourts ]);
 
   const notifyCourtDeleted = () => toast.error("Cancha Eliminada", { position: 'bottom-right', autoClose: 1000, theme: 'dark' });
   const handleDeleteCourt = async (id) => {
@@ -270,8 +270,8 @@ const Home = () => {
     if (pathname === '/home' || pathname === '/') {
       handleMenuClick('main')
     }
-  }, [auth.user, handleMenuClick, navigate]);
- 
+  }, [ auth.user, handleMenuClick, navigate ]);
+
   const conditionalRender = () => {
     try {
       if (auth?.user) {
@@ -283,8 +283,7 @@ const Home = () => {
       console.log(error)
     }
   };
-
-
+ 
   return (
 
     <>
@@ -325,7 +324,7 @@ const Home = () => {
             <Routes>
 
               <Route
-                exact path='/createUser'
+                exact path={ import.meta.env.VITE_PROD_URL || '/createUser' }
                 element={ <CreateUser
                   handleMenuClick={ handleMenuClick }
                   menu={ menu } /> }
