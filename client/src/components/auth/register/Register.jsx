@@ -27,7 +27,7 @@ const Register = () => {
         minLowercase: 0,
         minUppercase: 1,
         minNumbers: 1,
-        minSymbols: 1,
+        minSymbols: 0,
       };
 
       if (!isStrongPassword(data.password, passwordValidationOptions)) {
@@ -130,7 +130,7 @@ const Register = () => {
             </div>
 
             <small className='text-success col-9 text-center'>
-              La contraseña debe tener al menos 8 caracteres y, debe incluir como mínimo una MAYÚSCULA, un número y un caracter especial. <strong><i className='text-decoration-underline'>Ejemplo:</i> Nombre@1980</strong>
+              La contraseña debe tener al menos 8 caracteres y, debe incluir como mínimo una MAYÚSCULA, y un número. <strong><i className='text-decoration-underline'>Ejemplo:</i> Nombre1980</strong>
             </small>
 
             {errors.password && (

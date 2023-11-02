@@ -160,7 +160,7 @@ const Navbar = () => {
         minLowercase: 0,
         minUppercase: 1,
         minNumbers: 1,
-        minSymbols: 1,
+        minSymbols: 0,
       };
 
       if (!isStrongPassword(data.newPassword, passwordValidationOptions)) {

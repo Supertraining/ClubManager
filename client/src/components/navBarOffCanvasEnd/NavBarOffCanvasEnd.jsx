@@ -138,8 +138,8 @@ const NavBarOffCanvasEnd = (props) => {
                     }
                   >
                     La contraseña debe tener al menos 8 caracteres y, debe incluir como mínimo una
-                    MAYÚSCULA, un número y un caracter especial. <br />
-                    <strong>(Ej.: Nombre@1980)</strong>
+                    MAYÚSCULA, y un número. <br />
+                    <strong>(Ej.: Nombre1980)</strong>
                   </small>
                 </form>
               </div>
