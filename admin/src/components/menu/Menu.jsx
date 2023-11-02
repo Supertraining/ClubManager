@@ -34,7 +34,7 @@ const Menu = ({ menu, handleGetAllUsers, handleGetAllCourts, handleCloseSession,
                 className='d-flex align-items-center col-12'>
 
                 <Link
-                  to={import.meta.env.VITE_PROD_URL || '/createUser'}
+                  to='/createUser'
                   className={ menu.createUser
                     ? 'btn btn-success'
                     : 'btn btn-success bg-transparent' }

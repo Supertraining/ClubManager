@@ -324,7 +324,7 @@ const Home = () => {
             <Routes>
 
               <Route
-                exact path={ import.meta.env.VITE_PROD_URL || '/createUser' }
+                exact path='/createUser'
                 element={ <CreateUser
                   handleMenuClick={ handleMenuClick }
                   menu={ menu } /> }
