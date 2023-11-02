@@ -23,6 +23,7 @@ import { useCallback } from 'react';
 const Home = () => {
 
   const auth = useContext(AuthContext);
+
   const menuFeatures = {
     createUser: false,
     getAllUsers: false,
@@ -47,7 +48,7 @@ const Home = () => {
 
   const notifyTryAgainLater = () => toast.warn("Hubo un problema, por favor intente nuevamente mas tarde", { position: 'bottom-right', autoClose: 2000, theme: 'dark' });
 
-  const handleMenuClick = (option) => {
+  const handleMenuClick = useCallback( (option) => {
     setMenu({
       createUser: false,
       getAllUsers: false,
@@ -59,9 +60,9 @@ const Home = () => {
       main: false,
       [ option ]: true
     });
-  };
-  
-  const handleGetAllUsers =  useCallback(async () => {
+  }, [setMenu]);
+
+  const handleGetAllUsers = useCallback(async () => {
 
     try {
 
@@ -88,7 +89,7 @@ const Home = () => {
     }
 
   }, [ setAllUsers ]);
-  
+
   const notifyDeletedReserve = () => toast.error("Reserva Eliminada", { position: 'bottom-right', autoClose: 1000, theme: 'dark' });
   const handleDeleteReserve = async (court, day, id, userid) => {
 
@@ -194,7 +195,7 @@ const Home = () => {
     }
   };
 
-  const handleGetAllCourts = async () => {
+  const handleGetAllCourts = useCallback( async () => {
 
     try {
 
@@ -209,7 +210,7 @@ const Home = () => {
 
     }
 
-  };
+  },[setAllCourts]);
 
   const notifyCourtDeleted = () => toast.error("Cancha Eliminada", { position: 'bottom-right', autoClose: 1000, theme: 'dark' });
   const handleDeleteCourt = async (id) => {
@@ -266,11 +267,11 @@ const Home = () => {
       navigate('/login')
     }
     const { pathname } = window.location
-    if (pathname === '/home') {
+    if (pathname === '/home' || pathname === '/') {
       handleMenuClick('main')
     }
-  }, [ auth.user, menuFeatures.main, navigate ]);
-
+  }, [auth.user, handleMenuClick, navigate]);
+ 
   const conditionalRender = () => {
     try {
       if (auth?.user) {
@@ -327,13 +328,14 @@ const Home = () => {
                 exact path='/createUser'
                 element={ <CreateUser
                   handleMenuClick={ handleMenuClick }
-                /> }
+                  menu={ menu } /> }
               />
 
               <Route
                 exact path='/getAllUsers'
                 element={ <GetAllUsers
                   handleMenuClick={ handleMenuClick }
+                  menu={ menu }
                   handleGetAllUsers={ handleGetAllUsers }
                   allUsers={ allUsers }
                   handleDeleteReserve={ handleDeleteReserve }
@@ -348,6 +350,7 @@ const Home = () => {
                 exact path='/courts'
                 element={ <GetAllCourts
                   handleMenuClick={ handleMenuClick }
+                  menu={ menu }
                   handleGetAllCourts={ handleGetAllCourts }
                   allCourts={ allCourts }
                   court={ court }
@@ -363,19 +366,23 @@ const Home = () => {
               <Route
                 exact path='/events'
                 element={ <Events
-                  handleMenuClick={ handleMenuClick } /> }
+                  handleMenuClick={ handleMenuClick }
+                  menu={ menu } /> }
               />
 
               <Route
                 exact path='/activities'
                 element={ <Activities
-                  handleMenuClick={ handleMenuClick } /> }
+                  handleMenuClick={ handleMenuClick }
+                  menu={ menu } /> }
               />
               <Route
                 exact path='/getAllActivities'
-                element={ <GetAllActivities setMenu={ setMenu } menu={ menu } handleMenuClick={ handleMenuClick }
-                /> }
+                element={ <GetAllActivities
+                  handleMenuClick={ handleMenuClick }
+                  menu={ menu } /> }
               />
+
               <Route
                 exact path='/updateActivities/'
                 element={ <UpdateActivities /> }
@@ -384,7 +391,7 @@ const Home = () => {
               <Route
                 exact path='/oldReservesDeleted'
                 element={ <OldReservesDeleted
-                  setMenu={ setMenu }
+                  handleMenuClick={ handleMenuClick }
                   menu={ menu }
                   setConfirmDelete={ setConfirmDelete }
                   confirmDelete={ confirmDelete }

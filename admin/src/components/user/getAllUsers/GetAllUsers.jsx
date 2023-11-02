@@ -4,189 +4,199 @@ import User from '../User'
 import { ToastContainer } from 'react-toastify';
 import { useEffect } from 'react';
 
-const GetAllUsers = ({handleMenuClick,  allUsers, handleGetAllUsers, handleDeleteReserve, user, setUser, handleUpdateUser, handleDeleteUser, setConfirmDelete, confirmDelete }) => {
+const GetAllUsers = ({ handleMenuClick, menu, allUsers, handleGetAllUsers, handleDeleteReserve, user, setUser, handleUpdateUser, handleDeleteUser, setConfirmDelete, confirmDelete }) => {
 
 
   useEffect(() => {
     handleGetAllUsers()
-  }, [ handleGetAllUsers])
- 
+  }, [ handleGetAllUsers ])
+
+  useEffect(() => {
+    handleMenuClick('getAllUsers');
+  }, [handleMenuClick])
+  
+  
   return (
+    <>
+      { menu.getAllUsers &&
 
-    <div
-      className="col-12 p-1">
+        <div
+          className="col-12 p-1">
 
-      { !user
-        ? <>
+          { !user
+            ? <>
 
-          <div
-            className='my-3'>
+              <div
+                className='my-3'>
 
-            <Link
-              to={ '/' }
-              className='btn btn-close border border-dark p-2'
-              onClick={ () =>  handleMenuClick('main')  }>
-            </Link>
+                <Link
+                  to={ '/' }
+                  className='btn btn-close border border-dark p-2'
+                  onClick={ () => handleMenuClick('main') }>
+                </Link>
 
-          </div>
+              </div>
 
-          <table
-            className="table bg-white table-responsive">
+              <table
+                className="table bg-white table-responsive">
 
-            <thead>
-
-              <tr
-                className="text-center text-dark">
-
-                <th
-                  scope="col">
-                  #
-                </th>
-
-                <th
-                  scope="col">
-                  UserName
-                </th>
-
-                <th
-                  scope="col">
-                  Nombre
-                </th>
-
-                <th
-                  scope="col">
-                  Apellido
-                </th>
-
-                <th
-                  scope="col">
-                  edad
-                </th>
-
-                <th
-                  scope="col">
-                  telefono
-                </th>
-
-                <th
-                  scope="col">
-                  reservas
-                </th>
-
-                <th
-                  scope="col">
-                  actividades
-                </th>
-
-                <th
-                  scope="col">
-                  admin
-                </th>
-
-              </tr>
-
-            </thead>
-
-            <tbody>
-
-              { allUsers.length === 0
-
-                ? <tr
-                  className="spinner-grow text-success m-5"
-                  role="status">
-                </tr>
-
-                : allUsers.map((user, i) => (
+                <thead>
 
                   <tr
-                    key={ user._id }
-                    className="text-center">
+                    className="text-center text-dark">
 
-                    <td>
-                      <div className='text-dark'>
-                        { i + 1 }
-                      </div>
-                    </td>
+                    <th
+                      scope="col">
+                      #
+                    </th>
 
-                    <td>
+                    <th
+                      scope="col">
+                      UserName
+                    </th>
 
-                      <button
-                        className='text-primary'
-                        onClick={ () => setUser(user) }>
-                        { user.username }
-                      </button>
+                    <th
+                      scope="col">
+                      Nombre
+                    </th>
 
-                    </td>
+                    <th
+                      scope="col">
+                      Apellido
+                    </th>
 
-                    <td>
-                      <div className='text-dark'>
-                        { user.nombre }
-                      </div>
-                    </td>
+                    <th
+                      scope="col">
+                      edad
+                    </th>
 
-                    <td>
-                      <div className='text-dark'>
-                        { user.apellido }
-                      </div>
-                    </td>
+                    <th
+                      scope="col">
+                      telefono
+                    </th>
 
-                    <td>
-                      <div className='text-dark'>
-                        { user.edad }
-                      </div>
-                    </td>
+                    <th
+                      scope="col">
+                      reservas
+                    </th>
 
-                    <td>
-                      <div className='text-dark'>
-                        { user.telefono }
-                      </div>
-                    </td>
+                    <th
+                      scope="col">
+                      actividades
+                    </th>
 
-                    { user.reserves.length === 0
-                      ? <td>
-                        <div className='text-danger fw-bold'>
-                          Sin reservas
-                        </div>
-                      </td>
-                      : <td>
-                        <div className='text-success fw-bold'>
-                          Reservas activas
-                        </div>
-                      </td> }
-
-                    <td>
-                      <div className='text-dark'>
-                        @actividades
-                      </div>
-                    </td>
-
-                    <td>
-                      <div className='text-dark'>
-                        { user.admin
-                          ? <i className="bi bi-check-circle-fill text-success"></i>
-                          : <i className="bi bi-x-circle-fill text-danger"></i>
-                        }
-                      </div>
-                    </td>
+                    <th
+                      scope="col">
+                      admin
+                    </th>
 
                   </tr>
 
-                )) }
-            </tbody>
+                </thead>
 
-          </table>
+                <tbody>
 
-        </>
-        : <User setUser={ setUser } user={ user } handleDeleteReserve={ handleDeleteReserve } handleUpdateUser={ handleUpdateUser } handleDeleteUser={ handleDeleteUser } setConfirmDelete={ setConfirmDelete } confirmDelete={ confirmDelete } />
+                  { allUsers.length === 0
+
+                    ? <tr
+                      className="spinner-grow text-success m-5"
+                      role="status">
+                    </tr>
+
+                    : allUsers.map((user, i) => (
+
+                      <tr
+                        key={ user._id }
+                        className="text-center">
+
+                        <td>
+                          <div className='text-dark'>
+                            { i + 1 }
+                          </div>
+                        </td>
+
+                        <td>
+
+                          <button
+                            className='text-primary'
+                            onClick={ () => setUser(user) }>
+                            { user.username }
+                          </button>
+
+                        </td>
+
+                        <td>
+                          <div className='text-dark'>
+                            { user.nombre }
+                          </div>
+                        </td>
+
+                        <td>
+                          <div className='text-dark'>
+                            { user.apellido }
+                          </div>
+                        </td>
+
+                        <td>
+                          <div className='text-dark'>
+                            { user.edad }
+                          </div>
+                        </td>
+
+                        <td>
+                          <div className='text-dark'>
+                            { user.telefono }
+                          </div>
+                        </td>
+
+                        { user.reserves.length === 0
+                          ? <td>
+                            <div className='text-danger fw-bold'>
+                              Sin reservas
+                            </div>
+                          </td>
+                          : <td>
+                            <div className='text-success fw-bold'>
+                              Reservas activas
+                            </div>
+                          </td> }
+
+                        <td>
+                          <div className='text-dark'>
+                            @actividades
+                          </div>
+                        </td>
+
+                        <td>
+                          <div className='text-dark'>
+                            { user.admin
+                              ? <i className="bi bi-check-circle-fill text-success"></i>
+                              : <i className="bi bi-x-circle-fill text-danger"></i>
+                            }
+                          </div>
+                        </td>
+
+                      </tr>
+
+                    )) }
+                </tbody>
+
+              </table>
+
+            </>
+            : <User setUser={ setUser } user={ user } handleDeleteReserve={ handleDeleteReserve } handleUpdateUser={ handleUpdateUser } handleDeleteUser={ handleDeleteUser } setConfirmDelete={ setConfirmDelete } confirmDelete={ confirmDelete } />
+          }
+
+          <div>
+
+            <ToastContainer />
+
+          </div>
+
+        </div>
+
       }
-
-      <div>
-
-        <ToastContainer />
-
-      </div>
-
-    </div>
+    </>
 
   )
 

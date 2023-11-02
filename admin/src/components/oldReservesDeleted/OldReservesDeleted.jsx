@@ -1,68 +1,79 @@
 import { ToastContainer } from 'react-toastify';
 import './oldReservesDeleted.css';
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const OldReservesDeleted = (
-  { setMenu, menu, setConfirmDelete, confirmDelete, handleDeleteOldReserves }) => {
+  { handleMenuClick, menu, setConfirmDelete, confirmDelete, handleDeleteOldReserves }) => {
+
+  useEffect(() => {
+    handleMenuClick('oldReservesDeleted');
+  }, [ handleMenuClick ])
 
   return (
 
-    <div
-      className='col-9 d-flex flex-column align-items-center p-1'>
-      {
-        !confirmDelete
-          ?
-          <div
-            className='border border-danger p-5 rounded m-auto bg-dark'>
+    <>
+      { menu.oldReservesDeleted &&
 
-            <p
-              className='text-center text-white fw-bold'>
-              ¿Estás seguro de que quieres borrar todas las reservas?
-            </p>
+        <div
+          className='col-9 d-flex flex-column align-items-center p-1 OldReservesDeleted-container'>
+          {
+            !confirmDelete
+              ?
+              <div
+                className='border border-danger p-5 rounded m-auto bg-dark'>
 
-            <div
-              className='d-flex justify-content-evenly'>
+                <p
+                  className='text-center text-white fw-bold'>
+                  ¿Estás seguro de que quieres borrar todas las reservas?
+                </p>
 
-              <Link to={'/'}
-                className='btn btn-success'
-                onClick={() => { setConfirmDelete(false), setMenu({ ...menu, main: true, deleteReserves: false }) }}>
-                Cancelar
-              </Link>
+                <div
+                  className='d-flex justify-content-evenly'>
 
-              <button
-                className='btn btn-danger'
-                onClick={() => { setConfirmDelete(true), handleDeleteOldReserves() }}>
-                Borrar
-              </button>
+                  <Link to={ '/' }
+                    className='btn btn-success'
+                    onClick={ () => { setConfirmDelete(false), handleMenuClick('main') } }>
+                    Cancelar
+                  </Link>
 
-            </div>
+                  <button
+                    className='btn btn-danger'
+                    onClick={ () => { setConfirmDelete(true), handleDeleteOldReserves() } }>
+                    Borrar
+                  </button>
+
+                </div>
+
+              </div>
+              :
+              <>
+                <div
+                  className='col-12 my-3'>
+
+                  <Link
+                    to={ '/' }
+                    className='btn btn-close border border-dark p-2'
+                    onClick={ () => { setMenu({ ...menu, main: true, deleteReserves: false }), setConfirmDelete(false) } }>
+                  </Link>
+
+                </div>
+
+                <div
+                  className='alert alert-danger m-auto'>
+                  Reserves Deleted
+                </div>
+              </>
+          }
+          <div>
+
+            <ToastContainer />
 
           </div>
-          :
-          <>
-            <div
-              className='col-12 my-3'>
+        </div>
 
-              <Link
-                to={'/'}
-                className='btn btn-close border border-dark p-2'
-                onClick={() => { setMenu({ ...menu, main: true, deleteReserves: false }), setConfirmDelete(false) }}>
-              </Link>
-
-            </div>
-
-            <div
-              className='alert alert-danger m-auto'>
-              Reserves Deleted
-            </div>
-          </>
       }
-      <div>
-
-        <ToastContainer />
-
-      </div>
-    </div>
+    </>
 
   )
 }
