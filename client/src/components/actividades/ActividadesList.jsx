@@ -10,7 +10,8 @@ const ActividadesList = () => {
     <>
       <div className='d-flex justify-content-start justify-content-md-evenly overflow-auto flex-md-wrap gap-4 my-5'>
 
-        { data?.map((card) => (
+        {data &&
+          data?.map((card) => (
           <>
             <ActividadesCard
               key={ card.id }
