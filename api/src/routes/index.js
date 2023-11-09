@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import fs from 'fs';
-import { dirname } from 'path';
+import { dirname, basename } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -9,7 +9,7 @@ const PATH_ROUTER = `${__dirname}`;
 const router = Router();
 
 const cleanFileName = (fileName) => {
-  const file = fileName.split('.').shift();
+  const file = basename(fileName, '.js')
   return file;
 }
 
