@@ -44,7 +44,7 @@ const ActividadesModal = ({ categories }) => {
               className='my-1 text-center text-dark border border-success'
               key={ i }>
 
-              <td className='tableData'>
+              <td className='tableData fw-bold'>
                 { category.name }
               </td>
 
