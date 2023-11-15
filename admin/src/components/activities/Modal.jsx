@@ -2,7 +2,7 @@ import ActividadesModal from "./ActividadesModal";
 import PropTypes from 'prop-types'
 
 const Modal = ({ dataTarget, activity, categories, img }) => {
-
+  
   return (
 
     <div className="modal fade" id={ dataTarget }

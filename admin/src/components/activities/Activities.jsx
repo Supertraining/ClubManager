@@ -445,7 +445,7 @@ const Activities = ({ handleMenuClick, menu }) => {
                 description={ activity.description }
                 data_target={ activity.data_target } />
 
-              <Modal dataTarget={ dataTarget } activity={ activity.activity } categories={ categories } />
+              <Modal img={activity.img} dataTarget={ dataTarget } activity={ activity.activity } categories={ categories } />
 
             </div>
 
@@ -460,7 +460,8 @@ const Activities = ({ handleMenuClick, menu }) => {
 }
 
 Activities.propTypes = {
-  handleMenuClick: PropTypes.func.isRequired
+  handleMenuClick: PropTypes.func.isRequired,
+  menu: PropTypes.object
 }
 
 export default Activities

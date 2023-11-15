@@ -2,69 +2,75 @@ import ActividadesCard from './ActividadesCard'
 import './actividades.css'
 import useFetch from '../../hooks/useFetch'
 import ActividadesModal from './ActividadesModal'
+
 const ActividadesList = () => {
 
   const { data } = useFetch('./activities/getAll');
-  
+
   return (
     <>
       <div className='d-flex justify-content-start justify-content-md-evenly overflow-auto flex-md-wrap gap-4 my-5'>
 
-        {data &&
+        { data &&
           data?.map((card) => (
-          <>
-            <ActividadesCard
-              key={ card.id }
-              img={ card.img }
-              imgText={ card.imgText }
-              title={ card.activity }
-              category={ card.category }
-              description={ card.description }
-              data_target={ card.data_target } />
 
-            <div className="modal fade" id={ card.activity.split(' ').join('') }
-              key={ card.id }
-              tabIndex="-1"
-              role="dialog"
-              aria-labelledby="exampleModalLabel"
-              aria-hidden="true">
+            <div className='col-4 card-wrapper mx-1 shadow'
+              key={ window.crypto.randomUUID() }>
 
-              <div className="modal-dialog modal-dialog-centered"
-                role="document">
+              <ActividadesCard
+                key={ card.id }
+                img={ card.img }
+                imgText={ card.imgText }
+                title={ card.activity }
+                category={ card.category }
+                description={ card.description }
+                data_target={ card.data_target } />
 
-                <div className="modal-content" style={ { backgroundImage: `url(${card.img})`, backgroundSize: 'cover' } }>
+              <div className="modal fade" id={ card.activity.split(' ').join('') }
+                key={ card.id }
+                tabIndex="-1"
+                role="dialog"
+                aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
 
-                  <div className="modal-header">
+                <div className="modal-dialog modal-dialog-centered"
+                  role="document">
 
-                    <h5 className="modal-title p-2 rounded" id="exampleModalLabel">
-                      { card.activity }
-                    </h5>
+                  <div className="modal-content" style={ { backgroundImage: `url(${card.img})`, backgroundSize: 'cover' } }>
 
-                    <button type="button"
-                      className="close btn modal-btn border-success"
-                      data-dismiss="modal"
-                      aria-label="Close">
+                    <div className="modal-header">
 
-                      <span aria-hidden="true">
-                        &times;
-                      </span>
+                      <h5 className="modal-title p-2 rounded" id="exampleModalLabel">
+                        { card.activity }
+                      </h5>
 
-                    </button>
+                      <button type="button"
+                        className="close btn modal-btn border-success"
+                        data-dismiss="modal"
+                        aria-label="Close">
 
-                  </div>
-                  <div className="modal-body">
+                        <span aria-hidden="true">
+                          &times;
+                        </span>
 
-                    <ActividadesModal
-                      category={ card.category }
-                      key={ card.img } />
+                      </button>
 
-                  </div>
-                  <div className="modal-footer">
+                    </div>
+                    <div className="modal-body">
 
-                    <button type="button"
-                      className="btn modal-btn border-success" data-dismiss="modal">
-                      Cerrar
-                    </button>
+                      <ActividadesModal
+                        category={ card.category }
+                        key={ card.img } />
+
+                    </div>
+                    <div className="modal-footer">
+
+                      <button type="button"
+                        className="btn modal-btn border-success" data-dismiss="modal">
+                        Cerrar
+                      </button>
+
+                    </div>
 
                   </div>
 
@@ -72,13 +78,11 @@ const ActividadesList = () => {
 
               </div>
 
+
+
             </div>
 
-
-
-          </>
-
-        )) }
+          )) }
 
       </div>
 

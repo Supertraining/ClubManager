@@ -4,7 +4,7 @@ const ActividadesCard = ({ img, imgText, title, description, data_target }) => {
 
   return (
 
-    <div className='col-4 card-wrapper mx-1 shadow'>
+    <>
 
       <div className="card">
         <img className="card-img p-2" src={ img } alt={ imgText } />
@@ -20,7 +20,7 @@ const ActividadesCard = ({ img, imgText, title, description, data_target }) => {
         </div>
       </div>
 
-    </div>
+    </>
 
   )
 }

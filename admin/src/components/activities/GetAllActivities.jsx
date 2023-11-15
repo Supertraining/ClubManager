@@ -106,7 +106,8 @@ const GetAllActivities = ({ handleMenuClick, menu }) => {
 }
 
 GetAllActivities.propTypes = {
-  handleMenuClick: PropTypes.func.isRequired
+  handleMenuClick: PropTypes.func.isRequired,
+  menu: PropTypes.object
 }
 
 export default GetAllActivities
