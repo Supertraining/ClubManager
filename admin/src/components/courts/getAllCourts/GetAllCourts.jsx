@@ -16,7 +16,6 @@ const GetAllCourts = ({ allCourts, handleGetAllCourts, court, setCourt, handleCr
   useEffect(() => {
     handleMenuClick('getAllCourts');
   }, [ handleMenuClick ])
-  console.log('render')
 
   return (
     <>
