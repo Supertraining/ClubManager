@@ -42,7 +42,7 @@ const Login = () => {
           <input
             id='username'
             name='username'
-            placeholder='Username'
+            placeholder='Usuario'
             className='form-control m-3 bg-transparent border-0 border-bottom text-white'
             type='email'
             autoComplete='on'
@@ -60,7 +60,7 @@ const Login = () => {
           <input
             id='password'
             name='password'
-            placeholder='Password'
+            placeholder='Contraseña'
             className='form-control m-3 bg-transparent border-0 border-bottom text-white'
             type='password'
             autoComplete='on'
