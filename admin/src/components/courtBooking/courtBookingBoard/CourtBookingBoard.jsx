@@ -1,5 +1,5 @@
 import './CourtBookingBoard.css'
-
+import PropTypes from 'prop-types'
 const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, handleDeleteReserve }) => {
 
   return (
@@ -1374,5 +1374,17 @@ const CourtBookingBoard = ({ data, dateList, dateListLc, weekDaysList, court, ha
     </div>
   )
 }
+
+CourtBookingBoard.propTypes = {
+  data: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.object
+  ]),
+  dateList: PropTypes.array,
+  dateListLc: PropTypes.array,
+  weekDaysList: PropTypes.array,
+  court: PropTypes.string,
+  handleDeleteReserve: PropTypes.func
+}  
 
 export default CourtBookingBoard

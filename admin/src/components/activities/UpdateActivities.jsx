@@ -8,10 +8,8 @@ import ActividadesCard from './ActividadesCard'
 import Modal from './Modal';
 
 const UpdateActivities = () => {
+
   const { state: { id } } = useLocation();
-
-  console.log('render')
-
 
   const [ activity, setActivity ] = useState({})
   const [ category, setCategory ] = useState()

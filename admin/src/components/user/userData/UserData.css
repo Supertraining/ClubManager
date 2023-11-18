@@ -1,0 +1,8 @@
+.user-data {
+  font-size: calc(10px + 1vw);
+  line-height: calc(1.1em + 0.5vw);
+}
+.user-reserves-th {
+  font-size: calc(8px + 1vw);
+  line-height: calc(1.1em + 0.5vw);
+}

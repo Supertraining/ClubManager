@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';
-
+import PropTypes from 'prop-types'
 
 const CreateUser = ({ handleMenuClick, menu }) => {
 
@@ -310,6 +310,11 @@ const CreateUser = ({ handleMenuClick, menu }) => {
       }
     </>
   )
+}
+
+CreateUser.propTypes = {
+  handleMenuClick: PropTypes.func,
+  menu: PropTypes.object
 }
 
 export default CreateUser

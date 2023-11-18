@@ -11,6 +11,7 @@ import CourtBookingBoard from './courtBookingBoard/CourtBookingBoard'
 import { ReserveBoardContext } from '../context/ReserveBoardUpdate'
 import unidecode from 'unidecode';
 import CourtBookingDatePicker from './courtBookingDatePicker/CourtBookingDatePicker';
+import PropTypes from 'prop-types'
 
 
 const Booking = ({ setCourt, court }) => {
@@ -188,7 +189,7 @@ const Booking = ({ setCourt, court }) => {
     }
 
   }
-
+  console.log('render')
   useEffect(() => {
     reFetch()
     setReserveDeleted(false)
@@ -216,7 +217,7 @@ const Booking = ({ setCourt, court }) => {
     dateListLc.push(unaccentedWeekday);
     weekDaysList.push(unaccentedDay);
   }
-
+  
   return (
     <>
 
@@ -286,4 +287,8 @@ const Booking = ({ setCourt, court }) => {
   )
 }
 
+Booking.propTypes = {
+  setCourt: PropTypes.func,
+  court: PropTypes.string
+} 
 export default Booking

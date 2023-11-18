@@ -3,7 +3,7 @@ import './getAllUsers.css'
 import User from '../User'
 import { ToastContainer } from 'react-toastify';
 import { useEffect } from 'react';
-
+import PropTypes from 'prop-types'
 const GetAllUsers = ({ handleMenuClick, menu, allUsers, handleGetAllUsers, handleDeleteReserve, user, setUser, handleUpdateUser, handleDeleteUser, setConfirmDelete, confirmDelete }) => {
 
 
@@ -13,9 +13,9 @@ const GetAllUsers = ({ handleMenuClick, menu, allUsers, handleGetAllUsers, handl
 
   useEffect(() => {
     handleMenuClick('getAllUsers');
-  }, [handleMenuClick])
-  
-  
+  }, [ handleMenuClick ])
+
+
   return (
     <>
       { menu.getAllUsers &&
@@ -200,6 +200,20 @@ const GetAllUsers = ({ handleMenuClick, menu, allUsers, handleGetAllUsers, handl
 
   )
 
+}
+
+GetAllUsers.propTypes = {
+  handleMenuClick: PropTypes.func,
+  menu: PropTypes.object,
+  allUsers: PropTypes.array,
+  handleGetAllUsers: PropTypes.func,
+  handleDeleteReserve: PropTypes.func,
+  user: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
+  setUser: PropTypes.func,
+  handleUpdateUser: PropTypes.func,
+  handleDeleteUser: PropTypes.func,
+  setConfirmDelete: PropTypes.func,
+  confirmDelete: PropTypes.bool
 }
 
 export default GetAllUsers

@@ -1,4 +1,6 @@
 import { useReducer, createContext, useEffect } from "react";
+import PropTypes from 'prop-types'
+
 // import axios from '../../utils/axiosInstance';
 
 //__Esta funcion solo es util si configuro un tiempo de vida a la cookie, entonces cuando este termina, se elimina la cookie y se elimina el localStorage
@@ -61,7 +63,7 @@ export const AuthContextProvider = ({ children }) => {
 
   const [ state, dispatch ] = useReducer(AuthReducer, INITIAL_STATE)
 
- 
+
   useEffect(() => {
     state.permanentLog
       ? localStorage.setItem('user', JSON.stringify(state.user))
@@ -76,3 +78,6 @@ export const AuthContextProvider = ({ children }) => {
   )
 }
 
+AuthContextProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};

@@ -1,5 +1,5 @@
 import './userReserve.css'
-
+import PropTypes from 'prop-types'
 
 const UserReserves = ({ user, handleDeleteReserve }) => {
 
@@ -8,7 +8,7 @@ const UserReserves = ({ user, handleDeleteReserve }) => {
 
     <div>
 
-      <h3 className='text-primary fw-bold my-2'>
+      <h3 className='text-primary fw-bold my-2 px-3'>
         @Reservas
       </h3>
 
@@ -22,37 +22,37 @@ const UserReserves = ({ user, handleDeleteReserve }) => {
 
             <th
               scope='col'
-              className='text-center'>
+              className='text-center user-reserves-th'>
               Actividad
             </th>
 
             <th
               scope='col'
-              className='text-center'>
+              className='text-center user-reserves-th'>
               fecha
             </th>
 
             <th
               scope='col'
-              className='text-center'>
+              className='text-center user-reserves-th'>
               Inicia
             </th>
 
             <th
               scope='col'
-              className='text-center'>
+              className='text-center user-reserves-th'>
               Finaliza
             </th>
 
             <th
               scope='col'
-              className='text-center'>
+              className='text-center user-reserves-th'>
               Fijo
             </th>
 
             <th
               scope='col'
-              className='text-center'>
+              className='text-center user-reserves-th'>
               Anular
             </th>
 
@@ -114,6 +114,11 @@ const UserReserves = ({ user, handleDeleteReserve }) => {
 
     </div>
   )
+}
+
+UserReserves.propTypes = { 
+  user: PropTypes.object, 
+  handleDeleteReserve: PropTypes.func
 }
 
 export default UserReserves

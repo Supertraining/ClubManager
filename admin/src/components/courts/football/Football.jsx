@@ -1,6 +1,6 @@
 import Booking from '../../courtBooking/Booking'
 import './football.css'
-
+import PropTypes from 'prop-types'
 const Football = ({ setCourt, court }) => {
 
   return (
@@ -12,4 +12,8 @@ const Football = ({ setCourt, court }) => {
   )
 }
 
+Football.propTypes = {
+  setCourt: PropTypes.func,
+  court: PropTypes.string
+}
 export default Football

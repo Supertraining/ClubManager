@@ -1,9 +1,9 @@
 import './menu.css'
 import { Link } from 'react-router-dom'
-
+import PropTypes from 'prop-types'
 
 const Menu = ({ menu, handleGetAllUsers, handleGetAllCourts, handleCloseSession, handleMenuClick }) => {
-  
+
   return (
     <>
       <div
@@ -180,11 +180,11 @@ const Menu = ({ menu, handleGetAllUsers, handleGetAllCourts, handleCloseSession,
               </li>
 
               <li
-                className='d-flex align-items-center'>
-                <button className='btn btn-danger m-auto' onClick={ handleCloseSession }>
+                className='d-flex align-items-center col-12'>
+                <button className='btn btn-danger m-auto col-12' onClick={ handleCloseSession }>
                   Cerrar sesión
                 </button>
-
+                <i className="bi bi-stop-btn-fill fs-4 mx-2 text-danger btn-closeSession-i"></i>
               </li>
 
             </ul>
@@ -195,6 +195,14 @@ const Menu = ({ menu, handleGetAllUsers, handleGetAllCourts, handleCloseSession,
 
     </>
   )
+}
+
+Menu.propTypes = {
+  menu: PropTypes.object,
+  handleGetAllUsers: PropTypes.func,
+  handleGetAllCourts: PropTypes.func,
+  handleCloseSession: PropTypes.func,
+  handleMenuClick: PropTypes.func
 }
 
 export default Menu

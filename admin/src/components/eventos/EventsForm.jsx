@@ -1,5 +1,6 @@
-
+import PropTypes from 'prop-types'
 const EventsForm = ({ handleChange, eventData, setEventData }) => {
+
   return (
     <>
       <form
@@ -212,6 +213,12 @@ const EventsForm = ({ handleChange, eventData, setEventData }) => {
 
     </>
   )
+}
+
+EventsForm.propTypes = {
+  handleChange: PropTypes.func,
+  eventData: PropTypes.object,
+  setEventData: PropTypes.func
 }
 
 export default EventsForm

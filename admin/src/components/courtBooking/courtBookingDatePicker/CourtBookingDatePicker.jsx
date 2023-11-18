@@ -1,14 +1,14 @@
 import { DatePicker } from 'react-date-time-picker-popup'
 import './courtBookingDatePicker.css'
-
+import Proptypes from 'prop-types'
 const CourtBookingDatePicker = (
   { setInitialTime, initialTime, setFinalTime, finalTime, setConfirmReserve, confirmReserve, handleBooking, setDay, day, setPermanent, permanent }
 ) => {
 
   const enableConfirmReserveBtn = !(initialTime && finalTime)
-
+    
   return (
-
+    
     <div
       className='d-flex flex-column col-12 p-3'>
 
@@ -113,6 +113,20 @@ const CourtBookingDatePicker = (
 
   )
 
+}
+
+CourtBookingDatePicker.propTypes = {
+  setInitialTime: Proptypes.func,
+  setFinalTime: Proptypes.func,
+  setConfirmReserve: Proptypes.func,
+  setPermanent: Proptypes.func,
+  setDay: Proptypes.func,
+  handleBooking: Proptypes.func,
+  initialTime: Proptypes.number,
+  finalTime: Proptypes.number,
+  confirmReserve: Proptypes.bool,
+  day: Proptypes.object,
+  permanent: Proptypes.bool
 }
 
 export default CourtBookingDatePicker

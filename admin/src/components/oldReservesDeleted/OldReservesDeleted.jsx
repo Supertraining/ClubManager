@@ -2,9 +2,10 @@ import { ToastContainer } from 'react-toastify';
 import './oldReservesDeleted.css';
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
+import PropTypes from 'prop-types'
 
 const OldReservesDeleted = (
-  { handleMenuClick, menu, setConfirmDelete, confirmDelete, handleDeleteOldReserves }) => {
+  { handleMenuClick, menu, setMenu, setConfirmDelete, confirmDelete, handleDeleteOldReserves }) => {
 
   useEffect(() => {
     handleMenuClick('oldReservesDeleted');
@@ -76,6 +77,16 @@ const OldReservesDeleted = (
     </>
 
   )
+}
+
+OldReservesDeleted.propTypes = 
+{
+  handleMenuClick: PropTypes.func,
+  menu: PropTypes.object,
+  setMenu: PropTypes.func,
+  setConfirmDelete: PropTypes.func,
+  confirmDelete: PropTypes.bool,
+  handleDeleteOldReserves: PropTypes.func
 }
 
 export default OldReservesDeleted

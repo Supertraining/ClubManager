@@ -36,14 +36,6 @@
   transition: 0.5s;
 }
 
-/* .options-wrapper li{
-  padding: 5px;
-  margin: 5px;
-  cursor: pointer;
-  border-radius: 5px;
-  border: 1px solid black;
-  background-color: white;
-  color: black;
-  font-weight: bold;
-
-} */
+.btn-closeSession-i {
+  filter: drop-shadow(1px 2px 0px white)
+}

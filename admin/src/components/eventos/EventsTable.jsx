@@ -1,5 +1,7 @@
+import PropTypes from 'prop-types'
 
 const EventsTable = ({ data, handleIsEventSettled, handleDeleteReserve }) => {
+
   return (
     <>
       <table className='table table-responsive bg-dark'>
@@ -86,6 +88,12 @@ const EventsTable = ({ data, handleIsEventSettled, handleDeleteReserve }) => {
         </tbody>
       </table></>
   )
+}
+
+EventsTable.propTypes = {
+  data: PropTypes.array,
+  handleIsEventSettled: PropTypes.func,
+  handleDeleteReserve: PropTypes.func
 }
 
 export default EventsTable

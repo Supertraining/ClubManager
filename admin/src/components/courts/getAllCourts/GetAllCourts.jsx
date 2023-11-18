@@ -6,8 +6,10 @@ import Paleta from '../pelotaPaleta/Paleta';
 import Paddle from '../paddle/Paddle';
 import Squash from '../squash/Squash';
 import { useEffect } from 'react';
+import PropTypes from 'prop-types'
 
-const GetAllCourts = ({ allCourts, handleGetAllCourts, court, setCourt, handleCreateCourt, handleDeleteCourt, courtId, setCourtId, handleMenuClick, menu }) => {
+
+const GetAllCourts = ({ allCourts, handleGetAllCourts, court, setCourt, handleDeleteCourt, courtId, setCourtId, handleMenuClick, menu }) => {
 
   useEffect(() => {
     handleGetAllCourts()
@@ -161,9 +163,22 @@ const GetAllCourts = ({ allCourts, handleGetAllCourts, court, setCourt, handleCr
       }
     </>
 
-
   )
 
+}
+
+GetAllCourts.propTypes = {
+
+  allCourts: PropTypes.array,
+  handleGetAllCourts: PropTypes.func,
+  court: PropTypes.bool,
+  setCourt: PropTypes.func,
+  handleCreateCourt:PropTypes.func,
+  handleDeleteCourt:PropTypes.func,
+  courtId: PropTypes.string,
+  setCourtId:PropTypes.func,
+  handleMenuClick:PropTypes.func,
+  menu: PropTypes.object
 }
 
 export default GetAllCourts

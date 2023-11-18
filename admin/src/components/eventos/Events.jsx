@@ -9,7 +9,7 @@ import useFetch from '../../hooks/useFetch';
 import { ToastContainer, toast } from 'react-toastify';
 import EventsTable from './EventsTable';
 import EventsForm from './EventsForm';
-
+import PropTypes from 'prop-types'
 
 
 const Events = ({ handleMenuClick, menu }) => {
@@ -107,7 +107,7 @@ const Events = ({ handleMenuClick, menu }) => {
 
     try {
 
-      const res = await axios.put('/events/updateEvent', { id: id, saldado: isSettled })
+       await axios.put('/events/updateEvent', { id: id, saldado: isSettled })
 
       reFetch()
     } catch (error) {
@@ -203,6 +203,11 @@ const Events = ({ handleMenuClick, menu }) => {
       }
     </>
   )
+}
+
+Events.propTypes = {
+  handleMenuClick: PropTypes.func,
+  menu: PropTypes.object
 }
 
 export default Events

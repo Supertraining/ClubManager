@@ -1,5 +1,6 @@
 import Booking from '../../courtBooking/Booking'
 import './paddle.css'
+import PropTypes from 'prop-types'
 
 const Paddle = ({ court, setCourt }) => {
   return (
@@ -9,6 +10,11 @@ const Paddle = ({ court, setCourt }) => {
     
   </div>
   )
+}
+
+Paddle.propTypes = {
+  setCourt: PropTypes.func,
+  court: PropTypes.string
 }
 
 export default Paddle
