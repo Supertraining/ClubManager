@@ -11,6 +11,7 @@ import CourtBookingBoard from '../courtBookingBoard/CourtBookingBoard';
 import { ReserveBoardContext } from '../context/ReserveBoardUpdate';
 import unidecode from 'unidecode';
 import CourtBookingDatePicker from '../courtBookingDatePicker/CourtBookingDatePicker';
+import PropTypes from 'prop-types';
 
 const Booking = ({ court }) => {
 
@@ -214,4 +215,7 @@ const Booking = ({ court }) => {
   );
 };
 
+Booking.propTypes = {
+  court: PropTypes.string
+}
 export default Booking;

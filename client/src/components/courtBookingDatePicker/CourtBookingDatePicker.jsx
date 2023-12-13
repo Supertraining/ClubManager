@@ -1,7 +1,9 @@
 import { DatePicker } from 'react-date-time-picker-popup';
 import './courtBookingDatePicker.css';
+import PropTypes from 'prop-types'
 
 const CourtBookingDatePicker = (props) => {
+ 
   const enableConfirmReserveBtn = !(props.initialTime && props.finalTime);
 
   return (
@@ -113,5 +115,17 @@ const CourtBookingDatePicker = (props) => {
     </div>
   );
 };
+
+CourtBookingDatePicker.propTypes = {
+  confirmReserve: PropTypes.bool.isRequired,
+  day: PropTypes.instanceOf(Date).isRequired,
+  finalTime: PropTypes.number,
+  handleBooking: PropTypes.func.isRequired,
+  initialTime: PropTypes.number,
+  setConfirmReserve: PropTypes.func.isRequired,
+  setDay: PropTypes.func.isRequired,
+  setFinalTime: PropTypes.func.isRequired,
+  setInitialTime: PropTypes.func.isRequired,
+}
 
 export default CourtBookingDatePicker;

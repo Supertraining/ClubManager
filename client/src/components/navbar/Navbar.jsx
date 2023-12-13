@@ -32,7 +32,6 @@ const Navbar = () => {
   const handleUserReserves = async () => {
     try {
       const { data } = await axios.get(`/users/user/${user?._id}`);
-
       setUserReserves(data.reserves);
     } catch (error) {
       console.log(error);

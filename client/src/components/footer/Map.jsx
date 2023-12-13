@@ -1,6 +1,7 @@
 
 const Map = () => {
   return (
+    
       <div className='m-1 p-1 col-12 col-md-3 d-flex justify-content-center'>
 
         <iframe

@@ -1,4 +1,5 @@
 import { createContext, useState } from "react";
+import PropTypes from 'prop-types';
 
 export const ReserveBoardContext = createContext();
 
@@ -14,3 +15,7 @@ export const ReserveBoardProvider = ({ children }) => {
     
   )
 } 
+
+ReserveBoardContext.propTypes = {
+  children: PropTypes.node
+}

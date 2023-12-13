@@ -3,10 +3,11 @@ import { AuthContext } from '../context/AuthContext';
 import './myUser.css';
 import React, { useContext, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
+import PropTypes from 'prop-types'
 
 const MyUser = (props) => {
+  
   const { user } = useContext(AuthContext);
-
   const [ showForm, setShowForm ] = useState(false);
   const [ confirmDelete, setConfirmDelete ] = useState(false);
   const [ credentials, setCredentials ] = useState({
@@ -205,5 +206,12 @@ const MyUser = (props) => {
     )
   );
 };
+
+MyUser.propTypes = {
+  handleDeleteAccount: PropTypes.func.isRequired,
+  handleUpdateUser: PropTypes.func.isRequired,
+  setShowChangePasswordForm: PropTypes.func.isRequired,
+  setShowProfile: PropTypes.func.isRequired
+}
 
 export default MyUser;

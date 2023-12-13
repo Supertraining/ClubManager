@@ -1,5 +1,6 @@
-import Booking from '../courtBooking/Booking'
-import './paleta.css'
+import Booking from '../courtBooking/Booking';
+import './paleta.css';
+import PropTypes from 'prop-types';
 
 const Paleta = ({ court }) => {
 
@@ -16,5 +17,10 @@ const Paleta = ({ court }) => {
     </div>
   )
 }
+
+Paleta.propTypes = {
+  court : PropTypes.string
+}
+
 
 export default Paleta

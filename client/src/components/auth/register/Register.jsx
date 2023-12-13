@@ -7,9 +7,9 @@ import { isStrongPassword } from 'validator';
 import { useForm } from 'react-hook-form';
 
 const Register = () => {
-
+  console.log('render')
   const { loading, error, dispatch } = useContext(AuthContext);
-  const [welcomeMessage, setWelcomeMessage] = useState(false)
+  const [ welcomeMessage, setWelcomeMessage ] = useState(false)
 
   const navigate = useNavigate();
 
@@ -47,8 +47,6 @@ const Register = () => {
 
       }, 2000);
 
-      
-
     } catch (error) {
 
       dispatch({ type: 'LOGIN_FAILURE', payload: error });
@@ -62,7 +60,7 @@ const Register = () => {
     <div
       className="my-5 rounded col-12 d-flex flex-column align-items-center">
 
-      {!welcomeMessage &&
+      { !welcomeMessage &&
 
         <>
           <div
@@ -81,7 +79,7 @@ const Register = () => {
             className="form d-flex flex-column align-items-center col-12 col-sm-8 col-md-6"
             role="form"
             autoComplete="on"
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={ handleSubmit(onSubmit) }
           >
 
             <div
@@ -97,16 +95,17 @@ const Register = () => {
               </div>
 
               <input
-                id="username"
+                id="userName"
                 name='username'
                 placeholder="Email"
+                autoComplete='username'
                 className="form-control my-2 text-center border-0 border-bottom ph" type="email"
-                {...register('username', { required: true })}
+                { ...register('username', { required: true }) }
               />
             </div>
-            {errors.username && (
+            { errors.username && (
               <small className="text-danger text-center">Este campo es obligatorio</small>
-            )}
+            ) }
             <div
               className="input-group align-items-center">
 
@@ -121,11 +120,13 @@ const Register = () => {
               </div>
 
               <input
-                id="password"
+                id="passWord"
                 name='password'
                 placeholder="Contraseña"
-                className="form-control my-2 text-center border-0 border-bottom ph" type="password"
-                {...register('password', { required: true })}
+                className="form-control my-2 text-center border-0 border-bottom ph"
+                type="password"
+                autoComplete='current-password'
+                { ...register('password', { required: true }) }
               />
             </div>
 
@@ -133,9 +134,9 @@ const Register = () => {
               La contraseña debe tener al menos 8 caracteres y, debe incluir como mínimo una MAYÚSCULA, y un número. <strong><i className='text-decoration-underline'>Ejemplo:</i> Nombre1980</strong>
             </small>
 
-            {errors.password && (
+            { errors.password && (
               <small className="text-danger text-center">Este campo es obligatorio</small>
-            )}
+            ) }
 
 
 
@@ -157,12 +158,12 @@ const Register = () => {
                 name="nombre"
                 placeholder="Nombre"
                 className="form-control my-2 text-center border-0 border-bottom ph" type="text"
-                {...register('nombre', { required: true })}
+                { ...register('nombre', { required: true }) }
               />
             </div>
-            {errors.nombre && (
+            { errors.nombre && (
               <small className="text-danger text-center">Este campo es obligatorio</small>
-            )}
+            ) }
 
             <div
               className="input-group align-items-center">
@@ -181,13 +182,13 @@ const Register = () => {
                 name="apellido"
                 placeholder="Apellido"
                 className="form-control my-2 text-center border-0 border-bottom ph" type="text"
-                {...register('apellido', { required: true })}
+                { ...register('apellido', { required: true }) }
 
               />
             </div>
-            {errors.apellido && (
+            { errors.apellido && (
               <small className="text-danger text-center">Este campo es obligatorio</small>
-            )}
+            ) }
 
             <div
               className="input-group align-items-center">
@@ -207,13 +208,13 @@ const Register = () => {
                 name='edad'
                 placeholder="Edad"
                 className="form-control my-2 text-center border-0 border-bottom ph" type="number"
-                min={0} max={99}
-                {...register('edad', { required: true })}
+                min={ 0 } max={ 99 }
+                { ...register('edad', { required: true }) }
               />
             </div>
-            {errors.edad && (
+            { errors.edad && (
               <small className="text-danger text-center">Este campo es obligatorio</small>
-            )}
+            ) }
 
             <div
               className="input-group align-items-center">
@@ -232,12 +233,12 @@ const Register = () => {
                 name='telefono'
                 placeholder="Telefono"
                 className="form-control my-2 text-center border-0 border-bottom ph" type="text"
-                {...register('telefono', { required: true })}
+                { ...register('telefono', { required: true }) }
               />
             </div>
-            {errors.telefono && (
+            { errors.telefono && (
               <small className="text-danger text-center">Este campo es obligatorio</small>
-            )}
+            ) }
 
             <div
               className="input-group my-2 justify-content-center align-items-center">
@@ -255,7 +256,7 @@ const Register = () => {
                 className="my-2 text-center border border-success col-6 rounded bg-white text-secondary p-2 register-Btn"
                 type="submit"
                 value='Registrarme'
-                disabled={loading}
+                disabled={ loading }
               />
 
             </div>
@@ -266,11 +267,11 @@ const Register = () => {
 
 
 
-      {error && <div className='text-danger p-1 m-1'>
+      { error && <div className='text-danger p-1 m-1'>
         Ha ocurrido un error, por favor vuelva a intentarlo
-      </div>}
+      </div> }
 
-      {welcomeMessage &&
+      { welcomeMessage &&
 
         <div className=' rounded p-4 col-6 welcome-background d-flex  align-items-center justify-content-center'>
           <h1 className='welcome-title text-success'>

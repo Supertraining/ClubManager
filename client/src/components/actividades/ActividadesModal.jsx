@@ -1,4 +1,5 @@
-import { useId } from "react"
+import { useId } from "react";
+import PropTypes from 'prop-types'
 
 const ActividadesModal = ({ category }) => {
 
@@ -71,6 +72,10 @@ const ActividadesModal = ({ category }) => {
     </>
 
   )
+}
+
+ActividadesModal.propTypes = {
+  category: PropTypes.array
 }
 
 export default ActividadesModal

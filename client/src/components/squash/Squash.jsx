@@ -1,5 +1,6 @@
-import Booking from '../courtBooking/Booking'
-import './squash.css'
+import Booking from '../courtBooking/Booking';
+import './squash.css';
+import PropTypes from 'prop-types';
 
 const Squash = ({ court }) => {
   return (
@@ -14,6 +15,10 @@ const Squash = ({ court }) => {
 
     </div>
   )
+}
+
+Squash.propTypes = {
+  court : PropTypes.string
 }
 
 export default Squash

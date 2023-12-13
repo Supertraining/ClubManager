@@ -1,5 +1,6 @@
 import Login from '../auth/login/Login';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types'
 
 const NavBarOffCanvasStart = (props) => {
  
@@ -139,5 +140,32 @@ const NavBarOffCanvasStart = (props) => {
     </>
   );
 };
+
+NavBarOffCanvasStart.propTypes = {
+  handleCloseSession: PropTypes.func.isRequired,
+  handleUserReserves: PropTypes.func.isRequired,
+  user: PropTypes.shape({
+    admin: PropTypes.bool.isRequired,
+    apellido: PropTypes.string.isRequired,
+    edad: PropTypes.number.isRequired,
+    nombre: PropTypes.string.isRequired,
+    reserves: PropTypes.arrayOf(
+      PropTypes.shape({
+        court: PropTypes.string.isRequired,
+        date: PropTypes.string.isRequired,
+        finalTime: PropTypes.number.isRequired,
+        id: PropTypes.string.isRequired,
+        initialTime: PropTypes.number.isRequired,
+        permanent: PropTypes.bool.isRequired,
+        weekday: PropTypes.string.isRequired,
+        telefono: PropTypes.string.isRequired,
+      })
+    ),
+    telefono: PropTypes.string.isRequired,
+    username: PropTypes.string.isRequired,
+    __v: PropTypes.number.isRequired,
+    _id: PropTypes.string.isRequired,
+  }),
+}
 
 export default NavBarOffCanvasStart;

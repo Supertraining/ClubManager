@@ -1,5 +1,5 @@
 import './myUserReserves.css';
-
+import PropTypes from 'prop-types'
 
 const MyUserReserves = (props) => {
   return (
@@ -53,29 +53,29 @@ const MyUserReserves = (props) => {
           </thead>
 
           <tbody>
-            
-            {props?.futbolReserves?.map((res, i) => (
+
+            { props?.futbolReserves?.map((res, i) => (
 
               <tr
-                className='my-1 text-success text-center border border-success tableData-text' key={i}>
+                className='my-1 text-success text-center border border-success tableData-text' key={ i }>
 
                 <td className='tableData'>
-                  {res.court}
+                  { res.court }
                 </td>
 
                 <td className='tableData'>
-                  {res.date}
+                  { res.date }
                 </td>
 
                 <td className='tableData'>
-                  {new Date(res.initialTime).toLocaleTimeString(
+                  { new Date(res.initialTime).toLocaleTimeString(
                     [], { timeStyle: 'short' }
                   )
                   }
                 </td>
 
                 <td className='tableData'>
-                  {new Date(res.finalTime).toLocaleTimeString(
+                  { new Date(res.finalTime).toLocaleTimeString(
                     [], { timeStyle: 'short' }
                   )
                   }
@@ -85,7 +85,7 @@ const MyUserReserves = (props) => {
 
                   <button
                     className='btn m-0 px-2 py-0'
-                    onClick={() => props.handleDeleteReserve(res.court, res.weekday, res.id)}>
+                    onClick={ () => props.handleDeleteReserve(res.court, res.weekday, res.id) }>
 
                     <i
                       className="bi bi-exclamation-triangle text-danger">
@@ -96,26 +96,26 @@ const MyUserReserves = (props) => {
                 </td>
 
               </tr>
-            ))}
-            {props?.paddleReserves?.map((res, i) => (
+            )) }
+            { props?.paddleReserves?.map((res, i) => (
 
               <tr
                 className='my-1 text-primary text-center border border-primary tableData-text'
-                key={i}>
+                key={ i }>
 
                 <td
                   className='text-center'>
-                  {res.court}
+                  { res.court }
                 </td>
 
                 <td
                   className='text-center'>
-                  {res.date}
+                  { res.date }
                 </td>
 
                 <td
                   className='text-center'>
-                  {new Date(res.initialTime).toLocaleTimeString(
+                  { new Date(res.initialTime).toLocaleTimeString(
                     [], { timeStyle: 'short' }
                   )
                   }
@@ -123,7 +123,7 @@ const MyUserReserves = (props) => {
 
                 <td
                   className='text-center'>
-                  {new Date(res.finalTime).toLocaleTimeString(
+                  { new Date(res.finalTime).toLocaleTimeString(
                     [], { timeStyle: 'short' }
                   )
                   }
@@ -134,7 +134,7 @@ const MyUserReserves = (props) => {
 
                   <button
                     className='btn m-0 px-2 py-0'
-                    onClick={() => props.handleDeleteReserve(res.court, res.weekday, res.id)}>
+                    onClick={ () => props.handleDeleteReserve(res.court, res.weekday, res.id) }>
 
                     <i
                       className="bi bi-exclamation-triangle text-danger">
@@ -144,26 +144,26 @@ const MyUserReserves = (props) => {
 
                 </td>
               </tr>
-            ))}
-            {props?.squashReserves?.map((res, i) => (
+            )) }
+            { props?.squashReserves?.map((res, i) => (
 
               <tr
                 className='my-1 text-info text-center border border-info tableData-text'
-                key={i}>
+                key={ i }>
 
                 <td
                   className='text-center'>
-                  {res.court}
+                  { res.court }
                 </td>
 
                 <td
                   className='text-center'>
-                  {res.date}
+                  { res.date }
                 </td>
 
                 <td
                   className='text-center'>
-                  {new Date(res.initialTime).toLocaleTimeString(
+                  { new Date(res.initialTime).toLocaleTimeString(
                     [], { timeStyle: 'short' }
                   )
                   }
@@ -171,7 +171,7 @@ const MyUserReserves = (props) => {
 
                 <td
                   className='text-center'>
-                  {new Date(res.finalTime).toLocaleTimeString(
+                  { new Date(res.finalTime).toLocaleTimeString(
                     [], { timeStyle: 'short' }
                   )
                   }
@@ -182,7 +182,7 @@ const MyUserReserves = (props) => {
 
                   <button
                     className='btn m-0 px-2 py-0'
-                    onClick={() => props.handleDeleteReserve(res.court, res.weekday, res.id)}>
+                    onClick={ () => props.handleDeleteReserve(res.court, res.weekday, res.id) }>
 
                     <i
                       className="bi bi-exclamation-triangle text-danger">
@@ -193,26 +193,26 @@ const MyUserReserves = (props) => {
                 </td>
 
               </tr>
-            ))}
-            {props?.paletaReserves?.map((res, i) => (
+            )) }
+            { props?.paletaReserves?.map((res, i) => (
 
               <tr
                 className='my-1 text-warning text-center border border-warning tableData-text'
-                key={i}>
+                key={ i }>
 
                 <td
                   className='text-center'>
-                  {res.court}
+                  { res.court }
                 </td>
 
                 <td
                   className='text-center'>
-                  {res.date}
+                  { res.date }
                 </td>
 
                 <td
                   className='text-center'>
-                  {new Date(res.initialTime).toLocaleTimeString(
+                  { new Date(res.initialTime).toLocaleTimeString(
                     [], { timeStyle: 'short' }
                   )
                   }
@@ -220,7 +220,7 @@ const MyUserReserves = (props) => {
 
                 <td
                   className='text-center'>
-                  {new Date(res.finalTime).toLocaleTimeString(
+                  { new Date(res.finalTime).toLocaleTimeString(
                     [], { timeStyle: 'short' }
                   )
                   }
@@ -231,7 +231,7 @@ const MyUserReserves = (props) => {
 
                   <button
                     className='btn m-0 px-2 py-0'
-                    onClick={() => props.handleDeleteReserve(res.court, res.weekday, res.id)}>
+                    onClick={ () => props.handleDeleteReserve(res.court, res.weekday, res.id) }>
 
                     <i
                       className="bi bi-exclamation-triangle text-danger">
@@ -242,7 +242,7 @@ const MyUserReserves = (props) => {
                 </td>
 
               </tr>
-            ))}
+            )) }
 
           </tbody>
 
@@ -252,6 +252,14 @@ const MyUserReserves = (props) => {
     </div>
 
   )
+}
+
+MyUserReserves.propTypes = {
+  futbolReserves: PropTypes.array.isRequired,
+  handleDeleteReserve: PropTypes.func.isRequired,
+  paddleReserves: PropTypes.array.isRequired,
+  paletaReserves: PropTypes.array.isRequired,
+  squashReserves: PropTypes.array.isRequired
 }
 
 export default MyUserReserves

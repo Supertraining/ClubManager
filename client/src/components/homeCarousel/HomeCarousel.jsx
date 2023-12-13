@@ -10,19 +10,19 @@ function CarouselFadeExample() {
     <Carousel fade >
 
       <Carousel.Item>
-        <img loading='lazy' className="d-block w-100 carousel-img" src={ patinaje } alt="First slide" />
+        <img className="d-block w-100 carousel-img" src={ patinaje } alt="First slide" />
       </Carousel.Item>
 
       <Carousel.Item>
-        <img loading='lazy' className="d-block w-100" src={ gimnasia } alt="Second slide" />
+        <img className="d-block w-100" src={ gimnasia } alt="Second slide" />
       </Carousel.Item>
 
       <Carousel.Item>
-        <img loading='lazy' className="d-block w-100" src={ futbol } alt="Third slide" />
+        <img className="d-block w-100" src={ futbol } alt="Third slide" />
       </Carousel.Item>
 
       <Carousel.Item>
-        <img loading='lazy' className="d-block w-100" src={ functional } alt="Third slide" />
+        <img className="d-block w-100" src={ functional } alt="Third slide" />
       </Carousel.Item>
 
     </Carousel>

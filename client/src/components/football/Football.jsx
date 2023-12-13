@@ -1,5 +1,6 @@
 import Booking from '../courtBooking/Booking'
 import './football.css'
+import PropTypes from 'prop-types'
 
 const Football = ({ court }) => {
 
@@ -15,6 +16,10 @@ const Football = ({ court }) => {
 
     </div>
   )
+}
+
+Football.propTypes = {
+  court : PropTypes.string
 }
 
 export default Football

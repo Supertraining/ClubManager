@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
 const ActividadesCard = ({ img, imgText, title, description, data_target }) => {
 
   return (
@@ -7,7 +8,7 @@ const ActividadesCard = ({ img, imgText, title, description, data_target }) => {
     <>
 
       <div className="card">
-        <img className="card-img p-2" src={ img } alt={ imgText } />
+        <img className="card-img p-2" loading='lazy' src={ img } alt={ imgText } />
         <div className="card-body">
           <h5 className="card-title">{ title }</h5>
           <p className="card-text">{ description }</p>
@@ -23,6 +24,14 @@ const ActividadesCard = ({ img, imgText, title, description, data_target }) => {
     </>
 
   )
+}
+
+ActividadesCard.propTypes = {
+  img: PropTypes.string,
+  imgText: PropTypes.string,
+  title: PropTypes.string,
+  description: PropTypes.string,
+  data_target: PropTypes.string
 }
 
 export default ActividadesCard
