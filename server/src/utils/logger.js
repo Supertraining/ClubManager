@@ -56,4 +56,33 @@ export const routeLogger = async (req, lvl, error) => {
 	
 };
 
+export const errorLogger = async (err, additionalInfo) => {
+
+	try {
+
+		if (!additionalInfo) {
+			logger.error(err.stack);
+			return;
+		}
+
+		const errorMessage = `Error occurred: ${err.message}\nAdditional Info:\n
+		Route: ${additionalInfo.route} 
+		Method: ${additionalInfo.method}
+		IP: ${additionalInfo.ip}
+		User_agent: ${additionalInfo.user_agent}
+		user: ${additionalInfo.user?.username}
+		Stack Trace: ${err.stack}\n\n`;
+
+		logger.error(errorMessage)
+
+		console.error(chalk.red.bold('Error occurred, check error.log file for more details'));
+
+	} catch (error) {
+
+		logger.error(error);
+
+	}
+	
+};
+
 export default logger;

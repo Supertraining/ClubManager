@@ -1,4 +1,4 @@
-import * as model from '../../../models/user.js';
+import * as model from '../../../db/models/user.js';
 import logger from '../../../utils/logger.js';
 
 let instance = null;
@@ -13,9 +13,9 @@ export default class UsersDAO {
         .insertMany(data);
       return newUser[ 0 ];
 
-    } catch (err) {
+    } catch (error) {
 
-      logger.error(err);
+      throw(error)
 
     }
 
@@ -28,12 +28,17 @@ export default class UsersDAO {
       let data = await model
         .usermodel
         .findOne({ username: username });
+      
+      if (!data) {
+        let error = createError(404, 'User not found');
+        throw error;
+      }
 
       return data;
 
-    } catch (err) {
+    } catch (error) {
 
-      logger.error(err);
+      throw(error)
 
     }
 
@@ -49,9 +54,9 @@ export default class UsersDAO {
 
       return data;
 
-    } catch (err) {
+    } catch (error) {
 
-      logger.error(err);
+      throw(error)
 
     }
 
@@ -67,9 +72,9 @@ export default class UsersDAO {
 
       return data
 
-    } catch (err) {
+    } catch (error) {
 
-      logger.error(err);
+      throw(error)
 
     }
 
@@ -85,9 +90,9 @@ export default class UsersDAO {
 
       return data;
 
-    } catch (err) {
+    } catch (error) {
 
-      logger.error(err);
+      throw(error)
 
     }
   }
@@ -102,9 +107,9 @@ export default class UsersDAO {
 
       return updatedUser;
 
-    } catch (err) {
+    } catch (error) {
 
-      logger.error(err);
+      throw(error)
 
     }
 
@@ -119,9 +124,9 @@ export default class UsersDAO {
 
       return updatedUser;
 
-    } catch (err) {
+    } catch (error) {
 
-      logger.error(err);
+      throw(error)
 
     }
 
@@ -148,9 +153,9 @@ export default class UsersDAO {
 
       return data;
 
-    } catch (err) {
+    } catch (error) {
 
-      logger.error(err);
+      throw(error)
 
     }
 
@@ -180,7 +185,7 @@ export default class UsersDAO {
 
     } catch (error) {
 
-      logger.error(error);
+      throw(error)
 
     }
   }
@@ -202,7 +207,7 @@ export default class UsersDAO {
 
     } catch (error) {
 
-      logger.error(error);
+      throw(error)
 
     }
 

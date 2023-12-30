@@ -1,6 +1,6 @@
 import { Router } from "express";
 import UsersController from '../apis/users/controllers/users.js';
-import { validate } from "./middlewares/dataValidator.js";
+import { validate } from "../middlewares/dataValidator.js";
 
 const router = Router();
 
@@ -18,30 +18,6 @@ export default class UserRouter {
 
          this.controllers.register,
     
-        );
-
-        router.get(
-
-            '/login',
-
-            async (req, res) => {
-
-                try {
-                    console.log('hola')
-                    req.isAuthenticated()
-
-                        ? res.json(true)
-                        : res.json(false)
-
-                } catch (error) {
-
-                    routeLogger(req, 'error', error);
-
-                }
-
-
-            }
-
         );
         
         router.post(

@@ -1,4 +1,4 @@
-import * as model from '../models/court.js';
+import * as model from '../db/models/court.js';
 import logger from './logger.js';
 import unidecode from 'unidecode';
 

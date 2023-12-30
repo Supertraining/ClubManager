@@ -50,12 +50,14 @@ export default class UsersController {
 	getByUserName = async (req, res) => {
 
 		try {
-			
+			console.log('HOLAAAAA HOLAAAAA')
 			if (req.headers.cookie) {
 				const usuario = await this.userServices
-				.getByUserName(req.headers.authorization);
+					.getByUserName(req.headers.authorization);
+				
 			usuario 
 				res.json(usuario)
+
 			} else {
 				res.json(false)
 			}

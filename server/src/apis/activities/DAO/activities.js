@@ -1,4 +1,4 @@
-import * as model from "../../../models/activity.js";
+import * as model from "../../../db/models/activity.js";
 import logger from "../../../utils/logger.js";
 
 let instance = null;

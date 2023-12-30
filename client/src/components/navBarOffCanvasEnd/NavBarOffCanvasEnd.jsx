@@ -194,7 +194,6 @@ NavBarOffCanvasEnd.propTypes = {
         initialTime: PropTypes.number.isRequired,
         permanent: PropTypes.bool.isRequired,
         weekday: PropTypes.string.isRequired,
-        telefono: PropTypes.string.isRequired,
       })
     ),
     telefono: PropTypes.string.isRequired,

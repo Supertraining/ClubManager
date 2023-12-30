@@ -1,5 +1,5 @@
 import UsersDAO from "../DAO/users.js";
-import { emailNewUserNotification, emailUpdatePasswordNotification } from "../../../utils/emailNotifications.js";
+import { emailNewUserNotification, emailUpdatePasswordNotification } from "../../../utils/emailNotifications.Utils.js";
 import logger from "../../../utils/logger.js";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';

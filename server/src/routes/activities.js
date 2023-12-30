@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import ActivityControllers from '../apis/activities/controllers/activities.js';
-import { validate } from './middlewares/dataValidator.js';
+import { validate } from '../middlewares/dataValidator.js';
 
 const router = Router();
 export default class ActivityRouter {
