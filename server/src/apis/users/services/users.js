@@ -4,6 +4,7 @@ import logger from "../../../utils/logger.js";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { secretKey } from "../../../config/config.js";
+import createError from '../../../utils/createError.Utils.js'
 
 export default class UsersServices {
 
@@ -17,7 +18,10 @@ export default class UsersServices {
 
             const checkUser = await this.getByUserName(data.username);
 
-            if (checkUser) return false;
+            if (checkUser) {
+                let error = createError(400, 'El usuario ya esta registrado');
+                throw (error)
+            };
 
             const newUser = await this.DAO
                 .register(
@@ -31,12 +35,12 @@ export default class UsersServices {
 
                 );
             newUser && emailNewUserNotification(data.username, data);
-            return newUser;
 
+            return newUser;
 
         } catch (error) {
 
-            logger.error(error);
+            throw (error);
 
         }
 
@@ -46,21 +50,19 @@ export default class UsersServices {
         try {
 
             const user = await this.getByUserName(data.username);
-            if (!user)
-                return { message: 'user not found', user: user };
 
             const isPasswordCorrect = await bcrypt.compare(data.password, user.password);
-            if (!isPasswordCorrect)
-                return { message: 'Wrong password or username', pass: isPasswordCorrect, user: user.username };
+            if (!isPasswordCorrect) {
+                let error = createError(404, 'Contraseña incorrecta');
+                throw error;
+            };
 
             const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin }, secretKey, { expiresIn: '1h' });
 
             return { user: user, token: token };
 
         } catch (error) {
-
-            logger.error(error);
-
+            throw (error);
         }
     };
     async getByUserName(username) {
@@ -71,16 +73,15 @@ export default class UsersServices {
                 .getByUserName(username);
 
             if (!user) {
-
-                return null
-
+                let error = createError(404, 'El usuario no existe');
+                throw error;
             }
 
             return user;
 
         } catch (error) {
 
-            logger.error(error);
+            throw (error);
 
         }
 
@@ -90,24 +91,24 @@ export default class UsersServices {
 
         try {
 
-            const data = await this.DAO
+            const isDeleted = await this.DAO
                 .deleteById(id);
 
-            if (data.deletedCount === 0) {
-
-                logger.info(`El Usuario con el Id: ${id} no existe`);
-
-                return false
-
+            if (isDeleted.deletedCount === 0) {
+                let error = createError(404, 'El usuario no existe');
+                throw error;
             }
-
-            logger.info('Usuario eliminado con exito');
 
             return true
 
-        } catch (err) {
+        } catch (error) {
 
-            logger.error(err);
+            if (error.kind === 'ObjectId') {
+                let error = createError(400, 'Id incorrecta')
+                throw error
+            }
+
+            throw (error)
 
         }
 
@@ -120,19 +121,11 @@ export default class UsersServices {
             const data = await this.DAO
                 .getAllUsers();
 
-            if (data.length === 0) {
-
-                logger.info('No hay usuarios registrados');
-
-                return data
-
-            }
-
             return data;
 
-        } catch (err) {
+        } catch (error) {
 
-            logger.error(err);
+            throw (error)
 
         }
 
@@ -141,22 +134,24 @@ export default class UsersServices {
     async getById(id) {
 
         try {
-            const data = await this.DAO
+            const user = await this.DAO
                 .getById(id);
 
-            if (!data) {
-
-                logger.info(`El usuario con el Id: ${id} no existe`);
-
-                return null
-
+            if (!user) {
+                let error = createError(404, 'El usuario no existe');
+                throw error;
             }
 
-            return data
+            return user
         }
-        catch (err) {
+        catch (error) {
 
-            logger.error(err);
+            if (error.kind === 'ObjectId') {
+                let error = createError(400, 'Id incorrecta')
+                throw error
+            }
+
+            throw (error)
 
         }
     }
@@ -165,23 +160,37 @@ export default class UsersServices {
 
         try {
 
-            const updateUser = await this.DAO
+            const passwordUpdated = await this.DAO
                 .updateUserPassword({
                     ...data,
                     password: bcrypt.hashSync(data.password,
                         bcrypt.genSaltSync(10))
                 });
 
-            if (updateUser)
-                emailUpdatePasswordNotification(data);
+            if (passwordUpdated.matchedCount === 0) {
+
+                let error = createError(404, `Usuario con el Id: ${id} no encontrado`);
+
+                throw error
+
+            }
+            if (passwordUpdated.modifiedCount === 0 && passwordUpdated.matchedCount === 1) {
+
+                let error = createError(400, `Usuario con el Id: ${id} no ha sido modificado`);
+
+                throw error
+
+            }
+
+            emailUpdatePasswordNotification(data);
             const updatedUser = await this.DAO
                 .getById(data._id);
 
             return updatedUser
 
-        } catch (err) {
+        } catch (error) {
 
-            logger.error(err);
+            throw (error)
 
         }
 
@@ -190,17 +199,32 @@ export default class UsersServices {
 
         try {
 
-            const updateUser = await this.DAO
+            const userUpdated = await this.DAO
                 .updateUser(id, data);
+
+            if (userUpdated.matchedCount === 0) {
+
+                let error = createError(404, `Usuario con el Id: ${id} no encontrado`);
+
+                throw error
+
+            }
+            if (userUpdated.modifiedCount === 0 && userUpdated.matchedCount === 1) {
+
+                let error = createError(400, `Usuario con el Id: ${id} no ha sido modificado`);
+
+                throw error
+
+            }
 
             const updatedUser = await this.DAO
                 .getById(id);
 
             return updatedUser
 
-        } catch (err) {
+        } catch (error) {
 
-            logger.error(err);
+            throw (error)
 
         }
 
@@ -208,14 +232,21 @@ export default class UsersServices {
     async updateUserReserves(username, reserveData) {
 
         try {
-            const updateUser = await this.DAO
+            const reserveUpdated = await this.DAO
                 .updateUserReserves(username, reserveData);
 
-            if (updateUser.matchedCount === 0) {
+            if (reserveUpdated.matchedCount === 0) {
 
-                logger.info(`El usuario con el Id: ${id} no encontrado`);
+                let error = createError(404, `Usuario con el Id: ${id} no encontrado`);
 
-                return null;
+                throw error
+
+            }
+            if (reserveUpdated.modifiedCount === 0 && reserveUpdated.matchedCount === 1) {
+
+                let error = createError(400, `Usuario con el Id: ${id} no ha sido modificado`);
+
+                throw error
 
             }
 
@@ -224,9 +255,9 @@ export default class UsersServices {
 
             return updatedUser;
 
-        } catch (err) {
+        } catch (error) {
 
-            logger.error(err);
+            throw (error)
 
         }
 
@@ -236,13 +267,28 @@ export default class UsersServices {
 
         try {
 
-            let deletedReserve = await this.DAO.
+            let reserveDeleted = await this.DAO.
                 deleteReserveById(username, reserveId);
 
-            return deletedReserve;
+            if (reserveDeleted.matchedCount === 0) {
+
+                let error = createError(404, `La reserva con el Id: ${reserveId} no encontrada`);
+
+                throw error
+
+            }
+            if (reserveDeleted.modifiedCount === 0 && reserveDeleted.matchedCount === 1) {
+
+                let error = createError(400, `La reserva con el Id: ${reserveId} no ha sido modificado`);
+
+                throw error
+
+            }
+
+            return reserveDeleted;
 
         } catch (error) {
-
+            throw error
         }
     }
 

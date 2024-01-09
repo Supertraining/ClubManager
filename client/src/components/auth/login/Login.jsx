@@ -22,12 +22,14 @@ const Login = () => {
       dispatch({ type: 'LOGIN_START' });
 
       const res = await axios.post('/users/login', data);
-
+    
       dispatch({ type: 'LOGIN_SUCCESS', payload: res.data });
 
       navigate('/');
     } catch (error) {
-      dispatch({ type: 'LOGIN_FAILURE', payload: error });
+
+      dispatch({ type: 'LOGIN_FAILURE', payload: error.response.data });
+
     }
   };
 
@@ -84,7 +86,7 @@ const Login = () => {
             Iniciar sesión
           </button>
 
-          { error && <div className='text-danger p-1 m-1'>Error en Usuario o Contraseña</div> }
+          { error && <div className='text-danger p-1 m-1'>{ error }</div> }
         </div>
       </form>
 

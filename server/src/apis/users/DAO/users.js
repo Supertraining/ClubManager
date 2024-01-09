@@ -1,5 +1,6 @@
 import * as model from '../../../db/models/user.js';
 import logger from '../../../utils/logger.js';
+import createError from '../../../utils/createError.Utils.js';
 
 let instance = null;
 
@@ -15,7 +16,7 @@ export default class UsersDAO {
 
     } catch (error) {
 
-      throw(error)
+      throw (error)
 
     }
 
@@ -24,21 +25,15 @@ export default class UsersDAO {
   async getByUserName(username) {
 
     try {
-
-      let data = await model
+      const user = await model
         .usermodel
         .findOne({ username: username });
-      
-      if (!data) {
-        let error = createError(404, 'User not found');
-        throw error;
-      }
 
-      return data;
+      return user;
 
     } catch (error) {
 
-      throw(error)
+      throw (error)
 
     }
 
@@ -48,15 +43,15 @@ export default class UsersDAO {
 
     try {
 
-      const data = await model
+      const isDeleted = await model
         .usermodel
         .deleteOne({ _id: id });
 
-      return data;
+      return isDeleted;
 
     } catch (error) {
 
-      throw(error)
+      throw (error)
 
     }
 
@@ -74,7 +69,7 @@ export default class UsersDAO {
 
     } catch (error) {
 
-      throw(error)
+      throw (error)
 
     }
 
@@ -84,15 +79,20 @@ export default class UsersDAO {
 
     try {
 
-      const data = await model
+      const user = await model
         .usermodel
         .findById(id);
 
-      return data;
+      return user;
 
     } catch (error) {
 
-      throw(error)
+      if (error.kind === 'ObjectId') {
+        let error = createError(400, 'Id incorrecta')
+        throw error
+    }
+
+      throw (error)
 
     }
   }
@@ -101,15 +101,14 @@ export default class UsersDAO {
 
     try {
 
-      const updatedUser = await model
+      const passwordUpdated = await model
         .usermodel
         .updateOne({ _id: data._id }, { $set: data });
-
-      return updatedUser;
+      return passwordUpdated;
 
     } catch (error) {
 
-      throw(error)
+      throw (error)
 
     }
 
@@ -126,7 +125,12 @@ export default class UsersDAO {
 
     } catch (error) {
 
-      throw(error)
+      if (error.kind === 'ObjectId') {
+        let error = createError(400, 'Id incorrecta')
+        throw error
+      }
+
+      throw (error)
 
     }
 
@@ -135,7 +139,7 @@ export default class UsersDAO {
 
     try {
 
-      let data = await model
+      let reserveUpdated = await model
         .usermodel
         .updateOne(
           {
@@ -150,12 +154,12 @@ export default class UsersDAO {
             }
           }
         );
-
-      return data;
+         
+      return reserveUpdated;
 
     } catch (error) {
 
-      throw(error)
+      throw (error)
 
     }
 
@@ -165,7 +169,7 @@ export default class UsersDAO {
 
     try {
 
-      let data = await model
+      let reserveDeleted = await model
         .usermodel
         .updateOne(
           {
@@ -180,12 +184,11 @@ export default class UsersDAO {
             }
           }
         );
-
-      return data;
+      return reserveDeleted;
 
     } catch (error) {
 
-      throw(error)
+      throw (error)
 
     }
   }
@@ -199,6 +202,7 @@ export default class UsersDAO {
 
         logger.info('Se ha creado una instancia de UsersDAO');
 
+        return instance;
       }
 
       logger.info('Se ha utilizado una instancia ya creada de usersDAO');
@@ -207,7 +211,7 @@ export default class UsersDAO {
 
     } catch (error) {
 
-      throw(error)
+      throw (error)
 
     }
 

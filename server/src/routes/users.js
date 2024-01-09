@@ -27,14 +27,6 @@ export default class UserRouter {
 
         );
 
-        router.get(
-            '/faillogin',
-
-
-            this.controllers
-                .failLogin
-
-        );
 
         router.get(
 

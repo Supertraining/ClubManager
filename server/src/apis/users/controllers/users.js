@@ -9,7 +9,7 @@ export default class UsersController {
 
 	}
 
-	register = async (req, res) => {
+	register = async (req, res, next) => {
 		try {
 
 			const newUser = await this.userServices.register(req.body)
@@ -20,42 +20,36 @@ export default class UsersController {
 
 		} catch (error) {
 
-			routeLogger(req, 'error', error);
+			next(error)
 
 		}
 	};
-	login = async (req, res) => {
+	login = async (req, res, next) => {
 		try {
+
 			const response = await this.userServices.login(req.body)
-			const { user, pass, ...errorResponse } = response
-
-			if (!response.user)
-				return res.status(404).send(errorResponse);
-
-			if (response?.pass === false && response.user)
-				return res.status(404).send(errorResponse);
 
 			const { password, isAdmin, ...otherDetails } = response?.user._doc;
 
-			res.cookie('access_token', response.token, { httpOnly: true, sameSite: 'none', secure: true})
+			res.cookie('access_token', response.token, { httpOnly: true, sameSite: 'none', secure: true })
 				.status(200)
 				.json({ ...{ ...otherDetails }, isAdmin });
 
 		} catch (error) {
 
-			routeLogger(req, 'error', error);
+			next(error)
 
 		}
 	};
-	getByUserName = async (req, res) => {
+	getByUserName = async (req, res, next) => {
 
 		try {
-			console.log('HOLAAAAA HOLAAAAA')
+
 			if (req.headers.cookie) {
 				const usuario = await this.userServices
 					.getByUserName(req.headers.authorization);
-				
-			usuario 
+
+				usuario
 				res.json(usuario)
 
 			} else {
@@ -64,48 +58,30 @@ export default class UsersController {
 
 		} catch (error) {
 
-			routeLogger(req, 'error', error);
+			next(error)
 
 		}
 
 	}
 
-	failLogin = (req, res) => {
+	deleteById = async (req, res, next) => {
 
 		try {
 
-			res.status(404).end();
-
-		} catch (error) {
-
-			routeLogger(req, 'error', error);
-
-		}
-
-	}
-
-	deleteById = async (req, res) => {
-
-		try {
-
-			const deletedUser = await this.userServices
+			const isUserDeleted = await this.userServices
 				.deleteById(req.params.id);
 
-			deletedUser
-
-				? res.status(200).json(deletedUser)
-
-				: res.status(404).json(deletedUser);
+			res.status(200).json(isUserDeleted)
 
 		} catch (error) {
 
-			routeLogger(req, 'error', error);
+			next(error)
 
 		}
 
 	}
 
-	getAllUsers = async (req, res) => {
+	getAllUsers = async (req, res, next) => {
 
 		try {
 
@@ -116,35 +92,30 @@ export default class UsersController {
 
 		} catch (error) {
 
-			routeLogger(req, 'error', error);
+			next(error)
 
 		}
 
 	}
 
-	getById = async (req, res) => {
+	getById = async (req, res, next) => {
 
 		try {
 
 			const user = await this.userServices
 				.getById(req.params.id);
 
-			user
-
-				? res.json(user)
-
-				: res.status(404).json(user);
-
+			res.json(user)
 
 		} catch (error) {
 
-			routeLogger(req, 'error', error);;
+			next(error);
 
 		}
 
 	}
 
-	updateUserPassword = async (req, res) => {
+	updateUserPassword = async (req, res, next) => {
 
 		try {
 
@@ -159,34 +130,30 @@ export default class UsersController {
 
 		} catch (error) {
 
-			routeLogger(req, 'error', error);
+			next(error)
 
 		}
 
 	}
 
-	updateUser = async (req, res) => {
+	updateUser = async (req, res, next) => {
 
 		try {
 
 			const updatedUser = await this.userServices
 				.updateUser(req.params.id, req.body);
 
-			updatedUser
-
-				? res.json(updatedUser)
-
-				: res.status(404).json(updatedUser);
+			res.json(updatedUser)
 
 		} catch (error) {
 
-			routeLogger(req, 'error', error);
+			next(error)
 
 		}
 
 	}
 
-	updateUserReserves = async (req, res) => {
+	updateUserReserves = async (req, res, next) => {
 
 		try {
 
@@ -195,19 +162,17 @@ export default class UsersController {
 
 			updatedUser
 
-				? res.json(updatedUser)
-
-				: res.status(404).json(false);
+			res.json(updatedUser)
 
 		} catch (error) {
 
-			routeLogger(req, 'error', error);
+			next(error)
 
 		}
 
 	}
 
-	deleteReserveById = async (req, res) => {
+	deleteReserveById = async (req, res, next) => {
 
 		try {
 
@@ -218,7 +183,7 @@ export default class UsersController {
 
 		} catch (error) {
 
-			routeLogger(req, 'error', error);
+			next(error)
 
 		}
 	}

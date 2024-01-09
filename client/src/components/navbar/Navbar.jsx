@@ -177,6 +177,7 @@ const Navbar = () => {
 
       setShowChangePasswordForm(false);
     } catch (error) {
+      console.log(error)
       notifyWrongPassword();
     }
   };

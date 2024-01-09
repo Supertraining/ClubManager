@@ -7,7 +7,7 @@ import { isStrongPassword } from 'validator';
 import { useForm } from 'react-hook-form';
 
 const Register = () => {
-  console.log('render')
+  
   const { loading, error, dispatch } = useContext(AuthContext);
   const [ welcomeMessage, setWelcomeMessage ] = useState(false)
 
@@ -49,7 +49,7 @@ const Register = () => {
 
     } catch (error) {
 
-      dispatch({ type: 'LOGIN_FAILURE', payload: error });
+      dispatch({ type: 'LOGIN_FAILURE', payload: error.response.data });
 
     }
 
@@ -268,7 +268,7 @@ const Register = () => {
 
 
       { error && <div className='text-danger p-1 m-1'>
-        Ha ocurrido un error, por favor vuelva a intentarlo
+        {error}
       </div> }
 
       { welcomeMessage &&

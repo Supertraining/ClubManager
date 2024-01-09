@@ -1,4 +1,5 @@
 import winston, { format } from 'winston';
+import chalk from 'chalk';
 
 const { combine, prettyPrint, timestamp, errors } = winston.format;
 
@@ -62,6 +63,7 @@ export const errorLogger = async (err, additionalInfo) => {
 
 		if (!additionalInfo) {
 			logger.error(err.stack);
+			
 			return;
 		}
 

@@ -189,7 +189,7 @@ const Booking = ({ setCourt, court }) => {
     }
 
   }
-  console.log('render')
+ 
   useEffect(() => {
     reFetch()
     setReserveDeleted(false)
