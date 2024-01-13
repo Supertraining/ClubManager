@@ -2,16 +2,17 @@ import React, { useState, useEffect, useContext } from 'react';
 import 'react-date-time-picker-popup/dist/index.css';
 import axios from '../../utils/axiosInstance.js';
 import useFetch from '../../hooks/useFetch';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './booking.css';
 import { AuthContext } from '../context/AuthContext';
 import { v4 as uuidv4 } from 'uuid';
-import CourtBookingBoard from '../courtBookingBoard/CourtBookingBoard';
+import CourtBookingBoard from './courtBookingBoard/CourtBookingBoard.jsx';
 import { ReserveBoardContext } from '../context/ReserveBoardUpdate';
 import unidecode from 'unidecode';
-import CourtBookingDatePicker from '../courtBookingDatePicker/CourtBookingDatePicker';
+import CourtBookingDatePicker from './courtBookingDatePicker/CourtBookingDatePicker.jsx';
 import PropTypes from 'prop-types';
+import useNotifications from '../../hooks/useNotifications.jsx';
 
 const Booking = ({ court }) => {
 
@@ -24,14 +25,7 @@ const Booking = ({ court }) => {
 
   const { user } = useContext(AuthContext);
   const { reserveDeleted, setReserveDeleted } = useContext(ReserveBoardContext);
-
-  const notifyFail = () => toast('HORARIO NO DISPONIBLE', { autoClose: 2000 });
-  const notifySuccess = () =>
-    toast.success('Reserva Confirmada', {
-      position: 'bottom-right',
-      autoClose: 1000,
-      theme: 'dark',
-    });
+  const { notify, notifySuccess, notifyWarning} = useNotifications();
 
   const handleBooking = async (selectedDay) => {
     try {
@@ -120,14 +114,14 @@ const Booking = ({ court }) => {
           permanent: false,
         });
 
-        notifySuccess();
+        notifySuccess('Reserva Confirmada');
       } else {
-        notifyFail();
+        notify('Horario no disponible');
       }
 
       reFetch();
     } catch (error) {
-      console.log(error);
+      notifyWarning('Hubo un problema, por favor intente nuevamente mas tarde');
     }
   };
 

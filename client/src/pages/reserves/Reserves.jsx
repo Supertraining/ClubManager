@@ -1,9 +1,9 @@
-import Football from "../../components/football/Football"
-import Paleta from '../../components/pelotaPaleta/Paleta'
-import Paddle from '../../components/paddle/Paddle'
-import Squash from '../../components/squash/Squash'
+import Football from "../../components/courts/football/Football"
+import Paleta from '../../components/courts/pelotaPaleta/Paleta'
+import Paddle from '../../components/courts/paddle/Paddle'
+import Squash from '../../components/courts/squash/Squash'
 import { useNavigate, useLocation } from "react-router-dom"
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect } from "react"
 import { AuthContext } from "../../components/context/AuthContext"
 
 

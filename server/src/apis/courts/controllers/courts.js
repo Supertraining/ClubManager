@@ -6,7 +6,7 @@ export default class CourtsControllers {
         this.courtsService = new CourtServices()
     }
 
-    save = async (req, res) => {
+    save = async (req, res, next) => {
 
         try {
 
@@ -17,12 +17,12 @@ export default class CourtsControllers {
 
         } catch (error) {
 
-            routeLogger(req, 'error', error);
+            next(error)
 
         }
     }
 
-    getAll = async (req, res) => {
+    getAll = async (req, res, next) => {
 
         try {
 
@@ -33,42 +33,42 @@ export default class CourtsControllers {
 
         } catch (error) {
 
-            routeLogger(req, 'error', error);
+            next(error)
 
         }
     }
 
-    deleteCourtById = async (req, res) => {
+    deleteCourtById = async (req, res, next) => {
         try {
 
             let data = await this.courtsService
                 .deleteCourtById(req.params.id);
             data.deletedCount > 0
-            ? res.json(true)
-            : res.json(false)
-            
-            
+                ? res.json(true)
+                : res.json(false)
+
+
         } catch (error) {
 
-            routeLogger(req, 'error', error);
-            
+            next(error)
+
         }
     }
 
-    getUnavailableDatesByName = async (req, res) => {
- 
+    getUnavailableDatesByName = async (req, res, next) => {
+
         try {
             let data = await this.courtsService.getUnavailableDatesByName(req.params.name);
             res.json(data);
         } catch (error) {
-            routeLogger(req, 'error', error);
+            next(error)
         }
     }
 
-    reserveDate = async (req, res) => {
-        
+    reserveDate = async (req, res, next) => {
+
         try {
-        
+
             let data = await this.courtsService
                 .reserveDate(req.body);
 
@@ -76,68 +76,68 @@ export default class CourtsControllers {
 
         } catch (error) {
 
-            routeLogger(req, 'error', error);
+            next(error)
 
         }
     }
 
-    deleteReserveById = async (req, res) => {
+    deleteReserveById = async (req, res, next) => {
         try {
-            
-             let data = await this.courtsService
+
+            let data = await this.courtsService
                 .deleteReserveById(req.body.courtName, req.body.reserveDay, req.body.reserveId);
-            
+
             res.json(data);
-            
+
         } catch (error) {
 
-            routeLogger(req, 'error', error);
-            
+            next(error)
+
         }
-       
+
     }
 
-    deleteUserReserves = async (req, res) => {
+    deleteUserReserves = async (req, res, next) => {
         try {
 
             let data = await this.courtsService
                 .deleteUserReserves(req.body);
-            
+
             res.json(data);
-            
+
         } catch (error) {
 
-            routeLogger(req, 'error', error);
+            next(error)
 
         }
     }
-    deleteOldReserves = async (req, res) => {
+    deleteOldReserves = async (req, res, next) => {
         try {
 
             let data = await this.courtsService
                 .deleteOldReserves();
-            
+
             res.json(data);
-            
+
         } catch (error) {
 
-            routeLogger(req, 'error', error);
+            next(error)
 
         }
     }
 
-    updateReservesUser = async (req, res) => {
+    updateReservesUser = async (req, res, next) => {
         try {
-          
-            let data = await this.courtsService
+
+            const reserveUpdated = await this.courtsService
                 .updateReservesUser(req.body);
-            
-            res.json(data);
-            
+
+            res.json(reserveUpdated);
+
         } catch (error) {
 
-            routeLogger(req, 'error', error);
-            
+            next(error)
+
         }
 
     }

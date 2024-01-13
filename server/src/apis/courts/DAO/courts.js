@@ -17,7 +17,7 @@ export default class CourtsDAO {
 
         } catch (error) {
 
-            logger.error(error);
+            throw (error)
 
         }
 
@@ -35,7 +35,7 @@ export default class CourtsDAO {
 
         } catch (error) {
 
-            logger.error(error);
+            throw (error)
 
         }
     }
@@ -51,7 +51,7 @@ export default class CourtsDAO {
 
         } catch (error) {
 
-            logger.error(error);
+            throw (error)
 
         }
     }
@@ -74,7 +74,7 @@ export default class CourtsDAO {
 
         } catch (error) {
 
-            logger.error(error);
+            throw (error)
 
         }
 
@@ -103,7 +103,7 @@ export default class CourtsDAO {
             return data;
 
         } catch (error) {
-            logger.error(error);
+            throw (error)
         }
     }
 
@@ -121,7 +121,7 @@ export default class CourtsDAO {
 
         } catch (error) {
 
-            logger.error(error);
+            throw (error)
 
         }
 
@@ -166,7 +166,7 @@ export default class CourtsDAO {
 
             }
         } catch (error) {
-            logger.error(error);
+            throw (error)
         }
     }
     deleteUserReserves = async (user) => {
@@ -189,41 +189,45 @@ export default class CourtsDAO {
                 );
 
                 logger.info(result.modifiedCount + ' reserves deleted from ' + court.name);
+
+                return result;
             }
 
         } catch (error) {
-            logger.error(error);
+            throw (error)
         }
     }
 
     updateReservesUser = async (user) => {
-
         try {
-
             const courts = await model.courtModel.find();
+            let reserveUpdated = false; 
+
             for (const court of courts) {
                 for (const [ dayOfWeek, reserves ] of Object.entries(court.unavailableDates)) {
-
-                    court.unavailableDates[ dayOfWeek ].forEach(async (reserve) => {
+                    for (const reserve of reserves) {
                         if (reserve.user == user.user) {
-
-                            await model.courtModel.updateOne(
+                            const result = await model.courtModel.updateOne(
                                 { _id: court._id },
                                 { $set: { [ `unavailableDates.${dayOfWeek}.$[elem].user` ]: user.newUser } },
                                 { arrayFilters: [ { "elem.user": user.user } ] }
                             );
-
+                               
+                            if (result.modifiedCount > 0) {
+                                reserveUpdated = true; 
+                            }
                         }
-                    })
-
+                    }
                 }
-
             }
 
+            return reserveUpdated; 
+
         } catch (error) {
-            logger.error(error);
+            throw error; 
         }
-    }
+    };
+
 
     static getInstance() {
         try {
@@ -234,6 +238,7 @@ export default class CourtsDAO {
 
                 logger.info('Se ha creado una instancia de CourtsDAO');
 
+                return instance;
             }
 
             logger.info('Se ha utilizado una instancia ya creada de CourtsDAO');
@@ -242,7 +247,7 @@ export default class CourtsDAO {
 
         } catch (error) {
 
-            logger.error(error);
+            throw (error)
 
         }
     }

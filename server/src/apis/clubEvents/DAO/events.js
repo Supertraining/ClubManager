@@ -96,7 +96,7 @@ export default class EventDAO {
         instance = new EventDAO();
 
         logger.info('Se ha creado una instancia de EventDAO');
-
+        return instance;
       }
 
       logger.info('Se ha utilizado una instancia ya creada de EventDAO');

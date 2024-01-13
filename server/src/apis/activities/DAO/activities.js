@@ -74,6 +74,7 @@ export default class ActivityDAO {
 
         logger.info('Se ha creado una instancia de ActivityDAO');
 
+        return instance;
       }
 
       logger.info('Se ha utilizado una instancia ya creada de ActivityDAO');

@@ -9,7 +9,7 @@ export default class EventControllers {
 
   }
 
-  getAllEvents = async (req, res) => {
+  getAllEvents = async (req, res, next) => {
 
     try {
 
@@ -19,12 +19,12 @@ export default class EventControllers {
 
     } catch (error) {
 
-      routeLogger(req, 'error', error);
+      next(error)
 
     }
 
   }
-  getEventById = async (req, res) => {
+  getEventById = async (req, res, next) => {
 
     try {
 
@@ -34,13 +34,13 @@ export default class EventControllers {
 
     } catch (error) {
 
-      routeLogger(req, 'error', error);
+      next(error)
 
     }
 
   }
 
-  insertEvent = async (req, res) => {
+  insertEvent = async (req, res, next) => {
     try {
     
       const newEvent = await this.services.insertEvent(req.body)
@@ -49,13 +49,13 @@ export default class EventControllers {
 
     } catch (error) {
       
-      routeLogger(req, 'error', error);
+      next(error)
       
     }
 
   }
 
-  updateEvent = async (req, res) => {
+  updateEvent = async (req, res, next) => {
     try {
      
       const updatedEvent = await this.services.updateEvent(req.body);
@@ -64,12 +64,12 @@ export default class EventControllers {
       
     } catch (error) {
 
-      routeLogger(req, 'error', error);
+      next(error)
       
     }
   }
 
-  deleteEvent = async (req, res) => {
+  deleteEvent = async (req, res, next) => {
     
     try {
     
@@ -79,7 +79,7 @@ export default class EventControllers {
       
     } catch (error) {
 
-      routeLogger(req, 'error', error);
+      next(error)
       
     }
 

@@ -1,4 +1,4 @@
-import Booking from '../courtBooking/Booking';
+import Booking from '../../courtBooking/Booking';
 import './paleta.css';
 import PropTypes from 'prop-types';
 

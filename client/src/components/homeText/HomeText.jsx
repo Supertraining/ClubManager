@@ -1,4 +1,4 @@
-import ActividadesList from '../actividades/ActividadesList'
+import ActividadesList from '../activities/ActividadesList'
 import './homeText.css'
 
 

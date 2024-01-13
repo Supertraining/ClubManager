@@ -1,5 +1,5 @@
 .paddleContainer{
-  background-image: url('../../assets/paddle/paddle-min.webp');
+  background-image: url('../../../assets/paddle/paddle-min.webp');
   background-position: center;
   background-size: cover;
 }
