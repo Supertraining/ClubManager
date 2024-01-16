@@ -6,7 +6,6 @@ import { useEffect } from 'react';
 import PropTypes from 'prop-types'
 const GetAllUsers = ({ handleMenuClick, menu, allUsers, handleGetAllUsers, handleDeleteReserve, user, setUser, handleUpdateUser, handleDeleteUser, setConfirmDelete, confirmDelete }) => {
 
-
   useEffect(() => {
     handleGetAllUsers()
   }, [ handleGetAllUsers ])

@@ -52,6 +52,7 @@ export const validate = {
 
     handleValidationErrors
   ],
+
   userUpdate: [
     param('id').exists().trim().notEmpty(),
     body('username').exists().trim().notEmpty().isEmail().normalizeEmail().optional().optional()
@@ -69,6 +70,7 @@ export const validate = {
 
     handleValidationErrors
   ],
+
   userUpdatePassword: [
     body('password').exists().trim().notEmpty()
   ],
@@ -79,6 +81,7 @@ export const validate = {
 
     handleValidationErrors
   ],
+  
   activity: [
     body('img').exists().trim().notEmpty(),
     body('imgText').exists().trim().notEmpty(),

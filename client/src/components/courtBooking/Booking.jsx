@@ -15,17 +15,16 @@ import PropTypes from 'prop-types';
 import useNotifications from '../../hooks/useNotifications.jsx';
 
 const Booking = ({ court }) => {
-
-  const [ day, setDay ] = useState(new Date());
-  const [ initialTime, setInitialTime ] = useState();
-  const [ finalTime, setFinalTime ] = useState();
-  const [ confirmReserve, setConfirmReserve ] = useState(false);
+  const [day, setDay] = useState(new Date());
+  const [initialTime, setInitialTime] = useState();
+  const [finalTime, setFinalTime] = useState();
+  const [confirmReserve, setConfirmReserve] = useState(false);
 
   let { data, reFetch } = useFetch(`/courts/${court}`);
 
   const { user } = useContext(AuthContext);
   const { reserveDeleted, setReserveDeleted } = useContext(ReserveBoardContext);
-  const { notify, notifySuccess, notifyWarning} = useNotifications();
+  const { notify, notifySuccess, notifyWarning } = useNotifications();
 
   const handleBooking = async (selectedDay) => {
     try {
@@ -59,19 +58,21 @@ const Booking = ({ court }) => {
       //!La duración maxima de un turno es de 1 hora 30 minutos
 
       const reservedDates =
-        reserveData?.some((reserve) =>
-          initialTime === finalTime ||
-          (initialTime === reserve.initialTime && finalTime === reserve.finalTime) ||
-          initialTime === reserve.initialTime + 1800000 ||
-          initialTime === reserve.initialTime - 1800000 ||
-          initialTime === reserve.finalTime - 1800000 ||
-          finalTime === initialTime + 1800000 ||
-          finalTime < initialTime ||
-          finalTime === reserve.finalTime + 1800000 ||
-          finalTime === reserve.finalTime - 1800000 ||
-          finalTime > initialTime + 5400000 ||
-          new Date(initialTime).getDate() < new Date().getDate() ||
-          new Date(finalTime).getDate() < new Date().getDate()) ||
+        reserveData?.some(
+          (reserve) =>
+            initialTime === finalTime ||
+            (initialTime === reserve.initialTime && finalTime === reserve.finalTime) ||
+            initialTime === reserve.initialTime + 1800000 ||
+            initialTime === reserve.initialTime - 1800000 ||
+            initialTime === reserve.finalTime - 1800000 ||
+            finalTime === initialTime + 1800000 ||
+            finalTime < initialTime ||
+            finalTime === reserve.finalTime + 1800000 ||
+            finalTime === reserve.finalTime - 1800000 ||
+            finalTime > initialTime + 5400000 ||
+            new Date(initialTime).getDate() < new Date().getDate() ||
+            new Date(finalTime).getDate() < new Date().getDate()
+        ) ||
         new Date(initialTime).getTime() <= Date.now() ||
         new Date(finalTime).getTime() <= Date.now() ||
         new Date(initialTime).toLocaleTimeString() === '0:00:00' ||
@@ -115,11 +116,13 @@ const Booking = ({ court }) => {
         });
 
         notifySuccess('Reserva Confirmada');
+        
       } else {
         notify('Horario no disponible');
       }
 
       reFetch();
+
     } catch (error) {
       notifyWarning('Hubo un problema, por favor intente nuevamente mas tarde');
     }
@@ -128,7 +131,7 @@ const Booking = ({ court }) => {
   useEffect(() => {
     reFetch();
     setReserveDeleted(false);
-  }, [ reserveDeleted ]);
+  }, [reserveDeleted]);
 
   const startDate = new Date();
   const endDate = new Date();
@@ -153,18 +156,15 @@ const Booking = ({ court }) => {
   }
 
   return (
-
     <>
-
       <div className='calendarContainer d-flex flex-column col-12'>
-
         <div className='d-flex flex-column border rounded bg-dark bg-opacity-50 reserveInstructionsWrapper'>
           <div className='d-flex align-items-center flex-wrap justify-content-center p-3 m-3 bg-dark'>
             <ul className='p-2 rounded m-0 text-center shadow fw-bold bg-light m-1'>
               <li>
-                { ' ' }
-                1 .Selecciona en el calendario la fecha y la hora de inicio de tu reserva y
-                presiona el botón
+                {' '}
+                1 .Selecciona en el calendario la fecha y la hora de inicio de tu reserva y presiona
+                el botón
                 <i className='text-success'> Confirmar hora de inicio</i>
               </li>
 
@@ -182,34 +182,33 @@ const Booking = ({ court }) => {
         </div>
 
         <CourtBookingDatePicker
-          setInitialTime={ setInitialTime }
-          initialTime={ initialTime }
-          setFinalTime={ setFinalTime }
-          finalTime={ finalTime }
-          setConfirmReserve={ setConfirmReserve }
-          confirmReserve={ confirmReserve }
-          handleBooking={ handleBooking }
-          setDay={ setDay }
-          day={ day }
+          setInitialTime={setInitialTime}
+          initialTime={initialTime}
+          setFinalTime={setFinalTime}
+          finalTime={finalTime}
+          setConfirmReserve={setConfirmReserve}
+          confirmReserve={confirmReserve}
+          handleBooking={handleBooking}
+          setDay={setDay}
+          day={day}
         />
 
         <div>
           <ToastContainer />
         </div>
-
       </div>
 
       <CourtBookingBoard
-        data={ data }
-        dateList={ dateList }
-        dateListLc={ dateListLc }
-        weekDaysList={ weekDaysList }
+        data={data}
+        dateList={dateList}
+        dateListLc={dateListLc}
+        weekDaysList={weekDaysList}
       />
     </>
   );
 };
 
 Booking.propTypes = {
-  court: PropTypes.string
-}
+  court: PropTypes.string,
+};
 export default Booking;

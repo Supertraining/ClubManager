@@ -11,7 +11,7 @@ export default class ActivityDAO {
         .create(activityData);
       return activity;
     } catch (error) {
-      logger.error(error);
+      throw(error)
     }
   }
   getAll = async () => {
@@ -21,7 +21,7 @@ export default class ActivityDAO {
         .find();
       return activity;
     } catch (error) {
-      logger.error(error);
+      throw(error)
     }
   }
   getById = async (id) => {
@@ -29,7 +29,7 @@ export default class ActivityDAO {
       const activity = await model.activityModel.findOne({ _id: id });
       return activity;
     } catch (error) {
-      logger.error(error);
+      throw(error)
     }
   }
   update = async (data) => {
@@ -40,7 +40,7 @@ export default class ActivityDAO {
         .findByIdAndUpdate(data.id, { ...data });
       return activity;
     } catch (error) {
-      logger.error(error);
+      throw(error)
     }
   }
   delete = async (id) => {
@@ -51,7 +51,7 @@ export default class ActivityDAO {
       return activity;
 
     } catch (error) {
-      logger.error(error);
+      throw(error)
     }
   }
   deleteAll = async () => {
@@ -62,7 +62,7 @@ export default class ActivityDAO {
       return activity;
 
     } catch (error) {
-      logger.error(error);
+      throw(error)
     }
   }
   static getInstance() {

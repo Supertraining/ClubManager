@@ -31,8 +31,8 @@ const Login = () => {
       }
       
     } catch (error) {
-
-      dispatch({ type: 'LOGIN_FAILURE', payload: error })
+    
+      dispatch({ type: 'LOGIN_FAILURE', payload: error.response.data });
 
     }
   }
@@ -148,7 +148,7 @@ const Login = () => {
                 </button>
                 { error && (
                   <div className="text-danger p-1 m-1">
-                    Error en Usuario o Contraseña
+                    {error}
                   </div>
                 ) }
               </div>

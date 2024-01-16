@@ -6,7 +6,6 @@ import GetAllUsers from '../../components/user/getAllUsers/GetAllUsers'
 import { useContext, useState } from 'react';
 import axios from '../../utils/axiosInstance.js'
 import OldReservesDeleted from '../../components/oldReservesDeleted/OldReservesDeleted';
-import { toast } from 'react-toastify';
 import Main from '../../components/main/Main';
 import GetAllCourts from '../../components/courts/getAllCourts/GetAllCourts';
 import { AuthContext } from '../../components/context/AuthContext';
@@ -17,12 +16,15 @@ import Activities from '../../components/activities/Activities';
 import GetAllActivities from '../../components/activities/GetAllActivities';
 import UpdateActivities from '../../components/activities/UpdateActivities';
 import { useCallback } from 'react';
+import useNotifications from '../../hooks/useNotifications.jsx';
 
 
 
 const Home = () => {
 
   const auth = useContext(AuthContext);
+
+  const { notifySuccess, notifyWarning} = useNotifications();
 
   const menuFeatures = {
     createUser: false,
@@ -46,8 +48,6 @@ const Home = () => {
 
   const navigate = useNavigate();
 
-  const notifyTryAgainLater = () => toast.warn("Hubo un problema, por favor intente nuevamente mas tarde", { position: 'bottom-right', autoClose: 2000, theme: 'dark' });
-
   const handleMenuClick = useCallback((option) => {
     setMenu({
       createUser: false,
@@ -65,7 +65,7 @@ const Home = () => {
   const handleGetAllUsers = useCallback(async () => {
 
     try {
-
+      
       const { data: allUsers } = await axios.get('/users/getAll');
 
       allUsers.sort((a, b) => {
@@ -83,14 +83,12 @@ const Home = () => {
 
     } catch (error) {
 
-      notifyTryAgainLater();
-      console.log(error);
+      notifyWarning("Ha ocurrido un problema, por favor intente nuevamente mas tarde")();
 
     }
 
   }, [ setAllUsers ]);
 
-  const notifyDeletedReserve = () => toast.error("Reserva Eliminada", { position: 'bottom-right', autoClose: 1000, theme: 'dark' });
   const handleDeleteReserve = async (court, day, id, userid) => {
 
     try {
@@ -110,18 +108,16 @@ const Home = () => {
       const userById = await axios.get(`/users/user/${userid}`);
 
       setUser(userById.data)
-      notifyDeletedReserve();
+      notifySuccess('Reserva eliminada');
 
     } catch (error) {
-
-      console.log(error);
-      notifyTryAgainLater();
+      
+      notifyWarning("Ha ocurrido un problema, por favor intente nuevamente mas tarde")();
 
     }
 
   };
 
-  const notifyUserUpdated = () => toast.success("Usuario Actualizado", { position: 'bottom-right', autoClose: 1000, theme: 'dark' });
   const handleUpdateUser = async (e, credentials, id) => {
 
     try {
@@ -132,18 +128,16 @@ const Home = () => {
       const userById = await axios.get(`/users/user/${id}`);
 
       setUser(userById.data)
-      notifyUserUpdated();
+      notifySuccess('Usuario actualizado');
 
     } catch (error) {
 
-      console.log(error)
-      notifyTryAgainLater();
+      notifyWarning("Ha ocurrido un problema, por favor intente nuevamente mas tarde");
 
     }
 
   };
 
-  const notifyUserDeleted = () => toast.error("Usuario Eliminado", { position: 'bottom-right', autoClose: 1000, theme: 'dark' });
   const handleDeleteUser = async (user) => {
     try {
 
@@ -157,7 +151,7 @@ const Home = () => {
         });
       })
 
-      notifyUserDeleted();
+      notifySuccess('Usuario eliminado');
 
       setTimeout(() => {
         handleGetAllUsers()
@@ -168,13 +162,11 @@ const Home = () => {
 
     } catch (error) {
 
-      console.log(error)
-      notifyTryAgainLater();
+      notifyWarning("Ha ocurrido un problema, por favor intente nuevamente mas tarde");
 
     }
   };
 
-  const notifyCourtCreated = () => toast.info("Cancha Creada", { position: 'bottom-right', autoClose: 1000, theme: 'dark' });
   const handleCreateCourt = async (e, name) => {
 
     try {
@@ -183,14 +175,14 @@ const Home = () => {
 
       await axios.post('/courts/createCourt', name)
 
-      notifyCourtCreated();
+      notifySuccess('Cancha creada');
 
       handleGetAllCourts()
 
     } catch (error) {
 
       console.log(error)
-      notifyTryAgainLater();
+      notifyWarning("Ha ocurrido un problema, por favor intente nuevamente mas tarde");
 
     }
   };
@@ -205,43 +197,38 @@ const Home = () => {
 
     } catch (error) {
 
-      console.log(error)
-      notifyTryAgainLater();
+      notifyWarning("Ha ocurrido un problema, por favor intente nuevamente mas tarde");
 
     }
 
   }, [ setAllCourts ]);
 
-  const notifyCourtDeleted = () => toast.error("Cancha Eliminada", { position: 'bottom-right', autoClose: 1000, theme: 'dark' });
   const handleDeleteCourt = async (id) => {
     try {
 
       await axios.delete(`/courts/delete/${id}`)
 
-      notifyCourtDeleted()
+      notifySuccess('Cancha eliminada');
 
       handleGetAllCourts()
 
     } catch (error) {
 
-      notifyTryAgainLater()
-      console.log(error);
+      notifyWarning("Ha ocurrido un problema, por favor intente nuevamente mas tarde")()
 
     }
   };
 
-  const notifyOldReservesDeleted = () => toast.error("Historial de reservas Eliminado", { position: 'bottom-right', autoClose: 1000, theme: 'dark' });
   const handleDeleteOldReserves = async () => {
 
     try {
 
       await axios.put('/courts/reserve/clean')
-      notifyOldReservesDeleted();
+      notifySuccess('Historial de reservas eliminadas');
 
     } catch (error) {
-
-      console.log(error);
-      notifyTryAgainLater();
+      
+      notifyWarning("Ha ocurrido un problema, por favor intente nuevamente mas tarde");
 
     }
 
@@ -262,6 +249,7 @@ const Home = () => {
     }
 
   };
+
   useEffect(() => {
     if (auth.user === null) {
       navigate('/login')
@@ -280,7 +268,7 @@ const Home = () => {
         return <FailLogin />
       }
     } catch (error) {
-      console.log(error)
+      notifyWarning("Hubo un problema, por favor intente nuevamente mas tarde"); 
     }
   };
  

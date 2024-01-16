@@ -6,52 +6,52 @@ export default class ActivityControllers {
     this.activityControllers = new ActivityServices();
   }
 
-  save = async (req, res) => {
+  save = async (req, res, next) => {
     try {
       const activity = await this.activityControllers.save(req.body);
       res.json(activity);
     } catch (error) {
-      routeLogger(req, 'error', error)
+      next(error)
     }
   }
-  getAll = async (req, res) => {
+  getAll = async (req, res, next) => {
     try {
       const activity = await this.activityControllers.getAll();
       res.json(activity);
     } catch (error) {
-      routeLogger(req, 'error', error)
+      next(error)
     }
   }
-  getById = async (req, res) => {
+  getById = async (req, res, next) => {
     try {
       const activity = await this.activityControllers.getById(req.params.id);
       res.json(activity);
     } catch (error) {
-      routeLogger(req, 'error', error)
+      next(error)
     }
   }
-  update = async (req, res) => {
+  update = async (req, res, next) => {
     try {
       const activity = await this.activityControllers.update({id: req.params.id, ...req.body});
       res.json(activity);
     } catch (error) {
-      routeLogger(req, 'error', error)
+      next(error)
     }
   }
-  delete = async (req, res) => {
+  delete = async (req, res, next) => {
     try {
       const activity = await this.activityControllers.delete(req.params.id);
       res.json(activity); 
     } catch (error) {
-      routeLogger(req, 'error', error)
+      next(error)
     }
   }
-  deleteAll = async (req, res) => {
+  deleteAll = async (req, res, next) => {
     try {
       const activity = await this.activityControllers.deleteAll();
       res.json(activity); 
     } catch (error) {
-      routeLogger(req, 'error', error)
+      next(error)
     }
   }
 }

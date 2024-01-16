@@ -3,6 +3,7 @@ import { errorLogger } from "../utils/logger.js";
 const errorHandler = (err, req, res, next) => {
 
   try {
+    
     const errorStatus = err.status || 500;
     const errorMessage = err.message || 'Internal server error';
 
@@ -13,7 +14,6 @@ const errorHandler = (err, req, res, next) => {
       user_agent: req.header[ 'user-agent' ],
       user: req.user
     };
-
     errorLogger(err, additionalInfo);
     res.status(errorStatus).send(errorMessage);
     
