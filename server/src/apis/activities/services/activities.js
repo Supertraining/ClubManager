@@ -1,5 +1,5 @@
 import ActivityDAO from "../DAO/activities.js";
-import createError from '../../../utils/createError.Utils.js'
+import { CustomError } from "../../../utils/customError.Utils.js";
 export default class ActivityServices {
   constructor() {
     this.activityServices = ActivityDAO.getInstance();
@@ -25,12 +25,18 @@ export default class ActivityServices {
   getById = async (id) => {
     try {
       const activity = await this.activityServices.getById(id);
+
       if (!activity) {
-        let error = createError(404, 'La actividad no existe');
-        throw error;
+
+        throw CustomError.notFound('El usuarios no existe');
+
       }
+
       return activity;
     } catch (error) {
+      if (error.kind === 'ObjectId') {
+        throw CustomError.badRequest('Id incorrecta')
+      }
       throw (error)
     }
   }
@@ -38,21 +44,20 @@ export default class ActivityServices {
   update = async (data) => {
     try {
       const activity = await this.activityServices.update(data);
+
       if (activity.matchedCount === 0) {
 
-        let error = createError(404, `Usuario con el Id: ${id} no encontrado`);
-
-        throw error
+        throw CustomError.notFound(`La actividad con el Id: ${id} no encontrado`)
 
       }
       if (activity.modifiedCount === 0 && activity.matchedCount === 1) {
 
-        let error = createError(400, `Usuario con el Id: ${id} no ha sido modificado`);
-
-        throw error
+        throw CustomError.badRequest(`La actividad con el Id: ${id} no ha sido modificado`)
 
       }
+
       return activity;
+
     } catch (error) {
       throw (error)
     }
@@ -62,14 +67,18 @@ export default class ActivityServices {
     try {
       const activity = await this.activityServices.delete(id);
 
-      if (activity.deletedCount === 0) {
-        let error = createError(404, 'La actividad no existe');
-        throw error;
+      if (activity.matchedCount === 0) {
+
+        throw CustomError.notFound(`La actividad con el Id: ${reserveId} no encontrada`)
+
       }
 
       return activity;
 
     } catch (error) {
+      if (error.kind === 'ObjectId') {
+        throw CustomError.badRequest('Id incorrecta')
+      }
       throw (error)
     }
   }

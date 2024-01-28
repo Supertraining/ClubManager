@@ -1,10 +1,9 @@
 import UsersDAO from "../DAO/users.js";
 import { emailNewUserNotification, emailUpdatePasswordNotification } from "../../../utils/emailNotifications.Utils.js";
-import logger from "../../../utils/logger.js";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { secretKey } from "../../../config/config.js";
-import createError from '../../../utils/createError.Utils.js'
+import { CustomError } from "../../../utils/customError.Utils.js";
 
 export default class UsersServices {
 
@@ -19,8 +18,7 @@ export default class UsersServices {
             const checkUser = await this.getByUserName(data.username);
 
             if (checkUser) {
-                let error = createError(400, 'El usuario ya esta registrado');
-                throw (error)
+                throw CustomError.badRequest('El usuario ya esta registrado');
             };
 
             const newUser = await this.DAO
@@ -51,10 +49,13 @@ export default class UsersServices {
 
             const user = await this.getByUserName(data.username);
 
+            if (!user) {
+                throw CustomError.notFound('El usuario no existe');
+            }
+
             const isPasswordCorrect = await bcrypt.compare(data.password, user.password);
             if (!isPasswordCorrect) {
-                let error = createError(404, 'Contraseña incorrecta');
-                throw error;
+                throw CustomError.badRequest('El usuario ya esta registrado');
             };
 
             const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin }, secretKey, { expiresIn: '1h' });
@@ -71,11 +72,6 @@ export default class UsersServices {
 
             const user = await this.DAO
                 .getByUserName(username);
-
-            if (!user) {
-                let error = createError(404, 'El usuario no existe');
-                throw error;
-            }
 
             return user;
 
@@ -95,8 +91,7 @@ export default class UsersServices {
                 .deleteById(id);
 
             if (isDeleted.deletedCount === 0) {
-                let error = createError(404, 'El usuario no existe');
-                throw error;
+                throw CustomError.notFound('El usuarios no existe');
             }
 
             return true
@@ -104,8 +99,8 @@ export default class UsersServices {
         } catch (error) {
 
             if (error.kind === 'ObjectId') {
-                let error = createError(400, 'Id incorrecta')
-                throw error
+                throw CustomError.badRequest('Id incorrecta')
+
             }
 
             throw (error)
@@ -138,8 +133,9 @@ export default class UsersServices {
                 .getById(id);
 
             if (!user) {
-                let error = createError(404, 'El usuario no existe');
-                throw error;
+
+                throw CustomError.notFound('El usuarios no existe');
+
             }
 
             return user
@@ -147,8 +143,7 @@ export default class UsersServices {
         catch (error) {
 
             if (error.kind === 'ObjectId') {
-                let error = createError(400, 'Id incorrecta')
-                throw error
+                throw CustomError.badRequest('Id incorrecta')
             }
 
             throw (error)
@@ -169,16 +164,12 @@ export default class UsersServices {
 
             if (passwordUpdated.matchedCount === 0) {
 
-                let error = createError(404, `Usuario con el Id: ${id} no encontrado`);
-
-                throw error
+                throw CustomError.notFound(`Usuario con el Id: ${id} no encontrado`)
 
             }
             if (passwordUpdated.modifiedCount === 0 && passwordUpdated.matchedCount === 1) {
 
-                let error = createError(400, `Usuario con el Id: ${id} no ha sido modificado`);
-
-                throw error
+                throw CustomError.badRequest(`Usuario con el Id: ${id} no ha sido modificado`)
 
             }
 
@@ -204,16 +195,12 @@ export default class UsersServices {
 
             if (userUpdated.matchedCount === 0) {
 
-                let error = createError(404, `Usuario con el Id: ${id} no encontrado`);
-
-                throw error
+                throw CustomError.notFound(`Usuario con el Id: ${id} no encontrado`)
 
             }
             if (userUpdated.modifiedCount === 0 && userUpdated.matchedCount === 1) {
 
-                let error = createError(400, `Usuario con el Id: ${id} no ha sido modificado`);
-
-                throw error
+                throw CustomError.badRequest(`Usuario con el Id: ${id} no ha sido modificado`)
 
             }
 
@@ -223,6 +210,10 @@ export default class UsersServices {
             return updatedUser
 
         } catch (error) {
+            
+            if (error.kind === 'ObjectId') {
+                throw CustomError.badRequest('Id incorrecta')
+            }
 
             throw (error)
 
@@ -237,16 +228,12 @@ export default class UsersServices {
 
             if (reserveUpdated.matchedCount === 0) {
 
-                let error = createError(404, `Usuario con el Id: ${id} no encontrado`);
-
-                throw error
+                throw CustomError.notFound(`Usuario con el Id: ${id} no encontrado`)
 
             }
             if (reserveUpdated.modifiedCount === 0 && reserveUpdated.matchedCount === 1) {
 
-                let error = createError(400, `Usuario con el Id: ${id} no ha sido modificado`);
-
-                throw error
+                throw CustomError.badRequest(`Usuario con el Id: ${id} no ha sido modificado`)
 
             }
 
@@ -272,16 +259,12 @@ export default class UsersServices {
 
             if (reserveDeleted.matchedCount === 0) {
 
-                let error = createError(404, `La reserva con el Id: ${reserveId} no encontrada`);
-
-                throw error
+                throw CustomError.notFound(`La reserva con el Id: ${reserveId} no encontrada`)
 
             }
             if (reserveDeleted.modifiedCount === 0 && reserveDeleted.matchedCount === 1) {
 
-                let error = createError(400, `La reserva con el Id: ${reserveId} no ha sido modificado`);
-
-                throw error
+                throw CustomError.badRequest(`La reserva con el Id: ${reserveId} no ha sido modificado`)
 
             }
 

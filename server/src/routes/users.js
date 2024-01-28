@@ -1,128 +1,87 @@
-import { Router } from "express";
+import { Router } from 'express';
 import UsersController from '../apis/users/controllers/users.js';
-import { validate } from "../middlewares/dataValidator.js";
+import { validate } from '../middlewares/dataValidator.js';
 
 const router = Router();
 
 export default class UserRouter {
-    constructor() {
-        this.controllers = new UsersController();
-    }
+  constructor() {
+    this.controllers = new UsersController();
+  }
 
-    start() {
+  start() {
+    router.post(
+      '/register',
 
-        router.post(
-            '/register',
+      validate.user,
 
-            validate.user,
+      this.controllers.register
+    );
 
-         this.controllers.register,
-    
-        );
-        
-        router.post(
-            '/login',
+    router.post(
+      '/login',
 
-            this.controllers.login
+      this.controllers.login
+    );
 
-        );
+    router.get(
+      '/',
 
+      async (req, res) => {
+        res.redirect('/home');
+      }
+    );
 
-        router.get(
+    router.get('/home', this.controllers.getByUserName);
 
-            '/',
+    router.get(
+      '/getAll',
 
-            async (req, res) => {
-                
-                res.redirect('/home');
+      this.controllers.getAllUsers
+    );
 
-            }
+    router.get(
+      '/user/:id',
 
-        );
+      this.controllers.getById
+    );
 
-        router.get(
-            '/home',
-            this.controllers
-                .getByUserName
+    router.delete(
+      '/eliminar/:id',
 
-        );
+      this.controllers.deleteById
+    );
 
-        router.get(
+    router.put(
+      '/reserves/delete',
 
-            '/getAll',
+      this.controllers.deleteReserveById
+    );
 
-            this.controllers
-                .getAllUsers
+    router.put(
+      '/reserves/:username',
 
-        );
+      validate.userReservation,
 
-        router.get(
+      this.controllers.updateUserReserves
+    );
 
-            '/user/:id',
+    router.put(
+      '/update',
 
-            this.controllers
-                .getById
+      validate.userUpdatePassword,
 
-        )
+      this.controllers.updateUserPassword
+    );
 
-        router.delete(
+    router.put(
+      '/update/:id',
 
-            '/eliminar/:id',
+      validate.activityUpdate,
 
-            this.controllers
-                .deleteById
+      this.controllers.updateUser
+    );
 
-        );
-
-        router.put(
-
-            '/reserves/delete',
-
-            this.controllers
-                .deleteReserveById
-
-        )
-
-        router.put(
-
-            '/reserves/:username',
-
-            validate.userReservation,
-
-            this.controllers
-                .updateUserReserves
-
-        );
-
-        router.put(
-
-            '/update',
-
-            validate.userUpdatePassword,
-
-            this.controllers
-                .updateUserPassword
-
-        );
-
-        router.put(
-
-            '/update/:id',
-
-            validate.activityUpdate,
-
-            this.controllers
-                .updateUser
-
-
-
-        );
-
-        return router
-    }
+    return router;
+  }
 }
-
-
-
-
-

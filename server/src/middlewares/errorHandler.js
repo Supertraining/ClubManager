@@ -4,7 +4,7 @@ const errorHandler = (err, req, res, next) => {
 
   try {
     
-    const errorStatus = err.status || 500;
+    const errorStatus = err.statusCode || 500;
     const errorMessage = err.message || 'Internal server error';
 
     const additionalInfo = {

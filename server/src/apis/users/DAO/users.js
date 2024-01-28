@@ -1,6 +1,5 @@
 import * as model from '../../../db/models/user.js';
 import logger from '../../../utils/logger.js';
-import createError from '../../../utils/createError.Utils.js';
 
 let instance = null;
 
@@ -10,9 +9,10 @@ export default class UsersDAO {
     try {
 
       let newUser = await model
-        .usermodel
-        .insertMany(data);
-      return newUser[ 0 ];
+        .usermodel.create(data)
+
+      newUser.save()
+      return newUser;
 
     } catch (error) {
 
@@ -86,14 +86,8 @@ export default class UsersDAO {
       return user;
 
     } catch (error) {
-
-      if (error.kind === 'ObjectId') {
-        let error = createError(400, 'Id incorrecta')
-        throw error
-    }
-
+     
       throw (error)
-
     }
   }
 
@@ -125,11 +119,6 @@ export default class UsersDAO {
 
     } catch (error) {
 
-      if (error.kind === 'ObjectId') {
-        let error = createError(400, 'Id incorrecta')
-        throw error
-      }
-
       throw (error)
 
     }
@@ -154,7 +143,7 @@ export default class UsersDAO {
             }
           }
         );
-         
+
       return reserveUpdated;
 
     } catch (error) {

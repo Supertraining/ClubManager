@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import { gmailData } from '../config/config.js'
+import logger from './logger.js';
 
 export const emailNewUserNotification = async (username, data) => {
 
@@ -33,7 +34,7 @@ export const emailNewUserNotification = async (username, data) => {
     console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
 
   } catch (error) {
-    console.log(error);
+    logger.error(error);
   }
 }
 
@@ -69,6 +70,7 @@ export const emailUpdatePasswordNotification = async (data) => {
     console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
 
   } catch (error) {
-    console.log(error);
+    logger.error(error);
+
   }
 }

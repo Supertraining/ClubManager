@@ -1,5 +1,5 @@
 import CourtsDAO from "../DAO/courts.js";
-import createError from "../../../utils/createError.Utils.js";
+import { CustomError } from "../../../utils/customError.Utils.js";
 export default class CourtServices {
 
     constructor() {
@@ -48,14 +48,16 @@ export default class CourtServices {
                 .deleteCourtById(id);
 
             if (isCourtDeleted.deletedCount === 0) {
-                let error = createError(404, 'the court does not exists');
-                throw error;
+                throw CustomError.notFound('the court does not exists');
             }
-
 
             return court
 
         } catch (error) {
+
+            if (error.kind === 'ObjectId') {
+                throw CustomError.badRequest('Id incorrecta')
+            }
 
             throw (error)
 
@@ -70,8 +72,7 @@ export default class CourtServices {
                 .getUnavailableDatesByName(name);
 
             if (!unavalailableDates) {
-                let error = createError(404, 'Theres no unavailable dates');
-                throw error;
+                throw CustomError.notFound('Theres no unavailable dates');
             }
 
             return unavalailableDates;
@@ -108,16 +109,12 @@ export default class CourtServices {
 
             if (isReserveDeleted.matchedCount === 0) {
 
-                let error = createError(404, `Reserve with Id: ${id} wasn't found`);
-
-                throw error
+                throw CustomError.notFound(`Reserve with Id: ${id} wasn't found`);
 
             }
             if (isReserveDeleted.modifiedCount === 0 && isReserveDeleted.matchedCount === 1) {
 
-                let error = createError(400, `Reserve with Id: ${id} wasn't modified`);
-
-                throw error
+                throw CustomError.badRequest(`Reserve with Id: ${id} wasn't modified`);
 
             }
 
@@ -125,6 +122,10 @@ export default class CourtServices {
 
 
         } catch (error) {
+
+            if (error.kind === 'ObjectId') {
+                throw CustomError.badRequest('Id incorrecta')
+            }
 
             throw (error)
 
@@ -150,10 +151,10 @@ export default class CourtServices {
 
     deleteUserReserves = async (user) => {
         try {
-            
+
             let data = await this.courtsDAO
                 .deleteUserReserves(user);
-          
+
             return data;
 
         } catch (error) {
@@ -168,7 +169,17 @@ export default class CourtServices {
 
             const reserveUpdated = await this.courtsDAO
                 .updateReservesUser(user);
-               
+                if (reserveUpdated.matchedCount === 0) {
+
+                    throw CustomError.notFound(`Usuario con el Id: ${id} no encontrado`)
+    
+                }
+                if (reserveUpdated.modifiedCount === 0 && reserveUpdated.matchedCount === 1) {
+    
+                    throw CustomError.badRequest(`Usuario con el Id: ${id} no ha sido modificado`)
+    
+                }
+
             return reserveUpdated
 
         } catch (error) {

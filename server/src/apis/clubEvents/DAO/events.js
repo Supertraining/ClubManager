@@ -14,9 +14,9 @@ export default class EventDAO {
         .find();
       return data;
 
-    } catch (err) {
+    } catch (error) {
 
-      logger.error(err);
+      throw(error)
 
     }
 
@@ -32,9 +32,9 @@ export default class EventDAO {
 
       return data;
 
-    } catch (err) {
+    } catch (error) {
 
-      logger.error(err);
+      throw(error)
 
     }
 
@@ -48,9 +48,9 @@ export default class EventDAO {
         .eventModel
         .insertMany(data);
 
-    } catch (err) {
+    } catch (error) {
 
-      logger.error(err);
+      throw(error)
 
     }
 
@@ -64,9 +64,9 @@ export default class EventDAO {
         .eventModel
         .updateOne({ _id: data.id }, { $set: {...data} });
 
-    } catch (err) {
+    } catch (error) {
 
-      logger.error(err);
+      throw(error)
 
     }
 
@@ -80,9 +80,9 @@ export default class EventDAO {
         .eventModel
         .deleteOne({ _id: id });
 
-    } catch (err) {
+    } catch (error) {
 
-      logger.error(err);
+      throw(error)
 
     }
 
@@ -104,7 +104,7 @@ export default class EventDAO {
 
     } catch (error) {
 
-      logger.error(error);
+      throw (error);
 
     }
 
