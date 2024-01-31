@@ -28,12 +28,8 @@ export default class UsersController {
 		try {
 
 			const response = await this.userServices.login(req.body)
-
-			const { password, isAdmin, ...otherDetails } = response?.user._doc;
-
-			res.cookie('access_token', response.token, { httpOnly: true, sameSite: 'none', secure: true })
-				.status(200)
-				.json({ ...{ ...otherDetails }, isAdmin });
+			
+			res.json(response);
 
 		} catch (error) {
 

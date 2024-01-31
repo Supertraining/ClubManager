@@ -56,12 +56,14 @@ export default class UsersServices {
             if (!isPasswordCorrect) {
                 throw CustomError.badRequest('El usuario ya esta registrado');
             };
+        
+            const { password, isAdmin, ...otherDetails } = user.toObject();
 
-            // const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin }, secretKey, { expiresIn: '1h' });
+            const payload = { ...otherDetails, isAdmin: isAdmin }
+           
+            const token = TokenHandler.generateToken(payload)
 
-            const token = TokenHandler.generateToken({ id: user._id, isAdmin: user.isAdmin }, { expiresIn: '1h' })
-
-            return { user: user, token: token };
+            return token;
 
         } catch (error) {
             throw (error);
