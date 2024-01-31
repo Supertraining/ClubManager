@@ -1,6 +1,4 @@
 import dotenv from 'dotenv';
-import MongoStore from 'connect-mongo';
-
 dotenv.config({ path: './src/config/.env' });
 
 export const port = process.env.PORT || 8080;
@@ -10,7 +8,7 @@ export const admin_prod_url = process.env.ADMIN_PROD_URL;
 export const client_dev_url = process.env.CLIENT_DEV_URL;
 export const admin_dev_url = process.env.ADMIN_DEV_URL;
 
-export const secretKey = process.env.JWT_SECRET;
+export const JWT_SEED = process.env.JWT_SECRET;
 
 
 export const gmailData = {

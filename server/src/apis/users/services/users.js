@@ -1,9 +1,8 @@
 import UsersDAO from "../DAO/users.js";
 import { emailNewUserNotification, emailUpdatePasswordNotification } from "../../../utils/emailNotifications.Utils.js";
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import { secretKey } from "../../../config/config.js";
 import { CustomError } from "../../../utils/customError.Utils.js";
+import { TokenHandler } from "../../../utils/tokenHandler.Utils.js";
 
 export default class UsersServices {
 
@@ -58,7 +57,9 @@ export default class UsersServices {
                 throw CustomError.badRequest('El usuario ya esta registrado');
             };
 
-            const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin }, secretKey, { expiresIn: '1h' });
+            // const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin }, secretKey, { expiresIn: '1h' });
+
+            const token = TokenHandler.generateToken({ id: user._id, isAdmin: user.isAdmin }, { expiresIn: '1h' })
 
             return { user: user, token: token };
 

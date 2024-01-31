@@ -2,9 +2,10 @@ import axios from '../../../utils/axiosInstance.js';
 import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext.jsx';
-import './login.css';
+import Cookies from 'js-cookie';
+// import jwt_decode from 'jwt-decode';
 import { useForm } from 'react-hook-form';
-
+import './login.css';
 const Login = () => {
 
   const {
@@ -22,7 +23,15 @@ const Login = () => {
       dispatch({ type: 'LOGIN_START' });
 
       const res = await axios.post('/users/login', data);
-    
+
+      if (res) {
+        const token = Cookies.get('_sp_id.0295');
+      console.log(token) 
+      }
+      console.log(document.cookie)
+     
+      // const decoded = jwt_decode(token)
+      // console.log(decoded)
       dispatch({ type: 'LOGIN_SUCCESS', payload: res.data });
 
       navigate('/');
@@ -32,6 +41,8 @@ const Login = () => {
 
     }
   };
+  const token = Cookies.get('access_token');
+  console.log(token) 
 
   return (
     <div>

@@ -44,7 +44,7 @@ export const validate = {
         }
         return true;
       }),
-    body('password').exists().trim().notEmpty(),
+    body('password').exists().trim().notEmpty().isLength({min: 8}).isStrongPassword({minLength: 8, minUppercase: 1, minNumbers: 1}),
     body('nombre').exists().trim().notEmpty(),
     body('apellido').exists().trim().notEmpty(),
     body('edad').exists().trim().notEmpty(),
@@ -62,7 +62,7 @@ export const validate = {
         }
         return true;
       }),
-    body('password').exists().trim().notEmpty().optional(),
+    body('password').exists().trim().notEmpty().isStrongPassword({minLength: 8, minUppercase: 1, minNumbers: 1}).optional(),
     body('nombre').exists().trim().notEmpty().optional(),
     body('apellido').exists().trim().notEmpty().optional(),
     body('edad').exists().trim().notEmpty().optional(),
@@ -74,14 +74,14 @@ export const validate = {
   userUpdatePassword: [
     body('password').exists().trim().notEmpty()
   ],
-  
+
   activityId: [
     //Esta expresión regular /^[0-9a-fA-F]{24}$/ asegura que el ID cumpla con los requisitos de "una cadena de 24 caracteres hexadecimales"
     param('id').exists().trim().notEmpty().matches(/^[0-9a-fA-F]{24}$/),
 
     handleValidationErrors
   ],
-  
+
   activity: [
     body('img').exists().trim().notEmpty(),
     body('imgText').exists().trim().notEmpty(),
