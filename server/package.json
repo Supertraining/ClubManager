@@ -27,12 +27,12 @@
     "node-cron": "^3.0.2",
     "nodemailer": "^6.9.3",
     "unidecode": "^0.1.8",
+    "uninstall": "^0.0.0",
     "uuid": "^9.0.0",
     "winston": "^3.8.2"
   },
   "devDependencies": {
     "chai": "^5.0.3",
-    "mocha": "^10.2.0",
-    "supertest": "^6.3.4"
+    "mocha": "^10.2.0"
   }
 }

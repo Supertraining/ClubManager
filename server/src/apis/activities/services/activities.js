@@ -1,8 +1,7 @@
-import ActivityDAO from "../DAO/activities.js";
 import { CustomError } from "../../../utils/customError.Utils.js";
 export default class ActivityServices {
-  constructor() {
-    this.activityServices = ActivityDAO.getInstance();
+  constructor(activityDAO) {
+    this.activityServices = activityDAO;
   }
   save = async (activityData) => {
     try {

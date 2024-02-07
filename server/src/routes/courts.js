@@ -1,12 +1,12 @@
 import { Router } from "express";
-import CourtsControllers from "../apis/courts/controllers/courts.js";
 import { validate } from "../middlewares/dataValidator.js";
+import { IsAuthenticated } from "../middlewares/isAuthenticated.js";
 
 const router = Router();
 
 export default class CourtsRouter {
-    constructor() {
-        this.controllers = new CourtsControllers();
+    constructor(courtsControllers) {
+        this.controllers = courtsControllers;
     }
 
     start() {
@@ -68,6 +68,8 @@ export default class CourtsRouter {
 
             "/reserve/deleteByUsername",
 
+            IsAuthenticated.checkJwt,
+
             this.controllers
                 .deleteUserReserves
         )
@@ -84,6 +86,8 @@ export default class CourtsRouter {
         router.put(
 
             '/reserve/userUpdate',
+
+            IsAuthenticated.checkJwt,
 
             this.controllers
                 .updateReservesUser

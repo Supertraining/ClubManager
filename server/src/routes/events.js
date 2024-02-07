@@ -1,12 +1,11 @@
-import EventControllers from "../apis/clubEvents/controllers/events.js";
 import { Router } from "express";
 
 const router = Router();
 export default class EventRouter {
 
-  constructor() {
+  constructor(eventControllers) {
 
-    this.controllers = new EventControllers();
+    this.controllers = eventControllers;
 
   }
 

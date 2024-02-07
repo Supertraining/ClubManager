@@ -2,7 +2,6 @@ import axios from '../../../utils/axiosInstance.js';
 import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext.jsx';
-import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
 import { useForm } from 'react-hook-form';
 import './login.css';
@@ -25,7 +24,9 @@ const Login = () => {
 
       const decoded = jwtDecode(res.data)
 
-      dispatch({ type: 'LOGIN_SUCCESS', payload: decoded });
+      const user = {...decoded, token: res.data}
+
+      dispatch({ type: 'LOGIN_SUCCESS', payload: user });
 
       navigate('/');
     } catch (error) {

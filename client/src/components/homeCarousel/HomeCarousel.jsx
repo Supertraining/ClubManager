@@ -7,9 +7,10 @@ import Carousel from 'react-bootstrap/Carousel';
 import { block } from 'million/react';
  
 
-const HomeCarrousel = block( ()=> {
+const HomeCarrousel = () => {
+  
   return (
-    <Carousel fade >
+    <Carousel fade>
 
       <Carousel.Item>
         <img className="d-block w-100 carousel-img" src={ patinaje } alt="First slide" />
@@ -29,7 +30,7 @@ const HomeCarrousel = block( ()=> {
 
     </Carousel>
   );
-}) 
+}
 
 export default HomeCarrousel;
 

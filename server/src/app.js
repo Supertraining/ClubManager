@@ -2,7 +2,8 @@ import express, { json, urlencoded } from 'express';
 import cors from 'cors';
 import * as config from './config/config.js';
 import { connect } from './db/mongoConnection.js';
-import router from './routes/index.js'
+// import router from './routes/index.js'
+import router from './dependencies/index.js'
 import helmet from "helmet";
 import cron from 'node-cron';
 import { repeatPermanentReservations } from './utils/updatePermanentReservations.Utils.js';

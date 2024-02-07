@@ -1,13 +1,15 @@
-import * as model from "../../../db/models/activity.js";
 import logger from "../../../utils/logger.js";
 
 let instance = null;
 export default class ActivityDAO {
 
+  constructor(activitiesModel) {
+    this.model = activitiesModel
+  }
+
   save = async (activityData) => {
     try {
-      const activity = await model
-        .activityModel
+      const activity = await this.model
         .create(activityData);
       return activity;
     } catch (error) {
@@ -16,8 +18,7 @@ export default class ActivityDAO {
   }
   getAll = async () => {
     try {
-      const activity = await model
-        .activityModel
+      const activity = await this.model
         .find();
       return activity;
     } catch (error) {
@@ -26,7 +27,7 @@ export default class ActivityDAO {
   }
   getById = async (id) => {
     try {
-      const activity = await model.activityModel.findOne({ _id: id });
+      const activity = await this.model.findOne({ _id: id });
       return activity;
     } catch (error) {
       throw(error)
@@ -35,8 +36,7 @@ export default class ActivityDAO {
   update = async (data) => {
     try {
 
-      const activity = await model
-        .activityModel
+      const activity = await this.model
         .findByIdAndUpdate(data.id, { ...data });
       return activity;
     } catch (error) {
@@ -45,8 +45,7 @@ export default class ActivityDAO {
   }
   delete = async (id) => {
     try {
-      const activity = await model
-        .activityModel
+      const activity = await this.model
         .deleteOne({ _id: id });
       return activity;
 
@@ -56,8 +55,7 @@ export default class ActivityDAO {
   }
   deleteAll = async () => {
     try {
-      const activity = await model
-        .activityModel
+      const activity = await this.model
         .deleteMany();
       return activity;
 
@@ -65,12 +63,12 @@ export default class ActivityDAO {
       throw(error)
     }
   }
-  static getInstance() {
+  static getInstance(activityModel) {
     try {
       
       if (!instance) {
 
-        instance = new ActivityDAO();
+        instance = new ActivityDAO(activityModel);
 
         logger.info('Se ha creado una instancia de ActivityDAO');
 

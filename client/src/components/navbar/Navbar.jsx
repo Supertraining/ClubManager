@@ -56,17 +56,35 @@ const Navbar = () => {
     try {
       e.preventDefault();
 
-      const { data: updatedUser } = await axios.put(`/users/update/${credentials._id}`, {
-        ...credentials,
-        reserves: userReserves,
-      });
+      const { data: updatedUser } = await axios.put(
+        `/users/update/${credentials._id}`,
+        {
+          ...credentials,
+          reserves: userReserves,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+            Accept: 'application/json',
+          },
+        }
+      );
 
-      const { data: reserverUpdated } = await axios.put('/courts/reserve/userUpdate', {
-        user: user.username,
-        newUser: credentials.username,
-      });
+      const { data: reserveUpdated } = await axios.put(
+        '/courts/reserve/userUpdate',
+        {
+          user: user.username,
+          newUser: credentials.username,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+            Accept: 'application/json',
+          },
+        }
+      );
 
-      await dispatch({ type: 'UPDATE_USER', payload: updatedUser });
+      await dispatch({ type: 'UPDATE_USER', payload: { ...updatedUser, token: user.token } });
 
       handleUserReserves();
 
@@ -80,10 +98,27 @@ const Navbar = () => {
 
   const handleDeleteAccount = async (user) => {
     try {
-      await axios.put('/courts/reserve/deleteByUsername', { username: user.username });
+      await axios.put(
+        '/courts/reserve/deleteByUsername',
+        { username: user.username },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+            Accept: 'application/json',
+          },
+        }
+      );
 
-      const res = await axios.delete(`/users/eliminar/${user._id}`);
+      const res = await axios.delete(`/users/eliminar/${user._id}`, 
+      {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+          Accept: 'application/json',
+        },
+        });
+      
       setUserReserves([]);
+      
       if (res.data === true) {
         dispatch({ type: 'LOGOUT' });
 

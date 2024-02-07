@@ -1,11 +1,9 @@
-import UsersServices from '../services/users.js';
-import { routeLogger } from '../../../utils/logger.js';
 
 export default class UsersController {
 
-	constructor() {
+	constructor(userServices) {
 
-		this.userServices = new UsersServices();
+		this.userServices = userServices;
 
 	}
 
@@ -80,7 +78,7 @@ export default class UsersController {
 	getAllUsers = async (req, res, next) => {
 
 		try {
-
+			console.log('hola')
 			const users = await this.userServices
 				.getAllUsers();
 
@@ -135,7 +133,7 @@ export default class UsersController {
 	updateUser = async (req, res, next) => {
 
 		try {
-
+			
 			const updatedUser = await this.userServices
 				.updateUser(req.params.id, req.body);
 

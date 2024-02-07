@@ -1,11 +1,9 @@
-import EventServices from "../services/events.js";
-import routeLogger from "../../../utils/logger.js";
 
 export default class EventControllers {
 
-  constructor() {
+  constructor(eventControllers) {
 
-    this.services = new EventServices();
+    this.services = eventControllers;
 
   }
 

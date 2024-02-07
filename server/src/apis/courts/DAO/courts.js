@@ -1,16 +1,20 @@
-import * as model from '../../../db/models/court.js';
-import { usermodel } from '../../../db/models/user.js';
 import logger from '../../../utils/logger.js';
 
 let instance = null;
 export default class CourtsDAO {
 
+    constructor(courtModel, userModel) {
+
+        this.model = courtModel;
+        this.userModel = userModel;
+        
+    }
+
     save = async (court) => {
 
         try {
 
-            let data = await model
-                .courtModel
+            let data = await this.model
                 .create(court);
 
             return data;
@@ -27,8 +31,7 @@ export default class CourtsDAO {
 
         try {
 
-            let data = await model
-                .courtModel
+            let data = await this.model
                 .find();
 
             return data;
@@ -43,8 +46,7 @@ export default class CourtsDAO {
     deleteCourtById = async (id) => {
         try {
 
-            let data = await model
-                .courtModel
+            let data = await this.model
                 .deleteOne({ _id: id });
 
             return data;
@@ -60,8 +62,7 @@ export default class CourtsDAO {
 
         try {
 
-            let data = await model
-                .courtModel
+            let data = await this.model
                 .findOne(
                     {
                         name: name
@@ -84,8 +85,7 @@ export default class CourtsDAO {
 
         try {
 
-            let data = await model
-                .courtModel
+            let data = await this.model
                 .updateOne(
                     {
                         name: reserve.name
@@ -111,7 +111,7 @@ export default class CourtsDAO {
 
         try {
 
-            let data = await model.courtModel
+            let data = await this.model
                 .updateOne(
                     { name: courtName },
                     { $pull: { [ `unavailableDates.${reserveDay}` ]: { id: reserveId } } }
@@ -134,7 +134,7 @@ export default class CourtsDAO {
             yesterday.setDate(yesterday.getDate() - 1);
 
             // Iterate over each court and remove reserves from yesterday
-            const courts = await model.courtModel.find();
+            const courts = await this.model.find();
             for (const court of courts) {
                 for (const [ dayOfWeek, reserves ] of Object.entries(court.unavailableDates)) {
 
@@ -144,20 +144,20 @@ export default class CourtsDAO {
                     });
                 }
 
-                const result = await model.courtModel.updateOne(
+                const result = await this.model.updateOne(
                     { _id: court._id },
                     { $set: { unavailableDates: court.unavailableDates } }
                 );
 
                 logger.info(result.modifiedCount + ' reserves deleted from ' + court.name);
             }
-            const users = await usermodel.find();
+            const users = await this.userModel.find();
             for (const user of users) {
                 user.reserves = user.reserves.filter((reserve) => {
                     return reserve.initialTime > yesterday.getTime()
                 })
 
-                const userResult = await usermodel.updateOne(
+                const userResult = await this.userModel.updateOne(
                     { _id: user._id },
                     { $set: { reserves: user.reserves } }
                 )
@@ -173,7 +173,7 @@ export default class CourtsDAO {
 
         try {
 
-            const courts = await model.courtModel.find();
+            const courts = await this.model.find();
             for (const court of courts) {
                 for (const [ dayOfWeek, reserves ] of Object.entries(court.unavailableDates)) {
 
@@ -183,7 +183,7 @@ export default class CourtsDAO {
                     });
                 }
 
-                const result = await model.courtModel.updateOne(
+                const result = await this.model.updateOne(
                     { _id: court._id },
                     { $set: { unavailableDates: court.unavailableDates } }
                 );
@@ -200,7 +200,7 @@ export default class CourtsDAO {
 
     updateReservesUser = async (user) => {
         try {
-            const courts = await model.courtModel.find();
+            const courts = await this.model.find();
             let reserveUpdated = false; 
 
             for (const court of courts) {
@@ -228,12 +228,12 @@ export default class CourtsDAO {
         }
     };
 
-    static getInstance() {
+    static getInstance(courtModel, userModel) {
         try {
 
             if (!instance) {
 
-                instance = new CourtsDAO();
+                instance = new CourtsDAO(courtModel, userModel);
 
                 logger.info('Se ha creado una instancia de CourtsDAO');
 

@@ -1,9 +1,6 @@
-import CourtServices from "../services/courts.js";
-import { routeLogger } from "../../../utils/logger.js";
-
 export default class CourtsControllers {
-    constructor() {
-        this.courtsService = new CourtServices()
+    constructor(courtServices) {
+        this.courtsService = courtServices;
     }
 
     save = async (req, res, next) => {

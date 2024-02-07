@@ -1,16 +1,18 @@
-import * as model from '../../../db/models/events.js';
 import logger from '../../../utils/logger.js';
 
 let instance = null;
 export default class EventDAO {
+
+  constructor(eventModel) {
+      this.model = eventModel
+  }
 
 
   async getAllEvents() {
 
     try {
 
-      const data = await model
-        .eventModel
+      const data = await this.model
         .find();
       return data;
 
@@ -26,8 +28,7 @@ export default class EventDAO {
 
     try {
 
-      const data = await model
-        .eventModel
+      const data = await this.model
         .findById(id);
 
       return data;
@@ -44,8 +45,7 @@ export default class EventDAO {
 
     try {
 
-      const newEvent = await model
-        .eventModel
+      const newEvent = await this.model
         .insertMany(data);
 
     } catch (error) {
@@ -60,8 +60,7 @@ export default class EventDAO {
 
     try {
 
-      const updatedEvent = await model
-        .eventModel
+      const updatedEvent = await this.model
         .updateOne({ _id: data.id }, { $set: {...data} });
 
     } catch (error) {
@@ -76,8 +75,7 @@ export default class EventDAO {
 
     try {
 
-      const data = await model
-        .eventModel
+      const data = await this.model
         .deleteOne({ _id: id });
 
     } catch (error) {
@@ -88,12 +86,12 @@ export default class EventDAO {
 
   }
 
-  static getInstance() {
+  static getInstance(eventModel) {
     try {
 
       if (!instance) {
 
-        instance = new EventDAO();
+        instance = new EventDAO(eventModel);
 
         logger.info('Se ha creado una instancia de EventDAO');
         return instance;

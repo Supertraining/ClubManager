@@ -1,15 +1,18 @@
-import * as model from '../../../db/models/user.js';
+import {userModel} from '../../../db/models/user.js';
 import logger from '../../../utils/logger.js';
 
 let instance = null;
 
 export default class UsersDAO {
 
+  constructor(usermodel) {
+    this.model = usermodel
+  }
+
   async register(data) {
     try {
 
-      let newUser = await model
-        .usermodel.create(data)
+      let newUser = await this.model.create(data)
 
       newUser.save()
       return newUser;
@@ -25,10 +28,8 @@ export default class UsersDAO {
   async getByUserName(username) {
 
     try {
-      const user = await model
-        .usermodel
+      const user = await this.model
         .findOne({ username: username });
-
       return user;
 
     } catch (error) {
@@ -43,8 +44,7 @@ export default class UsersDAO {
 
     try {
 
-      const isDeleted = await model
-        .usermodel
+      const isDeleted = await this.model
         .deleteOne({ _id: id });
 
       return isDeleted;
@@ -61,8 +61,7 @@ export default class UsersDAO {
 
     try {
 
-      const data = await model
-        .usermodel
+      const data = await this.model
         .find();
 
       return data
@@ -79,14 +78,13 @@ export default class UsersDAO {
 
     try {
 
-      const user = await model
-        .usermodel
+      const user = await this.model
         .findById(id);
 
       return user;
 
     } catch (error) {
-     
+
       throw (error)
     }
   }
@@ -95,8 +93,7 @@ export default class UsersDAO {
 
     try {
 
-      const passwordUpdated = await model
-        .usermodel
+      const passwordUpdated = await this.model
         .updateOne({ _id: data._id }, { $set: data });
       return passwordUpdated;
 
@@ -111,8 +108,7 @@ export default class UsersDAO {
 
     try {
 
-      const updatedUser = await model
-        .usermodel
+      const updatedUser = await this.model
         .updateOne({ _id: id }, { $set: data });
 
       return updatedUser;
@@ -128,8 +124,7 @@ export default class UsersDAO {
 
     try {
 
-      let reserveUpdated = await model
-        .usermodel
+      let reserveUpdated = await this.model
         .updateOne(
           {
             username: username
@@ -158,8 +153,7 @@ export default class UsersDAO {
 
     try {
 
-      let reserveDeleted = await model
-        .usermodel
+      let reserveDeleted = await this.model
         .updateOne(
           {
             username: username
@@ -182,12 +176,12 @@ export default class UsersDAO {
     }
   }
 
-  static getInstance() {
+  static getInstance(userModel) {
     try {
 
       if (!instance) {
 
-        instance = new UsersDAO();
+        instance = new UsersDAO(userModel);
 
         logger.info('Se ha creado una instancia de UsersDAO');
 

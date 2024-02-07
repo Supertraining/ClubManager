@@ -4,8 +4,8 @@ import { validate } from '../middlewares/dataValidator.js';
 
 const router = Router();
 export default class ActivityRouter {
-  constructor() {
-    this.activityControllers = new ActivityControllers();
+  constructor(activityController) {
+    this.activityControllers = activityController;
   }
   start() {
     router.post('/save', validate.activity, this.activityControllers.save);

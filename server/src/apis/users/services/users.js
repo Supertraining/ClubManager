@@ -1,4 +1,3 @@
-import UsersDAO from "../DAO/users.js";
 import { emailNewUserNotification, emailUpdatePasswordNotification } from "../../../utils/emailNotifications.Utils.js";
 import bcrypt from 'bcrypt';
 import { CustomError } from "../../../utils/customError.Utils.js";
@@ -6,9 +5,9 @@ import { TokenHandler } from "../../../utils/tokenHandler.Utils.js";
 
 export default class UsersServices {
 
-    constructor() {
+    constructor(userDAO) {
 
-        this.DAO = UsersDAO.getInstance();
+        this.DAO = userDAO;
 
     }
     async register(data) {
@@ -33,7 +32,13 @@ export default class UsersServices {
                 );
             newUser && emailNewUserNotification(data.username, data);
 
-            return newUser;
+            const { password, isAdmin, ...otherDetails } = newUser.toObject();
+
+            const payload = { ...otherDetails, isAdmin: isAdmin }
+           
+            const token = TokenHandler.generateToken(payload)
+
+            return token;
 
         } catch (error) {
 
@@ -70,7 +75,7 @@ export default class UsersServices {
         }
     };
     async getByUserName(username) {
-
+       
         try {
 
             const user = await this.DAO
@@ -195,6 +200,7 @@ export default class UsersServices {
 
             const userUpdated = await this.DAO
                 .updateUser(id, data);
+            
 
             if (userUpdated.matchedCount === 0) {
 
@@ -209,7 +215,7 @@ export default class UsersServices {
 
             const updatedUser = await this.DAO
                 .getById(id);
-
+               
             return updatedUser
 
         } catch (error) {

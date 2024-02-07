@@ -1,11 +1,10 @@
 import { CustomError } from "../../../utils/customError.Utils.js";
-import EventDAO from "../DAO/events.js";
 
 export default class EventServices {
 
-  constructor() {
+  constructor(eventDAO) {
 
-    this.EventDAO = EventDAO.getInstance();
+    this.EventDAO = eventDAO;
 
   }
 

@@ -1,10 +1,9 @@
-import CourtsDAO from "../DAO/courts.js";
 import { CustomError } from "../../../utils/customError.Utils.js";
 export default class CourtServices {
 
-    constructor() {
+    constructor(courtsDAO) {
 
-        this.courtsDAO = CourtsDAO.getInstance();
+        this.courtsDAO = courtsDAO;
 
     }
 
@@ -109,12 +108,12 @@ export default class CourtServices {
 
             if (isReserveDeleted.matchedCount === 0) {
 
-                throw CustomError.notFound(`Reserve with Id: ${id} wasn't found`);
+                throw CustomError.notFound(`Reserve with Id: ${reserveId} wasn't found`);
 
             }
             if (isReserveDeleted.modifiedCount === 0 && isReserveDeleted.matchedCount === 1) {
 
-                throw CustomError.badRequest(`Reserve with Id: ${id} wasn't modified`);
+                throw CustomError.badRequest(`Reserve with Id: ${reserveId} wasn't modified`);
 
             }
 
@@ -172,11 +171,6 @@ export default class CourtServices {
                 if (reserveUpdated.matchedCount === 0) {
 
                     throw CustomError.notFound(`Usuario con el Id: ${id} no encontrado`)
-    
-                }
-                if (reserveUpdated.modifiedCount === 0 && reserveUpdated.matchedCount === 1) {
-    
-                    throw CustomError.badRequest(`Usuario con el Id: ${id} no ha sido modificado`)
     
                 }
 

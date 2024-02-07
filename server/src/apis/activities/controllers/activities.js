@@ -1,9 +1,6 @@
-import ActivityServices from "../services/activities.js";
-import { routeLogger } from "../../../utils/logger.js";
-
 export default class ActivityControllers {
-  constructor() {
-    this.activityControllers = new ActivityServices();
+  constructor(activityService) {
+    this.activityControllers = activityService;
   }
 
   save = async (req, res, next) => {

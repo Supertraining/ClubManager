@@ -1,12 +1,12 @@
 import { Router } from 'express';
-import UsersController from '../apis/users/controllers/users.js';
 import { validate } from '../middlewares/dataValidator.js';
+import { IsAuthenticated } from '../middlewares/isAuthenticated.js';
 
 const router = Router();
 
 export default class UserRouter {
-  constructor() {
-    this.controllers = new UsersController();
+  constructor(userControllers) {
+    this.controllers = userControllers;
   }
 
   start() {
@@ -49,6 +49,8 @@ export default class UserRouter {
     router.delete(
       '/eliminar/:id',
 
+      IsAuthenticated.checkJwt,
+
       this.controllers.deleteById
     );
 
@@ -77,7 +79,9 @@ export default class UserRouter {
     router.put(
       '/update/:id',
 
-      validate.activityUpdate,
+      validate.userUpdate,
+
+      IsAuthenticated.checkJwt,
 
       this.controllers.updateUser
     );
