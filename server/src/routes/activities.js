@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import ActivityControllers from '../apis/activities/controllers/activities.js';
 import { validate } from '../middlewares/dataValidator.js';
+import { IsAuthenticated } from '../middlewares/isAuthenticated.js';
 
 const router = Router();
 export default class ActivityRouter {
@@ -8,8 +8,12 @@ export default class ActivityRouter {
     this.activityControllers = activityController;
   }
   start() {
-    router.post('/save', validate.activity, this.activityControllers.save);
+    
     router.get('/getAll', this.activityControllers.getAll);
+
+    router.use(IsAuthenticated.checkJwt)
+
+    router.post('/save', validate.activity, this.activityControllers.save);
     router.get('/getById/:id', validate.activityId, this.activityControllers.getById);
     router.put('/update/:id', validate.activityUpdate, this.activityControllers.update);
     router.delete('/deleteById/:id', this.activityControllers.delete);

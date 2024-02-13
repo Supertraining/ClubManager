@@ -9,7 +9,6 @@ export default class UsersController {
 
 	register = async (req, res, next) => {
 		try {
-
 			const newUser = await this.userServices.register(req.body)
 
 			newUser
@@ -38,7 +37,6 @@ export default class UsersController {
 	getByUserName = async (req, res, next) => {
 
 		try {
-
 			if (req.headers.cookie) {
 				const usuario = await this.userServices
 					.getByUserName(req.headers.authorization);
@@ -78,7 +76,6 @@ export default class UsersController {
 	getAllUsers = async (req, res, next) => {
 
 		try {
-			console.log('hola')
 			const users = await this.userServices
 				.getAllUsers();
 
@@ -133,7 +130,7 @@ export default class UsersController {
 	updateUser = async (req, res, next) => {
 
 		try {
-			
+				
 			const updatedUser = await this.userServices
 				.updateUser(req.params.id, req.body);
 

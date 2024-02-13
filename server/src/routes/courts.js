@@ -10,31 +10,34 @@ export default class CourtsRouter {
     }
 
     start() {
+
+        router.use(IsAuthenticated.checkJwt)
+
         router.get(
 
             "/",
-            
+
             this.controllers
                 .getAll
-            
+
         )
-        
+
         router.get(
-            
+
             "/:name",
-            
+
             this.controllers
                 .getUnavailableDatesByName
-            
+
         )
-        
+
         router.post(
 
             "/createCourt",
 
             this.controllers
                 .save
-            
+
         )
 
         router.delete(
@@ -43,7 +46,7 @@ export default class CourtsRouter {
 
             this.controllers
                 .deleteCourtById
-            
+
         )
 
         router.put(
@@ -54,7 +57,7 @@ export default class CourtsRouter {
 
             this.controllers
                 .reserveDate
-            
+
         )
 
         router.put(
@@ -68,8 +71,6 @@ export default class CourtsRouter {
 
             "/reserve/deleteByUsername",
 
-            IsAuthenticated.checkJwt,
-
             this.controllers
                 .deleteUserReserves
         )
@@ -80,18 +81,16 @@ export default class CourtsRouter {
 
             this.controllers
                 .deleteOldReserves
-            
+
         )
-        
+
         router.put(
 
             '/reserve/userUpdate',
 
-            IsAuthenticated.checkJwt,
-
             this.controllers
                 .updateReservesUser
-            
+
         )
 
         return router

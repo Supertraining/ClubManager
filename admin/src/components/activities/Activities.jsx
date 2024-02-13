@@ -1,5 +1,4 @@
 import './activities.css';
-import axios from '../../utils/axiosInstance.js';
 import { ToastContainer } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -7,6 +6,7 @@ import ActividadesCard from './ActividadesCard';
 import Modal from './Modal';
 import PropTypes from 'prop-types';
 import useNotifications from '../../hooks/useNotifications.jsx';
+import useAxiosInstance from '../../hooks/useAxiosInstance.jsx';
 
 const Activities = ({ handleMenuClick, menu }) => {
 
@@ -25,6 +25,7 @@ const Activities = ({ handleMenuClick, menu }) => {
   };
 
   const { notifySuccess, notifyWarning } = useNotifications();
+  const axios = useAxiosInstance();
 
   const [activity, setActivity] = useState(activityInitialState);
   const [category, setCategory] = useState(categoryInitialState);

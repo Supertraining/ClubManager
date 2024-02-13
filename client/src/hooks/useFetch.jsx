@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import axios from '../utils/axiosInstance.js';
 import PropTypes from 'prop-types';
+import useAxiosInstance from "./useAxiosInstance.jsx";
 
 const useFetch = (url) => {
     const [ data, setData ] = useState([]);
     const [ loading, setLoading ] = useState(false);
     const [ error, setError ] = useState(false);
+  const axios = useAxiosInstance();
+
 
     useEffect(() => {
         const fetchData = async () => {

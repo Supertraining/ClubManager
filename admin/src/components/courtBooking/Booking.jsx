@@ -1,6 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
 import 'react-date-time-picker-popup/dist/index.css';
-import axios from '../../utils/axiosInstance';
 import useFetch from '../../hooks/useFetch';
 import { ToastContainer } from 'react-toastify';
 import './booking.css';
@@ -12,6 +11,7 @@ import unidecode from 'unidecode';
 import CourtBookingDatePicker from './courtBookingDatePicker/CourtBookingDatePicker';
 import PropTypes from 'prop-types';
 import useNotifications from '../../hooks/useNotifications';
+import useAxiosInstance from '../../hooks/useAxiosInstance';
 
 const Booking = ({ setCourt, court }) => {
   const [day, setDay] = useState(new Date());
@@ -25,6 +25,7 @@ const Booking = ({ setCourt, court }) => {
   const { user } = useContext(AuthContext);
   const { reserveDeleted, setReserveDeleted } = useContext(ReserveBoardContext);
   const { notify, notifySuccess, notifyWarning } = useNotifications();
+  const axios = useAxiosInstance();
 
   const handleBooking = async (selectedDay) => {
     try {

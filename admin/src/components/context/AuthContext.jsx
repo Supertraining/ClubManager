@@ -1,19 +1,6 @@
 import { useReducer, createContext, useEffect } from "react";
 import PropTypes from 'prop-types'
 
-// import axios from '../../utils/axiosInstance';
-
-//__Esta funcion solo es util si configuro un tiempo de vida a la cookie, entonces cuando este termina, se elimina la cookie y se elimina el localStorage
-// const user = JSON.parse(localStorage.getItem('user'))
-// const { data } = await axios.get('/',
-//   {
-//     headers: {
-//       Authorization: user?.username
-//     }
-//   });
-// if (!data) {
-//   localStorage.removeItem('user')
-// }
 
 const INITIAL_STATE = {
   user: JSON.parse(localStorage.getItem('user')) || JSON.parse(sessionStorage.getItem('user')) || null,

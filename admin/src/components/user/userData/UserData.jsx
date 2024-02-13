@@ -23,7 +23,7 @@ const UserData = ({ user, handleUpdateUser, handleDeleteUser, setConfirmDelete, 
       [ e.target.name ]: e.target.value
     })
   }
-  console.log(credentials)
+ 
   return (
 
     <>

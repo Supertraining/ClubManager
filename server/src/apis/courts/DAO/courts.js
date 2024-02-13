@@ -5,7 +5,7 @@ export default class CourtsDAO {
 
     constructor(courtModel, userModel) {
 
-        this.model = courtModel;
+        this.courtModel = courtModel;
         this.userModel = userModel;
         
     }
@@ -14,7 +14,7 @@ export default class CourtsDAO {
 
         try {
 
-            let data = await this.model
+            let data = await this.courtModel
                 .create(court);
 
             return data;
@@ -31,7 +31,7 @@ export default class CourtsDAO {
 
         try {
 
-            let data = await this.model
+            let data = await this.courtModel
                 .find();
 
             return data;
@@ -46,7 +46,7 @@ export default class CourtsDAO {
     deleteCourtById = async (id) => {
         try {
 
-            let data = await this.model
+            let data = await this.courtModel
                 .deleteOne({ _id: id });
 
             return data;
@@ -62,7 +62,7 @@ export default class CourtsDAO {
 
         try {
 
-            let data = await this.model
+            let data = await this.courtModel
                 .findOne(
                     {
                         name: name
@@ -85,7 +85,7 @@ export default class CourtsDAO {
 
         try {
 
-            let data = await this.model
+            let data = await this.courtModel
                 .updateOne(
                     {
                         name: reserve.name
@@ -111,7 +111,7 @@ export default class CourtsDAO {
 
         try {
 
-            let data = await this.model
+            let data = await this.courtModel
                 .updateOne(
                     { name: courtName },
                     { $pull: { [ `unavailableDates.${reserveDay}` ]: { id: reserveId } } }
@@ -134,7 +134,7 @@ export default class CourtsDAO {
             yesterday.setDate(yesterday.getDate() - 1);
 
             // Iterate over each court and remove reserves from yesterday
-            const courts = await this.model.find();
+            const courts = await this.courtModel.find();
             for (const court of courts) {
                 for (const [ dayOfWeek, reserves ] of Object.entries(court.unavailableDates)) {
 
@@ -144,7 +144,7 @@ export default class CourtsDAO {
                     });
                 }
 
-                const result = await this.model.updateOne(
+                const result = await this.courtModel.updateOne(
                     { _id: court._id },
                     { $set: { unavailableDates: court.unavailableDates } }
                 );
@@ -173,7 +173,7 @@ export default class CourtsDAO {
 
         try {
 
-            const courts = await this.model.find();
+            const courts = await this.courtModel.find();
             for (const court of courts) {
                 for (const [ dayOfWeek, reserves ] of Object.entries(court.unavailableDates)) {
 
@@ -183,7 +183,7 @@ export default class CourtsDAO {
                     });
                 }
 
-                const result = await this.model.updateOne(
+                const result = await this.courtModel.updateOne(
                     { _id: court._id },
                     { $set: { unavailableDates: court.unavailableDates } }
                 );
@@ -200,14 +200,14 @@ export default class CourtsDAO {
 
     updateReservesUser = async (user) => {
         try {
-            const courts = await this.model.find();
+            const courts = await this.courtModel.find();
             let reserveUpdated = false; 
 
             for (const court of courts) {
                 for (const [ dayOfWeek, reserves ] of Object.entries(court.unavailableDates)) {
                     for (const reserve of reserves) {
                         if (reserve.user == user.user) {
-                            const result = await model.courtModel.updateOne(
+                            const result = await this.courtModel.updateOne(
                                 { _id: court._id },
                                 { $set: { [ `unavailableDates.${dayOfWeek}.$[elem].user` ]: user.newUser } },
                                 { arrayFilters: [ { "elem.user": user.user } ] }

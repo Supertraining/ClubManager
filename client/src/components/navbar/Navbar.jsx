@@ -2,12 +2,12 @@ import './navbar.css';
 import { useNavigate, Link } from 'react-router-dom';
 import { useContext, useState } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import axios from '../../utils/axiosInstance';
 import { isStrongPassword } from 'validator';
 import { ReserveBoardContext } from '../context/ReserveBoardUpdate';
 import NavBarOffCanvasStart from '../navBarOffCanvasStart/NavBarOffCanvasStart';
 import NavBarOffCanvasEnd from '../navBarOffCanvasEnd/NavBarOffCanvasEnd';
 import useNotifications from '../../hooks/useNotifications';
+import useAxiosInstance from '../../hooks/useAxiosInstance';
 
 const Navbar = () => {
   const [userReserves, setUserReserves] = useState([]);
@@ -18,13 +18,19 @@ const Navbar = () => {
 
   const navigate = useNavigate();
   const { notifySuccess, notifyError, notifyWarning } = useNotifications();
+  const axios = useAxiosInstance();
 
   const { user, dispatch } = useContext(AuthContext);
   const { setReserveDeleted } = useContext(ReserveBoardContext);
 
   const handleUserReserves = async () => {
     try {
-      const { data } = await axios.get(`/users/user/${user?._id}`);
+      const { data } = await axios.get(`/users/user/${user?._id}`, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+          Accept: 'application/json',
+        },
+      });
       setUserReserves(data.reserves);
     } catch (error) {
       notifyWarning('Hubo un problema, por favor intente nuevamente mas tarde');
@@ -56,33 +62,15 @@ const Navbar = () => {
     try {
       e.preventDefault();
 
-      const { data: updatedUser } = await axios.put(
-        `/users/update/${credentials._id}`,
-        {
-          ...credentials,
-          reserves: userReserves,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-            Accept: 'application/json',
-          },
-        }
-      );
+      const { data: updatedUser } = await axios.put(`/users/update/${credentials._id}`, {
+        ...credentials,
+        reserves: userReserves,
+      });
 
-      const { data: reserveUpdated } = await axios.put(
-        '/courts/reserve/userUpdate',
-        {
-          user: user.username,
-          newUser: credentials.username,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-            Accept: 'application/json',
-          },
-        }
-      );
+      const { data: reserveUpdated } = await axios.put('/courts/reserve/userUpdate', {
+        user: user.username,
+        newUser: credentials.username,
+      });
 
       await dispatch({ type: 'UPDATE_USER', payload: { ...updatedUser, token: user.token } });
 
@@ -109,16 +97,15 @@ const Navbar = () => {
         }
       );
 
-      const res = await axios.delete(`/users/eliminar/${user._id}`, 
-      {
+      const res = await axios.delete(`/users/eliminar/${user._id}`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
           Accept: 'application/json',
         },
-        });
-      
+      });
+
       setUserReserves([]);
-      
+
       if (res.data === true) {
         dispatch({ type: 'LOGOUT' });
 
@@ -135,16 +122,34 @@ const Navbar = () => {
 
   const handleDeleteReserve = async (court, day, id) => {
     try {
-      await axios.put(`/courts/reserve/delete`, {
-        courtName: court,
-        reserveDay: day,
-        reserveId: id,
-      });
+      await axios.put(
+        `/courts/reserve/delete`,
+        {
+          courtName: court,
+          reserveDay: day,
+          reserveId: id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+            Accept: 'application/json',
+          },
+        }
+      );
 
-      await axios.put(`/users/reserves/delete`, {
-        username: user.username,
-        reserveId: id,
-      });
+      await axios.put(
+        `/users/reserves/delete`,
+        {
+          username: user.username,
+          reserveId: id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+            Accept: 'application/json',
+          },
+        }
+      );
 
       handleUserReserves();
 
@@ -174,13 +179,31 @@ const Navbar = () => {
 
       setStrongPassword(true);
 
-      const res = await axios.post('/users/login', {
-        username: user.username,
-        password: data.password,
-      });
+      const res = await axios.post(
+        '/users/login',
+        {
+          username: user.username,
+          password: data.password,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+            Accept: 'application/json',
+          },
+        }
+      );
 
       if (res.status === 200)
-        await axios.put('/users/update', { ...user, password: data.newPassword });
+        await axios.put(
+          '/users/update',
+          { ...user, password: data.newPassword },
+          {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+              Accept: 'application/json',
+            },
+          }
+        );
 
       notifySuccess('Contraseña Actualizada');
 

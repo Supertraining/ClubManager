@@ -24,15 +24,7 @@ export default class UserRouter {
       this.controllers.login
     );
 
-    router.get(
-      '/',
-
-      async (req, res) => {
-        res.redirect('/home');
-      }
-    );
-
-    router.get('/home', this.controllers.getByUserName);
+    router.use(IsAuthenticated.checkJwt)
 
     router.get(
       '/getAll',
@@ -48,8 +40,6 @@ export default class UserRouter {
 
     router.delete(
       '/eliminar/:id',
-
-      IsAuthenticated.checkJwt,
 
       this.controllers.deleteById
     );
@@ -80,8 +70,6 @@ export default class UserRouter {
       '/update/:id',
 
       validate.userUpdate,
-
-      IsAuthenticated.checkJwt,
 
       this.controllers.updateUser
     );

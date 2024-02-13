@@ -44,7 +44,7 @@ export const validate = {
         }
         return true;
       }),
-    body('password').exists().trim().notEmpty().isLength({min: 8}).isStrongPassword({minLength: 8, minUppercase: 1, minNumbers: 1}),
+    body('password').exists().trim().notEmpty().isStrongPassword({minLength: 8, minUppercase: 1, minNumbers: 1}),
     body('nombre').exists().trim().notEmpty(),
     body('apellido').exists().trim().notEmpty(),
     body('edad').exists().trim().notEmpty(),

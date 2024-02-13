@@ -1,10 +1,10 @@
-import axios from '../../../utils/axiosInstance.js';
 import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext.jsx';
 import { jwtDecode } from 'jwt-decode';
 import { useForm } from 'react-hook-form';
 import './login.css';
+import useAxiosInstance from '../../../hooks/useAxiosInstance.jsx';
 const Login = () => {
   const {
     register,
@@ -15,16 +15,17 @@ const Login = () => {
   const { loading, error, dispatch } = useContext(AuthContext);
 
   const navigate = useNavigate();
+  const axios = useAxiosInstance();
 
   const onSubmit = async (data) => {
     try {
       dispatch({ type: 'LOGIN_START' });
      
-      const res = await axios.post('/users/login', data);
+      const {res : data} = await axios.post('/users/login', data);
 
-      const decoded = jwtDecode(res.data)
+      const decoded = jwtDecode(data)
 
-      const user = {...decoded, token: res.data}
+      const user = {...decoded, token: data}
 
       dispatch({ type: 'LOGIN_SUCCESS', payload: user });
 

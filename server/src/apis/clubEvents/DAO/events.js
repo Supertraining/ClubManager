@@ -75,8 +75,10 @@ export default class EventDAO {
 
     try {
 
-      const data = await this.model
+      const deletedEvent = await this.model
         .deleteOne({ _id: id });
+      
+      return deletedEvent;
 
     } catch (error) {
 

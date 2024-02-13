@@ -59,7 +59,7 @@ export default class UsersServices {
 
             const isPasswordCorrect = await bcrypt.compare(data.password, user.password);
             if (!isPasswordCorrect) {
-                throw CustomError.badRequest('El usuario ya esta registrado');
+                throw CustomError.badRequest('Contraseña incorrecta');
             };
         
             const { password, isAdmin, ...otherDetails } = user.toObject();

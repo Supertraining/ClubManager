@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { ReactFullYearScheduler } from 'react-full-year-scheduler';
-import axios from '../../utils/axiosInstance';
 import 'react-full-year-scheduler/dist/style.css';
 import useFetch from '../../hooks/useFetch';
 import { ToastContainer } from 'react-toastify';
@@ -11,13 +10,13 @@ import EventsTable from './EventsTable';
 import EventsForm from './EventsForm';
 import PropTypes from 'prop-types';
 import useNotification from '../../hooks/useNotifications';
+import useAxiosInstance from '../../hooks/useAxiosInstance';
 
 const Events = ({ handleMenuClick, menu }) => {
-
   const { data, loading, error, reFetch } = useFetch('/events');
 
   const { notifyWarning, notifySuccess } = useNotification();
-
+  const axios = useAxiosInstance();
   const calendarArray = [];
   !error
     ? data.forEach((event) => {
@@ -59,10 +58,9 @@ const Events = ({ handleMenuClick, menu }) => {
 
   const handleDeleteReserve = async (id) => {
     try {
-      await axios.delete(`/events/deleteById/${id}`);
+      const { status } = await axios.delete(`/events/deleteById/${id}`);
 
-      notifySuccess('Evento Eliminado');
-
+      status === 200 && notifySuccess('Evento Eliminado');
       reFetch();
     } catch (error) {
       notifyWarning('Ha ocurrido un error, por favor intente nuevamente mas tarde');

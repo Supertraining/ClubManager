@@ -1,6 +1,5 @@
 import './user.css';
 import UserReserves from './userReserves/UserReserves';
-// import UserActivities from './userActivities/UserActivities';
 import UserData from './userData/UserData';
 import PropTypes from 'prop-types';
 

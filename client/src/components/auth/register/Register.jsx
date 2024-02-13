@@ -1,17 +1,18 @@
 import './register.css';
-import axios from '../../../utils/axiosInstance.js';
 import { useContext, useState } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { isStrongPassword } from 'validator';
 import { useForm } from 'react-hook-form';
 import { jwtDecode } from 'jwt-decode';
+import useAxiosInstance from '../../../hooks/useAxiosInstance.jsx';
 
 const Register = () => {
   const { loading, error, dispatch } = useContext(AuthContext);
   const [welcomeMessage, setWelcomeMessage] = useState(false);
 
   const navigate = useNavigate();
+  const axios = useAxiosInstance();
 
   const {
     register,

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
 import 'react-date-time-picker-popup/dist/index.css';
-import axios from '../../utils/axiosInstance.js';
 import useFetch from '../../hooks/useFetch';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -13,6 +12,7 @@ import unidecode from 'unidecode';
 import CourtBookingDatePicker from './courtBookingDatePicker/CourtBookingDatePicker.jsx';
 import PropTypes from 'prop-types';
 import useNotifications from '../../hooks/useNotifications.jsx';
+import useAxiosInstance from '../../hooks/useAxiosInstance.jsx';
 
 const Booking = ({ court }) => {
   const [day, setDay] = useState(new Date());
@@ -25,6 +25,8 @@ const Booking = ({ court }) => {
   const { user } = useContext(AuthContext);
   const { reserveDeleted, setReserveDeleted } = useContext(ReserveBoardContext);
   const { notify, notifySuccess, notifyWarning } = useNotifications();
+  const axios = useAxiosInstance();
+
 
   const handleBooking = async (selectedDay) => {
     try {
@@ -92,37 +94,53 @@ const Booking = ({ court }) => {
         const unaccentedDate = unidecode(date);
         const UUID = uuidv4();
 
-        await axios.put('/courts/reserve', {
-          name: `${court}`,
-          selectedDates: {
+        await axios.put(
+          '/courts/reserve',
+          {
+            name: `${court}`,
+            selectedDates: {
+              weekday: unaccentedWeekday,
+              date: unaccentedDate,
+              initialTime: initialTime,
+              finalTime: finalTime,
+              user: user?.username,
+              id: UUID,
+              permanent: false,
+            },
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+              Accept: 'application/json',
+            },
+          }
+        );
+
+        await axios.put(
+          `/users/reserves/${user?.username}`,
+          {
+            court: `${court}`,
             weekday: unaccentedWeekday,
             date: unaccentedDate,
             initialTime: initialTime,
             finalTime: finalTime,
-            user: user?.username,
             id: UUID,
             permanent: false,
           },
-        });
-
-        await axios.put(`/users/reserves/${user?.username}`, {
-          court: `${court}`,
-          weekday: unaccentedWeekday,
-          date: unaccentedDate,
-          initialTime: initialTime,
-          finalTime: finalTime,
-          id: UUID,
-          permanent: false,
-        });
+          {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+              Accept: 'application/json',
+            },
+          }
+        );
 
         notifySuccess('Reserva Confirmada');
-        
       } else {
         notify('Horario no disponible');
       }
 
       reFetch();
-
     } catch (error) {
       notifyWarning('Hubo un problema, por favor intente nuevamente mas tarde');
     }

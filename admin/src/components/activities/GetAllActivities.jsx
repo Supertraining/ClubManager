@@ -2,17 +2,18 @@ import ActividadesCard from './ActividadesCard';
 import './activities.css';
 import useFetch from '../../hooks/useFetch';
 import { Link } from 'react-router-dom';
-import axios from '../../utils/axiosInstance';
 import { ToastContainer } from 'react-toastify';
 import Modal from './Modal';
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import useNotifications from '../../hooks/useNotifications';
+import useAxiosInstance from '../../hooks/useAxiosInstance';
 
 const GetAllActivities = ({ handleMenuClick, menu }) => {
 
   const { data, loading, reFetch } = useFetch('/activities/getAll');
   const { notifySuccess, notifyWarning } = useNotifications();
+  const axios = useAxiosInstance();
 
   useEffect(() => {
     handleMenuClick('getAllActivities');

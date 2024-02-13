@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { IsAuthenticated } from "../middlewares/isAuthenticated.js";
 
 const router = Router();
 export default class EventRouter {
@@ -10,6 +11,8 @@ export default class EventRouter {
   }
 
   start() {
+
+    router.use(IsAuthenticated.checkJwt)
 
     router.get('/', this.controllers.getAllEvents);
     router.get('/eventById/:id', this.controllers.getEventById);

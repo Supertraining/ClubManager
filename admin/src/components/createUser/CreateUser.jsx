@@ -1,5 +1,4 @@
 import './createUser.css';
-import axios from '../../utils/axiosInstance.js';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
@@ -7,9 +6,9 @@ import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import useNotifications from '../../hooks/useNotifications.jsx';
+import useAxiosInstance from '../../hooks/useAxiosInstance.jsx';
 
 const CreateUser = ({ handleMenuClick, menu }) => {
-
   const {
     register,
     handleSubmit,
@@ -22,13 +21,16 @@ const CreateUser = ({ handleMenuClick, menu }) => {
   }, [handleMenuClick]);
 
   const { notifySuccess, notifyWarning } = useNotifications();
+  const axios = useAxiosInstance();
 
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post('/users/register', data);
-      console.log('RESPONSE:', response);
-      notifySuccess('Usuario creado');
-      reset();
+      const { status } = await axios.post('/users/register', data);
+
+      if (status === 201) {
+        notifySuccess('Usuario creado');
+        reset();
+      }
     } catch (error) {
       notifyWarning('Hubo un problema, por favor intente nuevamente mas tarde');
     }

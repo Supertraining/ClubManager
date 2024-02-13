@@ -4,6 +4,7 @@ import useFetch from '../../hooks/useFetch';
 import ActivitiesModal from './ActivitiesModal';
 
 const ActividadesList = () => {
+  
   const { data } = useFetch('./activities/getAll');
 
   return (

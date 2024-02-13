@@ -4,7 +4,6 @@ import './home.css';
 import CreateUser from '../../components/createUser/CreateUser';
 import GetAllUsers from '../../components/user/getAllUsers/GetAllUsers'
 import { useContext, useState } from 'react';
-import axios from '../../utils/axiosInstance.js'
 import OldReservesDeleted from '../../components/oldReservesDeleted/OldReservesDeleted';
 import Main from '../../components/main/Main';
 import GetAllCourts from '../../components/courts/getAllCourts/GetAllCourts';
@@ -17,6 +16,7 @@ import GetAllActivities from '../../components/activities/GetAllActivities';
 import UpdateActivities from '../../components/activities/UpdateActivities';
 import { useCallback } from 'react';
 import useNotifications from '../../hooks/useNotifications.jsx';
+import useAxiosInstance from '../../hooks/useAxiosInstance.jsx';
 
 
 
@@ -24,7 +24,8 @@ const Home = () => {
 
   const auth = useContext(AuthContext);
 
-  const { notifySuccess, notifyWarning} = useNotifications();
+  const { notifySuccess, notifyWarning } = useNotifications();
+  const axios = useAxiosInstance()
 
   const menuFeatures = {
     createUser: false,

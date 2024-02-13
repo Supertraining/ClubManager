@@ -97,7 +97,7 @@ export default class EventServices {
 
       const deletedEvent = await this.EventDAO
         .deleteEvent(id);
-
+      
       if (deletedEvent.deletedCount === 0) {
         throw CustomError.notFound('El usuarios no existe');
       }

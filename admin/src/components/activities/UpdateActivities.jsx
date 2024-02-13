@@ -1,11 +1,11 @@
 import './activities.css';
-import axios from '../../utils/axiosInstance.js';
 import { ToastContainer } from 'react-toastify';
 import { Link, useLocation } from 'react-router-dom';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import ActividadesCard from './ActividadesCard';
 import Modal from './Modal';
 import useNotifications from '../../hooks/useNotifications.jsx';
+import useAxiosInstance from '../../hooks/useAxiosInstance.jsx';
 
 const UpdateActivities = () => {
 
@@ -13,6 +13,7 @@ const UpdateActivities = () => {
     state: { id },
   } = useLocation();
   const { notifySuccess, notifyWarning } = useNotifications();
+  const axios = useAxiosInstance();
 
   const [activity, setActivity] = useState({});
   const [category, setCategory] = useState();
