@@ -22,7 +22,7 @@ const Login = () => {
       dispatch({ type: 'LOGIN_START' });
      
       const {data : token} = await axios.post('/users/login', data);
-      console.log(token)
+  
       const decoded = jwtDecode(token)
 
       const user = {...decoded, token: token}
@@ -31,7 +31,6 @@ const Login = () => {
 
       navigate('/');
     } catch (error) {
-      console.log(error)
       dispatch({ type: 'LOGIN_FAILURE', payload: error.response.data });
     }
   };
