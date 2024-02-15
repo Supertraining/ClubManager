@@ -25,7 +25,7 @@ export default class UsersController {
 		try {
 
 			const response = await this.userServices.login(req.body)
-			
+
 			res.json(response);
 
 		} catch (error) {
@@ -37,16 +37,12 @@ export default class UsersController {
 	getByUserName = async (req, res, next) => {
 
 		try {
-			if (req.headers.cookie) {
-				const usuario = await this.userServices
-					.getByUserName(req.headers.authorization);
 
-				usuario
-				res.json(usuario)
+			const usuario = await this.userServices
+				.getByUserName(req.headers.authorization);
 
-			} else {
-				res.json(false)
-			}
+			usuario
+			res.json(usuario)
 
 		} catch (error) {
 
@@ -130,7 +126,7 @@ export default class UsersController {
 	updateUser = async (req, res, next) => {
 
 		try {
-				
+
 			const updatedUser = await this.userServices
 				.updateUser(req.params.id, req.body);
 
