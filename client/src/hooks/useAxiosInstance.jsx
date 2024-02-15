@@ -4,6 +4,7 @@ import { AuthContext } from '../components/context/AuthContext';
 
 const useAxiosInstance = () => {
   const { user } = useContext(AuthContext);
+  console.log(import.meta.env.VITE_BACKEND_URL)
   const instance = axios.create({
     baseURL: import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080',
     headers: {
