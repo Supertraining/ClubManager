@@ -20,12 +20,12 @@ const Login = () => {
   const onSubmit = async (credentials) => {
     try {
       dispatch({ type: 'LOGIN_START' });
-      console.log(credentials)
-      const { data } = await axios.post('/users/login', credentials);
-      const decoded = jwtDecode(data);
+    
+      const { data : token } = await axios.post('/users/login', credentials);
+      const decoded = jwtDecode(token);
 
       if (decoded.admin) {
-        const user = { ...decoded, token: data };
+        const user = { ...decoded, token: token };
       
         dispatch({
           type: 'LOGIN_SUCCESS',

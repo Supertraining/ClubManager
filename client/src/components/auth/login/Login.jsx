@@ -21,16 +21,17 @@ const Login = () => {
     try {
       dispatch({ type: 'LOGIN_START' });
      
-      const {res : data} = await axios.post('/users/login', data);
+      const {data : token} = await axios.post('/users/login', data);
+      console.log(token)
+      const decoded = jwtDecode(token)
 
-      const decoded = jwtDecode(data)
-
-      const user = {...decoded, token: data}
+      const user = {...decoded, token: token}
 
       dispatch({ type: 'LOGIN_SUCCESS', payload: user });
 
       navigate('/');
     } catch (error) {
+      console.log(error)
       dispatch({ type: 'LOGIN_FAILURE', payload: error.response.data });
     }
   };

@@ -35,11 +35,11 @@ const Register = () => {
         return;
       }
 
-      const res = await axios.post('/users/register', data);
+      const {data : token} = await axios.post('/users/register', data);
 
-      const decoded = jwtDecode(res.data);
+      const decoded = jwtDecode(token);
 
-      const user = { ...decoded, token: res.data };
+      const user = { ...decoded, token: token };
      
       dispatch({ type: 'LOGIN_SUCCESS', payload: user });
 
@@ -49,7 +49,6 @@ const Register = () => {
         navigate('/');
       }, 2000);
     } catch (error) {
-      console.log(error);
       dispatch({ type: 'LOGIN_FAILURE', payload: error.response.data });
     }
   };
