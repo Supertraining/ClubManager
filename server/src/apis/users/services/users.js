@@ -67,7 +67,7 @@ export default class UsersServices {
             const payload = { ...otherDetails, isAdmin: isAdmin }
            
             const token = TokenHandler.generateToken(payload)
-
+            
             return token;
 
         } catch (error) {

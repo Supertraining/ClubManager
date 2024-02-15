@@ -25,7 +25,7 @@ export default class UsersController {
 		try {
 
 			const response = await this.userServices.login(req.body)
-
+			
 			res.json(response);
 
 		} catch (error) {
@@ -41,7 +41,6 @@ export default class UsersController {
 			const usuario = await this.userServices
 				.getByUserName(req.headers.authorization);
 
-			usuario
 			res.json(usuario)
 
 		} catch (error) {
