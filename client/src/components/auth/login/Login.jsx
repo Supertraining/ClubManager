@@ -22,8 +22,7 @@ const Login = () => {
       dispatch({ type: 'LOGIN_START' });
      
       const { data: token } = await axios.post('/users/login', data);
-      console.log(token)
-      console.log(typeof token)
+    
       const decoded = jwtDecode(token)
 
       const user = {...decoded, token: token}

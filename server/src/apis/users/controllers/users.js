@@ -25,7 +25,7 @@ export default class UsersController {
 		try {
 
 			const response = await this.userServices.login(req.body)
-			console.log(response)
+		
 			res.json(response);
 
 		} catch (error) {
