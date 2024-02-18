@@ -1,4 +1,4 @@
-import logger from '../../../utils/logger.js';
+import { Logger } from "../../../utils/logger.js";
 
 let instance = null;
 export default class CourtsDAO {
@@ -7,7 +7,7 @@ export default class CourtsDAO {
 
         this.courtModel = courtModel;
         this.userModel = userModel;
-        
+
     }
 
     save = async (court) => {
@@ -201,7 +201,7 @@ export default class CourtsDAO {
     updateReservesUser = async (user) => {
         try {
             const courts = await this.courtModel.find();
-            let reserveUpdated = false; 
+            let reserveUpdated = false;
 
             for (const court of courts) {
                 for (const [ dayOfWeek, reserves ] of Object.entries(court.unavailableDates)) {
@@ -212,19 +212,19 @@ export default class CourtsDAO {
                                 { $set: { [ `unavailableDates.${dayOfWeek}.$[elem].user` ]: user.newUser } },
                                 { arrayFilters: [ { "elem.user": user.user } ] }
                             );
-                               
+
                             if (result.modifiedCount > 0) {
-                                reserveUpdated = true; 
+                                reserveUpdated = true;
                             }
                         }
                     }
                 }
             }
 
-            return reserveUpdated; 
+            return reserveUpdated;
 
         } catch (error) {
-            throw error; 
+            throw error;
         }
     };
 
@@ -235,12 +235,12 @@ export default class CourtsDAO {
 
                 instance = new CourtsDAO(courtModel, userModel);
 
-                logger.info('Se ha creado una instancia de CourtsDAO');
+                Logger.level().info('Se ha creado una instancia de CourtsDAO');
 
                 return instance;
             }
 
-            logger.info('Se ha utilizado una instancia ya creada de CourtsDAO');
+            Logger.level().info('Se ha utilizado una instancia ya creada de CourtsDAO');
 
             return instance;
 

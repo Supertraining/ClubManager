@@ -23,7 +23,7 @@ export default class UsersController {
 	};
 	login = async (req, res, next) => {
 		try {
-
+		
 			const response = await this.userServices.login(req.body)
 		
 			res.json(response);

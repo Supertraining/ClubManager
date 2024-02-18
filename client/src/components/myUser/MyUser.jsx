@@ -1,13 +1,13 @@
 import { ToastContainer } from 'react-toastify';
-import { AuthContext } from '../context/AuthContext';
 import './myUser.css';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import PropTypes from 'prop-types'
+import { userStore } from '../../stores';
 
 const MyUser = (props) => {
   
-  const { user } = useContext(AuthContext);
+  const { user: { user } } = userStore();
   const [ showForm, setShowForm ] = useState(false);
   const [ confirmDelete, setConfirmDelete ] = useState(false);
   const [ credentials, setCredentials ] = useState({

@@ -1,5 +1,6 @@
 import * as model from '../db/models/court.js';
-import logger from './logger.js';
+import { CustomError } from './customError.Utils.js';
+import { Logger } from './logger.js';
 import unidecode from 'unidecode';
 
 const checkIfPermanentReservationsExist = (reserves) => {
@@ -90,13 +91,13 @@ export const repeatPermanentReservations = async () => {
             { _id: court._id },
             { $set: { unavailableDates: court.unavailableDates } }
           );
-          logger.info(result.modifiedCount + ' permanent reservations repeated for ' + court.name);
+          Logger.level().info(result.modifiedCount + ' permanent reservations repeated for ' + court.name);
         }
 
       }
     }
   } catch (error) {
-    logger.error(error);
+    throw CustomError.internalError()
   }
 };
 

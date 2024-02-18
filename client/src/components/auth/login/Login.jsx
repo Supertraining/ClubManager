@@ -1,10 +1,9 @@
-import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../context/AuthContext.jsx';
 import { jwtDecode } from 'jwt-decode';
 import { useForm } from 'react-hook-form';
 import './login.css';
 import useAxiosInstance from '../../../hooks/useAxiosInstance.jsx';
+import { userStore } from '../../../stores/index.jsx';
 const Login = () => {
   const {
     register,
@@ -12,27 +11,28 @@ const Login = () => {
     formState: { errors },
   } = useForm();
 
-  const { loading, error, dispatch } = useContext(AuthContext);
-
   const navigate = useNavigate();
   const axios = useAxiosInstance();
 
+  const {setUser, user : {user, loading, error}} = userStore();
+
   const onSubmit = async (data) => {
     try {
-      dispatch({ type: 'LOGIN_START' });
-     
+      
+      setUser({ type: 'LOGIN_START' });
+
       const { data: token } = await axios.post('/users/login', data);
-    
-      const decoded = jwtDecode(token)
 
-      const user = {...decoded, token: token}
+      const decoded = jwtDecode(token);
 
-      dispatch({ type: 'LOGIN_SUCCESS', payload: user });
+      const user = { ...decoded, token: token };
+
+      setUser({ type: 'LOGIN_SUCCESS', payload: user });
 
       navigate('/');
+
     } catch (error) {
-    
-      dispatch({ type: 'LOGIN_FAILURE', payload: error.response.data });
+      setUser({ type: 'LOGIN_FAILURE', payload: error.response.data });
     }
   };
 

@@ -1,4 +1,4 @@
-import { errorLogger } from "../utils/logger.js";
+import { Logger } from "../utils/logger.js";
 
 const errorHandler = (err, req, res, next) => {
 
@@ -14,12 +14,12 @@ const errorHandler = (err, req, res, next) => {
       user_agent: req.header[ 'user-agent' ],
       user: req.user
     };
-    errorLogger(err, additionalInfo);
+    Logger.errorLogger(err, additionalInfo);
     res.status(errorStatus).send(errorMessage);
     
   } catch (error) {
 
-    errorLogger(error)
+    Logger.errorLogger(error)
     
   }
 };

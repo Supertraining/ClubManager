@@ -1,14 +1,15 @@
 import './register.css';
-import { useContext, useState } from 'react';
-import { AuthContext } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { isStrongPassword } from 'validator';
 import { useForm } from 'react-hook-form';
 import { jwtDecode } from 'jwt-decode';
 import useAxiosInstance from '../../../hooks/useAxiosInstance.jsx';
+import { userStore } from '../../../stores/index.jsx';
+import { useState } from 'react';
 
 const Register = () => {
-  const { loading, error, dispatch } = useContext(AuthContext);
+
+  const {setUser, user: {user, loading, error}} = userStore()
   const [welcomeMessage, setWelcomeMessage] = useState(false);
 
   const navigate = useNavigate();
@@ -31,17 +32,17 @@ const Register = () => {
       };
 
       if (!isStrongPassword(data.password, passwordValidationOptions)) {
-        dispatch({ type: 'LOGIN_FAILURE', payload: 'Error de contraseña' });
+        setUser({ type: 'LOGIN_FAILURE', payload: 'Error de contraseña' });
         return;
       }
 
-      const {data : token} = await axios.post('/users/register', data);
+      const { data: token } = await axios.post('/users/register', data);
 
       const decoded = jwtDecode(token);
 
       const user = { ...decoded, token: token };
-     
-      dispatch({ type: 'LOGIN_SUCCESS', payload: user });
+
+      setUser({ type: 'LOGIN_SUCCESS', payload: user });
 
       setWelcomeMessage(true);
 
@@ -49,7 +50,7 @@ const Register = () => {
         navigate('/');
       }, 2000);
     } catch (error) {
-      dispatch({ type: 'LOGIN_FAILURE', payload: error.response.data });
+      setUser({ type: 'LOGIN_FAILURE', payload: error.response.data });
     }
   };
 

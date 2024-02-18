@@ -1,4 +1,4 @@
-import logger from "../../../utils/logger.js";
+import { Logger } from "../../../utils/logger.js";
 
 let instance = null;
 export default class ActivityDAO {
@@ -13,7 +13,7 @@ export default class ActivityDAO {
         .create(activityData);
       return activity;
     } catch (error) {
-      throw(error)
+      throw (error)
     }
   }
   getAll = async () => {
@@ -22,7 +22,7 @@ export default class ActivityDAO {
         .find();
       return activity;
     } catch (error) {
-      throw(error)
+      throw (error)
     }
   }
   getById = async (id) => {
@@ -30,7 +30,7 @@ export default class ActivityDAO {
       const activity = await this.model.findOne({ _id: id });
       return activity;
     } catch (error) {
-      throw(error)
+      throw (error)
     }
   }
   update = async (data) => {
@@ -40,7 +40,7 @@ export default class ActivityDAO {
         .findByIdAndUpdate(data.id, { ...data });
       return activity;
     } catch (error) {
-      throw(error)
+      throw (error)
     }
   }
   delete = async (id) => {
@@ -50,7 +50,7 @@ export default class ActivityDAO {
       return activity;
 
     } catch (error) {
-      throw(error)
+      throw (error)
     }
   }
   deleteAll = async () => {
@@ -60,25 +60,25 @@ export default class ActivityDAO {
       return activity;
 
     } catch (error) {
-      throw(error)
+      throw (error)
     }
   }
   static getInstance(activityModel) {
     try {
-      
+
       if (!instance) {
 
         instance = new ActivityDAO(activityModel);
 
-        logger.info('Se ha creado una instancia de ActivityDAO');
+        Logger.level().info('Se ha creado una instancia de ActivityDAO');
 
         return instance;
       }
 
-      logger.info('Se ha utilizado una instancia ya creada de ActivityDAO');
+      Logger.level().info('Se ha utilizado una instancia ya creada de ActivityDAO');
 
       return instance;
-      
+
     } catch (error) {
 
     }

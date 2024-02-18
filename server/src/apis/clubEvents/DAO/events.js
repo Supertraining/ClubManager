@@ -1,4 +1,4 @@
-import logger from '../../../utils/logger.js';
+import { Logger } from "../../../utils/logger.js";
 
 let instance = null;
 export default class EventDAO {
@@ -95,11 +95,11 @@ export default class EventDAO {
 
         instance = new EventDAO(eventModel);
 
-        logger.info('Se ha creado una instancia de EventDAO');
+        Logger.level().info('Se ha creado una instancia de EventDAO');
         return instance;
       }
 
-      logger.info('Se ha utilizado una instancia ya creada de EventDAO');
+      Logger.level().info('Se ha utilizado una instancia ya creada de EventDAO');
       return instance;
 
     } catch (error) {

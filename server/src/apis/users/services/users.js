@@ -1,4 +1,4 @@
-import { emailNewUserNotification, emailUpdatePasswordNotification } from "../../../utils/emailNotifications.Utils.js";
+import { UserNotifications } from "../helpers/emailNotifications.helper.js";
 import bcrypt from 'bcrypt';
 import { CustomError } from "../../../utils/customError.Utils.js";
 import { TokenHandler } from "../../../utils/tokenHandler.Utils.js";
@@ -30,12 +30,12 @@ export default class UsersServices {
                     }
 
                 );
-            newUser && emailNewUserNotification(data.username, data);
+            newUser && UserNotifications.emailNewUserNotification(data.username, data);
 
             const { password, isAdmin, ...otherDetails } = newUser.toObject();
 
             const payload = { ...otherDetails, isAdmin: isAdmin }
-           
+
             const token = TokenHandler.generateToken(payload)
 
             return token;
@@ -61,13 +61,13 @@ export default class UsersServices {
             if (!isPasswordCorrect) {
                 throw CustomError.badRequest('Contraseña incorrecta');
             };
-        
+
             const { password, isAdmin, ...otherDetails } = user.toObject();
 
             const payload = { ...otherDetails, isAdmin: isAdmin }
-           
+
             const token = TokenHandler.generateToken(payload)
-            
+
             return token;
 
         } catch (error) {
@@ -75,7 +75,7 @@ export default class UsersServices {
         }
     };
     async getByUserName(username) {
-       
+
         try {
 
             const user = await this.DAO
@@ -181,7 +181,7 @@ export default class UsersServices {
 
             }
 
-            emailUpdatePasswordNotification(data);
+            UserNotifications.emailUpdatePasswordNotification(data);
             const updatedUser = await this.DAO
                 .getById(data._id);
 
@@ -200,7 +200,7 @@ export default class UsersServices {
 
             const userUpdated = await this.DAO
                 .updateUser(id, data);
-            
+
 
             if (userUpdated.matchedCount === 0) {
 
@@ -215,11 +215,11 @@ export default class UsersServices {
 
             const updatedUser = await this.DAO
                 .getById(id);
-               
+
             return updatedUser
 
         } catch (error) {
-            
+
             if (error.kind === 'ObjectId') {
                 throw CustomError.badRequest('Id incorrecta')
             }

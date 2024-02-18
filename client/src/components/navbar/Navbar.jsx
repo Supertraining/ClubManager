@@ -1,13 +1,12 @@
 import './navbar.css';
 import { useNavigate, Link } from 'react-router-dom';
-import { useContext, useState } from 'react';
-import { AuthContext } from '../context/AuthContext';
 import { isStrongPassword } from 'validator';
-import { ReserveBoardContext } from '../context/ReserveBoardUpdate';
 import NavBarOffCanvasStart from '../navBarOffCanvasStart/NavBarOffCanvasStart';
 import NavBarOffCanvasEnd from '../navBarOffCanvasEnd/NavBarOffCanvasEnd';
 import useNotifications from '../../hooks/useNotifications';
 import useAxiosInstance from '../../hooks/useAxiosInstance';
+import { userStore } from '../../stores';
+import { useState } from 'react';
 
 const Navbar = () => {
   const [userReserves, setUserReserves] = useState([]);
@@ -20,8 +19,8 @@ const Navbar = () => {
   const { notifySuccess, notifyError, notifyWarning } = useNotifications();
   const axios = useAxiosInstance();
 
-  const { user, dispatch } = useContext(AuthContext);
-  const { setReserveDeleted } = useContext(ReserveBoardContext);
+  const { user: {user}, setUser, setReserveDeleted } = userStore();
+
 
   const handleUserReserves = async () => {
     try {
@@ -48,11 +47,10 @@ const Navbar = () => {
 
   const handleCloseSession = async () => {
     try {
-      dispatch({ type: 'LOGOUT' });
-
-      localStorage.removeItem('user');
+      setUser({ type: 'LOGOUT' });
 
       navigate('/');
+
     } catch (error) {
       notifyWarning('Hubo un problema, por favor intente nuevamente mas tarde');
     }
@@ -72,7 +70,7 @@ const Navbar = () => {
         newUser: credentials.username,
       });
 
-      await dispatch({ type: 'UPDATE_USER', payload: { ...updatedUser, token: user.token } });
+      setUser({ type: 'UPDATE_USER', payload: { ...updatedUser, token: user.token } });
 
       handleUserReserves();
 
@@ -107,7 +105,7 @@ const Navbar = () => {
       setUserReserves([]);
 
       if (res.data === true) {
-        dispatch({ type: 'LOGOUT' });
+        setUser({ type: 'LOGOUT' });
 
         notifySuccess('Cuenta Eliminada');
 

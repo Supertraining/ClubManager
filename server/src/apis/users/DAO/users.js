@@ -1,5 +1,4 @@
-import {userModel} from '../../../db/models/user.js';
-import logger from '../../../utils/logger.js';
+import { Logger } from "../../../utils/logger.js";
 
 let instance = null;
 
@@ -183,12 +182,12 @@ export default class UsersDAO {
 
         instance = new UsersDAO(userModel);
 
-        logger.info('Se ha creado una instancia de UsersDAO');
+       Logger.level().info('Se ha creado una instancia de UsersDAO');
 
         return instance;
       }
 
-      logger.info('Se ha utilizado una instancia ya creada de usersDAO');
+      Logger.level().info('Se ha utilizado una instancia ya creada de usersDAO');
 
       return instance;
 
