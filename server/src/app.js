@@ -1,78 +1,35 @@
-import express, { json, urlencoded } from 'express';
+import express from 'express';
 import cors from 'cors';
-import * as config from './config/config.js';
-import { MongoConnection } from './db/mongoConnection.js';
-import router from './dependencies/index.js'
 import helmet from "helmet";
-import cron from 'node-cron';
-import { repeatPermanentReservations } from './utils/updatePermanentReservations.Utils.js';
 import errorHandler from './middlewares/errorHandler.js';
+import { Logger } from './utils/logger.js';
 
-const app = express();
+export class Server {
 
-app.use(helmet());
+  app = express();
+  port;
+  routes;
 
-app.use(cors({
-  origin: [ config.client_prod_url, config.admin_prod_url, config.client_dev_url, config.admin_dev_url ],
-  credentials: true
-}));
+  constructor(port, router, corsOptions) {
+    this.port = port;
+    this.router = router;
+    this.corsOptions = corsOptions
+  }
 
-app.use(json());
-app.use(urlencoded({ extended: true }));
-app.use(router);
+  async start() {
+    //middlewares
+    this.app.use(helmet());
+    this.app.use(cors(this.corsOptions));
+    this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: true }));
 
+    //usar las rutas definidas
+    this.app.use(this.router);
 
-MongoConnection.connect(config.mongoUrl)
+    this.app.use(errorHandler)
 
-process.env.TZ = 'America/Argentina/Buenos_Aires';
-cron.schedule('19 17 * * *', repeatPermanentReservations);
-
-app.use(errorHandler);
-
-export default app;
-
-// (() => {
-//   main();
-// })();
-
-// async function main() {
-  
-//   await MongoDatabase.connect({
-//     dbName: envs.MONGO_DB_NAME,
-//     mongoUrl: envs.MONGO_URL,
-//   })
-
-//   new Server({
-//     port: envs.PORT,
-//     routes: AppRoutes.routes
-//   }).start()
-// }
-
-
-// export class Server {
-//   public readonly app = express();
-//   private readonly port: number;
-//   private readonly routes: Router;
-
-//   constructor(options: Options) {
-//     const { port = 3100, routes } = options;
-
-//     this.port = port;
-//     this.routes = routes;
-//   }
-
-//   async start() {
-//     //middlewares
-//     this.app.use(express.json());
-//     this.app.use(express.urlencoded({ extended: true }));
-
-//     //usar las rutas definidas
-//     this.app.use(this.routes);
-
-//     this.app.use(ErrorHandler.errorHandler)
-
-//     this.app.listen(this.port, () => {
-//       console.log(`Server running at port ${this.port}`);
-//     });
-//   }
-// }
+    this.app.listen(this.port, () => {
+      Logger.level().info(`Server running at port ${this.port}`);
+    });
+  }
+}
