@@ -17,13 +17,15 @@ export class Server {
   }
 
   async start() {
-    //middlewares
+
+    
     this.app.use(helmet());
     this.app.use(cors(this.corsOptions));
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
 
-    //usar las rutas definidas
+  
+    
     this.app.use(this.router);
 
     this.app.use(errorHandler)

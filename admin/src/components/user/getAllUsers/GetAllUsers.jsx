@@ -2,9 +2,9 @@ import { Link } from 'react-router-dom'
 import './getAllUsers.css'
 import User from '../User'
 import { ToastContainer } from 'react-toastify';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types'
-const GetAllUsers = ({ handleMenuClick, menu, allUsers, handleGetAllUsers, handleDeleteReserve, user, setUser, handleUpdateUser, handleDeleteUser, setConfirmDelete, confirmDelete }) => {
+const GetAllUsers = ({ user, handleMenuClick, menu, allUsers, handleGetAllUsers, handleDeleteReserve, handleUpdateUser, handleDeleteUser, setConfirmDelete, confirmDelete }) => {
 
   useEffect(() => {
     handleGetAllUsers()
@@ -14,7 +14,9 @@ const GetAllUsers = ({ handleMenuClick, menu, allUsers, handleGetAllUsers, handl
     handleMenuClick('getAllUsers');
   }, [ handleMenuClick ])
 
-
+  const [ isUserSelected, setIsUserSelected ] = useState(false)
+  
+  
   return (
     <>
       { menu.getAllUsers &&
@@ -22,7 +24,7 @@ const GetAllUsers = ({ handleMenuClick, menu, allUsers, handleGetAllUsers, handl
         <div
           className="col-12 p-1">
 
-          { !user
+          { !isUserSelected
             ? <>
 
               <div
@@ -118,7 +120,7 @@ const GetAllUsers = ({ handleMenuClick, menu, allUsers, handleGetAllUsers, handl
 
                           <button
                             className='text-primary'
-                            onClick={ () => setUser(user) }>
+                            onClick={ () => setIsUserSelected(true) }>
                             { user.username }
                           </button>
 
@@ -183,7 +185,7 @@ const GetAllUsers = ({ handleMenuClick, menu, allUsers, handleGetAllUsers, handl
               </table>
 
             </>
-            : <User setUser={ setUser } user={ user } handleDeleteReserve={ handleDeleteReserve } handleUpdateUser={ handleUpdateUser } handleDeleteUser={ handleDeleteUser } setConfirmDelete={ setConfirmDelete } confirmDelete={ confirmDelete } />
+            : <User setIsUserSelected={ setIsUserSelected } isUserSelected={ isUserSelected } user={user} handleDeleteReserve={ handleDeleteReserve } handleUpdateUser={ handleUpdateUser } handleDeleteUser={ handleDeleteUser } setConfirmDelete={ setConfirmDelete } confirmDelete={ confirmDelete } />
           }
 
           <div>

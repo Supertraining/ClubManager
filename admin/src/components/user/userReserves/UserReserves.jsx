@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 
 const UserReserves = ({ user, handleDeleteReserve }) => {
 
-
   return (
 
     <div>

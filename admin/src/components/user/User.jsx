@@ -3,8 +3,9 @@ import UserReserves from './userReserves/UserReserves';
 import UserData from './userData/UserData';
 import PropTypes from 'prop-types';
 
-const User = ({ setUser, user, handleDeleteReserve, handleUpdateUser, handleDeleteUser, setConfirmDelete, confirmDelete }) => {
+const User = ({ setIsUserSelected, user, handleDeleteReserve, handleUpdateUser, handleDeleteUser, setConfirmDelete, confirmDelete }) => {
 
+  
 
   return (
 
@@ -15,7 +16,7 @@ const User = ({ setUser, user, handleDeleteReserve, handleUpdateUser, handleDele
         
         <button
           className='btn btn-close border border-dark p-2'
-          onClick={() => setUser(false)}>
+          onClick={() => setIsUserSelected(false)}>
         </button>
         
       </div>
@@ -68,7 +69,7 @@ const User = ({ setUser, user, handleDeleteReserve, handleUpdateUser, handleDele
 }
 
 User.propTypes = { 
-  setUser: PropTypes.func, 
+  setIsUserSelected: PropTypes.func, 
   user: PropTypes.object, 
   handleDeleteReserve: PropTypes.func, 
   handleUpdateUser: PropTypes.func, 

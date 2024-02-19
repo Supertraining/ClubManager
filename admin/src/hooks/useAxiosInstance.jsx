@@ -1,9 +1,8 @@
-import { useContext } from 'react';
 import axios from 'axios';
-import { AuthContext } from '../components/context/AuthContext';
+import { userStore } from '../stores';
 
 const useAxiosInstance = () => {
-  const { user } = useContext(AuthContext);
+  const { user } = userStore(state => state.user)
   const instance = axios.create({
     baseURL: import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080',
     headers: {

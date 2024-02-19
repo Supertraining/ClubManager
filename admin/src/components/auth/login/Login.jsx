@@ -1,14 +1,28 @@
-import { useContext, useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../context/AuthContext';
 import './login.css';
 import { useForm } from 'react-hook-form';
 import { jwtDecode } from 'jwt-decode';
 import useAxiosInstance from '../../../hooks/useAxiosInstance';
+import { userStore } from '../../../stores/index';
+import { createJSONStorage } from 'zustand/middleware';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { user, loading, error, dispatch } = useContext(AuthContext);
+
+   const {
+    user: { user, loading, error },
+    setUser,
+  } = userStore((state) => state);
+
+  useCallback((value) => {
+    setUser(value)
+  }, [ setUser ]);
+
+  useEffect(() => {
+    setUser({ type: 'DEFAULT' });
+  }, [setUser]);
+
   const axios = useAxiosInstance();
 
   const {
@@ -19,30 +33,43 @@ const Login = () => {
 
   const onSubmit = async (credentials) => {
     try {
-      dispatch({ type: 'LOGIN_START' });
-    
-      const { data : token } = await axios.post('/users/login', credentials);
+
+      userStore.persist.setOptions(
+        !credentials.permanentLog
+          ? {
+              storage: createJSONStorage(() => sessionStorage),
+            }
+          : {
+              storage: createJSONStorage(() => localStorage),
+            }
+      );
+
+      setUser({ type: 'LOGIN_START' });
+
+      const { data: token } = await axios.post('/users/login', credentials);
       const decoded = jwtDecode(token);
 
       if (decoded.admin) {
         const user = { ...decoded, token: token };
-      
-        dispatch({
+
+        setUser({
           type: 'LOGIN_SUCCESS',
-          payload: { ...user, permanentLog: credentials.permanentLog },
+          payload: { ...user },
         });
+
         navigate('/home');
       } else {
         navigate('/failLogin');
       }
     } catch (error) {
-      dispatch({ type: 'LOGIN_FAILURE', payload: error.response.data });
+      setUser({ type: 'LOGIN_FAILURE', payload: error.response.data });
     }
   };
 
   useEffect(() => {
-    if (user) navigate('/home');
-  }, [user, navigate]);
+    if (user !== null) navigate('/home');
+    return;
+  }, [navigate, setUser, user]);
 
   return (
     <div className='d-flex flex-column justify-content-center align-items-center col-12 login-container'>

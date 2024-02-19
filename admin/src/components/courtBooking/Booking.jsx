@@ -3,7 +3,6 @@ import 'react-date-time-picker-popup/dist/index.css';
 import useFetch from '../../hooks/useFetch';
 import { ToastContainer } from 'react-toastify';
 import './booking.css';
-import { AuthContext } from '../context/AuthContext';
 import { v4 as uuidv4 } from 'uuid';
 import CourtBookingBoard from './courtBookingBoard/CourtBookingBoard';
 import { ReserveBoardContext } from '../context/ReserveBoardUpdate';
@@ -12,6 +11,7 @@ import CourtBookingDatePicker from './courtBookingDatePicker/CourtBookingDatePic
 import PropTypes from 'prop-types';
 import useNotifications from '../../hooks/useNotifications';
 import useAxiosInstance from '../../hooks/useAxiosInstance';
+import { userStore } from '../../stores';
 
 const Booking = ({ setCourt, court }) => {
   const [day, setDay] = useState(new Date());
@@ -22,7 +22,11 @@ const Booking = ({ setCourt, court }) => {
 
   let { data, reFetch } = useFetch(`/courts/${court}`);
 
-  const { user } = useContext(AuthContext);
+  const {
+    user: { user },
+    setUser,
+  } = userStore();
+
   const { reserveDeleted, setReserveDeleted } = useContext(ReserveBoardContext);
   const { notify, notifySuccess, notifyWarning } = useNotifications();
   const axios = useAxiosInstance();
@@ -81,6 +85,7 @@ const Booking = ({ setCourt, court }) => {
           day: 'numeric',
           month: 'numeric',
         });
+
         const unaccentedDate = unidecode(date);
         const UUID = uuidv4();
 
@@ -117,11 +122,13 @@ const Booking = ({ setCourt, court }) => {
               month: 'numeric',
             })
           );
+
           const initialTimeWeekFromNow = new Date(today.getTime());
           const todayFinalTime = new Date(finalTime);
           const finalTimeWeekFromNow = new Date(
             todayFinalTime.getTime() + 7 * 24 * 60 * 60 * 1000
           ).getTime();
+
           await axios.put('/courts/reserve', {
             name: `${court}`,
             selectedDates: {
@@ -152,6 +159,10 @@ const Booking = ({ setCourt, court }) => {
       }
 
       reFetch();
+      const { data: userById } = await axios.get(`/users/user/${user._id}`);
+      const updatedUser = { ...userById, token: user.token };
+      setUser({ type: 'UPDATE_USER', payload: updatedUser });
+
     } catch (error) {
       notifyWarning('Hubo un problema, por favor intente nuevamente mas tarde');
     }
