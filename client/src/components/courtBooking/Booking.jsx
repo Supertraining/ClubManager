@@ -11,7 +11,7 @@ import CourtBookingDatePicker from './courtBookingDatePicker/CourtBookingDatePic
 import PropTypes from 'prop-types';
 import useNotifications from '../../hooks/useNotifications.jsx';
 import useAxiosInstance from '../../hooks/useAxiosInstance.jsx';
-import { userStore } from '../../stores/index.jsx';
+import { userStore } from '../../stores/index.js';
 
 const Booking = ({ court }) => {
   const [day, setDay] = useState(new Date());

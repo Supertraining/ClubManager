@@ -3,16 +3,16 @@ import { ToastContainer } from 'react-toastify';
 import './UserData.css';
 import PropTypes from 'prop-types';
 
-const UserData = ({ user, handleUpdateUser, handleDeleteUser, setConfirmDelete, confirmDelete }) => {
-
+const UserData = ({ selectedUser, handleUpdateUser, handleDeleteUser, setConfirmDelete, confirmDelete }) => {
+ 
   const [ credentials, setCredentials ] = useState(
     {
-      username: user.username,
-      nombre: user.nombre,
-      apellido: user.apellido,
-      edad: user.edad,
-      telefono: user.telefono,
-      admin: user.admin
+      username: selectedUser.username,
+      nombre: selectedUser.nombre,
+      apellido: selectedUser.apellido,
+      edad: selectedUser.edad,
+      telefono: selectedUser.telefono,
+      admin: selectedUser.admin
     })
 
   const [ showForm, setShowForm ] = useState(false)
@@ -52,12 +52,12 @@ const UserData = ({ user, handleUpdateUser, handleDeleteUser, setConfirmDelete, 
             </i>
 
             <b
-              className='text-success mx-1 user-data'>
+              className='text-success mx-1 selectedUser-data'>
               Usuario:
             </b>
 
-            <span className='mx-1 fw-bold user-data'>
-              { user.username }
+            <span className='mx-1 fw-bold selectedUser-data'>
+              { selectedUser.username }
             </span>
 
           </li>
@@ -70,12 +70,12 @@ const UserData = ({ user, handleUpdateUser, handleDeleteUser, setConfirmDelete, 
             </i>
 
             <b
-              className='text-success mx-1 user-data'>
+              className='text-success mx-1 selectedUser-data'>
               Nombre:
             </b>
 
-            <span className='mx-1 fw-bold user-data'>
-              { user.nombre }
+            <span className='mx-1 fw-bold selectedUser-data'>
+              { selectedUser.nombre }
             </span>
 
           </li>
@@ -88,12 +88,12 @@ const UserData = ({ user, handleUpdateUser, handleDeleteUser, setConfirmDelete, 
             </i>
 
             <b
-              className='text-success mx-1 user-data'>
+              className='text-success mx-1 selectedUser-data'>
               Apellido:
             </b>
 
-            <span className='mx-1 fw-bold user-data'>
-              { user.apellido }
+            <span className='mx-1 fw-bold selectedUser-data'>
+              { selectedUser.apellido }
             </span>
 
           </li>
@@ -106,12 +106,12 @@ const UserData = ({ user, handleUpdateUser, handleDeleteUser, setConfirmDelete, 
             </i>
 
             <b
-              className='text-success mx-1 user-data'>
+              className='text-success mx-1 selectedUser-data'>
               Edad:
             </b>
 
-            <span className='mx-1 fw-bold user-data'>
-              { user.edad }
+            <span className='mx-1 fw-bold selectedUser-data'>
+              { selectedUser.edad }
             </span>
 
           </li>
@@ -124,12 +124,12 @@ const UserData = ({ user, handleUpdateUser, handleDeleteUser, setConfirmDelete, 
             </i>
 
             <b
-              className='text-success mx-1 user-data'>
+              className='text-success mx-1 selectedUser-data'>
               Telefono:
             </b>
 
-            <span className='mx-1 fw-bold user-data'>
-              { user.telefono }
+            <span className='mx-1 fw-bold selectedUser-data'>
+              { selectedUser.telefono }
             </span>
 
           </li>
@@ -141,12 +141,12 @@ const UserData = ({ user, handleUpdateUser, handleDeleteUser, setConfirmDelete, 
             </i>
 
             <b
-              className='text-success mx-1 user-data'>
+              className='text-success mx-1 selectedUser-data'>
               Admin:
             </b>
 
-            <span className='mx-1 fw-bold user-data'>
-              { user.admin ? 'Si' : 'No' }
+            <span className='mx-1 fw-bold selectedUser-data'>
+              { selectedUser.admin ? 'Si' : 'No' }
             </span>
 
           </li>
@@ -247,7 +247,7 @@ const UserData = ({ user, handleUpdateUser, handleDeleteUser, setConfirmDelete, 
                   type='submit'
                   value='Actualizar'
                   className='btn btn-sm btn-outline-danger m-1'
-                  onClick={ (e) => handleUpdateUser(e, credentials, user._id) }
+                  onClick={ (e) => handleUpdateUser(e, credentials, selectedUser._id) }
                 />
 
                 <button
@@ -301,7 +301,7 @@ const UserData = ({ user, handleUpdateUser, handleDeleteUser, setConfirmDelete, 
 
             <button
               className='btn btn-sm btn-danger mx-1'
-              onClick={ () => handleDeleteUser(user) }>
+              onClick={ () => handleDeleteUser(selectedUser) }>
               Confirmar
             </button>
 
@@ -321,7 +321,7 @@ const UserData = ({ user, handleUpdateUser, handleDeleteUser, setConfirmDelete, 
 }
 
 UserData.propTypes = {
-  user: PropTypes.oneOfType([ PropTypes.bool, PropTypes.object ]),
+  selectedUser: PropTypes.oneOfType([ PropTypes.bool, PropTypes.object ]),
   handleUpdateUser: PropTypes.func,
   handleDeleteUser: PropTypes.func,
   setConfirmDelete: PropTypes.func,

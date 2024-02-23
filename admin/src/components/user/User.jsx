@@ -3,7 +3,7 @@ import UserReserves from './userReserves/UserReserves';
 import UserData from './userData/UserData';
 import PropTypes from 'prop-types';
 
-const User = ({ setIsUserSelected, user, handleDeleteReserve, handleUpdateUser, handleDeleteUser, setConfirmDelete, confirmDelete }) => {
+const User = ({ setIsUserSelected, setSelectedUser, selectedUser, handleDeleteReserve, handleUpdateUser, handleDeleteUser, setConfirmDelete, confirmDelete }) => {
 
   
 
@@ -29,7 +29,7 @@ const User = ({ setIsUserSelected, user, handleDeleteReserve, handleUpdateUser, 
             className='col-12 border border-dark shadow p-3'>
             
             <UserData
-              user={user}
+              selectedUser={selectedUser}
               handleUpdateUser={handleUpdateUser}
               handleDeleteUser={handleDeleteUser}
               setConfirmDelete={setConfirmDelete}
@@ -46,7 +46,8 @@ const User = ({ setIsUserSelected, user, handleDeleteReserve, handleUpdateUser, 
             className='col-12 border border-dark shadow'>
             
             <UserReserves
-              user={user}
+              selectedUser={selectedUser}
+              setSelectedUser={setSelectedUser}
               handleDeleteReserve={handleDeleteReserve}
             />
 
@@ -70,7 +71,8 @@ const User = ({ setIsUserSelected, user, handleDeleteReserve, handleUpdateUser, 
 
 User.propTypes = { 
   setIsUserSelected: PropTypes.func, 
-  user: PropTypes.object, 
+  setSelectedUser: PropTypes.func, 
+  selectedUser: PropTypes.object, 
   handleDeleteReserve: PropTypes.func, 
   handleUpdateUser: PropTypes.func, 
   handleDeleteUser: PropTypes.func, 

@@ -237,12 +237,12 @@ export default class UsersServices {
 
             if (reserveUpdated.matchedCount === 0) {
 
-                throw CustomError.notFound(`Usuario con el Id: ${id} no encontrado`)
+                throw CustomError.notFound(`Usuario ${username} no encontrado`)
 
             }
             if (reserveUpdated.modifiedCount === 0 && reserveUpdated.matchedCount === 1) {
 
-                throw CustomError.badRequest(`Usuario con el Id: ${id} no ha sido modificado`)
+                throw CustomError.badRequest(`Usuario ${username} no ha sido modificado`)
 
             }
 

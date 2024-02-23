@@ -39,7 +39,6 @@ const Home = () => {
   };
   const [menu, setMenu] = useState(menuFeatures);
   const [allUsers, setAllUsers] = useState([]);
-  // const [ user, setUser ] = useState(false);
 
   const [allCourts, setAllCourts] = useState([]);
   const [court, setCourt] = useState(false);
@@ -86,8 +85,9 @@ const Home = () => {
     }
   }, []);
 
-  const handleDeleteReserve = async (court, day, id, userid) => {
+  const handleDeleteReserve = async (court, day, id, userid, user) => {
     try {
+  
       await axios.put(`/courts/reserve/delete`, {
         courtName: court,
         reserveDay: day,
@@ -95,15 +95,16 @@ const Home = () => {
       });
 
       await axios.put(`/users/reserves/delete`, {
-        username: user.username,
+        username: user,
         reserveId: id,
       });
 
-      const { data: userById } = await axios.get(`/users/user/${userid}`);
-      const updatedUser = { ...userById, token: user.token };
-      setUser({ type: 'UPDATE_USER', payload: updatedUser });
+      const { data: userById } = await axios.get(`/users/user/${userid}`); 
 
       notifySuccess('Reserva eliminada');
+   
+      return userById;
+
     } catch (error) {
       notifyWarning('Ha ocurrido un problema, por favor intente nuevamente mas tarde');
     }

@@ -1,11 +1,10 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState } from 'react';
 import 'react-date-time-picker-popup/dist/index.css';
 import useFetch from '../../hooks/useFetch';
 import { ToastContainer } from 'react-toastify';
 import './booking.css';
 import { v4 as uuidv4 } from 'uuid';
 import CourtBookingBoard from './courtBookingBoard/CourtBookingBoard';
-import { ReserveBoardContext } from '../context/ReserveBoardUpdate';
 import unidecode from 'unidecode';
 import CourtBookingDatePicker from './courtBookingDatePicker/CourtBookingDatePicker';
 import PropTypes from 'prop-types';
@@ -20,18 +19,27 @@ const Booking = ({ setCourt, court }) => {
   const [confirmReserve, setConfirmReserve] = useState(false);
   const [permanent, setPermanent] = useState(false);
 
+  //todo: IMPLEMENTAR UN OBJETO PARA REEMPLAZAR TANTOS USESTATES;
+  // const RESERVE_DATA_INITIAL_STATE = {
+  //   day: '',
+  //   initialTime: '',
+  //   finalTime: '',
+  //   permanent: '',
+  // };
+  // const [reserveData, setReserveData] = useState(RESERVE_DATA_INITIAL_STATE);
+  
+
   let { data, reFetch } = useFetch(`/courts/${court}`);
 
   const {
     user: { user },
-    setUser,
+    updateUser,
   } = userStore();
 
-  const { reserveDeleted, setReserveDeleted } = useContext(ReserveBoardContext);
   const { notify, notifySuccess, notifyWarning } = useNotifications();
   const axios = useAxiosInstance();
 
-  const handleBooking = async (selectedDay) => {
+  const handleBooking = async (selectedDay, { reservedFor, info }) => {
     try {
       let reserveData;
 
@@ -89,28 +97,57 @@ const Booking = ({ setCourt, court }) => {
         const unaccentedDate = unidecode(date);
         const UUID = uuidv4();
 
-        await axios.put('/courts/reserve', {
-          name: `${court}`,
-          selectedDates: {
+        if (reservedFor.length === 0) {
+          await axios.put(`/users/reserves/${user?.username}`, {
+            court: `${court}`,
             weekday: unaccentedWeekday,
             date: unaccentedDate,
             initialTime: initialTime,
             finalTime: finalTime,
-            user: user?.username,
             id: UUID,
             permanent: permanent,
-          },
-        });
+          });
 
-        await axios.put(`/users/reserves/${user?.username}`, {
-          court: `${court}`,
-          weekday: unaccentedWeekday,
-          date: unaccentedDate,
-          initialTime: initialTime,
-          finalTime: finalTime,
-          id: UUID,
-          permanent: permanent,
-        });
+          await axios.put('/courts/reserve', {
+            name: `${court}`,
+            selectedDates: {
+              weekday: unaccentedWeekday,
+              date: unaccentedDate,
+              initialTime: initialTime,
+              finalTime: finalTime,
+              user: user?.username,
+              id: UUID,
+              info: info.length > 0 ? info : null,
+              permanent: permanent,
+            },
+          });
+        }
+
+        if (reservedFor.length > 0) {
+          await axios.put(`/users/reserves/${reservedFor}`, {
+            court: `${court}`,
+            weekday: unaccentedWeekday,
+            date: unaccentedDate,
+            initialTime: initialTime,
+            finalTime: finalTime,
+            id: UUID,
+            permanent: permanent,
+          });
+
+          await axios.put('/courts/reserve', {
+            name: `${court}`,
+            selectedDates: {
+              weekday: unaccentedWeekday,
+              date: unaccentedDate,
+              initialTime: initialTime,
+              finalTime: finalTime,
+              user: reservedFor,
+              id: UUID,
+              info: info.length > 0 ? info : null,
+              permanent: permanent,
+            },
+          });
+        }
 
         if (permanent) {
           const today = new Date(initialTime);
@@ -129,20 +166,9 @@ const Booking = ({ setCourt, court }) => {
             todayFinalTime.getTime() + 7 * 24 * 60 * 60 * 1000
           ).getTime();
 
-          await axios.put('/courts/reserve', {
-            name: `${court}`,
-            selectedDates: {
-              weekday: unaccentedWeekday,
-              date: dateOneWeekFromNow,
-              initialTime: initialTimeWeekFromNow,
-              finalTime: finalTimeWeekFromNow,
-              user: user?.username,
-              id: UUID,
-              permanent: permanent,
-            },
-          });
+          const isForUser = reservedFor.length === 0 ? false : true;
 
-          await axios.put(`/users/reserves/${user?.username}`, {
+          await axios.put(`/users/reserves/${isForUser ? reservedFor : user?.username}`, {
             court: `${court}`,
             weekday: unaccentedWeekday,
             date: dateOneWeekFromNow,
@@ -151,20 +177,32 @@ const Booking = ({ setCourt, court }) => {
             id: UUID,
             permanent: permanent,
           });
+
+          await axios.put('/courts/reserve', {
+            name: `${court}`,
+            selectedDates: {
+              weekday: unaccentedWeekday,
+              date: dateOneWeekFromNow,
+              initialTime: initialTimeWeekFromNow,
+              finalTime: finalTimeWeekFromNow,
+              user: isForUser ? reservedFor : user?.username,
+              id: UUID,
+              info: info.length > 0 ? info : null,
+              permanent: permanent,
+            },
+          });
         }
 
         notifySuccess('Reserva confirmada');
       } else {
-        notify('HORARIO NO DISPONIBLE');
+        notify('Horario no disponible');
       }
 
       reFetch();
-      const { data: userById } = await axios.get(`/users/user/${user._id}`);
-      const updatedUser = { ...userById, token: user.token };
-      setUser({ type: 'UPDATE_USER', payload: updatedUser });
 
+      updateUser();
     } catch (error) {
-      notifyWarning('Hubo un problema, por favor intente nuevamente mas tarde');
+      notifyWarning(`Hubo un problema, ${error?.response?.data}`);
     }
   };
 
@@ -182,16 +220,12 @@ const Booking = ({ setCourt, court }) => {
       });
 
       reFetch();
+
       notifySuccess('Reserva Eliminada');
     } catch (error) {
       notifyWarning('Hubo un problema, por favor intente nuevamente mas tarde');
     }
   };
-
-  useEffect(() => {
-    reFetch();
-    setReserveDeleted(false);
-  }, [reserveDeleted]);
 
   const startDate = new Date();
   const endDate = new Date();
@@ -229,10 +263,9 @@ const Booking = ({ setCourt, court }) => {
       <div className='calendarContainer d-flex flex-column col-12'>
         <div className='d-flex flex-column border rounded bg-dark bg-opacity-50 reserveInstructionsWrapper'>
           <div className='d-flex align-items-center flex-wrap justify-content-center p-3 m-3 bg-dark'>
-            <ul className='p-2 rounded m-0 text-center shadow fw-bold bg-light m-1'>
+            <ul className='p-2 rounded m-0 shadow fw-bold bg-light'>
               <li>
-                {' '}
-                1 .Selecciona en el calendario la fecha y la hora de inicio de tu reserva y presiona
+                1. Selecciona en el calendario la fecha y la hora de inicio de tu reserva y presiona
                 el botón
                 <i className='text-success'> Confirmar hora de inicio</i>
               </li>

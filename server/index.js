@@ -23,7 +23,7 @@ async function main() {
   new Server(PORT, ROUTER, CORS_OPTIONS).start()
 
   process.env.TZ = 'America/Argentina/Buenos_Aires';
-  cron.schedule('19 17 * * *', repeatPermanentReservations);
+  cron.schedule('30 15 * * *', repeatPermanentReservations);
 }
 
 

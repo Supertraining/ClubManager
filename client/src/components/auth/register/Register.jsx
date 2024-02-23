@@ -4,7 +4,7 @@ import { isStrongPassword } from 'validator';
 import { useForm } from 'react-hook-form';
 import { jwtDecode } from 'jwt-decode';
 import useAxiosInstance from '../../../hooks/useAxiosInstance.jsx';
-import { userStore } from '../../../stores/index.jsx';
+import { userStore } from '../../../stores/index.js';
 import { useState } from 'react';
 
 const Register = () => {

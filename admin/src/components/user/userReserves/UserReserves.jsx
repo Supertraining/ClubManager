@@ -1,7 +1,7 @@
 import './userReserve.css'
 import PropTypes from 'prop-types'
 
-const UserReserves = ({ user, handleDeleteReserve }) => {
+const UserReserves = ({ setSelectedUser, selectedUser, handleDeleteReserve }) => {
 
   return (
 
@@ -21,37 +21,37 @@ const UserReserves = ({ user, handleDeleteReserve }) => {
 
             <th
               scope='col'
-              className='text-center user-reserves-th'>
+              className='text-center selectedUser-reserves-th'>
               Actividad
             </th>
 
             <th
               scope='col'
-              className='text-center user-reserves-th'>
+              className='text-center selectedUser-reserves-th'>
               fecha
             </th>
 
             <th
               scope='col'
-              className='text-center user-reserves-th'>
+              className='text-center selectedUser-reserves-th'>
               Inicia
             </th>
 
             <th
               scope='col'
-              className='text-center user-reserves-th'>
+              className='text-center selectedUser-reserves-th'>
               Finaliza
             </th>
 
             <th
               scope='col'
-              className='text-center user-reserves-th'>
+              className='text-center selectedUser-reserves-th'>
               Fijo
             </th>
 
             <th
               scope='col'
-              className='text-center user-reserves-th'>
+              className='text-center selectedUser-reserves-th'>
               Anular
             </th>
 
@@ -60,7 +60,7 @@ const UserReserves = ({ user, handleDeleteReserve }) => {
         </thead>
 
         <tbody>
-          {user?.reserves?.map((res) => (
+          {selectedUser?.reserves?.map((res) => (
             <tr
               key={res.id}
               className='text-center text-dark'>
@@ -95,7 +95,11 @@ const UserReserves = ({ user, handleDeleteReserve }) => {
 
                 <button
                   className='alert alert-danger m-0 px-2 py-0'
-                  onClick={() => handleDeleteReserve(res.court, res.weekday, res.id, user._id)}>
+                  onClick={ async () => {
+                    const updatedUser = await handleDeleteReserve(res.court, res.weekday, res.id, selectedUser._id, selectedUser.username)
+                   
+                    setSelectedUser(updatedUser)
+                  } }>
 
                   <i
                     className="bi bi-exclamation-triangle">
@@ -116,8 +120,9 @@ const UserReserves = ({ user, handleDeleteReserve }) => {
 }
 
 UserReserves.propTypes = { 
-  user: PropTypes.object, 
-  handleDeleteReserve: PropTypes.func
+  selectedUser: PropTypes.object, 
+  handleDeleteReserve: PropTypes.func,
+  setSelectedUser: PropTypes.func
 }
 
 export default UserReserves

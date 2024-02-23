@@ -1,4 +1,5 @@
 import * as model from '../db/models/court.js';
+import { userModel } from '../db/models/user.js'
 import { CustomError } from './customError.Utils.js';
 import { Logger } from './logger.js';
 import unidecode from 'unidecode';
@@ -39,7 +40,7 @@ const checkIfPermanentReservationsExist = (reserves) => {
 
       }
       if (permReserves.length === 1) {
-        return permReserves[0];
+        return permReserves[ 0 ];
       }
 
 
@@ -61,7 +62,7 @@ export const repeatPermanentReservations = async () => {
       for (const [ dayOfWeek, reserves ] of Object.entries(court.unavailableDates)) {
 
         const PermanentReserve = checkIfPermanentReservationsExist(reserves);
-       
+
         if (PermanentReserve) {
 
           const initialTime = typeof PermanentReserve.initialTime === 'string'
@@ -92,6 +93,27 @@ export const repeatPermanentReservations = async () => {
             { $set: { unavailableDates: court.unavailableDates } }
           );
           Logger.level().info(result.modifiedCount + ' permanent reservations repeated for ' + court.name);
+
+          
+          const { user, ...otherDetails } = newPermanentReserve;
+          const userReserve = { court: court.name, ...otherDetails };
+
+          const userResult = await userModel.updateOne(
+            {
+              username: user
+            },
+            {
+              $push:
+              {
+
+                [ `reserves` ]: userReserve
+
+              }
+            }
+          )
+
+          Logger.level().info(userResult.modifiedCount + ' permanent reservations repeated for ' + user);
+
         }
 
       }

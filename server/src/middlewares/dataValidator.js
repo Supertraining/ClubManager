@@ -31,6 +31,7 @@ export const validate = {
     body('selectedDates.initialTime').exists().notEmpty(),
     body('selectedDates.finalTime').exists().notEmpty(),
     body('selectedDates.id').exists().notEmpty(),
+    body('for').exists().notEmpty().optional(),
     body('selectedDates.permanent').exists().notEmpty(),
 
     handleValidationErrors

@@ -3,7 +3,7 @@ import { jwtDecode } from 'jwt-decode';
 import { useForm } from 'react-hook-form';
 import './login.css';
 import useAxiosInstance from '../../../hooks/useAxiosInstance.jsx';
-import { userStore } from '../../../stores/index.jsx';
+import { userStore } from '../../../stores/index.js';
 const Login = () => {
   const {
     register,
