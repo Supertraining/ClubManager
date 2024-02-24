@@ -6,7 +6,7 @@ import GetAllUsers from '../../components/user/getAllUsers/GetAllUsers';
 import { useState } from 'react';
 import OldReservesDeleted from '../../components/oldReservesDeleted/OldReservesDeleted';
 import Main from '../../components/main/Main';
-import GetAllCourts from '../../components/courts/getAllCourts/GetAllCourts';
+import GetAllCourts from '../../components/courts/pages/getAllCourts/GetAllCourts';
 import FailLogin from '../../components/auth/faillogin/FailLogin';
 import Events from '../../components/eventos/Events';
 import { useEffect } from 'react';
@@ -206,6 +206,7 @@ const Home = () => {
   };
 
   useEffect(() => {
+    
     if (user === null) {
       navigate('/login');
     }

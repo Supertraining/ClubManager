@@ -1,13 +1,14 @@
 import './CourtBookingBoard.css';
 import PropTypes from 'prop-types';
 const CourtBookingBoard = ({
-  data,
+  courtReserves,
   dateList,
   dateListLc,
   weekDaysList,
   court,
   handleDeleteReserve,
 }) => {
+
   return (
     <div className='col-12 p-2 tableContainer'>
       <div className='table rounded'>
@@ -17,7 +18,7 @@ const CourtBookingBoard = ({
 
             <div className='p-0 text-center d-flex justify-content-center align-items-center'>
               <ul>
-                {data[weekDaysList[0]]
+                {courtReserves[weekDaysList[0]]
                   ?.sort((a, b) => a.initialTime - b.initialTime)
                   .map(
                     (reserve, i) =>
@@ -71,7 +72,7 @@ const CourtBookingBoard = ({
 
             <div className='p-0 text-center d-flex justify-content-center align-items-center'>
               <ul>
-                {data[weekDaysList[1]]
+                {courtReserves[weekDaysList[1]]
                   ?.sort((a, b) => a.initialTime - b.initialTime)
                   .map(
                     (reserve, i) =>
@@ -125,7 +126,7 @@ const CourtBookingBoard = ({
 
             <div className='p-0 text-center d-flex justify-content-center align-items-center'>
               <ul>
-                {data[weekDaysList[2]]
+                {courtReserves[weekDaysList[2]]
                   ?.sort((a, b) => a.initialTime - b.initialTime)
                   .map(
                     (reserve, i) =>
@@ -178,7 +179,7 @@ const CourtBookingBoard = ({
 
             <div className='p-0 text-center d-flex justify-content-center align-items-center'>
               <ul>
-                {data[weekDaysList[3]]
+                {courtReserves[weekDaysList[3]]
                   ?.sort((a, b) => a.initialTime - b.initialTime)
                   .map(
                     (reserve, i) =>
@@ -231,7 +232,7 @@ const CourtBookingBoard = ({
 
             <div className='p-0 text-center d-flex justify-content-center align-items-center'>
               <ul>
-                {data[weekDaysList[4]]
+                {courtReserves[weekDaysList[4]]
                   ?.sort((a, b) => a.initialTime - b.initialTime)
                   .map(
                     (reserve, i) =>
@@ -284,7 +285,7 @@ const CourtBookingBoard = ({
 
             <div className='p-0 text-center d-flex justify-content-center align-items-center'>
               <ul>
-                {data[weekDaysList[5]]
+                {courtReserves[weekDaysList[5]]
                   ?.sort((a, b) => a.initialTime - b.initialTime)
                   .map(
                     (reserve, i) =>
@@ -337,7 +338,7 @@ const CourtBookingBoard = ({
 
             <div className='p-0 text-center d-flex justify-content-center align-items-center'>
               <ul>
-                {data[weekDaysList[6]]
+                {courtReserves[weekDaysList[6]]
                   ?.sort((a, b) => a.initialTime - b.initialTime)
                   .map(
                     (reserve, i) =>
@@ -393,7 +394,7 @@ const CourtBookingBoard = ({
 
             <div className='p-0 text-center d-flex justify-content-center align-items-center'>
               <ul>
-                {data[weekDaysList[7]]
+                {courtReserves[weekDaysList[7]]
                   ?.sort((a, b) => a.initialTime - b.initialTime)
                   .map(
                     (reserve, i) =>
@@ -447,7 +448,7 @@ const CourtBookingBoard = ({
 
             <div className='p-0 text-center d-flex justify-content-center align-items-center'>
               <ul>
-                {data[weekDaysList[8]]
+                {courtReserves[weekDaysList[8]]
                   ?.sort((a, b) => a.initialTime - b.initialTime)
                   .map(
                     (reserve, i) =>
@@ -501,7 +502,7 @@ const CourtBookingBoard = ({
 
             <div className='p-0 text-center d-flex justify-content-center align-items-center'>
               <ul>
-                {data[weekDaysList[9]]
+                {courtReserves[weekDaysList[9]]
                   ?.sort((a, b) => a.initialTime - b.initialTime)
                   .map(
                     (reserve, i) =>
@@ -555,7 +556,7 @@ const CourtBookingBoard = ({
 
             <div className='p-0 text-center d-flex justify-content-center align-items-center'>
               <ul>
-                {data[weekDaysList[10]]
+                {courtReserves[weekDaysList[10]]
                   ?.sort((a, b) => a.initialTime - b.initialTime)
                   .map(
                     (reserve, i) =>
@@ -609,7 +610,7 @@ const CourtBookingBoard = ({
 
             <div className='p-0 text-center d-flex justify-content-center align-items-center'>
               <ul>
-                {data[weekDaysList[11]]
+                {courtReserves[weekDaysList[11]]
                   ?.sort((a, b) => a.initialTime - b.initialTime)
                   .map(
                     (reserve, i) =>
@@ -663,7 +664,7 @@ const CourtBookingBoard = ({
 
             <div className='p-0 text-center d-flex justify-content-center align-items-center'>
               <ul>
-                {data[weekDaysList[12]]
+                {courtReserves[weekDaysList[12]]
                   ?.sort((a, b) => a.initialTime - b.initialTime)
                   .map(
                     (reserve, i) =>
@@ -717,7 +718,7 @@ const CourtBookingBoard = ({
 
             <div className='p-0 text-center d-flex justify-content-center align-items-center'>
               <ul>
-                {data[weekDaysList[13]]
+                {courtReserves[weekDaysList[13]]
                   ?.sort((a, b) => a.initialTime - b.initialTime)
                   .map(
                     (reserve, i) =>
@@ -773,7 +774,7 @@ const CourtBookingBoard = ({
 
             <div className='p-0 text-center d-flex justify-content-center align-items-center'>
               <ul>
-                {data[weekDaysList[14]]
+                {courtReserves[weekDaysList[14]]
                   ?.sort((a, b) => a.initialTime - b.initialTime)
                   .map(
                     (reserve, i) =>
@@ -827,7 +828,7 @@ const CourtBookingBoard = ({
 
             <div className='p-0 text-center d-flex justify-content-center align-items-center'>
               <ul>
-                {data[weekDaysList[15]]
+                {courtReserves[weekDaysList[15]]
                   ?.sort((a, b) => a.initialTime - b.initialTime)
                   .map(
                     (reserve, i) =>
@@ -881,7 +882,7 @@ const CourtBookingBoard = ({
 
             <div className='p-0 text-center d-flex justify-content-center align-items-center'>
               <ul>
-                {data[weekDaysList[16]]
+                {courtReserves[weekDaysList[16]]
                   ?.sort((a, b) => a.initialTime - b.initialTime)
                   .map(
                     (reserve, i) =>
@@ -935,7 +936,7 @@ const CourtBookingBoard = ({
 
             <div className='p-0 text-center d-flex justify-content-center align-items-center'>
               <ul>
-                {data[weekDaysList[17]]
+                {courtReserves[weekDaysList[17]]
                   ?.sort((a, b) => a.initialTime - b.initialTime)
                   .map(
                     (reserve, i) =>
@@ -989,7 +990,7 @@ const CourtBookingBoard = ({
 
             <div className='p-0 text-center d-flex justify-content-center align-items-center'>
               <ul>
-                {data[weekDaysList[18]]
+                {courtReserves[weekDaysList[18]]
                   ?.sort((a, b) => a.initialTime - b.initialTime)
                   .map(
                     (reserve, i) =>
@@ -1043,7 +1044,7 @@ const CourtBookingBoard = ({
 
             <div className='p-0 text-center d-flex justify-content-center align-items-center'>
               <ul>
-                {data[weekDaysList[19]]
+                {courtReserves[weekDaysList[19]]
                   ?.sort((a, b) => a.initialTime - b.initialTime)
                   .map(
                     (reserve, i) =>
@@ -1097,7 +1098,7 @@ const CourtBookingBoard = ({
 
             <div className='p-0 text-center d-flex justify-content-center align-items-center'>
               <ul>
-                {data[weekDaysList[20]]
+                {courtReserves[weekDaysList[20]]
                   ?.sort((a, b) => a.initialTime - b.initialTime)
                   .map(
                     (reserve, i) =>
@@ -1153,7 +1154,7 @@ const CourtBookingBoard = ({
 
             <div className='p-0 text-center d-flex justify-content-center align-items-center'>
               <ul>
-                {data[weekDaysList[21]]
+                {courtReserves[weekDaysList[21]]
                   ?.sort((a, b) => a.initialTime - b.initialTime)
                   .map(
                     (reserve, i) =>
@@ -1207,7 +1208,7 @@ const CourtBookingBoard = ({
 
             <div className='p-0 text-center d-flex justify-content-center align-items-center'>
               <ul>
-                {data[weekDaysList[22]]
+                {courtReserves[weekDaysList[22]]
                   ?.sort((a, b) => a.initialTime - b.initialTime)
                   .map(
                     (reserve, i) =>
@@ -1261,7 +1262,7 @@ const CourtBookingBoard = ({
 
             <div className='p-0 text-center d-flex justify-content-center align-items-center'>
               <ul>
-                {data[weekDaysList[23]]
+                {courtReserves[weekDaysList[23]]
                   ?.sort((a, b) => a.initialTime - b.initialTime)
                   .map(
                     (reserve, i) =>
@@ -1315,7 +1316,7 @@ const CourtBookingBoard = ({
 
             <div className='p-0 text-center d-flex justify-content-center align-items-center'>
               <ul>
-                {data[weekDaysList[24]]
+                {courtReserves[weekDaysList[24]]
                   ?.sort((a, b) => a.initialTime - b.initialTime)
                   .map(
                     (reserve, i) =>
@@ -1369,7 +1370,7 @@ const CourtBookingBoard = ({
 
             <div className='p-0 text-center d-flex justify-content-center align-items-center'>
               <ul>
-                {data[weekDaysList[25]]
+                {courtReserves[weekDaysList[25]]
                   ?.sort((a, b) => a.initialTime - b.initialTime)
                   .map(
                     (reserve, i) =>
@@ -1423,7 +1424,7 @@ const CourtBookingBoard = ({
 
             <div className='p-0 text-center d-flex justify-content-center align-items-center'>
               <ul>
-                {data[weekDaysList[26]]
+                {courtReserves[weekDaysList[26]]
                   ?.sort((a, b) => a.initialTime - b.initialTime)
                   .map(
                     (reserve, i) =>
@@ -1477,7 +1478,7 @@ const CourtBookingBoard = ({
 
             <div className='p-0 text-center d-flex justify-content-center align-items-center'>
               <ul>
-                {data[weekDaysList[27]]
+                {courtReserves[weekDaysList[27]]
                   ?.sort((a, b) => a.initialTime - b.initialTime)
                   .map(
                     (reserve, i) =>
@@ -1532,7 +1533,7 @@ const CourtBookingBoard = ({
 };
 
 CourtBookingBoard.propTypes = {
-  data: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+  courtReserves: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   dateList: PropTypes.array,
   dateListLc: PropTypes.array,
   weekDaysList: PropTypes.array,

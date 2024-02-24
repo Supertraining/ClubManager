@@ -159,7 +159,7 @@ const GetAllCourts = ({
 GetAllCourts.propTypes = {
   allCourts: PropTypes.array,
   handleGetAllCourts: PropTypes.func,
-  court: PropTypes.bool,
+  court: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
   setCourt: PropTypes.func,
   handleCreateCourt: PropTypes.func,
   handleDeleteCourt: PropTypes.func,

@@ -4,19 +4,18 @@ import Proptypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 
 const CourtBookingDatePicker = ({
-  setInitialTime,
-  initialTime,
-  setFinalTime,
-  finalTime,
+  setReserveData,
+  reserveData,
   setConfirmReserve,
   confirmReserve,
-  handleBooking,
-  setDay,
   day,
-  setPermanent,
-  permanent,
+  setDay,
+  handleBooking,
 }) => {
+  
   const { register, watch, reset } = useForm();
+
+  const {initialTime, finalTime, permanent } = reserveData;
 
   const enableConfirmReserveBtn = !(initialTime && finalTime);
 
@@ -31,7 +30,7 @@ const CourtBookingDatePicker = ({
         <div className='d-flex align-items-center justify-content-start shadow mx-0 my-1 border rounded col-12 col-md-7 col-sm-12 col-lg-4'>
           <button
             className='btn btn-success btn-pressed fw-bold col-8 h-100'
-            onClick={() => setInitialTime(day.getTime())}
+            onClick={() => setReserveData({...reserveData, initialTime: day.getTime()})}
             disabled={initialTime}>
             Confirmar hora de inicio
           </button>
@@ -42,7 +41,7 @@ const CourtBookingDatePicker = ({
 
               <button
                 className='btn btn-sm btn-outline-danger fw-bold'
-                onClick={() => setInitialTime()}
+                onClick={() => setReserveData({...reserveData, initialTime: undefined})}
                 disabled={confirmReserve}>
                 Anular
               </button>
@@ -53,7 +52,7 @@ const CourtBookingDatePicker = ({
         <div className='d-flex align-items-center justify-content-start shadow mx-0 my-1 border rounded col-12 col-md-7 col-sm-12 col-lg-4'>
           <button
             className='btn btn-success btn-pressed fw-bold col-8 h-100'
-            onClick={() => setFinalTime(day.getTime())}
+            onClick={() => setReserveData({...reserveData, finalTime: day.getTime()})}
             disabled={finalTime}>
             Confirmar hora de finalización
           </button>
@@ -64,7 +63,7 @@ const CourtBookingDatePicker = ({
 
               <button
                 className='btn btn-sm btn-outline-danger fw-bold'
-                onClick={() => setFinalTime()}
+                onClick={() => setReserveData({...reserveData, finalTime: undefined})}
                 disabled={confirmReserve}>
                 Anular
               </button>
@@ -85,11 +84,11 @@ const CourtBookingDatePicker = ({
           {!permanent ? (
             <i
               className='bi bi-toggle-off fs-4 mx-2 text-success'
-              onClick={() => setPermanent(true)}></i>
+              onClick={() => setReserveData({...reserveData, permanent: true})}></i>
           ) : (
             <i
               className='bi bi-toggle-on fs-4 mx-2 text-danger'
-              onClick={() => setPermanent(false)}></i>
+              onClick={() => setReserveData({...reserveData, permanent: false})}></i>
           )}
 
           {initialTime && finalTime && confirmReserve && (
@@ -97,7 +96,7 @@ const CourtBookingDatePicker = ({
               <button
                 className='btn p-0 mx-1'
                 onClick={() => {
-                  setInitialTime(), setFinalTime(), setConfirmReserve(false), setPermanent(false);
+                  setReserveData({...reserveData, finalTime: undefined, initialTime: undefined}, setConfirmReserve(false))
                 }}>
                 <i className='bi bi-plus-circle fs-1 text-primary'></i>
               </button>
@@ -155,16 +154,13 @@ const CourtBookingDatePicker = ({
 };
 
 CourtBookingDatePicker.propTypes = {
-  setInitialTime: Proptypes.func,
-  setFinalTime: Proptypes.func,
-  setConfirmReserve: Proptypes.func,
-  setPermanent: Proptypes.func,
+  setReserveData: Proptypes.func,
   setDay: Proptypes.func,
-  handleBooking: Proptypes.func,
-  initialTime: Proptypes.number,
-  finalTime: Proptypes.number,
-  confirmReserve: Proptypes.bool,
   day: Proptypes.object,
+  setConfirmReserve: Proptypes.func,
+  handleBooking: Proptypes.func,
+  reserveData: Proptypes.object,
+  confirmReserve: Proptypes.bool,
   permanent: Proptypes.bool,
 };
 
