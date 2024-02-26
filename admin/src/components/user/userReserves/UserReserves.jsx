@@ -2,7 +2,7 @@ import './userReserve.css'
 import PropTypes from 'prop-types'
 
 const UserReserves = ({ setSelectedUser, selectedUser, handleDeleteReserve }) => {
-
+ 
   return (
 
     <div>

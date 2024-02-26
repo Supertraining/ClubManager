@@ -69,7 +69,6 @@ const useReserves = () => {
   };
 
   const createReserve = async (court, initialTime, finalTime, permanent, info, username) => {
-
     const weekday = new Date(initialTime).toLocaleDateString('es-AR', {
       weekday: 'long',
     });
@@ -85,7 +84,6 @@ const useReserves = () => {
     const UUID = uuidv4();
 
     try {
-      
       createUserReserve(
         court,
         initialTime,
@@ -110,7 +108,6 @@ const useReserves = () => {
       );
 
       if (permanent) {
-
         const today = new Date(initialTime);
         const oneWeekFromNow = today.setDate(today.getDate() + 7);
         const dateOneWeekFromNow = unidecode(
@@ -157,8 +154,27 @@ const useReserves = () => {
     }
   };
 
+  const deleteUserReserve = async (username, id) => {
+    await axios.put(`/users/reserves/delete`, {
+      username: username,
+      reserveId: id,
+    });
+  };
+
+  const deleteCourtReserve = async (court, day, id) => {
+    await axios.put(`/courts/reserve/delete`, {
+      courtName: court,
+      reserveDay: day,
+      reserveId: id,
+    });
+  };
+
   return {
+    createUserReserve,
+    createCourtReserve,
     createReserve,
+    deleteUserReserve,
+    deleteCourtReserve,
   };
 };
 

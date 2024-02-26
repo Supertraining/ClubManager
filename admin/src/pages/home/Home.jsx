@@ -20,7 +20,7 @@ import { userStore } from '../../stores/index';
 
 const Home = () => {
   const {
-    user: { user },
+    user: { user: admin },
     setUser,
   } = userStore();
 
@@ -207,7 +207,7 @@ const Home = () => {
 
   useEffect(() => {
     
-    if (user === null) {
+    if (admin === null) {
       navigate('/login');
     }
 
@@ -215,13 +215,13 @@ const Home = () => {
     if (pathname === '/home' || pathname === '/') {
       handleMenuClick('main');
     }
-  }, [user, handleMenuClick, navigate]);
+  }, [admin, handleMenuClick, navigate]);
 
   const conditionalRender = () => {
     try {
-      if (user) {
+      if (admin) {
         return true;
-      } else if (user?.admin === false) {
+      } else if (admin?.admin === false) {
         return <FailLogin />;
       }
     } catch (error) {
@@ -274,7 +274,6 @@ const Home = () => {
                 path='/getAllUsers'
                 element={
                   <GetAllUsers
-                    user={user}
                     handleMenuClick={handleMenuClick}
                     menu={menu}
                     handleGetAllUsers={handleGetAllUsers}

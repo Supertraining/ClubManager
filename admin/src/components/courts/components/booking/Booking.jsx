@@ -1,20 +1,20 @@
 import { useState } from 'react';
 import 'react-date-time-picker-popup/dist/index.css';
-import useFetch from '../../../../hooks/useFetch';
 import { ToastContainer } from 'react-toastify';
 import './booking.css';
 import CourtBookingBoard from '../courtBookingBoard/CourtBookingBoard';
-import unidecode from 'unidecode';
 import CourtBookingDatePicker from '../courtBookingDatePicker/CourtBookingDatePicker';
 import PropTypes from 'prop-types';
-import useNotifications from '../../../../hooks/useNotifications';
-import useAxiosInstance from '../../../../hooks/useAxiosInstance';
-import { userStore } from '../../../../stores/index';
-import { isReserveDateAvailable } from '../../helpers/reserve.availability.helper.js';
-import useReserves from '../../../../hooks/useReserves.jsx';
+
+import { userStore } from '../../../../stores';
+
+import { createDateListArray, isReserveDateAvailable } from '../../helpers'
+
+import { useReserves, useFetch, useNotifications } from '../../../../hooks'
+
+
 
 const Booking = ({ setCourt, court }) => {
-
   const [day, setDay] = useState(new Date());
   const [confirmReserve, setConfirmReserve] = useState(false);
 
@@ -34,16 +34,13 @@ const Booking = ({ setCourt, court }) => {
   } = userStore();
 
   const { notify, notifySuccess, notifyWarning } = useNotifications();
-  const axios = useAxiosInstance();
-  const { createReserve } = useReserves();
+  const { createReserve, deleteCourtReserve, deleteUserReserve } = useReserves();
 
   const handleBooking = async (selectedDay, { reservedFor, info }) => {
     try {
-
       const reservedDates = isReserveDateAvailable(courtReserves, selectedDay, reserveData);
 
       if (!reservedDates) {
-
         if (reservedFor.length === 0 && !permanent) {
           createReserve(court, initialTime, finalTime, permanent, info, admin.username);
         }
@@ -54,9 +51,14 @@ const Booking = ({ setCourt, court }) => {
         }
 
         if (permanent) {
-
-          createReserve(court, initialTime, finalTime, permanent, info, reservedFor || admin.username);
-        
+          createReserve(
+            court,
+            initialTime,
+            finalTime,
+            permanent,
+            info,
+            reservedFor || admin.username
+          );
         }
 
         notifySuccess('Reserva confirmada');
@@ -65,7 +67,6 @@ const Booking = ({ setCourt, court }) => {
       }
 
       reFetch();
-
     } catch (error) {
       notifyWarning(`Hubo un problema, ${error?.response?.data}`);
     }
@@ -73,48 +74,20 @@ const Booking = ({ setCourt, court }) => {
 
   const handleDeleteReserve = async (court, day, id, username) => {
     try {
-      await axios.put(`/courts/reserve/delete`, {
-        courtName: court,
-        reserveDay: day,
-        reserveId: id,
-      });
+      deleteCourtReserve(court, day, id);
 
-      await axios.put(`/users/reserves/delete`, {
-        username: username,
-        reserveId: id,
-      });
+      deleteUserReserve(username, id);
 
       reFetch();
 
       notifySuccess('Reserva Eliminada');
     } catch (error) {
-      console.log(error);
       notifyWarning('Hubo un problema, por favor intente nuevamente mas tarde');
     }
   };
 
-  const startDate = new Date();
-  const endDate = new Date();
-  endDate.setDate(endDate.getDate() + 27);
-
-  const dateList = [];
-  const dateListLc = [];
-  const weekDaysList = [];
-
-  for (let d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
-    const day = d.toLocaleDateString('es-AR', { weekday: 'long' });
-    const unaccentedDay = unidecode(day);
-    const options = { weekday: 'long', day: 'numeric', month: 'numeric' };
-    const weekDay = d.toLocaleDateString('es-AR', options);
-    const unaccentedWeekday = unidecode(weekDay);
-    const firstLetter = weekDay.charAt(0).toUpperCase();
-    const capitalizedWeekday = firstLetter + weekDay.slice(1);
-
-    dateList.push(capitalizedWeekday);
-    dateListLc.push(unaccentedWeekday);
-    weekDaysList.push(unaccentedDay);
-  }
-
+  const { dateList, dateListLc, weekDaysList } = createDateListArray();
+ 
   return (
     <>
       <div className='my-3'>
