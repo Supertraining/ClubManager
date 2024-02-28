@@ -10,7 +10,7 @@ import { userStore } from '../../../../stores';
 
 import { createDateListArray, isReserveDateAvailable } from '../../helpers'
 
-import { useReserves, useFetch, useNotifications } from '../../../../hooks'
+import { useFetch, useNotifications, useReserves } from '../../../../hooks/index'
 
 
 
@@ -34,7 +34,7 @@ const Booking = ({ setCourt, court }) => {
   } = userStore();
 
   const { notify, notifySuccess, notifyWarning } = useNotifications();
-  const { createReserve, deleteCourtReserve, deleteUserReserve } = useReserves();
+  const { createReserve, deleteCourtReserve, deleteUserReserve } = useReserves
 
   const handleBooking = async (selectedDay, { reservedFor, info }) => {
     try {

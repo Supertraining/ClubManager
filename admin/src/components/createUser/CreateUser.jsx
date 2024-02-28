@@ -5,8 +5,7 @@ import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import useNotifications from '../../hooks/useNotifications.jsx';
-import useAxiosInstance from '../../hooks/useAxiosInstance.jsx';
+import { useNotifications, useAxiosInstance } from '../../hooks';
 
 const CreateUser = ({ handleMenuClick, menu }) => {
   const {

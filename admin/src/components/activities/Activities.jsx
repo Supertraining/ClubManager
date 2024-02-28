@@ -5,8 +5,8 @@ import { useEffect, useState } from 'react';
 import ActividadesCard from './ActividadesCard';
 import Modal from './Modal';
 import PropTypes from 'prop-types';
-import useNotifications from '../../hooks/useNotifications.jsx';
-import useAxiosInstance from '../../hooks/useAxiosInstance.jsx';
+import { useNotifications, useAxiosInstance } from '../../hooks';
+
 
 const Activities = ({ handleMenuClick, menu }) => {
 

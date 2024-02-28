@@ -3,21 +3,24 @@ import { useNavigate } from 'react-router-dom';
 import './login.css';
 import { useForm } from 'react-hook-form';
 import { jwtDecode } from 'jwt-decode';
-import useAxiosInstance from '../../../hooks/useAxiosInstance';
+import { useAxiosInstance } from '../../../hooks';
 import { userStore } from '../../../stores/index';
 import { createJSONStorage } from 'zustand/middleware';
 
 const Login = () => {
   const navigate = useNavigate();
 
-   const {
+  const {
     user: { user, loading, error },
     setUser,
   } = userStore((state) => state);
 
-  useCallback((value) => {
-    setUser(value)
-  }, [ setUser ]);
+  useCallback(
+    (value) => {
+      setUser(value);
+    },
+    [setUser]
+  );
 
   useEffect(() => {
     setUser({ type: 'DEFAULT' });
@@ -33,7 +36,6 @@ const Login = () => {
 
   const onSubmit = async (credentials) => {
     try {
-
       userStore.persist.setOptions(
         !credentials.permanentLog
           ? {
@@ -80,14 +82,14 @@ const Login = () => {
       ) : (
         <>
           <h1 className='title'>CLub Manager</h1>
-
+          <p className='my-2 text-primary'>Esta App esta desplegada en un servidor gratuito por lo que al momento de loguearte deberás esperar unos momentos hasta que el servidor despierte.</p>
           <form
             onSubmit={handleSubmit(onSubmit)}
             className='col-10 col-sm-7 col-md-5 col-lg-4 col-xl-4 rounded p-3 my-3 login-form'
             autoComplete='on'>
             <div className='d-flex align-items-center'>
               <i
-                className='bi bi-person-check'
+                className='bi bi-person-check fs-4'
                 id='basic-addon1'></i>
 
               <input

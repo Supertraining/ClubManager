@@ -1,13 +1,11 @@
 import ActividadesCard from './ActividadesCard';
 import './activities.css';
-import useFetch from '../../hooks/useFetch';
 import { Link } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import Modal from './Modal';
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
-import useNotifications from '../../hooks/useNotifications';
-import useAxiosInstance from '../../hooks/useAxiosInstance';
+import { useNotifications, useAxiosInstance, useFetch } from '../../hooks';
 
 const GetAllActivities = ({ handleMenuClick, menu }) => {
 

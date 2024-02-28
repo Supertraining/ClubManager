@@ -14,9 +14,9 @@ import Activities from '../../components/activities/Activities';
 import GetAllActivities from '../../components/activities/GetAllActivities';
 import UpdateActivities from '../../components/activities/UpdateActivities';
 import { useCallback } from 'react';
-import useNotifications from '../../hooks/useNotifications.jsx';
-import useAxiosInstance from '../../hooks/useAxiosInstance.jsx';
 import { userStore } from '../../stores/index';
+import { useNotifications, useAxiosInstance } from '../../hooks';
+
 
 const Home = () => {
   const {

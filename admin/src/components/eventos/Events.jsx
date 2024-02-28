@@ -4,18 +4,17 @@ import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { ReactFullYearScheduler } from 'react-full-year-scheduler';
 import 'react-full-year-scheduler/dist/style.css';
-import useFetch from '../../hooks/useFetch';
 import { ToastContainer } from 'react-toastify';
 import EventsTable from './EventsTable';
 import EventsForm from './EventsForm';
 import PropTypes from 'prop-types';
-import useNotification from '../../hooks/useNotifications';
-import useAxiosInstance from '../../hooks/useAxiosInstance';
+import { useNotifications, useAxiosInstance, useFetch } from '../../hooks';
+
 
 const Events = ({ handleMenuClick, menu }) => {
   const { data, loading, error, reFetch } = useFetch('/events');
 
-  const { notifyWarning, notifySuccess } = useNotification();
+  const { notifyWarning, notifySuccess } = useNotifications();
   const axios = useAxiosInstance();
   const calendarArray = [];
   !error

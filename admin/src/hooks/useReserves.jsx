@@ -1,10 +1,10 @@
 import { v4 as uuidv4 } from 'uuid';
 import unidecode from 'unidecode';
-import useNotifications from './useNotifications';
-import useAxiosInstance from './useAxiosInstance';
+import { useNotifications } from './useNotifications';
+import { useAxiosInstance } from './useAxiosInstance';
 import { userStore } from '../stores/index';
 
-const useReserves = () => {
+export const useReserves = () => {
   const { notifyWarning } = useNotifications();
   const axios = useAxiosInstance();
 
@@ -177,5 +177,3 @@ const useReserves = () => {
     deleteCourtReserve,
   };
 };
-
-export default useReserves;

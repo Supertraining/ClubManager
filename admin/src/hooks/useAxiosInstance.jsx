@@ -2,7 +2,7 @@ import axios from 'axios';
 import { userStore } from '../stores';
 import { useMemo } from 'react';
 
-const useAxiosInstance = () => {
+export const useAxiosInstance = () => {
   const { user } = userStore((state) => state.user);
 
   const instance = useMemo(() => {
@@ -19,4 +19,3 @@ const useAxiosInstance = () => {
   return instance;
 };
 
-export default useAxiosInstance;
