@@ -77,7 +77,7 @@ const Home = () => {
     },
     [setMenu]
   );
-
+  
   const handleGetAllUsers = useCallback(async () => {
     try {
       const allUsersResponse = await getAllUsers();
@@ -164,7 +164,7 @@ const Home = () => {
     } catch (error) {
       notifyWarning('Ha ocurrido un problema, por favor intente nuevamente mas tarde');
     }
-  }, []);
+  }, [getAllCourts, notifyWarning]);
 
   const handleDeleteCourt = async (id) => {
     deleteCourt(id);

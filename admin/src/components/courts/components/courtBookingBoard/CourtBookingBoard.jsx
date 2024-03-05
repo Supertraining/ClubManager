@@ -43,7 +43,7 @@ const CourtBookingBoard = ({
                             })}
                             ]
                             <i
-                              className='bi bi-x-circle-fill text-danger mx-1 cursor'
+                              className="bi bi-trash-fill text-danger mx-1 cursor"
                               onClick={() =>
                                 handleDeleteReserve(
                                   court,
@@ -97,7 +97,7 @@ const CourtBookingBoard = ({
                             })}
                             ]
                             <i
-                              className='bi bi-x-circle-fill text-danger mx-1 cursor'
+                              className="bi bi-trash-fill text-danger mx-1 cursor"
                               onClick={() =>
                                 handleDeleteReserve(
                                   court,
@@ -151,7 +151,7 @@ const CourtBookingBoard = ({
                             })}
                             ]
                             <i
-                              className='bi bi-x-circle-fill text-danger mx-1 cursor'
+                              className="bi bi-trash-fill text-danger mx-1 cursor"
                               onClick={() =>
                                 handleDeleteReserve(
                                   court,
@@ -204,7 +204,7 @@ const CourtBookingBoard = ({
                             })}
                             ]
                             <i
-                              className='bi bi-x-circle-fill text-danger mx-1 cursor'
+                              className="bi bi-trash-fill text-danger mx-1 cursor"
                               onClick={() =>
                                 handleDeleteReserve(
                                   court,
@@ -257,7 +257,7 @@ const CourtBookingBoard = ({
                             })}
                             ]
                             <i
-                              className='bi bi-x-circle-fill text-danger mx-1 cursor'
+                              className="bi bi-trash-fill text-danger mx-1 cursor"
                               onClick={() =>
                                 handleDeleteReserve(
                                   court,
@@ -310,7 +310,7 @@ const CourtBookingBoard = ({
                             })}
                             ]
                             <i
-                              className='bi bi-x-circle-fill text-danger mx-1 cursor'
+                              className="bi bi-trash-fill text-danger mx-1 cursor"
                               onClick={() =>
                                 handleDeleteReserve(
                                   court,
@@ -363,7 +363,7 @@ const CourtBookingBoard = ({
                             })}
                             ]
                             <i
-                              className='bi bi-x-circle-fill text-danger mx-1 cursor'
+                              className="bi bi-trash-fill text-danger mx-1 cursor"
                               onClick={() =>
                                 handleDeleteReserve(
                                   court,
@@ -419,7 +419,7 @@ const CourtBookingBoard = ({
                             })}
                             ]
                             <i
-                              className='bi bi-x-circle-fill text-danger mx-1 cursor'
+                              className="bi bi-trash-fill text-danger mx-1 cursor"
                               onClick={() =>
                                 handleDeleteReserve(
                                   court,
@@ -473,7 +473,7 @@ const CourtBookingBoard = ({
                             })}
                             ]
                             <i
-                              className='bi bi-x-circle-fill text-danger mx-1 cursor'
+                              className="bi bi-trash-fill text-danger mx-1 cursor"
                               onClick={() =>
                                 handleDeleteReserve(
                                   court,
@@ -527,7 +527,7 @@ const CourtBookingBoard = ({
                             })}
                             ]
                             <i
-                              className='bi bi-x-circle-fill text-danger mx-1 cursor'
+                              className="bi bi-trash-fill text-danger mx-1 cursor"
                               onClick={() =>
                                 handleDeleteReserve(
                                   court,
@@ -581,7 +581,7 @@ const CourtBookingBoard = ({
                             })}
                             ]
                             <i
-                              className='bi bi-x-circle-fill text-danger mx-1 cursor'
+                              className="bi bi-trash-fill text-danger mx-1 cursor"
                               onClick={() =>
                                 handleDeleteReserve(
                                   court,
@@ -635,7 +635,7 @@ const CourtBookingBoard = ({
                             })}
                             ]
                             <i
-                              className='bi bi-x-circle-fill text-danger mx-1 cursor'
+                              className="bi bi-trash-fill text-danger mx-1 cursor"
                               onClick={() =>
                                 handleDeleteReserve(
                                   court,
@@ -689,7 +689,7 @@ const CourtBookingBoard = ({
                             })}
                             ]
                             <i
-                              className='bi bi-x-circle-fill text-danger mx-1 cursor'
+                              className="bi bi-trash-fill text-danger mx-1 cursor"
                               onClick={() =>
                                 handleDeleteReserve(
                                   court,
@@ -743,7 +743,7 @@ const CourtBookingBoard = ({
                             })}
                             ]
                             <i
-                              className='bi bi-x-circle-fill text-danger mx-1 cursor'
+                              className="bi bi-trash-fill text-danger mx-1 cursor"
                               onClick={() =>
                                 handleDeleteReserve(
                                   court,
@@ -799,7 +799,7 @@ const CourtBookingBoard = ({
                             })}
                             ]
                             <i
-                              className='bi bi-x-circle-fill text-danger mx-1 cursor'
+                              className="bi bi-trash-fill text-danger mx-1 cursor"
                               onClick={() =>
                                 handleDeleteReserve(
                                   court,
@@ -853,7 +853,7 @@ const CourtBookingBoard = ({
                             })}
                             ]
                             <i
-                              className='bi bi-x-circle-fill text-danger mx-1 cursor'
+                              className="bi bi-trash-fill text-danger mx-1 cursor"
                               onClick={() =>
                                 handleDeleteReserve(
                                   court,
@@ -907,7 +907,7 @@ const CourtBookingBoard = ({
                             })}
                             ]
                             <i
-                              className='bi bi-x-circle-fill text-danger mx-1 cursor'
+                              className="bi bi-trash-fill text-danger mx-1 cursor"
                               onClick={() =>
                                 handleDeleteReserve(
                                   court,
@@ -961,7 +961,7 @@ const CourtBookingBoard = ({
                             })}
                             ]
                             <i
-                              className='bi bi-x-circle-fill text-danger mx-1 cursor'
+                              className="bi bi-trash-fill text-danger mx-1 cursor"
                               onClick={() =>
                                 handleDeleteReserve(
                                   court,
@@ -1015,7 +1015,7 @@ const CourtBookingBoard = ({
                             })}
                             ]
                             <i
-                              className='bi bi-x-circle-fill text-danger mx-1 cursor'
+                              className="bi bi-trash-fill text-danger mx-1 cursor"
                               onClick={() =>
                                 handleDeleteReserve(
                                   court,
@@ -1069,7 +1069,7 @@ const CourtBookingBoard = ({
                             })}
                             ]
                             <i
-                              className='bi bi-x-circle-fill text-danger mx-1 cursor'
+                              className="bi bi-trash-fill text-danger mx-1 cursor"
                               onClick={() =>
                                 handleDeleteReserve(
                                   court,
@@ -1123,7 +1123,7 @@ const CourtBookingBoard = ({
                             })}
                             ]
                             <i
-                              className='bi bi-x-circle-fill text-danger mx-1 cursor'
+                              className="bi bi-trash-fill text-danger mx-1 cursor"
                               onClick={() =>
                                 handleDeleteReserve(
                                   court,
@@ -1179,7 +1179,7 @@ const CourtBookingBoard = ({
                             })}
                             ]
                             <i
-                              className='bi bi-x-circle-fill text-danger mx-1 cursor'
+                              className="bi bi-trash-fill text-danger mx-1 cursor"
                               onClick={() =>
                                 handleDeleteReserve(
                                   court,
@@ -1233,7 +1233,7 @@ const CourtBookingBoard = ({
                             })}
                             ]
                             <i
-                              className='bi bi-x-circle-fill text-danger mx-1 cursor'
+                              className="bi bi-trash-fill text-danger mx-1 cursor"
                               onClick={() =>
                                 handleDeleteReserve(
                                   court,
@@ -1287,7 +1287,7 @@ const CourtBookingBoard = ({
                             })}
                             ]
                             <i
-                              className='bi bi-x-circle-fill text-danger mx-1 cursor'
+                              className="bi bi-trash-fill text-danger mx-1 cursor"
                               onClick={() =>
                                 handleDeleteReserve(
                                   court,
@@ -1341,7 +1341,7 @@ const CourtBookingBoard = ({
                             })}
                             ]
                             <i
-                              className='bi bi-x-circle-fill text-danger mx-1 cursor'
+                              className="bi bi-trash-fill text-danger mx-1 cursor"
                               onClick={() =>
                                 handleDeleteReserve(
                                   court,
@@ -1395,7 +1395,7 @@ const CourtBookingBoard = ({
                             })}
                             ]
                             <i
-                              className='bi bi-x-circle-fill text-danger mx-1 cursor'
+                              className="bi bi-trash-fill text-danger mx-1 cursor"
                               onClick={() =>
                                 handleDeleteReserve(
                                   court,
@@ -1449,7 +1449,7 @@ const CourtBookingBoard = ({
                             })}
                             ]
                             <i
-                              className='bi bi-x-circle-fill text-danger mx-1 cursor'
+                              className="bi bi-trash-fill text-danger mx-1 cursor"
                               onClick={() =>
                                 handleDeleteReserve(
                                   court,
@@ -1503,7 +1503,7 @@ const CourtBookingBoard = ({
                             })}
                             ]
                             <i
-                              className='bi bi-x-circle-fill text-danger mx-1 cursor'
+                              className="bi bi-trash-fill text-danger mx-1 cursor"
                               onClick={() =>
                                 handleDeleteReserve(
                                   court,

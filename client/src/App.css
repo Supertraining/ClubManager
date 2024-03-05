@@ -1,33 +1,33 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;500&display=swap');
 
-*{
+* {
   font-family: 'Roboto Slab', serif;
 }
 
 ._lRp58 {
   padding: 3% !important;
-    width: 6% !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: space-between !important;
-}/*Dias de la semana(lun-mart-etc)*/
+  width: 6% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+} /*Dias de la semana(lun-mart-etc)*/
 ._2ommc {
   margin: auto !important;
   width: 90% !important;
 }
 /*Domingo display none*/
-._2ommc :nth-child(7){
+._2ommc :nth-child(7) {
   display: none;
-}  
+}
 
 /*Columnas con las fechas*/
-._2umuz { 
+._2umuz {
   margin: auto !important;
   width: 90% !important;
   padding: 0% !important;
 }
 /*Columna de fechas del dia domingo display none*/
-._2umuz :nth-child(7){
+._2umuz :nth-child(7) {
   display: none !important;
 }
 
@@ -42,7 +42,7 @@
 /* calendar */
 ._3rDu9 {
   border-radius: 5px;
-  box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
   background-color: rgba(44, 76, 104, 0.582) !important;
 }
 /* time */
@@ -56,25 +56,24 @@
 /*Hour Selected*/
 ._3LEck {
   background-color: rgba(32, 178, 171, 0.74) !important;
-/*minutes Selected*/
+  /*minutes Selected*/
 }
 ._8EDxV {
   background-color: rgba(32, 178, 171, 0.74) !important;
 }
 
 /*horarios: Se acorta el rengo horario*/
-._3XUP3 :nth-child(n+10){
+._3XUP3 :nth-child(n + 10) {
   display: none;
 }
 
-
 /*weekDays*/
 ._2WxJS {
-  color:#1ad1c8 !important;
+  color: #1ad1c8 !important;
 }
 
 /*Asterik-icon*/
-#basic-addon1{
+#basic-addon1 {
   font-size: 10px !important;
 }
 

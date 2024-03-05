@@ -19,11 +19,10 @@ const GetAllCourts = ({
   handleMenuClick,
   menu,
 }) => {
-
   useEffect(() => {
     handleGetAllCourts();
-  }, [ handleGetAllCourts ]);
-  
+  }, [handleGetAllCourts]);
+
   useEffect(() => {
     handleMenuClick('getAllCourts');
   }, [handleMenuClick]);
@@ -90,6 +89,7 @@ const GetAllCourts = ({
                               onClick={() => {
                                 setCourtId(court._id);
                               }}>
+                              <i className='bi bi-trash-fill mx-1'></i>
                               Eliminar
                             </button>
                           )}

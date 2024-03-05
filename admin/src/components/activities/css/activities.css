@@ -4,7 +4,6 @@
     overflow-y: hidden;
   }
 }
-        
 .card-wrapper {
   width: 300px;
   height: fit-content;
@@ -19,9 +18,6 @@
   object-fit: contain;
 }
 
-/* .card-text {
-  font-size: clamp(14px, 2vw, 100%);
-} */
 
 .card-link:active {
   background-color: #121212;

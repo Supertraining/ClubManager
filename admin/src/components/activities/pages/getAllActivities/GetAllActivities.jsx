@@ -1,5 +1,4 @@
 import ActivityCard from '../../components/activityCard/ActivityCard';
-import '../../activities.css';
 import { Link } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import Modal from '../../components/modal/Modal';

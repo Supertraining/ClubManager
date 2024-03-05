@@ -1,4 +1,4 @@
-import '../../eventos.css';
+import '../../css/events.css';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';

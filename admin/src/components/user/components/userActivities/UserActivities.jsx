@@ -1,4 +1,4 @@
-import './UserActivities.css'
+
 
 const UserActivities = () => {
   return (

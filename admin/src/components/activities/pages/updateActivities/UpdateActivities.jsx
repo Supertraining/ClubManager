@@ -1,4 +1,3 @@
-import '../../activities.css';
 import { ToastContainer } from 'react-toastify';
 import { Link, useLocation } from 'react-router-dom';
 import { useCallback, useEffect, useMemo, useState } from 'react';

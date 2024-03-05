@@ -8,13 +8,13 @@ const OldReservesDeleted = (
   { handleMenuClick, menu, setMenu, setConfirmDelete, confirmDelete, handleDeleteOldReserves }) => {
 
   useEffect(() => {
-    handleMenuClick('oldReservesDeleted');
+    handleMenuClick('deleteReserves');
   }, [ handleMenuClick ])
 
   return (
 
     <>
-      { menu.oldReservesDeleted &&
+      { menu.deleteReserves &&
 
         <div
           className='col-9 d-flex flex-column align-items-center p-1 OldReservesDeleted-container'>

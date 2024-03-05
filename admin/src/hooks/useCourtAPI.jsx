@@ -1,17 +1,18 @@
 import { useNotifications } from './useNotifications';
 import { useAxiosInstance } from './useAxiosInstance';
+import { useCallback } from 'react';
 export const useCourtAPI = () => {
   const { notifyWarning, notifySuccess } = useNotifications();
   const axios = useAxiosInstance();
 
-  const getAllCourts = async () => {
+  const getAllCourts = useCallback( async () => {
     try {
       const { data: allCourts } = await axios.get('/courts/');
       return allCourts;
     } catch (error) {
       notifyWarning(`Hubo un problema, ${error?.response?.data}`);
     }
-  };
+  },[axios, notifyWarning]);
 
   const deleteCourt = async (id) => {
     try {
