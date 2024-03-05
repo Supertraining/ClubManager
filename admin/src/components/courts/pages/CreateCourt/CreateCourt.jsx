@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './createCourt.css';
 import { ToastContainer } from 'react-toastify';
-
+import PropTypes from 'prop-types';
 const CreateCourt = ({ handleCreateCourt }) => {
 
   const [court, setCourt] = useState({ name: '' })
@@ -88,4 +88,8 @@ const CreateCourt = ({ handleCreateCourt }) => {
   )
 }
 
-export default CreateCourt
+export default CreateCourt;
+
+CreateCourt.propTypes = {
+  handleCreateCourt: PropTypes.func,
+}

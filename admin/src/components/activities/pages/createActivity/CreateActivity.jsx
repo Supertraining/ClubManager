@@ -1,15 +1,14 @@
-import './activities.css';
+import '../../activities.css';
 import { ToastContainer } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import ActividadesCard from './ActividadesCard';
-import Modal from './Modal';
+import ActivityCard from '../../components/activityCard/ActivityCard';
+import Modal from '../../components/modal/Modal';
 import PropTypes from 'prop-types';
-import { useNotifications, useAxiosInstance } from '../../hooks';
+import { useNotifications } from '../../../../hooks';
+import useActivityAPI from '../../hooks/useActivityAPI';
 
-
-const Activities = ({ handleMenuClick, menu }) => {
-
+export const CreateActivity = ({ handleMenuClick, menu }) => {
   const categoryInitialState = {
     name: '',
     age_range: '',
@@ -25,7 +24,7 @@ const Activities = ({ handleMenuClick, menu }) => {
   };
 
   const { notifySuccess, notifyWarning } = useNotifications();
-  const axios = useAxiosInstance();
+  const { createActivity } = useActivityAPI();
 
   const [activity, setActivity] = useState(activityInitialState);
   const [category, setCategory] = useState(categoryInitialState);
@@ -79,7 +78,7 @@ const Activities = ({ handleMenuClick, menu }) => {
     }
   };
 
-  const createActivity = async (e) => {
+  const handleCreateActivity = async (e) => {
     e.preventDefault();
 
     try {
@@ -94,9 +93,8 @@ const Activities = ({ handleMenuClick, menu }) => {
         return;
       }
 
-      const { status } = await axios.post('/activities/save', activityData);
+      createActivity(activityData);
 
-      status === 200 && notifySuccess('Actividad creada');
       setActivity(activityInitialState);
       setDisableCategory(true);
       setCategories([]);
@@ -135,7 +133,7 @@ const Activities = ({ handleMenuClick, menu }) => {
                 className='form d-flex flex-column col-12'
                 role='form'
                 autoComplete='on'
-                onSubmit={createActivity}>
+                onSubmit={handleCreateActivity}>
                 <p className='mt-3 text-success'>Datos de la actividad</p>
                 <hr className='border-3 border-success  mb-2' />
 
@@ -321,7 +319,7 @@ const Activities = ({ handleMenuClick, menu }) => {
             </div>
 
             <div className='d-flex justify-content-center col-12 col-xl-4'>
-              <ActividadesCard
+              <ActivityCard
                 key={activity.img}
                 img={activity.img}
                 imgText={activity.imgText}
@@ -344,9 +342,8 @@ const Activities = ({ handleMenuClick, menu }) => {
   );
 };
 
-Activities.propTypes = {
+CreateActivity.propTypes = {
   handleMenuClick: PropTypes.func.isRequired,
   menu: PropTypes.object,
 };
 
-export default Activities;

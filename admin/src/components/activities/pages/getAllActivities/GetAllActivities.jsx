@@ -1,29 +1,28 @@
-import ActividadesCard from './ActividadesCard';
-import './activities.css';
+import ActivityCard from '../../components/activityCard/ActivityCard';
+import '../../activities.css';
 import { Link } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import Modal from './Modal';
+import Modal from '../../components/modal/Modal';
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
-import { useNotifications, useAxiosInstance, useFetch } from '../../hooks';
+import { useNotifications, useFetch } from '../../../../hooks';
+import useActivityAPI from '../../hooks/useActivityAPI';
 
-const GetAllActivities = ({ handleMenuClick, menu }) => {
-
+export const GetAllActivities = ({ handleMenuClick, menu }) => {
   const { data, loading, reFetch } = useFetch('/activities/getAll');
   const { notifySuccess, notifyWarning } = useNotifications();
-  const axios = useAxiosInstance();
+  const { deleteActivity } = useActivityAPI();
 
   useEffect(() => {
     handleMenuClick('getAllActivities');
   }, [handleMenuClick]);
 
-  const deleteActivity = async (id) => {
+  const handleDeleteActivity = async (id) => {
     try {
-      const {
-        data: { deletedCount },
-      } = await axios.delete(`/activities/deleteById/${id}`);
+     const deletedCount = await deleteActivity(id);
+    
       if (deletedCount) reFetch();
-      notifySuccess('Actividad eliminada');
+      notifySuccess('Actividad eliminada con exito')
     } catch (error) {
       notifyWarning('Hubo un problema, por favor intente nuevamente mas tarde');
     }
@@ -61,7 +60,7 @@ const GetAllActivities = ({ handleMenuClick, menu }) => {
           <div className='d-flex justify-content-start justify-content-md-evenly cards-container flex-md-wrap gap-2 my-5'>
             {data?.map((card) => (
               <div key={window.crypto.randomUUID()}>
-                <ActividadesCard
+                <ActivityCard
                   key={card.id}
                   id={card._id}
                   img={card.img}
@@ -69,7 +68,7 @@ const GetAllActivities = ({ handleMenuClick, menu }) => {
                   title={card.activity}
                   description={card.description}
                   data_target={card.data_target}
-                  deleteActivity={deleteActivity}
+                  handleDeleteActivity={handleDeleteActivity}
                 />
 
                 <Modal
@@ -93,4 +92,3 @@ GetAllActivities.propTypes = {
   menu: PropTypes.object,
 };
 
-export default GetAllActivities;

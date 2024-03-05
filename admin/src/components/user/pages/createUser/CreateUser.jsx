@@ -5,9 +5,9 @@ import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useNotifications, useAxiosInstance } from '../../hooks';
+import { useNotifications, useAxiosInstance } from '../../../../hooks';
 
-const CreateUser = ({ handleMenuClick, menu }) => {
+export const CreateUser = ({ handleMenuClick, menu }) => {
   const {
     register,
     handleSubmit,
@@ -247,4 +247,3 @@ CreateUser.propTypes = {
   menu: PropTypes.object,
 };
 
-export default CreateUser;

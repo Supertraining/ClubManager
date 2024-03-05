@@ -1,21 +1,21 @@
-import './eventos.css';
+import '../../eventos.css';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { ReactFullYearScheduler } from 'react-full-year-scheduler';
 import 'react-full-year-scheduler/dist/style.css';
 import { ToastContainer } from 'react-toastify';
-import EventsTable from './EventsTable';
-import EventsForm from './EventsForm';
+import EventsTable from '../../components/EventsTable/EventsTable';
+import EventsForm from '../../components/eventsForm/EventsForm';
 import PropTypes from 'prop-types';
-import { useNotifications, useAxiosInstance, useFetch } from '../../hooks';
-
+import { useNotifications, useFetch } from '../../../../hooks';
+import { useEventsAPI } from '../../hooks/useEventsAPI';
 
 const Events = ({ handleMenuClick, menu }) => {
   const { data, loading, error, reFetch } = useFetch('/events');
 
-  const { notifyWarning, notifySuccess } = useNotifications();
-  const axios = useAxiosInstance();
+  const { notifyWarning } = useNotifications();
+  const { deleteReserve, createEvent, updateEvent } = useEventsAPI();
   const calendarArray = [];
   !error
     ? data.forEach((event) => {
@@ -25,7 +25,7 @@ const Events = ({ handleMenuClick, menu }) => {
       })
     : notifyWarning('Ha ocurrido un error, por favor intente nuevamente mas tarde');
 
-  let eventDataInitialState = {
+  let EVENT_DATA_INITIAL_STATE = {
     evento: '',
     nombre: '',
     apellido: '',
@@ -42,7 +42,7 @@ const Events = ({ handleMenuClick, menu }) => {
     saldado: false,
   };
 
-  const [eventData, setEventData] = useState(eventDataInitialState);
+  const [eventData, setEventData] = useState(EVENT_DATA_INITIAL_STATE);
 
   useEffect(() => {
     handleMenuClick('events');
@@ -57,9 +57,7 @@ const Events = ({ handleMenuClick, menu }) => {
 
   const handleDeleteReserve = async (id) => {
     try {
-      const { status } = await axios.delete(`/events/deleteById/${id}`);
-
-      status === 200 && notifySuccess('Evento Eliminado');
+      deleteReserve(id);
       reFetch();
     } catch (error) {
       notifyWarning('Ha ocurrido un error, por favor intente nuevamente mas tarde');
@@ -74,22 +72,18 @@ const Events = ({ handleMenuClick, menu }) => {
         return;
       }
 
-      await axios.post(`/events/createEvent`, {
-        ...eventData,
-        date: new Date(date).toLocaleDateString(),
-        calendarData: calendarData,
-      });
+      createEvent(eventData, date, calendarData);
 
       reFetch();
-
-      notifySuccess('Evento Creado');
     } catch (error) {
       notifyWarning('Ha ocurrido un error, por favor intente nuevamente mas tarde');
     }
   };
+
   const handleIsEventSettled = async (id, isSettled) => {
     try {
-      await axios.put('/events/updateEvent', { id: id, saldado: isSettled });
+
+      updateEvent(id, isSettled)
 
       reFetch();
     } catch (error) {
@@ -160,7 +154,7 @@ const Events = ({ handleMenuClick, menu }) => {
 
                     clearSelectedCell();
 
-                    setEventData(eventDataInitialState);
+                    setEventData(EVENT_DATA_INITIAL_STATE);
                   }}
                 />
               </>

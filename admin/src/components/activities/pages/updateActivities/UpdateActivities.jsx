@@ -1,18 +1,18 @@
-import './activities.css';
+import '../../activities.css';
 import { ToastContainer } from 'react-toastify';
 import { Link, useLocation } from 'react-router-dom';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import ActividadesCard from './ActividadesCard';
-import Modal from './Modal';
-import { useNotifications, useAxiosInstance } from '../../hooks';
+import ActivityCard from '../../components/activityCard/ActivityCard';
+import Modal from '../../components/modal/Modal';
+import { useNotifications } from '../../../../hooks';
+import useActivityAPI from '../../hooks/useActivityAPI';
 
-const UpdateActivities = () => {
-
+export const UpdateActivities = () => {
   const {
     state: { id },
   } = useLocation();
+  const { getActivityById, updateActivity } = useActivityAPI();
   const { notifySuccess, notifyWarning } = useNotifications();
-  const axios = useAxiosInstance();
 
   const [activity, setActivity] = useState({});
   const [category, setCategory] = useState();
@@ -25,20 +25,18 @@ const UpdateActivities = () => {
     wrongId: null,
     input: null,
   };
+
   const [error, setError] = useState(errorInitialState);
 
-  const getActivityById = useCallback(async () => {
+  const handleGetActivityById = useCallback(async () => {
     try {
-      const { status, data } = await axios.get(`/activities/getById/${id}`);
-    
-      if (status === 200) {
-        const { category, ...activityData } = data;
+      const data = await getActivityById(id);
 
-        setActivity({ ...activityData });
-        setCategories(category);
-        setModalId(activityData.activity.split(' ').join(''));
-      } 
+      const { category, ...activityData } = data;
 
+      setActivity({ ...activityData });
+      setCategories(category);
+      setModalId(activityData.activity.split(' ').join(''));
     } catch (error) {
       notifyWarning('Hubo un problema, por favor intente nuevamente mas tarde');
     }
@@ -52,8 +50,8 @@ const UpdateActivities = () => {
   };
 
   useEffect(() => {
-    getActivityById();
-  }, [getActivityById]);
+    handleGetActivityById();
+  }, [handleGetActivityById]);
 
   const updateCategory = (e, i) => {
     try {
@@ -66,8 +64,7 @@ const UpdateActivities = () => {
       setError(errorInitialState);
       categories[i] = { ...categories[i], ...category };
 
-      notifySuccess(`Categoría ${categories[ i ].name} Actualizada`);
-      
+      notifySuccess(`Categoría ${categories[i].name} Actualizada`);
     } catch (error) {
       notifyWarning('Hubo un problema, por favor intente nuevamente mas tarde');
     }
@@ -118,7 +115,7 @@ const UpdateActivities = () => {
     }
   };
 
-  const updateActivity = async (e) => {
+  const handleUpdateActivity = async (e) => {
     try {
       e.preventDefault();
       const form = e.target;
@@ -137,9 +134,8 @@ const UpdateActivities = () => {
         data_target: `#${dt}`,
       };
 
-      const { status } = await axios.put(`/activities/update/${id}`, activityData);
+      updateActivity(id, activityData)
 
-      status === 200 && notifySuccess('Actividad creada');
       setActivity(activityData);
     } catch (error) {
       notifyWarning('Hubo un problema, por favor intente nuevamente mas tarde');
@@ -170,7 +166,7 @@ const UpdateActivities = () => {
             className='form d-flex flex-column col-12'
             role='form'
             autoComplete='on'
-            onSubmit={updateActivity}>
+            onSubmit={handleUpdateActivity}>
             <p className='mt-3 text-success'>Datos de la actividad</p>
             <hr className='border-3 border-success  mb-2' />
 
@@ -242,7 +238,7 @@ const UpdateActivities = () => {
                   <input
                     className='my-2 text-center bg-white text-secondary p-2'
                     type='submit'
-                    value='Crear actividad'
+                    value='Actualizar actividad'
                   />
                 </div>
 
@@ -473,7 +469,7 @@ const UpdateActivities = () => {
         </div>
 
         <div className='d-flex justify-content-center'>
-          <ActividadesCard
+          <ActivityCard
             key={activity.img}
             img={activity.img}
             imgText={activity.imgText}
@@ -494,4 +490,3 @@ const UpdateActivities = () => {
   );
 };
 
-export default UpdateActivities;

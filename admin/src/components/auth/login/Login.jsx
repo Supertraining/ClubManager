@@ -2,8 +2,7 @@ import { useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './login.css';
 import { useForm } from 'react-hook-form';
-import { jwtDecode } from 'jwt-decode';
-import { useAxiosInstance } from '../../../hooks';
+import { useUserAPI } from '../../../hooks';
 import { userStore } from '../../../stores/index';
 import { createJSONStorage } from 'zustand/middleware';
 
@@ -26,7 +25,7 @@ const Login = () => {
     setUser({ type: 'DEFAULT' });
   }, [setUser]);
 
-  const axios = useAxiosInstance();
+  const { userLogin } = useUserAPI();
 
   const {
     register,
@@ -48,21 +47,19 @@ const Login = () => {
 
       setUser({ type: 'LOGIN_START' });
 
-      const { data: token } = await axios.post('/users/login', credentials);
-      const decoded = jwtDecode(token);
+      const user = await userLogin(credentials);
 
-      if (decoded.admin) {
-        const user = { ...decoded, token: token };
-
+      if (user?.admin) {
         setUser({
           type: 'LOGIN_SUCCESS',
           payload: { ...user },
         });
 
         navigate('/home');
-      } else {
+      } else if (!user?.admin) {
         navigate('/failLogin');
       }
+
     } catch (error) {
       setUser({ type: 'LOGIN_FAILURE', payload: error.response.data });
     }
@@ -82,7 +79,10 @@ const Login = () => {
       ) : (
         <>
           <h1 className='title'>CLub Manager</h1>
-          <p className='my-2 text-primary'>Esta App esta desplegada en un servidor gratuito por lo que al momento de loguearte deberás esperar unos momentos hasta que el servidor despierte.</p>
+          <p className='my-2 text-primary'>
+            Esta App esta desplegada en un servidor gratuito por lo que al momento de loguearte
+            deberás esperar unos momentos hasta que el servidor despierte.
+          </p>
           <form
             onSubmit={handleSubmit(onSubmit)}
             className='col-10 col-sm-7 col-md-5 col-lg-4 col-xl-4 rounded p-3 my-3 login-form'

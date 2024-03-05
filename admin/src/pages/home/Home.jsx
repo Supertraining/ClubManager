@@ -1,31 +1,44 @@
-import Menu from '../../components/menu/Menu';
 import { Routes, Route, useNavigate } from 'react-router-dom';
+
 import './home.css';
-import CreateUser from '../../components/createUser/CreateUser';
-import GetAllUsers from '../../components/user/getAllUsers/GetAllUsers';
-import { useState } from 'react';
+
+import { CreateUser, GetAllUsers } from '../../components/user/pages';
+import Menu from '../../components/menu/Menu';
 import OldReservesDeleted from '../../components/oldReservesDeleted/OldReservesDeleted';
 import Main from '../../components/main/Main';
 import GetAllCourts from '../../components/courts/pages/getAllCourts/GetAllCourts';
 import FailLogin from '../../components/auth/faillogin/FailLogin';
-import Events from '../../components/eventos/Events';
-import { useEffect } from 'react';
-import Activities from '../../components/activities/Activities';
-import GetAllActivities from '../../components/activities/GetAllActivities';
-import UpdateActivities from '../../components/activities/UpdateActivities';
+import Events from '../../components/events/pages/events/Events';
+
+import {
+  CreateActivity,
+  GetAllActivities,
+  UpdateActivities,
+} from '../../components/activities/pages';
+
+import { useState, useEffect } from 'react';
 import { useCallback } from 'react';
 import { userStore } from '../../stores/index';
-import { useNotifications, useAxiosInstance } from '../../hooks';
-
+import {
+  useNotifications,
+  useAxiosInstance,
+  useReservesAPI,
+  useUserAPI,
+  useCourtAPI,
+} from '../../hooks';
 
 const Home = () => {
   const {
     user: { user: admin },
-    setUser,
+    updateUser,
   } = userStore();
 
   const { notifySuccess, notifyWarning } = useNotifications();
   const axios = useAxiosInstance();
+  const navigate = useNavigate();
+  const { deleteCourtReserve, deleteUserReserve } = useReservesAPI();
+  const { getAllUsers, updateUserById, deleteUserById, getUserById, closeSession } = useUserAPI();
+  const { getAllCourts, deleteCourt, deleteOldReserves } = useCourtAPI();
 
   const menuFeatures = {
     createUser: false,
@@ -39,14 +52,14 @@ const Home = () => {
   };
   const [menu, setMenu] = useState(menuFeatures);
   const [allUsers, setAllUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [isUserSelected, setIsUserSelected] = useState(false);
 
   const [allCourts, setAllCourts] = useState([]);
   const [court, setCourt] = useState(false);
   const [courtId, setCourtId] = useState();
 
   const [confirmDelete, setConfirmDelete] = useState(false);
-
-  const navigate = useNavigate();
 
   const handleMenuClick = useCallback(
     (option) => {
@@ -67,19 +80,9 @@ const Home = () => {
 
   const handleGetAllUsers = useCallback(async () => {
     try {
-      const { data: allUsers } = await axios.get('/users/getAll');
+      const allUsersResponse = await getAllUsers();
 
-      allUsers.sort((a, b) => {
-        if (a.apellido > b.apellido) {
-          return 1;
-        }
-        if (a.apellido < b.apellido) {
-          return -1;
-        }
-        return 0;
-      });
-
-      setAllUsers(allUsers);
+      setAllUsers(allUsersResponse);
     } catch (error) {
       notifyWarning('Ha ocurrido un problema, por favor intente nuevamente mas tarde');
     }
@@ -87,24 +90,15 @@ const Home = () => {
 
   const handleDeleteReserve = async (court, day, id, userid, user) => {
     try {
-  
-      await axios.put(`/courts/reserve/delete`, {
-        courtName: court,
-        reserveDay: day,
-        reserveId: id,
-      });
+      deleteCourtReserve(court, day, id);
 
-      await axios.put(`/users/reserves/delete`, {
-        username: user,
-        reserveId: id,
-      });
+      deleteUserReserve(user, id);
 
-      const { data: userById } = await axios.get(`/users/user/${userid}`); 
+      const userById = await getUserById(userid);
 
       notifySuccess('Reserva eliminada');
-   
-      return userById;
 
+      return userById;
     } catch (error) {
       notifyWarning('Ha ocurrido un problema, por favor intente nuevamente mas tarde');
     }
@@ -114,11 +108,14 @@ const Home = () => {
     try {
       e.preventDefault();
 
-      await axios.put(`/users/update/${id}`, credentials);
+      const updatedUser = updateUserById(id, credentials);
 
-      const userById = await axios.get(`/users/user/${id}`);
+      setSelectedUser(updatedUser);
 
-      setUser(userById.data);
+      if (credentials.username === admin.username) {
+        updateUser();
+      }
+
       notifySuccess('Usuario actualizado');
     } catch (error) {
       notifyWarning('Ha ocurrido un problema, por favor intente nuevamente mas tarde');
@@ -127,21 +124,18 @@ const Home = () => {
 
   const handleDeleteUser = async (user) => {
     try {
-      await axios.delete(`/users/eliminar/${user._id}`);
+      deleteUserById(user._id);
 
       user.reserves.forEach(async (res) => {
-        await axios.put(`/courts/reserve/delete`, {
-          courtName: res.court,
-          reserveDay: res.weekday,
-          reserveId: res.id,
-        });
+        const { court, weekday, id } = res;
+        deleteCourtReserve(court, weekday, id);
       });
 
       notifySuccess('Usuario eliminado');
 
       setTimeout(() => {
         handleGetAllUsers();
-        setUser(false);
+        setIsUserSelected(false);
         navigate('/getAllUsers');
       }, 2000);
     } catch (error) {
@@ -165,48 +159,28 @@ const Home = () => {
 
   const handleGetAllCourts = useCallback(async () => {
     try {
-      const allCourts = await axios.get('/courts/');
-
-      setAllCourts(allCourts.data);
+      const allCourts = await getAllCourts();
+      setAllCourts(allCourts);
     } catch (error) {
       notifyWarning('Ha ocurrido un problema, por favor intente nuevamente mas tarde');
     }
-  }, [setAllCourts]);
+  }, []);
 
   const handleDeleteCourt = async (id) => {
-    try {
-      await axios.delete(`/courts/delete/${id}`);
+    deleteCourt(id);
 
-      notifySuccess('Cancha eliminada');
-
-      handleGetAllCourts();
-    } catch (error) {
-      notifyWarning('Ha ocurrido un problema, por favor intente nuevamente mas tarde')();
-    }
+    handleGetAllCourts();
   };
 
   const handleDeleteOldReserves = async () => {
-    try {
-      await axios.put('/courts/reserve/clean');
-      notifySuccess('Historial de reservas eliminadas');
-    } catch (error) {
-      notifyWarning('Ha ocurrido un problema, por favor intente nuevamente mas tarde');
-    }
+    deleteOldReserves();
   };
 
   const handleCloseSession = async () => {
-    try {
-      setUser({ type: 'LOGOUT' });
-      localStorage.removeItem('user')
-      navigate('/login');
-      
-    } catch (error) {
-      notifyWarning('Ha ocurrido un problema, por favor intente nuevamente mas tarde');
-    }
+    closeSession();
   };
 
   useEffect(() => {
-    
     if (admin === null) {
       navigate('/login');
     }
@@ -283,6 +257,10 @@ const Home = () => {
                     handleDeleteUser={handleDeleteUser}
                     setConfirmDelete={setConfirmDelete}
                     confirmDelete={confirmDelete}
+                    selectedUser={selectedUser}
+                    setSelectedUser={setSelectedUser}
+                    isUserSelected={isUserSelected}
+                    setIsUserSelected={setIsUserSelected}
                   />
                 }
               />
@@ -323,7 +301,7 @@ const Home = () => {
                 exact
                 path='/activities'
                 element={
-                  <Activities
+                  <CreateActivity
                     handleMenuClick={handleMenuClick}
                     menu={menu}
                   />

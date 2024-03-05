@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
 import './getAllUsers.css';
-import User from '../User';
+import { User } from '../user/User';
 import { ToastContainer } from 'react-toastify';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
-const GetAllUsers = ({
+export const GetAllUsers = ({
   handleMenuClick,
   menu,
   allUsers,
@@ -14,6 +14,10 @@ const GetAllUsers = ({
   handleDeleteUser,
   setConfirmDelete,
   confirmDelete,
+  selectedUser,
+  setSelectedUser,
+  isUserSelected,
+  setIsUserSelected,
 }) => {
   useEffect(() => {
     handleGetAllUsers();
@@ -22,9 +26,6 @@ const GetAllUsers = ({
   useEffect(() => {
     handleMenuClick('getAllUsers');
   }, [handleMenuClick]);
-
-  const [isUserSelected, setIsUserSelected] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
 
   return (
     <>
@@ -79,7 +80,9 @@ const GetAllUsers = ({
                         <td>
                           <button
                             className='text-primary'
-                            onClick={() => {setIsUserSelected(true), setSelectedUser(user)}}>
+                            onClick={() => {
+                              setIsUserSelected(true), setSelectedUser(user);
+                            }}>
                             {user.username}
                           </button>
                         </td>
@@ -164,6 +167,9 @@ GetAllUsers.propTypes = {
   handleDeleteUser: PropTypes.func,
   setConfirmDelete: PropTypes.func,
   confirmDelete: PropTypes.bool,
+  selectedUser: PropTypes.object,
+  setSelectedUser: PropTypes.func,
+  isUserSelected: PropTypes.bool,
+  setIsUserSelected: PropTypes.func,
 };
 
-export default GetAllUsers;

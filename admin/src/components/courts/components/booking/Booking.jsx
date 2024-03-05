@@ -8,11 +8,9 @@ import PropTypes from 'prop-types';
 
 import { userStore } from '../../../../stores';
 
-import { createDateListArray, isReserveDateAvailable } from '../../helpers'
+import { createDateListArray, isReserveDateAvailable } from '../../helpers';
 
-import { useFetch, useNotifications, useReserves } from '../../../../hooks/index'
-
-
+import { useFetch, useNotifications, useReservesAPI } from '../../../../hooks/index';
 
 const Booking = ({ setCourt, court }) => {
   const [day, setDay] = useState(new Date());
@@ -31,10 +29,11 @@ const Booking = ({ setCourt, court }) => {
 
   const {
     user: { user: admin },
+    updateUser,
   } = userStore();
 
   const { notify, notifySuccess, notifyWarning } = useNotifications();
-  const { createReserve, deleteCourtReserve, deleteUserReserve } = useReserves
+  const { createReserve, deleteCourtReserve, deleteUserReserve } = useReservesAPI();
 
   const handleBooking = async (selectedDay, { reservedFor, info }) => {
     try {
@@ -62,6 +61,7 @@ const Booking = ({ setCourt, court }) => {
         }
 
         notifySuccess('Reserva confirmada');
+
       } else {
         notify('Horario no disponible');
       }
@@ -81,13 +81,16 @@ const Booking = ({ setCourt, court }) => {
       reFetch();
 
       notifySuccess('Reserva Eliminada');
+      if (username === admin.username) {
+        updateUser()
+      }
     } catch (error) {
       notifyWarning('Hubo un problema, por favor intente nuevamente mas tarde');
     }
   };
 
   const { dateList, dateListLc, weekDaysList } = createDateListArray();
- 
+
   return (
     <>
       <div className='my-3'>

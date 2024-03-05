@@ -1,10 +1,10 @@
+import { useMemo } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export const useNotifications = () => {
-
+export const useNotifications = () => useMemo(()=> {
   const notify = (text) => toast(`${text}`, { autoClose: 2000 });
-  
+
   const notifySuccess = (text) =>
     toast.success(`${text}`, {
       position: 'bottom-right',
@@ -23,9 +23,8 @@ export const useNotifications = () => {
     toast.error(`${text}`, {
       position: 'bottom-right',
       autoClose: 1000,
-      theme: 'dark'
+      theme: 'dark',
     });
-
 
   return {
     notify,
@@ -33,6 +32,5 @@ export const useNotifications = () => {
     notifyWarning,
     notifyError,
   };
-};
-
+}, []);
 

@@ -19,10 +19,11 @@ const GetAllCourts = ({
   handleMenuClick,
   menu,
 }) => {
+
   useEffect(() => {
     handleGetAllCourts();
-  }, [handleGetAllCourts]);
-
+  }, [ handleGetAllCourts ]);
+  
   useEffect(() => {
     handleMenuClick('getAllCourts');
   }, [handleMenuClick]);

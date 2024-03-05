@@ -4,7 +4,7 @@ import { useNotifications } from './useNotifications';
 import { useAxiosInstance } from './useAxiosInstance';
 import { userStore } from '../stores/index';
 
-export const useReserves = () => {
+export const useReservesAPI = () => {
   const { notifyWarning } = useNotifications();
   const axios = useAxiosInstance();
 
@@ -147,8 +147,10 @@ export const useReserves = () => {
           permanent
         );
       }
-
-      username === admin.username && updateUser();
+      if (username === admin.username) {
+        updateUser();
+      }
+       
     } catch (error) {
       notifyWarning(`Hubo un problema, ${error?.response?.data}`);
     }

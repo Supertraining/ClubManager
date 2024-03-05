@@ -4,7 +4,7 @@ let instance = null;
 export default class EventDAO {
 
   constructor(eventModel) {
-      this.model = eventModel
+    this.model = eventModel
   }
 
 
@@ -18,7 +18,7 @@ export default class EventDAO {
 
     } catch (error) {
 
-      throw(error)
+      throw (error)
 
     }
 
@@ -35,7 +35,7 @@ export default class EventDAO {
 
     } catch (error) {
 
-      throw(error)
+      throw (error)
 
     }
 
@@ -47,10 +47,10 @@ export default class EventDAO {
 
       const newEvent = await this.model
         .insertMany(data);
-
+      return newEvent;
     } catch (error) {
 
-      throw(error)
+      throw (error)
 
     }
 
@@ -61,11 +61,11 @@ export default class EventDAO {
     try {
 
       const updatedEvent = await this.model
-        .updateOne({ _id: data.id }, { $set: {...data} });
-
+        .updateOne({ _id: data.id }, { $set: { ...data } });
+      return updatedEvent;
     } catch (error) {
 
-      throw(error)
+      throw (error)
 
     }
 
@@ -77,12 +77,12 @@ export default class EventDAO {
 
       const deletedEvent = await this.model
         .deleteOne({ _id: id });
-      
+
       return deletedEvent;
 
     } catch (error) {
 
-      throw(error)
+      throw (error)
 
     }
 

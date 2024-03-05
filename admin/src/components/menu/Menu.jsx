@@ -127,7 +127,7 @@ const Menu = ({ menu, handleGetAllUsers, handleGetAllCourts, handleCloseSession,
                   onClick={ () => {
                     handleMenuClick('activities')
                   } }>
-                  Crear actividades
+                  Crear actividad
                 </Link>
 
                 <i className={ menu.activities

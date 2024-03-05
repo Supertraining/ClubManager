@@ -53,7 +53,7 @@ export default class EventServices {
 
       const newEvent = await this.EventDAO
         .insertEvent(data);
-
+      
       return newEvent
 
     } catch (error) {
@@ -69,7 +69,7 @@ export default class EventServices {
 
       const updatedEvent = await this.EventDAO
         .updateEvent(data);
-
+     
       if (updatedEvent.matchedCount === 0) {
 
         throw CustomError.notFound(`Usuario con el Id: ${id} no encontrado`)
