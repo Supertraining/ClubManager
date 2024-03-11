@@ -1,7 +1,7 @@
-import { useId } from 'react';
 import PropTypes from 'prop-types';
 
 const ActivitiesModal = ({ category }) => {
+
   return (
     <>
       <table className='table table-responsive bg-transparent w-100'>
@@ -34,7 +34,7 @@ const ActivitiesModal = ({ category }) => {
           {category?.map((category) => (
             <tr
               className='my-1 text-center text-dark border border-success'
-              key={useId()}>
+              key={window.crypto.randomUUID()}>
               <td className='tableData fw-bold'>{category.name}</td>
 
               <td className='tableData'>{category.age_range}</td>

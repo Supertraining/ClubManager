@@ -4,7 +4,6 @@ import gimnasia from '../../assets/home/child-gymnastics-1.webp'
 import futbol from '../../assets/home/child-football-1.webp'
 import functional from '../../assets/home/functional.webp'
 import Carousel from 'react-bootstrap/Carousel';
-import { block } from 'million/react';
  
 
 const HomeCarrousel = () => {

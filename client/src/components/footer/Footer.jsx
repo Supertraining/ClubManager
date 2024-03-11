@@ -39,7 +39,7 @@ function Footer() {
 
         <div className='m-2'>
 
-          <a target='_blank' href='https://www.instagram.com/ranelagh.club/'>
+          <a target='_blank' rel='noreferrer' href='https://www.instagram.com/ranelagh.club/'>
             <img src={ instagram } alt='instagram' className='instagramImg' />
           </a>
 
@@ -47,7 +47,7 @@ function Footer() {
 
         <div className='m-2'>
 
-          <a target='_blank' href='https://www.facebook.com/profile.php?id=100064211970969'>
+          <a target='_blank' rel='noreferrer' href='https://www.facebook.com/profile.php?id=100064211970969'>
             <img src={ facebook } alt='facebook' className='instagramImg' />
           </a>
 
@@ -55,7 +55,7 @@ function Footer() {
 
         <div className='m-2'>
 
-          <a target='_blank' href='https://www.facebook.com/profile.php?id=100064211970969'>
+          <a target='_blank' rel='noreferrer' href='https://www.facebook.com/profile.php?id=100064211970969'>
             <img src={ gmail } alt='gmail' className='instagramImg' />
           </a>
 

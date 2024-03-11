@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 const ActivityCard = ({ img, imgText, title, description, data_target }) => {

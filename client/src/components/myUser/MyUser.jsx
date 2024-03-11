@@ -1,6 +1,6 @@
 import { ToastContainer } from 'react-toastify';
 import './myUser.css';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import PropTypes from 'prop-types'
 import { userStore } from '../../stores';

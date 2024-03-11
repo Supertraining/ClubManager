@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { isStrongPassword } from 'validator';
 import NavBarOffCanvasStart from '../navBarOffCanvasStart/NavBarOffCanvasStart';
 import NavBarOffCanvasEnd from '../navBarOffCanvasEnd/NavBarOffCanvasEnd';
-import { useAxiosInstance, useCourtAPI, useNotifications, useUserAPI } from '../../../../hooks';
+import { useCourtAPI, useNotifications, useUserAPI } from '../../../../hooks';
 import { userStore } from '../../../../stores';
 import { useState } from 'react';
 
@@ -16,7 +16,6 @@ const Navbar = () => {
 
   const navigate = useNavigate();
   const { notifySuccess, notifyError, notifyWarning } = useNotifications();
-  const axios = useAxiosInstance();
   const {
     getUserById,
     updateUserById,
@@ -150,6 +149,7 @@ const Navbar = () => {
       notifyError('Contraseña incorrecta');
     }
   };
+
 
   return (
     <div className='navBarContainer col-12 sticky-top container-fluid'>

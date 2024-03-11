@@ -16,7 +16,7 @@ const Login = () => {
 
   const {
     setUser,
-    user: { user, loading, error },
+    user: {  loading, error },
   } = userStore();
 
   const onSubmit = async (data) => {

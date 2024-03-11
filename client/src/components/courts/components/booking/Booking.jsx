@@ -1,13 +1,12 @@
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import 'react-date-time-picker-popup/dist/index.css';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './booking.css';
 import CourtBookingBoard from '../courtBookingBoard/CourtBookingBoard.jsx';
-import unidecode from 'unidecode';
 import CourtBookingDatePicker from '../courtBookingDatePicker/CourtBookingDatePicker.jsx';
 import PropTypes from 'prop-types';
-import { useAxiosInstance, useNotifications, useFetch, useReservesAPI } from '../../../../hooks';
+import { useNotifications, useFetch, useReservesAPI } from '../../../../hooks';
 import { userStore } from '../../../../stores/index.js';
 import { isReserveDateAvailable, createDateListArray } from '../../helpers';
 
@@ -20,15 +19,11 @@ const Booking = ({ court }) => {
 
   let { data: courtReserves, reFetch } = useFetch(`/courts/${court}`);
 
-  const {
-    user: { user },
-  } = userStore();
 
   const { reserveDeleted, setReserveDeleted } = userStore();
 
   const { notify, notifySuccess, notifyWarning } = useNotifications();
   const { createReserve } = useReservesAPI();
-  const axios = useAxiosInstance();
 
   const handleBooking = async (selectedDay) => {
     try {
