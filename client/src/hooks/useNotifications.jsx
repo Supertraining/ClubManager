@@ -1,7 +1,7 @@
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const useNotifications = () => {
+export const useNotifications = () => {
 
   const notify = (text) => toast(`${text}`, { autoClose: 2000 });
   
@@ -34,5 +34,3 @@ const useNotifications = () => {
     notifyError,
   };
 };
-
-export default useNotifications;

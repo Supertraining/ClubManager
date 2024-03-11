@@ -1,7 +1,7 @@
-import Football from '../../components/courts/football/Football';
-import Paleta from '../../components/courts/pelotaPaleta/Paleta';
-import Paddle from '../../components/courts/paddle/Paddle';
-import Squash from '../../components/courts/squash/Squash';
+import Football from '../../components/courts/pages/football/Football';
+import Paleta from '../../components/courts/pages/pelotaPaleta/Paleta';
+import Paddle from '../../components/courts/pages/paddle/Paddle';
+import Squash from '../../components/courts/pages/squash/Squash';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { userStore } from '../../stores';
 import { useEffect } from 'react';

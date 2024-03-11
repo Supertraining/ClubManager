@@ -1,5 +1,5 @@
 import './App.css'
-import Navbar from './components/navbar/Navbar'
+import Navbar from './components/navigation/components/navbar/Navbar'
 import Home from './pages/home/Home';
 import {
   BrowserRouter as Router,
@@ -9,7 +9,7 @@ import {
 } from "react-router-dom";
 import Reserves from './pages/reserves/Reserves';
 import Footer from './components/footer/Footer';
-import Register from './components/auth/register/Register';
+import Register from './components/auth/pages/register/Register';
 
 
 

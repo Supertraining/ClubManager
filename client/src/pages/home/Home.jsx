@@ -1,5 +1,6 @@
 import HomeCarousel from '../../components/homeCarousel/HomeCarousel';
 import HomeText from '../../components/homeText/HomeText';
+import ActividadesList from '../../components/activities/pages/activityList/ActivityList'
 import whatsapp from '../../assets/footer/icons/whatsapp.png';
 import './home.css';
 
@@ -14,6 +15,12 @@ const Home = () => {
         </a>
       </div>
       <HomeText />
+      <div className='my-3 p-sm-4 shadow'>
+        <h1 className='text-center'>Actividades</h1>
+
+        <ActividadesList />
+
+      </div>
     </div>
   );
 };

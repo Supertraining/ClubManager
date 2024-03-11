@@ -1,8 +1,7 @@
-import { useContext } from 'react';
 import axios from 'axios';
 import { userStore } from '../stores';
 
-const useAxiosInstance = () => {
+export const useAxiosInstance = () => {
   const { user: { user } } = userStore();
  
   const instance = axios.create({
@@ -17,4 +16,3 @@ const useAxiosInstance = () => {
   return instance;
 };
 
-export default useAxiosInstance;

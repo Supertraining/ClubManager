@@ -149,7 +149,7 @@ export default class CourtsDAO {
                     { $set: { unavailableDates: court.unavailableDates } }
                 );
 
-                logger.info(result.modifiedCount + ' reserves deleted from ' + court.name);
+                Logger.level().info(result.modifiedCount + ' reserves deleted from ' + court.name);
             }
             const users = await this.userModel.find();
             for (const user of users) {
@@ -162,7 +162,7 @@ export default class CourtsDAO {
                     { $set: { reserves: user.reserves } }
                 )
 
-                logger.info(userResult.modifiedCount + ' reserves deleted from ' + user.username);
+                Logger.level().info(userResult.modifiedCount + ' reserves deleted from ' + user.username);
 
             }
         } catch (error) {
@@ -188,7 +188,7 @@ export default class CourtsDAO {
                     { $set: { unavailableDates: court.unavailableDates } }
                 );
 
-                logger.info(result.modifiedCount + ' reserves deleted from ' + court.name);
+                Logger.level().info(result.modifiedCount + ' reserves deleted from ' + court.name);
 
                 return result;
             }

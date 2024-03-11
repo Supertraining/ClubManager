@@ -88,7 +88,7 @@ const MyUserReserves = (props) => {
                     onClick={ () => props.handleDeleteReserve(res.court, res.weekday, res.id) }>
 
                     <i
-                      className="bi bi-exclamation-triangle text-danger">
+                      className="bi bi-trash text-danger">
                     </i>
 
                   </button>

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import PropTypes from 'prop-types';
-import useAxiosInstance from "./useAxiosInstance.jsx";
+import {useAxiosInstance} from "./useAxiosInstance.jsx";
 
-const useFetch = (url) => {
+export const useFetch = (url) => {
     const [ data, setData ] = useState([]);
     const [ loading, setLoading ] = useState(false);
     const [ error, setError ] = useState(false);
@@ -44,5 +44,3 @@ const useFetch = (url) => {
 useFetch.propTypes = {
     url : PropTypes.string.isRequired
 }
-
-export default useFetch;
