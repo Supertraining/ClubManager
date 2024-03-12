@@ -2,24 +2,25 @@ import { UserNotifications } from "../helpers/emailNotifications.helper.js";
 import bcrypt from 'bcrypt';
 import { CustomError } from "../../../utils/customError.Utils.js";
 import { TokenHandler } from "../../../utils/tokenHandler.Utils.js";
+import UserModel from "../entities/user.js";
 
 export default class UsersServices {
 
-    constructor(userDAO) {
+    constructor(userRepository) {
 
-        this.DAO = userDAO;
+        this.repository = userRepository;
 
     }
     async register(data) {
         try {
-
-            const checkUser = await this.getByUserName(data.username);
-
+            
+            const checkUser = await this.repository.getByUserName(data.username);
+           
             if (checkUser) {
                 throw CustomError.badRequest('El usuario ya esta registrado');
             };
 
-            const newUser = await this.DAO
+            const newUser = await this.repository
                 .register(
 
                     {
@@ -32,7 +33,7 @@ export default class UsersServices {
                 );
             newUser && UserNotifications.emailNewUserNotification(data.username, data);
 
-            const { password, isAdmin, ...otherDetails } = newUser.toObject();
+            const { password, isAdmin, ...otherDetails } = newUser
 
             const payload = { ...otherDetails, isAdmin: isAdmin }
 
@@ -51,8 +52,8 @@ export default class UsersServices {
     async login(data) {
         try {
 
-            const user = await this.getByUserName(data.username);
-
+            const user = await this.repository.getByUserName(data.username);
+            
             if (!user) {
                 throw CustomError.notFound('El usuario no existe');
             }
@@ -62,7 +63,7 @@ export default class UsersServices {
                 throw CustomError.badRequest('Contraseña incorrecta');
             };
 
-            const { password, isAdmin, ...otherDetails } = user.toObject();
+            const { password, isAdmin, ...otherDetails } = user;
 
             const payload = { ...otherDetails, isAdmin: isAdmin }
 
@@ -78,7 +79,7 @@ export default class UsersServices {
 
         try {
 
-            const user = await this.DAO
+            const user = await this.repository
                 .getByUserName(username);
 
             return user;
@@ -95,7 +96,7 @@ export default class UsersServices {
 
         try {
 
-            const isDeleted = await this.DAO
+            const isDeleted = await this.repository
                 .deleteById(id);
 
             if (isDeleted.deletedCount === 0) {
@@ -121,10 +122,10 @@ export default class UsersServices {
 
         try {
 
-            const data = await this.DAO
+            const allUsers = await this.repository
                 .getAllUsers();
 
-            return data;
+            return allUsers;
 
         } catch (error) {
 
@@ -137,7 +138,7 @@ export default class UsersServices {
     async getById(id) {
 
         try {
-            const user = await this.DAO
+            const user = await this.repository
                 .getById(id);
 
             if (!user) {
@@ -163,7 +164,7 @@ export default class UsersServices {
 
         try {
 
-            const passwordUpdated = await this.DAO
+            const passwordUpdated = await this.repository
                 .updateUserPassword({
                     ...data,
                     password: bcrypt.hashSync(data.password,
@@ -182,7 +183,7 @@ export default class UsersServices {
             }
 
             UserNotifications.emailUpdatePasswordNotification(data);
-            const updatedUser = await this.DAO
+            const updatedUser = await this.repository
                 .getById(data._id);
 
             return updatedUser
@@ -198,7 +199,7 @@ export default class UsersServices {
 
         try {
 
-            const userUpdated = await this.DAO
+            const userUpdated = await this.repository
                 .updateUser(id, data);
 
 
@@ -213,7 +214,7 @@ export default class UsersServices {
 
             }
 
-            const updatedUser = await this.DAO
+            const updatedUser = await this.repository
                 .getById(id);
 
             return updatedUser
@@ -232,7 +233,7 @@ export default class UsersServices {
     async updateUserReserves(username, reserveData) {
 
         try {
-            const reserveUpdated = await this.DAO
+            const reserveUpdated = await this.repository
                 .updateUserReserves(username, reserveData);
 
             if (reserveUpdated.matchedCount === 0) {
@@ -246,7 +247,7 @@ export default class UsersServices {
 
             }
 
-            const updatedUser = await this.DAO
+            const updatedUser = await this.repository
                 .getByUserName(username);
 
             return updatedUser;
@@ -263,7 +264,7 @@ export default class UsersServices {
 
         try {
 
-            let reserveDeleted = await this.DAO.
+            let reserveDeleted = await this.repository.
                 deleteReserveById(username, reserveId);
 
             if (reserveDeleted.matchedCount === 0) {

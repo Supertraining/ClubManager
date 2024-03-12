@@ -1,8 +1,8 @@
 import './navbar.css';
 import { useNavigate, Link } from 'react-router-dom';
 import { isStrongPassword } from 'validator';
-import NavBarOffCanvasStart from '../navBarOffCanvasStart/NavBarOffCanvasStart';
-import NavBarOffCanvasEnd from '../navBarOffCanvasEnd/NavBarOffCanvasEnd';
+import NavBarOffCanvasStart from '../../components/navBarOffCanvasStart/NavBarOffCanvasStart';
+import NavBarOffCanvasEnd from '../../components/navBarOffCanvasEnd/NavBarOffCanvasEnd';
 import { useCourtAPI, useNotifications, useUserAPI } from '../../../../hooks';
 import { userStore } from '../../../../stores';
 import { useState } from 'react';

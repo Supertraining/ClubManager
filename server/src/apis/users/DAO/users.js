@@ -4,8 +4,8 @@ let instance = null;
 
 export default class UsersDAO {
 
-  constructor(usermodel) {
-    this.model = usermodel
+  constructor(userModel) {
+    this.model = userModel
   }
 
   async register(data) {
@@ -103,13 +103,13 @@ export default class UsersDAO {
     }
 
   }
+  
   async updateUser(id, data) {
-
     try {
 
       const updatedUser = await this.model
         .updateOne({ _id: id }, { $set: data });
-
+    
       return updatedUser;
 
     } catch (error) {
@@ -119,6 +119,7 @@ export default class UsersDAO {
     }
 
   }
+
   async updateUserReserves(username, reserveData) {
 
     try {

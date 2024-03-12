@@ -27,6 +27,7 @@ const storeApi = (set, get) => ({
     try {
 
       const { data: userById } = await instance.get(`/users/user/${user._id}`);
+     
       const updatedUser = { ...userById, token: user.token };
 
       set((state) => ({

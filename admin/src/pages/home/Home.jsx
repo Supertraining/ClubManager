@@ -77,7 +77,7 @@ const Home = () => {
     },
     [setMenu]
   );
-  
+
   const handleGetAllUsers = useCallback(async () => {
     try {
       const allUsersResponse = await getAllUsers();
@@ -98,6 +98,10 @@ const Home = () => {
 
       notifySuccess('Reserva eliminada');
 
+      if (user.username === admin.username) {
+        updateUser();
+      }
+
       return userById;
     } catch (error) {
       notifyWarning('Ha ocurrido un problema, por favor intente nuevamente mas tarde');
@@ -108,8 +112,8 @@ const Home = () => {
     try {
       e.preventDefault();
 
-      const updatedUser = updateUserById(id, credentials);
-
+      const updatedUser = await updateUserById(id, credentials);
+     
       setSelectedUser(updatedUser);
 
       if (credentials.username === admin.username) {

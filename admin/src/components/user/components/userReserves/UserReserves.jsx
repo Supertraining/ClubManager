@@ -70,7 +70,7 @@ const UserReserves = ({ setSelectedUser, selectedUser, handleDeleteReserve }) =>
 
               <td>
                 <button
-                  className='alert alert-danger m-0 px-2 py-0'
+                  className='m-0 px-2 py-0'
                   onClick={async () => {
                     const updatedUser = await handleDeleteReserve(
                       res.court,
@@ -82,7 +82,7 @@ const UserReserves = ({ setSelectedUser, selectedUser, handleDeleteReserve }) =>
 
                     setSelectedUser(updatedUser);
                   }}>
-                  <i className='bi bi-trash'></i>
+                  <i className='bi bi-trash-fill text-danger'></i>
                 </button>
               </td>
             </tr>

@@ -1,16 +1,16 @@
-import '../../css/register.css';
+import './register.css';
 import { useNavigate } from 'react-router-dom';
 import { isStrongPassword } from 'validator';
 import { useForm } from 'react-hook-form';
 import { jwtDecode } from 'jwt-decode';
-import { useAxiosInstance } from '../../../../hooks/useAxiosInstance.jsx';
-import { userStore } from '../../../../stores/index.js';
+import { useAxiosInstance } from '../../hooks';
+import { userStore } from '../../stores';
 import { useState } from 'react';
 
 const Register = () => {
   const {
     setUser,
-    user: { user, loading, error },
+    user: { loading, error },
   } = userStore();
   const [welcomeMessage, setWelcomeMessage] = useState(false);
 

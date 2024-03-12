@@ -1,4 +1,4 @@
-import Login from '../../../auth/pages/login/Login';
+import Login from '../login/Login';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types'
 

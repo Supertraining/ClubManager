@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import { useForm } from 'react-hook-form';
-import '../../css/login.css';
+import './login.css';
 import { useAxiosInstance } from '../../../../hooks/useAxiosInstance.jsx';
 import { userStore } from '../../../../stores/index.js';
 const Login = () => {
@@ -28,7 +28,7 @@ const Login = () => {
       const decoded = jwtDecode(token);
 
       const user = { ...decoded, token: token };
-
+    
       setUser({ type: 'LOGIN_SUCCESS', payload: user });
 
       navigate('/');

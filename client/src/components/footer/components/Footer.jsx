@@ -1,8 +1,9 @@
-import './footer.css';
-import facebook from '../../assets/footer/icons/facebook.png';
-import instagram from '../../assets/footer/icons/instagram.png';
-import gmail from '../../assets/footer/icons/gmail.png';
+import '../css/footer.css';
+import facebook from '../../../assets/footer/icons/facebook.png';
+import instagram from '../../../assets/footer/icons/instagram.png';
+import gmail from '../../../assets/footer/icons/gmail.png';
 import React, { Suspense } from 'react'
+
 const Map = React.lazy(() => import('./Map'));
 function Footer() {
 

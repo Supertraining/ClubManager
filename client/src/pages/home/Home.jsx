@@ -1,4 +1,4 @@
-import HomeCarousel from '../../components/homeCarousel/HomeCarousel';
+import HomeCarousel from '../../components/homeCarousel/components/HomeCarousel';
 import HomeText from '../../components/homeText/HomeText';
 import ActividadesList from '../../components/activities/pages/activityList/ActivityList';
 import whatsapp from '../../assets/footer/icons/whatsapp.png';
@@ -24,7 +24,6 @@ const Home = () => {
       <HomeText />
       <div className='my-3 p-sm-4 shadow'>
         <h1 className='text-center'>Actividades</h1>
-
         <ActividadesList />
       </div>
     </div>
