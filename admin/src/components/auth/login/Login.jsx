@@ -14,7 +14,7 @@ const Login = () => {
     user: { user, loading, error },
     setUser,
   } = userStore((state) => state);
-  
+
   useCallback(
     (value) => {
       setUser(value);

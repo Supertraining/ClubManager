@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 
-const Spinner = (props) => {
-  const { height, width, color, text } = props;
+const Spinner = ({ height, width, color, text }) => {
   return (
     <div className='d-flex flex-column align-items-center'>
       <div
