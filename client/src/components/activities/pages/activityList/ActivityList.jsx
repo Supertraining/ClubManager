@@ -2,6 +2,7 @@ import ActivitiesCard from '../../components/activityCard/ActivityCard';
 import '../../css/activities.css';
 import { useFetch } from '../../../../hooks';
 import ActivitiesModal from '../../components/activitiesModal/ActivitiesModal';
+import Spinner from '../../../spinner/Spinner';
 
 const ActivityList = () => {
   const { data } = useFetch('./activities/getAll');
@@ -9,7 +10,14 @@ const ActivityList = () => {
   return (
     <>
       <div className='d-flex justify-content-start justify-content-md-evenly overflow-auto flex-md-wrap gap-4 my-5'>
-        {data &&
+        {data.length === 0 ? (
+          <Spinner
+            width={'80px'}
+            height={'80px'}
+            color={'text-success'}
+            text={'Por favor espere unos momentos....'}
+          />
+        ) : (
           data?.map((card) => (
             <div
               className='col-4 card-wrapper mx-1 shadow'
@@ -71,7 +79,8 @@ const ActivityList = () => {
                 </div>
               </div>
             </div>
-          ))}
+          ))
+        )}
       </div>
     </>
   );

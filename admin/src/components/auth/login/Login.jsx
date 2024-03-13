@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useUserAPI } from '../../../hooks';
 import { userStore } from '../../../stores/index';
 import { createJSONStorage } from 'zustand/middleware';
+import Spinner from '../../../../../client/src/components/spinner/Spinner';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ const Login = () => {
     user: { user, loading, error },
     setUser,
   } = userStore((state) => state);
-
+  
   useCallback(
     (value) => {
       setUser(value);
@@ -59,7 +60,6 @@ const Login = () => {
       } else if (!user?.admin) {
         navigate('/failLogin');
       }
-
     } catch (error) {
       setUser({ type: 'LOGIN_FAILURE', payload: error.response.data });
     }
@@ -79,8 +79,8 @@ const Login = () => {
       ) : (
         <>
           <h1 className='title'>CLub Manager</h1>
-          <p className='my-2 text-primary'>
-            Esta App esta desplegada en un servidor gratuito por lo que al momento de loguearte
+          <p className='my-2 text-primary text-center'>
+            Esta App esta desplegada en un servidor gratuito por lo que al momento de iniciar sesión
             deberás esperar unos momentos hasta que el servidor despierte.
           </p>
           <form
@@ -98,8 +98,16 @@ const Login = () => {
                 placeholder='Username'
                 className='form-control m-3 bg-transparent border-0 border-bottom'
                 type='email'
+                disabled={loading}
                 {...register('username', { required: true })}
               />
+              {loading && (
+                <Spinner
+                  height={'18px'}
+                  width={'18px'}
+                  color={'text-dark'}
+                />
+              )}
             </div>
 
             {errors.username && (
@@ -120,8 +128,16 @@ const Login = () => {
                 placeholder='Password'
                 className='form-control m-3 bg-transparent border-0 border-bottom'
                 type='password'
+                disabled={loading}
                 {...register('password', { required: true })}
               />
+              {loading && (
+                <Spinner
+                  height={'18px'}
+                  width={'18px'}
+                  color={'text-dark'}
+                />
+              )}
             </div>
 
             {errors.password && (
@@ -132,15 +148,21 @@ const Login = () => {
 
             <div className='d-flex align-items-center'>
               <label htmlFor='permanentLog'>Recordarme</label>
-
               <input
                 id='permanentLog'
                 name='permanentLog'
                 className='m-3 bg-transparent border-0 border-bottom'
                 type='checkbox'
+                disabled={loading}
                 {...register('permanentLog')}
               />
             </div>
+
+            {loading && (
+              <small className='w-100 d-flex justify-content-center text-primary fw-bold'>
+                cargando por favor espere unos momentos
+              </small>
+            )}
 
             <div className='d-flex flex-column align-items-center justify-content-center m-3'>
               <i className='bi bi-plug'></i>

@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import './login.css';
 import { useAxiosInstance } from '../../../../hooks/useAxiosInstance.jsx';
 import { userStore } from '../../../../stores/index.js';
+import Spinner from '../../../spinner/Spinner.jsx';
 const Login = () => {
   const {
     register,
@@ -16,7 +17,7 @@ const Login = () => {
 
   const {
     setUser,
-    user: {  loading, error },
+    user: { loading, error },
   } = userStore();
 
   const onSubmit = async (data) => {
@@ -28,7 +29,7 @@ const Login = () => {
       const decoded = jwtDecode(token);
 
       const user = { ...decoded, token: token };
-    
+
       setUser({ type: 'LOGIN_SUCCESS', payload: user });
 
       navigate('/');
@@ -36,7 +37,7 @@ const Login = () => {
       setUser({ type: 'LOGIN_FAILURE', payload: error.response.data });
     }
   };
-
+  console.log(loading);
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -52,8 +53,16 @@ const Login = () => {
             className='form-control m-3 bg-transparent border-0 border-bottom text-white'
             type='email'
             autoComplete='on'
+            disabled={loading}
             {...register('username', { required: true })}
           />
+          {loading && (
+            <Spinner
+              height={'18px'}
+              width={'18px'}
+              color={'text-success'}
+            />
+          )}
         </div>
         {errors.username && (
           <div className='text-center'>
@@ -72,13 +81,26 @@ const Login = () => {
             className='form-control m-3 bg-transparent border-0 border-bottom text-white'
             type='password'
             autoComplete='on'
+            disabled={loading}
             {...register('password', { required: true })}
           />
+          {loading && (
+            <Spinner
+              height={'18px'}
+              width={'18px'}
+              color={'text-success'}
+            />
+          )}
         </div>
         {errors.password && (
           <div className='text-center'>
             <small className='text-danger'>Este campo es obligatorio</small>
           </div>
+        )}
+        {loading && (
+          <small className='w-100 d-flex justify-content-center text-success'>
+            cargando por favor espere unos momentos
+          </small>
         )}
 
         <div className='d-flex flex-column align-items-center justify-content-center m-3'>

@@ -14,7 +14,9 @@ export default class ActivityControllers {
   getAll = async (req, res, next) => {
     try {
       const activity = await this.activityControllers.getAll();
-      res.json(activity);
+  
+       res.json(activity); 
+      
     } catch (error) {
       next(error)
     }

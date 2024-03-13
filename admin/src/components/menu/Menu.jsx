@@ -147,9 +147,7 @@ const Menu = ({
                 <Link
                   to={'/oldReservesDeleted'}
                   className={
-                    menu.deleteReserves
-                      ? 'btn btn-success'
-                      : 'btn btn-success bg-transparent'
+                    menu.deleteReserves ? 'btn btn-success' : 'btn btn-success bg-transparent'
                   }
                   onClick={() => {
                     handleMenuClick('deleteReserves');
@@ -167,11 +165,12 @@ const Menu = ({
 
               <li className='d-flex align-items-center col-12'>
                 <button
-                  className='btn btn-danger m-auto col-12'
+                  className='btn btn-danger col-12 d-flex justify-content-center align-items-center'
                   onClick={handleCloseSession}>
                   Cerrar sesión
+                  <i className='bi bi-arrow-bar-right'></i>
+                  <i className='bi bi-door-open text-light fs-5'></i>
                 </button>
-                <i className='bi bi-stop-btn-fill fs-4 mx-2 text-danger btn-closeSession-i'></i>
               </li>
             </ul>
           </div>

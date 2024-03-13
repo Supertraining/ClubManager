@@ -24,9 +24,9 @@ export default class UsersController {
 
 	login = async (req, res, next) => {
 		try {
-		
-			const response = await this.userServices.login(req.body)
-		
+
+			const response = await this.userServices.login(req.body);
+
 			res.json(response);
 
 		} catch (error) {
@@ -127,7 +127,7 @@ export default class UsersController {
 	updateUser = async (req, res, next) => {
 
 		try {
-		
+
 			const updatedUser = await this.userServices
 				.updateUser(req.params.id, req.body);
 
