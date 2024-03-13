@@ -1,14 +1,15 @@
 import PropTypes from 'prop-types';
 
-const Spinner = (props) => {
-  const { height, width, color, text } = props;
+const Spinner = ({ height, width, color, text, textSize, textColor, type }) => {
   return (
     <div className='d-flex flex-column align-items-center'>
       <div
-        className={`spinner-border ${color}`}
+        className={`spinner-${type ? type : 'border'} ${color}`}
         style={{ height: height, width: width }}
         role='status'></div>
-      <span className='fs-3 text-primary'>{text}</span>
+      <span className={`${textSize ? textSize : 'fs-3'} ${textColor ? textColor : 'text-primary'}`}>
+        {text}
+      </span>
     </div>
   );
 };
@@ -18,6 +19,9 @@ Spinner.propTypes = {
   width: PropTypes.string,
   color: PropTypes.string,
   text: PropTypes.string,
+  type: PropTypes.string,
+  textSize: PropTypes.string,
+  textColor: PropTypes.string,
 };
 
 export default Spinner;
