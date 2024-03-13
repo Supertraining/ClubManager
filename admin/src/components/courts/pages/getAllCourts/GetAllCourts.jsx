@@ -7,6 +7,7 @@ import Paddle from '../paddle/Paddle';
 import Squash from '../squash/Squash';
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import Spinner from '../../../spinner/Spinner';
 
 const GetAllCourts = ({
   allCourts,
@@ -40,26 +41,30 @@ const GetAllCourts = ({
                   onClick={() => handleMenuClick('main')}></Link>
               </div>
 
-              <table className='table bg-white table-responsive'>
-                <thead>
-                  <tr className='text-center text-dark'>
-                    <th scope='col'>#</th>
+              {allCourts.length === 0 ? (
+                <Spinner
+                  type={'grow'}
+                  color={'text-success'}
+                  text={'Cargando aguarde unos momentos por favor'}
+                  textColor={'text-success'}
+                  textSize={'fs-5'}
+                />
+              ) : (
+                <table className='table bg-white table-responsive'>
+                  <thead>
+                    <tr className='text-center text-dark'>
+                      <th scope='col'>#</th>
 
-                    <th scope='col'>Nombre</th>
+                      <th scope='col'>Nombre</th>
 
-                    <th scope='col'>reservas</th>
+                      <th scope='col'>reservas</th>
 
-                    <th scope='col'>Eliminar</th>
-                  </tr>
-                </thead>
+                      <th scope='col'>Eliminar</th>
+                    </tr>
+                  </thead>
 
-                <tbody>
-                  {allCourts.length === 0 ? (
-                    <tr
-                      className='spinner-grow text-success m-5'
-                      role='status'></tr>
-                  ) : (
-                    allCourts.map((court, i) => (
+                  <tbody>
+                    {allCourts.map((court, i) => (
                       <tr
                         key={court._id}
                         className='text-center'>
@@ -114,10 +119,10 @@ const GetAllCourts = ({
                           )}
                         </td>
                       </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
+                    ))}
+                  </tbody>
+                </table>
+              )}
             </>
           ) : (
             <>

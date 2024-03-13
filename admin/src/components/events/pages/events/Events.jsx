@@ -10,6 +10,7 @@ import EventsForm from '../../components/eventsForm/EventsForm';
 import PropTypes from 'prop-types';
 import { useNotifications, useFetch } from '../../../../hooks';
 import { useEventsAPI } from '../../hooks/useEventsAPI';
+import Spinner from '../../../spinner/Spinner';
 
 const Events = ({ handleMenuClick, menu }) => {
   const { data, loading, error, reFetch } = useFetch('/events');
@@ -110,9 +111,7 @@ const Events = ({ handleMenuClick, menu }) => {
 
           <div className='col-12 p-2 react-full-year-scheduler-container'>
             {loading ? (
-              <div
-                className='spinner-grow text-success m-5'
-                role='status'></div>
+              <Spinner type={'grow'} color={'text-success'}/>
             ) : (
               <>
                 <ReactFullYearScheduler

@@ -6,9 +6,11 @@ import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { useNotifications, useFetch } from '../../../../hooks';
 import useActivityAPI from '../../hooks/useActivityAPI';
+import '../../css/activities.css';
+import Spinner from '../../../spinner/Spinner';
 
 export const GetAllActivities = ({ handleMenuClick, menu }) => {
-  const { data, loading, reFetch } = useFetch('/activities/getAll');
+  const { reFetch, loading, data } = useFetch('/activities/getAll');
   const { notifySuccess, notifyWarning } = useNotifications();
   const { deleteActivity } = useActivityAPI();
 
@@ -18,10 +20,10 @@ export const GetAllActivities = ({ handleMenuClick, menu }) => {
 
   const handleDeleteActivity = async (id) => {
     try {
-     const deletedCount = await deleteActivity(id);
-    
+      const deletedCount = await deleteActivity(id);
+
       if (deletedCount) reFetch();
-      notifySuccess('Actividad eliminada con exito')
+      notifySuccess('Actividad eliminada con exito');
     } catch (error) {
       notifyWarning('Hubo un problema, por favor intente nuevamente mas tarde');
     }
@@ -30,9 +32,12 @@ export const GetAllActivities = ({ handleMenuClick, menu }) => {
   const handleInitialRender = () => {
     if (loading && data.length === 0) {
       return (
-        <div
-          className='spinner-grow text-success m-5'
-          role='status'></div>
+        <Spinner
+          type={'grow'}
+          color={'text-success'}
+          text={'Cargando aguarde unos momentos por favor'}
+          textColor={'text-success'}
+        />
       );
     } else if (!loading && data.length === 0) {
       return <h1 className='text-center w-100'>No hay actividades creadas</h1>;
@@ -54,9 +59,9 @@ export const GetAllActivities = ({ handleMenuClick, menu }) => {
               onClick={() => handleMenuClick('main')}></Link>
           </div>
 
-          {handleInitialRender()}
-
           <div className='d-flex justify-content-start justify-content-md-evenly cards-container flex-md-wrap gap-2 my-5'>
+            {handleInitialRender()}
+
             {data?.map((card) => (
               <div key={window.crypto.randomUUID()}>
                 <ActivityCard
@@ -90,4 +95,3 @@ GetAllActivities.propTypes = {
   handleMenuClick: PropTypes.func.isRequired,
   menu: PropTypes.object,
 };
-

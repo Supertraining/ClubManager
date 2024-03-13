@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useUserAPI } from '../../../hooks';
 import { userStore } from '../../../stores/index';
 import { createJSONStorage } from 'zustand/middleware';
-import Spinner from '../../../../../client/src/components/spinner/Spinner';
+import Spinner from '../../spinner/Spinner';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -73,9 +73,11 @@ const Login = () => {
   return (
     <div className='d-flex flex-column justify-content-center align-items-center col-12 login-container'>
       {user ? (
-        <div
-          className='spinner-grow text-success m-5'
-          role='status'></div>
+        <Spinner
+          type={'grow'}
+          color={'text-success'}
+          className='m-5'
+        />
       ) : (
         <>
           <h1 className='title'>CLub Manager</h1>

@@ -4,6 +4,7 @@ import { User } from '../user/User';
 import { ToastContainer } from 'react-toastify';
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import Spinner from '../../../spinner/Spinner';
 export const GetAllUsers = ({
   handleMenuClick,
   menu,
@@ -26,7 +27,7 @@ export const GetAllUsers = ({
   useEffect(() => {
     handleMenuClick('getAllUsers');
   }, [handleMenuClick]);
-
+  
   return (
     <>
       {menu.getAllUsers && (
@@ -40,36 +41,40 @@ export const GetAllUsers = ({
                   onClick={() => handleMenuClick('main')}></Link>
               </div>
 
-              <table className='table bg-white table-responsive'>
-                <thead>
-                  <tr className='text-center text-dark'>
-                    <th scope='col'>#</th>
+              {allUsers.length === 0 ? (
+                <Spinner
+                  type={'grow'}
+                  color={'text-success'}
+                  text={'Cargando aguarde unos momentos por favor'}
+                  textColor={'text-success'}
+                  textSize={'fs-5'}
+                />
+              ) : (
+                <table className='table bg-white table-responsive'>
+                  <thead>
+                    <tr className='text-center text-dark'>
+                      <th scope='col'>#</th>
 
-                    <th scope='col'>UserName</th>
+                      <th scope='col'>UserName</th>
 
-                    <th scope='col'>Nombre</th>
+                      <th scope='col'>Nombre</th>
 
-                    <th scope='col'>Apellido</th>
+                      <th scope='col'>Apellido</th>
 
-                    <th scope='col'>edad</th>
+                      <th scope='col'>edad</th>
 
-                    <th scope='col'>telefono</th>
+                      <th scope='col'>telefono</th>
 
-                    <th scope='col'>reservas</th>
+                      <th scope='col'>reservas</th>
 
-                    <th scope='col'>actividades</th>
+                      <th scope='col'>actividades</th>
 
-                    <th scope='col'>admin</th>
-                  </tr>
-                </thead>
+                      <th scope='col'>admin</th>
+                    </tr>
+                  </thead>
 
-                <tbody>
-                  {allUsers.length === 0 ? (
-                    <tr
-                      className='spinner-grow text-success m-5'
-                      role='status'></tr>
-                  ) : (
-                    allUsers.map((user, i) => (
+                  <tbody>
+                    {allUsers.map((user, i) => (
                       <tr
                         key={user._id}
                         className='text-center'>
@@ -127,10 +132,10 @@ export const GetAllUsers = ({
                           </div>
                         </td>
                       </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
+                    ))}
+                  </tbody>
+                </table>
+              )}
             </>
           ) : (
             <User
@@ -172,4 +177,3 @@ GetAllUsers.propTypes = {
   isUserSelected: PropTypes.bool,
   setIsUserSelected: PropTypes.func,
 };
-
