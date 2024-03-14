@@ -1,18 +1,18 @@
-import '../../css/events.css';
+import '../css/events.css';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { ReactFullYearScheduler } from 'react-full-year-scheduler';
 import 'react-full-year-scheduler/dist/style.css';
 import { ToastContainer } from 'react-toastify';
-import EventsTable from '../../components/EventsTable/EventsTable';
-import EventsForm from '../../components/eventsForm/EventsForm';
+import EventsTable from '../components/EventsTable/EventsTable';
+import EventsForm from '../components/eventsForm/EventsForm';
 import PropTypes from 'prop-types';
-import { useNotifications, useFetch } from '../../../../hooks';
-import { useEventsAPI } from '../../hooks/useEventsAPI';
-import Spinner from '../../../spinner/Spinner';
+import { useNotifications, useFetch } from '../../../hooks';
+import { useEventsAPI } from '../hooks/useEventsAPI';
+import Spinner from '../../spinner/Spinner';
 
-const Events = ({ handleMenuClick, menu }) => {
+export const Events = ({ handleMenuClick, menu }) => {
   const { data, loading, error, reFetch } = useFetch('/events');
 
   const { notifyWarning } = useNotifications();
@@ -83,8 +83,7 @@ const Events = ({ handleMenuClick, menu }) => {
 
   const handleIsEventSettled = async (id, isSettled) => {
     try {
-
-      updateEvent(id, isSettled)
+      updateEvent(id, isSettled);
 
       reFetch();
     } catch (error) {
@@ -111,7 +110,10 @@ const Events = ({ handleMenuClick, menu }) => {
 
           <div className='col-12 p-2 react-full-year-scheduler-container'>
             {loading ? (
-              <Spinner type={'grow'} color={'text-success'}/>
+              <Spinner
+                type={'grow'}
+                color={'text-success'}
+              />
             ) : (
               <>
                 <ReactFullYearScheduler
@@ -179,5 +181,3 @@ Events.propTypes = {
   handleMenuClick: PropTypes.func,
   menu: PropTypes.object,
 };
-
-export default Events;

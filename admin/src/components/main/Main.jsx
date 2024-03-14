@@ -1,6 +1,6 @@
 import './main.css'
 
-const Main = () => {
+export const Main = () => {
   return (
     <div className='col-12 d-flex align-items-center justify-content-center background'>
 
@@ -11,5 +11,3 @@ const Main = () => {
     </div>
   )
 }
-
-export default Main

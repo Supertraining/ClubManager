@@ -2,23 +2,25 @@ import { Routes, Route, useNavigate } from 'react-router-dom';
 
 import './home.css';
 
-import { CreateUser, GetAllUsers } from '../../components/user/pages';
-import Menu from '../../components/menu/Menu';
-import OldReservesDeleted from '../../components/oldReservesDeleted/OldReservesDeleted';
-import Main from '../../components/main/Main';
-import GetAllCourts from '../../components/courts/pages/getAllCourts/GetAllCourts';
-import FailLogin from '../../components/auth/faillogin/FailLogin';
-import Events from '../../components/events/pages/events/Events';
-
 import {
+  Events,
+  GetAllCourts,
+  Main,
+  Menu,
+  OldReservesDeleted,
+  CreateUser,
+  GetAllUsers,
   CreateActivity,
   GetAllActivities,
   UpdateActivities,
-} from '../../components/activities/pages';
+} from '../../components';
 
-import { useState, useEffect } from 'react';
-import { useCallback } from 'react';
+import FailLogin from '../auth/failLogin/FailLogin';
+
+import { useState, useEffect, useCallback } from 'react';
+
 import { userStore } from '../../stores/index';
+
 import {
   useNotifications,
   useAxiosInstance,
@@ -113,7 +115,7 @@ const Home = () => {
       e.preventDefault();
 
       const updatedUser = await updateUserById(id, credentials);
-     
+
       setSelectedUser(updatedUser);
 
       if (credentials.username === admin.username) {
@@ -234,7 +236,6 @@ const Home = () => {
               handleCloseSession={handleCloseSession}
             />
             {menu.main && <Main />}
-
             <Routes>
               <Route
                 exact

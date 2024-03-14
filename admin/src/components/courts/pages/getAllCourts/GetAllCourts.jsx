@@ -9,7 +9,7 @@ import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Spinner from '../../../spinner/Spinner';
 
-const GetAllCourts = ({
+export const GetAllCourts = ({
   allCourts,
   handleGetAllCourts,
   court,
@@ -175,4 +175,3 @@ GetAllCourts.propTypes = {
   menu: PropTypes.object,
 };
 
-export default GetAllCourts;

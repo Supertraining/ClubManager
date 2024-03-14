@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useUserAPI } from '../../../hooks';
 import { userStore } from '../../../stores/index';
 import { createJSONStorage } from 'zustand/middleware';
-import Spinner from '../../spinner/Spinner';
+import Spinner from '../../../components/spinner/Spinner';
 
 const Login = () => {
   const navigate = useNavigate();

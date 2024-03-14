@@ -1,8 +1,8 @@
-import './menu.css';
+import '../css/menu.css';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-const Menu = ({
+export const Menu = ({
   menu,
   handleGetAllUsers,
   handleGetAllCourts,
@@ -188,4 +188,3 @@ Menu.propTypes = {
   handleMenuClick: PropTypes.func,
 };
 
-export default Menu;
