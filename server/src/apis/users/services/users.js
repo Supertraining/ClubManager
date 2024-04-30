@@ -48,7 +48,6 @@ export default class UsersServices {
         }
 
     }
-
     async login(data) {
         try {
 

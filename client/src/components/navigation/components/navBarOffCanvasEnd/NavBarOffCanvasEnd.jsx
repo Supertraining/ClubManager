@@ -10,7 +10,6 @@ const NavBarOffCanvasEnd = (props) => {
     password: '',
     newPassword: '',
   };
-
   const [passwordData, setPasswordData] = useState(initialState);
 
   const handleChange = (e) => {
@@ -189,7 +188,7 @@ NavBarOffCanvasEnd.propTypes = {
     ),
     telefono: PropTypes.string.isRequired,
     username: PropTypes.string.isRequired,
-    __v: PropTypes.number.isRequired,
+    __v: PropTypes.number,
     _id: PropTypes.string.isRequired,
   }),
 };

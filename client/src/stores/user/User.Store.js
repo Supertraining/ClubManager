@@ -2,7 +2,20 @@ import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { persist } from 'zustand/middleware';
 import axios from 'axios';
+
+
+const ACTIONS = {
+  LOGIN_START: 'LOGIN_START',
+  LOGIN_SUCCESS: 'LOGIN_SUCCESS',
+  LOGIN_FAILURE: 'LOGIN_FAILURE',
+  LOGOUT: 'LOGOUT',
+  UPDATE_USER: 'UPDATE_USER'
+};
+Object.freeze(ACTIONS);
+
 const storeApi = (set, get) => ({
+
+  reserveDeleted: false,
 
   user: {
     user: JSON.parse(localStorage.getItem('user')) || null,
@@ -10,13 +23,13 @@ const storeApi = (set, get) => ({
     error: null,
   },
 
-  reserveDeleted:false,
+  ACTIONS: ACTIONS,
 
   setUser: (action) => {
 
     switch (action.type) {
 
-      case 'LOGIN_START':
+      case ACTIONS.LOGIN_START:
         set((state) => {
           state.user = {
             user: null,
@@ -25,7 +38,7 @@ const storeApi = (set, get) => ({
           };
         })
         break;
-      case 'LOGIN_SUCCESS':
+      case ACTIONS.LOGIN_SUCCESS:
         set((state) => {
           state.user = {
             user: action.payload,
@@ -34,7 +47,7 @@ const storeApi = (set, get) => ({
           };
         });
         break;
-      case 'LOGIN_FAILURE':
+      case ACTIONS.LOGIN_FAILURE:
         set((state) => {
           state.user = {
             user: null,
@@ -43,7 +56,7 @@ const storeApi = (set, get) => ({
           };
         });
         break;
-      case 'LOGOUT':
+      case ACTIONS.LOGOUT:
         set((state) => {
           state.user = {
             user: null,
@@ -52,7 +65,7 @@ const storeApi = (set, get) => ({
           };
         });
         break;
-      case 'UPDATE_USER':
+      case ACTIONS.UPDATE_USER:
         set((state) => {
           state.user = {
             user: action.payload,
@@ -62,7 +75,7 @@ const storeApi = (set, get) => ({
         });
         break;
       default:
-       get().user;
+        get().user;
     }
   },
 
@@ -96,8 +109,8 @@ const storeApi = (set, get) => ({
   },
 
   setReserveDeleted: (value) => {
-    set((state) => {state.reserveDeleted = value})
+    set((state) => { state.reserveDeleted = value })
   }
 });
 
-export const userStore = create(immer(persist(storeApi, {name: 'user'})))
+export const userStore = create(immer(persist(storeApi, { name: 'user' })))

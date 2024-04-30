@@ -13,6 +13,7 @@ const Login = () => {
   const {
     user: { user, loading, error },
     setUser,
+    ACTIONS
   } = userStore((state) => state);
 
   useCallback(
@@ -23,8 +24,8 @@ const Login = () => {
   );
 
   useEffect(() => {
-    setUser({ type: 'DEFAULT' });
-  }, [setUser]);
+    setUser({ type: ACTIONS.DEFAULT });
+  }, [ACTIONS.DEFAULT, setUser]);
 
   const { userLogin } = useUserAPI();
 
@@ -46,13 +47,13 @@ const Login = () => {
             }
       );
 
-      setUser({ type: 'LOGIN_START' });
+      setUser({ type: ACTIONS.LOGIN_START });
 
       const user = await userLogin(credentials);
 
       if (user?.admin) {
         setUser({
-          type: 'LOGIN_SUCCESS',
+          type: ACTIONS.LOGIN_SUCCESS,
           payload: { ...user },
         });
 
@@ -61,7 +62,7 @@ const Login = () => {
         navigate('/failLogin');
       }
     } catch (error) {
-      setUser({ type: 'LOGIN_FAILURE', payload: error.response.data });
+      setUser({ type: ACTIONS.LOGIN_FAILURE, payload: error.response.data });
     }
   };
 

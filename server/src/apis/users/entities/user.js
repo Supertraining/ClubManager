@@ -15,14 +15,14 @@ export default class UserEntity {
   constructor({_id, username, password, nombre, apellido, edad, telefono, reserves, admin }) {
     
     this.#_id = _id
-    this.username = username
-    this.password = password
-    this.nombre = nombre
-    this.apellido = apellido
-    this.edad = edad
-    this.telefono = telefono
-    this.reserves = reserves
-    this.admin = admin
+    this.#username = username
+    this.#password = password
+    this.#nombre = nombre
+    this.#apellido = apellido
+    this.#edad = edad
+    this.#telefono = telefono
+    this.#reserves = reserves
+    this.#admin = admin
   
   }
 

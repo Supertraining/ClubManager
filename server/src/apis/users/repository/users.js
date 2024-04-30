@@ -21,7 +21,6 @@ export default class UsersRepository {
     }
 
   }
-
   async getByUserName(username) {
 
     try {
@@ -36,7 +35,6 @@ export default class UsersRepository {
     }
 
   }
-
   async deleteById(id) {
 
     try {
@@ -53,7 +51,6 @@ export default class UsersRepository {
     }
 
   }
-
   async getAllUsers() {
 
     try {
@@ -71,7 +68,6 @@ export default class UsersRepository {
     }
 
   }
-
   async getById(id) {
 
     try {
@@ -86,7 +82,6 @@ export default class UsersRepository {
       throw (error)
     }
   }
-
   async updateUserPassword(data) {
 
     try {
@@ -102,7 +97,6 @@ export default class UsersRepository {
     }
 
   }
-
   async updateUser(id, data) {
 
     try {
@@ -119,7 +113,6 @@ export default class UsersRepository {
     }
 
   }
-
   async updateUserReserves(username, reserveData) {
 
     try {
@@ -136,7 +129,6 @@ export default class UsersRepository {
     }
 
   }
-
   async deleteReserveById(username, reserveId) {
 
     try {

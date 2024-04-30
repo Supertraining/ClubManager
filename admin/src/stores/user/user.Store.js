@@ -3,6 +3,15 @@ import { immer } from 'zustand/middleware/immer';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import axios from 'axios';
 
+const ACTIONS = {
+  LOGIN_START: 'LOGIN_START',
+  LOGIN_SUCCESS: 'LOGIN_SUCCESS',
+  LOGIN_FAILURE: 'LOGIN_FAILURE',
+  LOGOUT: 'LOGOUT',
+  DEFAULT: 'DEFAULT',
+  UPDATE_USER: 'UPDATE_USER'
+};
+Object.freeze(ACTIONS);
 
 const storeApi = (set, get) => ({
 
@@ -42,11 +51,12 @@ const storeApi = (set, get) => ({
 
   },
 
+  ACTIONS: ACTIONS,
 
   setUser: (action) => {
 
     switch (action.type) {
-      case 'LOGIN_START':
+      case ACTIONS.LOGIN_START:
         set((state) => {
           state.user = {
             user: null,
@@ -55,7 +65,7 @@ const storeApi = (set, get) => ({
           };
         });
         break;
-      case 'LOGIN_SUCCESS':
+      case ACTIONS.LOGIN_SUCCESS:
         set((state) => {
           state.user = {
             user: action.payload,
@@ -64,7 +74,7 @@ const storeApi = (set, get) => ({
           };
         });
         break;
-      case 'LOGIN_FAILURE':
+      case ACTIONS.LOGIN_FAILURE:
         set((state) => {
           state.user = {
             user: null,
@@ -73,7 +83,7 @@ const storeApi = (set, get) => ({
           };
         });
         break;
-      case 'LOGOUT':
+      case ACTIONS.LOGOUT:
         set((state) => {
           state.user = {
             user: null,
@@ -82,7 +92,7 @@ const storeApi = (set, get) => ({
           };
         });
         break;
-      case 'DEFAULT':
+      case ACTIONS.DEFAULT:
         set((state) => {
           state.user = {
             user: JSON.parse(localStorage.getItem('user'))?.state?.user?.user || JSON.parse(sessionStorage.getItem('user'))?.state?.user?.user || null,
@@ -91,7 +101,7 @@ const storeApi = (set, get) => ({
           }
         })
         break;
-      case 'UPDATE_USER':
+      case ACTIONS.UPDATE_USER:
         set((state) => {
           state.user = {
             user: action.payload,

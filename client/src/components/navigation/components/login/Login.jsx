@@ -18,11 +18,12 @@ const Login = () => {
   const {
     setUser,
     user: { loading, error },
+    ACTIONS,
   } = userStore();
 
   const onSubmit = async (data) => {
     try {
-      setUser({ type: 'LOGIN_START' });
+      setUser({ type: ACTIONS.LOGIN_START });
 
       const { data: token } = await axios.post('/users/login', data);
 
@@ -30,14 +31,14 @@ const Login = () => {
 
       const user = { ...decoded, token: token };
 
-      setUser({ type: 'LOGIN_SUCCESS', payload: user });
+      setUser({ type: ACTIONS.LOGIN_SUCCESS, payload: user });
 
       navigate('/');
     } catch (error) {
-      setUser({ type: 'LOGIN_FAILURE', payload: error.response.data });
+      setUser({ type: ACTIONS.LOGIN_FAILURE, payload: error.response.data });
     }
   };
-  console.log(loading);
+
   return (
     <div>
       <form onSubmit={handleSubmit(onSubmit)}>
