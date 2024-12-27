@@ -1,7 +1,11 @@
-// const envFile = process.env.NODE_ENV?.trim();
-// console.log(envFile);
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
 
-process.loadEnvFile();
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+const envFile = process.env.NODE_ENV?.trim() !== "production" ? join(__dirname, ".env.dev") : null;
+
+process.loadEnvFile(envFile && `${envFile}`);
 export const {
   MONGO_URL: mongoUrl,
   CLIENT_PROD_URL: client_prod_url,

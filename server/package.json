@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha ./test/user.test.js",
     "dev": "set NODE_ENV=development && node --watch index.js",
-    "prod": "node --watch index.js",
+    "prod": "set NODE_ENV=production && node --watch index.js",
     "start": "node index.js"
   },
   "keywords": [],
