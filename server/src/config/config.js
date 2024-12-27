@@ -1,11 +1,7 @@
-import path from "path";
-import { fileURLToPath } from "url";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const envFile = process.env.NODE_ENV?.trim() !== "development" ? ".env" : ".env.dev";
 
-const envFile = process.env.NODE_ENV?.trim() !== "development" ? ".env.prod" : ".env.dev";
-
-process.loadEnvFile(__dirname + `/${envFile}`);
+process.loadEnvFile(`./${envFile}`);
 export const {
   MONGO_URL: mongoUrl,
   CLIENT_PROD_URL: client_prod_url,
