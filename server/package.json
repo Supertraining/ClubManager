@@ -2,7 +2,6 @@
   "name": "clubmanager",
   "type": "module",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "mocha ./test/user.test.js",
@@ -33,5 +32,9 @@
   "devDependencies": {
     "chai": "^5.0.3",
     "mocha": "^10.2.0"
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "description": ""
 }
