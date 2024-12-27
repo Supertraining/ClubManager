@@ -1,38 +1,28 @@
-import winston, { format } from 'winston';
-import chalk from 'chalk';
-import { CustomError } from './customError.Utils.js'
+import winston, { format } from "winston";
+import { CustomError } from "./customError.Utils.js";
+import { styleText } from "util";
 
 const { combine, prettyPrint, timestamp, errors } = winston.format;
 
-const LEVEL = Symbol.for('level');
+const LEVEL = Symbol.for("level");
 function filterOnly(level) {
-
-	return format(function (info) {
-
-		if (info[ LEVEL ] === level) {
-
-			return info;
-
-		}
-
-	})();
+  return format(function (info) {
+    if (info[LEVEL] === level) {
+      return info;
+    }
+  })();
 }
 
-
-
 export class Logger {
+  static errorLogger = async (err, additionalInfo) => {
+    try {
+      if (!additionalInfo) {
+        this.level().error(err.stack);
 
-	static errorLogger = async (err, additionalInfo) => {
+        return;
+      }
 
-		try {
-
-			if (!additionalInfo) {
-				this.level().error(err.stack);
-
-				return;
-			}
-
-			const errorMessage = `Error occurred: ${err.message}\nAdditional Info:\n
+      const errorMessage = `Error occurred: ${err.message}\nAdditional Info:\n
 			Route: ${additionalInfo.route} 
 			Method: ${additionalInfo.method}
 			IP: ${additionalInfo.ip}
@@ -40,34 +30,33 @@ export class Logger {
 			user: ${additionalInfo.user?.username}
 			Stack Trace: ${err.stack}\n\n`;
 
-			this.level().error(errorMessage)
+      this.level().error(errorMessage);
 
-			console.error(chalk.red.bold('Error occurred, check error.log file for more details'));
+      console.error(
+        styleText(["red", "bold"], "Error occurred, check error.log file for more details")
+      );
+    } catch (error) {
+      throw CustomError.internalError();
+    }
+  };
 
-		} catch (error) {
-
-		throw	CustomError.internalError();
-
-		}
-
-	};
-
-	static level = () => {
-		const logger = winston.createLogger(
-
-			{
-				format: combine(errors({ stack: true }), timestamp(), prettyPrint()),
-				transports: [
-					new winston.transports.Console({ level: 'info', format: filterOnly('info') }),
-					new winston.transports.File({ level: 'warn', format: filterOnly('warn'), filename: './src/log/warn.log' }),
-					new winston.transports.File({ level: 'error', format: filterOnly('error'), filename: './src/log/error.log', }),
-				],
-
-			}
-
-		);
-		return logger;
-	}
+  static level = () => {
+    const logger = winston.createLogger({
+      format: combine(errors({ stack: true }), timestamp(), prettyPrint()),
+      transports: [
+        new winston.transports.Console({ level: "info", format: filterOnly("info") }),
+        new winston.transports.File({
+          level: "warn",
+          format: filterOnly("warn"),
+          filename: "./src/log/warn.log",
+        }),
+        new winston.transports.File({
+          level: "error",
+          format: filterOnly("error"),
+          filename: "./src/log/error.log",
+        }),
+      ],
+    });
+    return logger;
+  };
 }
-
-

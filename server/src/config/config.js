@@ -1,22 +1,22 @@
-import dotenv from 'dotenv';
-dotenv.config({ path: './src/config/.env' });
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const envFile = process.env.NODE_ENV?.trim() !== "development" ? ".env.prod" : ".env.dev";
+
+process.loadEnvFile(__dirname + `/${envFile}`);
+export const {
+  MONGO_URL: mongoUrl,
+  CLIENT_PROD_URL: client_prod_url,
+  ADMIN_PROD_URL: admin_prod_url,
+  CLIENT_DEV_URL: client_dev_url,
+  ADMIN_DEV_URL: admin_dev_url,
+  JWT_SECRET: JWT_SEED,
+  SERVICE: gmailService,
+  GMAILPORT: gmailPort,
+  GMAILUSER: gmailUser,
+  GMAILPASS: gmailPass,
+} = process.env;
 
 export const port = process.env.PORT || 8080;
-export const mongoUrl = process.env.MONGO_URL;
-export const client_prod_url = process.env.CLIENT_PROD_URL; 
-export const admin_prod_url = process.env.ADMIN_PROD_URL;
-export const client_dev_url = process.env.CLIENT_DEV_URL;
-export const admin_dev_url = process.env.ADMIN_DEV_URL;
-
-export const JWT_SEED = process.env.JWT_SECRET;
-
-
-export const gmailData = {
-  gmailService: process.env.SERVICE,
-  gmailPort: process.env.GMAILPORT,
-  gmailUser: process.env.GMAILUSER,
-  gmailPass: process.env.GMAILPASS,
-}
-
-
-

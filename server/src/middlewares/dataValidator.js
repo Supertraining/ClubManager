@@ -93,6 +93,7 @@ export const validate = {
     body('category.*.days').exists().trim().notEmpty(),
     body('category.*.schedule').exists().trim().notEmpty(),
   ],
+  
   activityUpdate: [
     body('img').exists().trim().notEmpty().optional(),
     body('imgText').exists().trim().notEmpty().optional(),

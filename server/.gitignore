@@ -23,5 +23,6 @@ dist-ssr
 *.sw?
 
 .env
+.env.dev
 
 *.txt

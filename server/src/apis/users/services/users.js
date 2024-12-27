@@ -2,7 +2,6 @@ import { UserNotifications } from "../helpers/emailNotifications.helper.js";
 import bcrypt from 'bcrypt';
 import { CustomError } from "../../../utils/customError.Utils.js";
 import { TokenHandler } from "../../../utils/tokenHandler.Utils.js";
-import UserModel from "../entities/user.js";
 
 export default class UsersServices {
 
@@ -37,7 +36,7 @@ export default class UsersServices {
 
             const payload = { ...otherDetails, isAdmin: isAdmin }
 
-            const token = TokenHandler.generateToken(payload)
+            const token = await TokenHandler.generateToken(payload)
 
             return token;
 
