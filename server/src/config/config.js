@@ -1,11 +1,13 @@
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
+import { Logger } from "../utils/logger.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+const nodeEnv = process.env.NODE_ENV?.trim();
+nodeEnv === "dev"
+  ? process.loadEnvFile(join(__dirname, ".env.dev"))
+  : nodeEnv === "prod" ? process.loadEnvFile(join(__dirname, ".env")) : Logger.level().info("Production environment");
 
-const envFile = process.env.NODE_ENV?.trim() !== "production" ? join(__dirname, ".env.dev") : null;
-
-process.loadEnvFile(envFile && `${envFile}`);
 export const {
   MONGO_URL: mongoUrl,
   CLIENT_PROD_URL: client_prod_url,
