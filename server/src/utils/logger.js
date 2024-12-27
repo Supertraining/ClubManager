@@ -1,7 +1,6 @@
 import winston, { format } from "winston";
 import { CustomError } from "./customError.Utils.js";
-import { styleText } from "util";
-
+import { styleText } from "node:util";
 
 const { combine, prettyPrint, timestamp, errors } = winston.format;
 
