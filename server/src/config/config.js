@@ -1,7 +1,7 @@
-const envFile = process.env.NODE_ENV?.trim();
-console.log(envFile);
+// const envFile = process.env.NODE_ENV?.trim();
+// console.log(envFile);
 
-process.loadEnvFile(envFile && `./${envFile}`);
+process.loadEnvFile();
 export const {
   MONGO_URL: mongoUrl,
   CLIENT_PROD_URL: client_prod_url,
