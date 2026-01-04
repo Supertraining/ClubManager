@@ -1,6 +1,6 @@
-import EventDAO from "../apis/clubEvents/DAO/events.js";
-import EventControllers from "../apis/clubEvents/controllers/events.js";
-import EventServices from "../apis/clubEvents/services/events.js";
+import EventDAO from "../modules/clubEvents/DAO/events.js";
+import EventControllers from "../modules/clubEvents/controllers/events.js";
+import EventServices from "../modules/clubEvents/services/events.js";
 import { eventModel } from '../db/models/events.js'
 import EventRouter from "../routes/events.js";
 

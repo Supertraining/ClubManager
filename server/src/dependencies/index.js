@@ -31,6 +31,6 @@ async function dinamycRouter() {
   }
 }
 
-dinamycRouter();
+await dinamycRouter();
 
 export default router;

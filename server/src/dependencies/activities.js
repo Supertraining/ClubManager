@@ -1,14 +1,15 @@
-import ActivityDAO from "../apis/activities/DAO/activities.js";
-import ActivityControllers from "../apis/activities/controllers/activities.js";
-import ActivityServices from "../apis/activities/services/activities.js";
+import ActivityControllers from "../modules/activities/controllers/activities.js";
+import ActivityServices from "../modules/activities/services/activities.js";
 import ActivityRouter from "../routes/activities.js";
-import { activityModel } from '../db/models/activity.js'
+import { activityModel } from "../db/models/activity.js";
+import ActivityRepository from "../modules/activities/repository/activities.js";
+import MongoDao from "../core/dao/mongoDb.dao.js";
 
-const activitiesDAO = ActivityDAO.getInstance(activityModel);
-const activitiesService = new ActivityServices(activitiesDAO);
+const activitiesDAO = new MongoDao(activityModel);
+const activitiesRepository = ActivityRepository.getInstance(activitiesDAO);
+const activitiesService = new ActivityServices(activitiesRepository);
 const activitiesController = new ActivityControllers(activitiesService);
 const activitiesRouter = new ActivityRouter(activitiesController);
 const router = activitiesRouter.start();
 
 export default router;
-

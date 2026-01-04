@@ -31,7 +31,7 @@ export default class ActivityControllers {
   }
   update = async (req, res, next) => {
     try {
-      const activity = await this.activityControllers.update({id: req.params.id, ...req.body});
+      const activity = await this.activityControllers.update(req.params.id, req.body);
       res.json(activity);
     } catch (error) {
       next(error)

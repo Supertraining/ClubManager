@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { ReactFullYearScheduler } from 'react-full-year-scheduler';
-import 'react-full-year-scheduler/dist/style.css';
+// import 'react-full-year-scheduler/dist/style.css';
 import { ToastContainer } from 'react-toastify';
 import EventsTable from '../components/EventsTable/EventsTable';
 import EventsForm from '../components/eventsForm/EventsForm';

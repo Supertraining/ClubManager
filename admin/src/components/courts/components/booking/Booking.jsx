@@ -1,16 +1,15 @@
-import { useState } from 'react';
-import 'react-date-time-picker-popup/dist/index.css';
-import { ToastContainer } from 'react-toastify';
-import './booking.css';
-import CourtBookingBoard from '../courtBookingBoard/CourtBookingBoard';
-import CourtBookingDatePicker from '../courtBookingDatePicker/CourtBookingDatePicker';
-import PropTypes from 'prop-types';
+import { useState } from "react";
+import { ToastContainer } from "react-toastify";
+import "./booking.css";
+import CourtBookingBoard from "../courtBookingBoard/CourtBookingBoard";
+import CourtBookingDatePicker from "../courtBookingDatePicker/CourtBookingDatePicker";
+import PropTypes from "prop-types";
 
-import { userStore } from '../../../../stores';
+import { userStore } from "../../../../stores";
 
-import { createDateListArray, isReserveDateAvailable } from '../../helpers';
+import { createDateListArray, isReserveDateAvailable } from "../../helpers";
 
-import { useFetch, useNotifications, useReservesAPI } from '../../../../hooks/index';
+import { useFetch, useNotifications, useReservesAPI } from "../../../../hooks/index";
 
 const Booking = ({ setCourt, court }) => {
   const [day, setDay] = useState(new Date());
@@ -60,10 +59,9 @@ const Booking = ({ setCourt, court }) => {
           );
         }
 
-        notifySuccess('Reserva confirmada');
-
+        notifySuccess("Reserva confirmada");
       } else {
-        notify('Horario no disponible');
+        notify("Horario no disponible");
       }
 
       reFetch();
@@ -80,12 +78,12 @@ const Booking = ({ setCourt, court }) => {
 
       reFetch();
 
-      notifySuccess('Reserva Eliminada');
+      notifySuccess("Reserva Eliminada");
       if (username === admin.username) {
-        updateUser()
+        updateUser();
       }
     } catch (error) {
-      notifyWarning('Hubo un problema, por favor intente nuevamente mas tarde');
+      notifyWarning("Hubo un problema, por favor intente nuevamente mas tarde");
     }
   };
 
@@ -95,9 +93,10 @@ const Booking = ({ setCourt, court }) => {
     <>
       <div className='my-3'>
         <button
-          to={'/'}
+          to={"/"}
           className='btn btn-close border border-dark p-2'
-          onClick={() => setCourt(false)}></button>
+          onClick={() => setCourt(false)}
+        ></button>
       </div>
 
       <h1 className='text-info'>@{court}</h1>

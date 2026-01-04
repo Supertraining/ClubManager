@@ -1,8 +1,8 @@
-import { useNotifications } from './useNotifications';
-import { useAxiosInstance } from './useAxiosInstance';
-import { userStore } from '../stores';
-import { useNavigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
+import { useNotifications } from "./useNotifications";
+import { useAxiosInstance } from "./useAxiosInstance";
+import { userStore } from "../stores";
+import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 export const useUserAPI = () => {
   const { notifyWarning } = useNotifications();
@@ -11,7 +11,8 @@ export const useUserAPI = () => {
   const navigate = useNavigate();
 
   const userLogin = async (credentials) => {
-    const { data: token } = await axios.post('/users/login', credentials);
+    const { data: token } = await axios.post("/users/login", credentials);
+    console.log(token);
     const decodedUser = jwtDecode(token);
 
     const user = { ...decodedUser, token: token };
@@ -21,7 +22,7 @@ export const useUserAPI = () => {
 
   const getAllUsers = async () => {
     try {
-      const { data: allUsers } = await axios.get('/users/getAll');
+      const { data: allUsers } = await axios.get("/users/getAll");
 
       allUsers.sort((a, b) => {
         if (a.apellido > b.apellido) {
@@ -68,11 +69,11 @@ export const useUserAPI = () => {
 
   const closeSession = async () => {
     try {
-      setUser({ type: 'LOGOUT' });
-      localStorage.removeItem('user');
-      navigate('/login');
+      setUser({ type: "LOGOUT" });
+      localStorage.removeItem("user");
+      navigate("/login");
     } catch (error) {
-      notifyWarning('Ha ocurrido un problema, por favor intente nuevamente mas tarde');
+      notifyWarning("Ha ocurrido un problema, por favor intente nuevamente mas tarde");
     }
   };
 
