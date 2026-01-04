@@ -20,7 +20,7 @@
     "express-session": "^1.17.3",
     "express-validator": "^7.0.1",
     "helmet": "^7.0.0",
-    "jsonwebtoken": "^9.0.2",
+    "jose": "^5.2.0",
     "mongoose": "^7.0.3",
     "node-cron": "^3.0.2",
     "nodemailer": "^6.9.3",
