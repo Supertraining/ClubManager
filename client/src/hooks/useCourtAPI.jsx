@@ -1,74 +1,50 @@
+import { useCallback } from 'react';
 import { useNotifications } from './useNotifications';
 import { useAxiosInstance } from './useAxiosInstance';
-import { useCallback } from 'react';
+
+/**
+ * useCourtAPI — Supabase edition.
+ *
+ * All calls go to the Express backend. The backend's `/courts/:name` endpoint
+ * returns reservations keyed by weekday (0..6) to keep backward compat with
+ * the existing week-board UI.
+ */
 export const useCourtAPI = () => {
   const { notifyWarning, notifySuccess } = useNotifications();
   const axios = useAxiosInstance();
 
   const getAllCourts = useCallback(async () => {
     try {
-      const { data: allCourts } = await axios.get('/courts/');
-      return allCourts;
+      const { data } = await axios.get('/courts/');
+      return data ?? [];
     } catch (error) {
-      notifyWarning(`Hubo un problema, ${error?.response?.data}`);
+      notifyWarning(`Hubo un problema: ${error?.response?.data?.message || error.message}`);
+      return [];
     }
   }, [axios, notifyWarning]);
 
-  const deleteCourt = async (id) => {
+  const getUnavailableDatesByName = useCallback(async (name) => {
     try {
-      await axios.delete(`/courts/delete/${id}`);
-      notifySuccess('Cancha eliminada');
+      const { data } = await axios.get(`/courts/${name}`);
+      return data;
     } catch (error) {
-      notifyWarning(`Hubo un problema, ${error?.response?.data}`);
+      notifyWarning(`Hubo un problema: ${error?.response?.data?.message || error.message}`);
+      return null;
     }
-  };
+  }, [axios, notifyWarning]);
 
-  const deleteReserveByUsername = async (username) => {
+  const deleteCourtReserve = useCallback(async (reservationId) => {
     try {
-      await axios.put('/courts/reserve/deleteByUsername', { username: username });
+      await axios.delete(`/users/reserves/${reservationId}`);
+      notifySuccess('Reserva eliminada');
     } catch (error) {
-      notifyWarning(`Hubo un problema, ${error?.response?.data}`);
+      notifyWarning(`Hubo un problema: ${error?.response?.data?.message || error.message}`);
     }
-  };
-
-  const deleteCourtReserve = async (court, day, id) => {
-    try {
-      await axios.put(`/courts/reserve/delete`, {
-        courtName: court,
-        reserveDay: day,
-        reserveId: id,
-      });
-    } catch (error) {
-      notifyWarning(`Hubo un problema, ${error?.response?.data}`);
-    }
-  };
-
-  const deleteOldReserves = async () => {
-    try {
-      await axios.put('/courts/reserve/clean');
-      notifySuccess('Historial de reservas eliminadas');
-    } catch (error) {
-      notifyWarning('Ha ocurrido un problema, por favor intente nuevamente mas tarde');
-    }
-  };
-
-  const updateReserveUsername = async (username, newUsername) => {
-    try {
-      await axios.put('/courts/reserve/userUpdate', {
-        user: username,
-        newUser: newUsername,
-      });
-    } catch (error) {
-      notifyWarning(`Hubo un problema, ${error?.response?.data}`);
-    }
-  };
+  }, [axios, notifySuccess, notifyWarning]);
 
   return {
     getAllCourts,
-    deleteCourt,
-    deleteOldReserves,
-    updateReserveUsername,
-    deleteReserveByUsername,
+    getUnavailableDatesByName,
     deleteCourtReserve,
   };
 };

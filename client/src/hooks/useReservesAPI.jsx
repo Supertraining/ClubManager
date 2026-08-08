@@ -1,132 +1,76 @@
-import { v4 as uuidv4 } from 'uuid';
-import unidecode from 'unidecode';
+import { useCallback } from 'react';
 import { useNotifications } from './useNotifications';
 import { useAxiosInstance } from './useAxiosInstance';
-import { userStore } from '../stores/index';
+import { userStore } from '../stores';
 
+/**
+ * useReservesAPI — Supabase edition.
+ *
+ * Reservations now live in their own table; the server's POST /courts/reserve
+ * is backed by the `create_reservation` RPC which enforces RLS + the EXCLUDE
+ * constraint that prevents double-booking.
+ */
 export const useReservesAPI = () => {
-  const { notifyWarning } = useNotifications();
+  const { notifyWarning, notifySuccess } = useNotifications();
   const axios = useAxiosInstance();
+  const user = userStore((s) => s.user?.user);
 
-  const {
-    user: { user },
-    updateUser,
-  } = userStore();
-
-  const createDate = (initialTime) => {
-    const weekday = new Date(initialTime).toLocaleDateString('es-AR', { weekday: 'long' });
-    const unaccentedWeekday = unidecode(weekday);
-    const date = new Date(initialTime).toLocaleDateString('es-AR', {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'numeric',
-    });
-    const unaccentedDate = unidecode(date);
-
-    return {
-      unaccentedWeekday,
-      unaccentedDate,
-    };
-  };
-
-  const createUserReserve = async (
-    court,
-    initialTime,
-    finalTime,
-    UUID,
-    unaccentedWeekday,
-    unaccentedDate
-  ) => {
+  const getMyReserves = useCallback(async () => {
     try {
-      await axios.put(`/users/reserves/${user.username}`, {
-        court: `${court}`,
-        weekday: unaccentedWeekday,
-        date: unaccentedDate,
-        initialTime: initialTime,
-        finalTime: finalTime,
-        id: UUID,
-        permanent: false,
-      });
+      const { data } = await axios.get('/users/me/reserves');
+      return data ?? [];
     } catch (error) {
-      console.log(error);
+      notifyWarning(`Hubo un problema: ${error?.response?.data?.message || error.message}`);
+      return [];
     }
-  };
+  }, [axios, notifyWarning]);
 
-  const createCourtReserve = async (
-    court,
-    unaccentedWeekday,
-    unaccentedDate,
-    initialTime,
-    finalTime,
-    UUID
-  ) => {
+  /**
+   * Create a reservation.
+   * @param {string} courtName  - one of 'futbol' | 'paddle' | 'squash' | 'paleta'
+   * @param {string} date       - 'YYYY-MM-DD'
+   * @param {string} initialTime - 'HH:mm'
+   * @param {string} finalTime   - 'HH:mm'
+   * @param {boolean} [permanent]
+   */
+  const createReserve = useCallback(async (courtName, date, initialTime, finalTime, permanent = false) => {
     try {
-      await axios.put('/courts/reserve', {
-        name: `${court}`,
+      const start = new Date(`${date}T${initialTime}:00-03:00`);
+      const end = new Date(`${date}T${finalTime}:00-03:00`);
+      const { data } = await axios.put('/courts/reserve', {
+        name: courtName,
         selectedDates: {
-          weekday: unaccentedWeekday,
-          date: unaccentedDate,
-          initialTime: initialTime,
-          finalTime: finalTime,
-          user: user.username,
-          id: UUID,
-          info: null,
-          permanent: false,
+          date,
+          initialTime,
+          finalTime,
+          permanent,
         },
+        // startTime/endTime are what the server actually uses now; the legacy
+        // selectedDates object is still accepted for backward compat.
+        startTime: start.toISOString(),
+        endTime: end.toISOString(),
       });
+      notifySuccess('Reserva confirmada');
+      return data;
     } catch (error) {
-      console.log(error);
+      const msg = error?.response?.data?.message || error.message;
+      notifyWarning(`No se pudo reservar: ${msg}`);
+      return null;
     }
-  };
+  }, [axios, notifySuccess, notifyWarning]);
 
-  const createReserve = async (court, initialTime, finalTime) => {
-
-    const { unaccentedWeekday, unaccentedDate } = createDate(initialTime);
-
-    const UUID = uuidv4();
-
+  const deleteReserve = useCallback(async (reservationId) => {
     try {
-
-      createUserReserve(
-        court,
-        initialTime,
-        finalTime,
-        UUID,
-        unaccentedWeekday,
-        unaccentedDate
-      );
-
-      createCourtReserve(court, unaccentedWeekday, unaccentedDate, initialTime, finalTime, UUID);
-
-   
-        updateUser();
-      
+      await axios.delete(`/users/reserves/${reservationId}`);
+      notifySuccess('Reserva eliminada');
     } catch (error) {
-      console.log(error)
-      notifyWarning(`Hubo un problema, ${error?.response?.data}`);
+      notifyWarning(`Hubo un problema: ${error?.response?.data?.message || error.message}`);
     }
-  };
-
-  const deleteUserReserve = async (username, id) => {
-    await axios.put(`/users/reserves/delete`, {
-      username: username,
-      reserveId: id,
-    });
-  };
-
-  const deleteCourtReserve = async (court, day, id) => {
-    await axios.put(`/courts/reserve/delete`, {
-      courtName: court,
-      reserveDay: day,
-      reserveId: id,
-    });
-  };
+  }, [axios, notifySuccess, notifyWarning]);
 
   return {
-    createUserReserve,
-    createCourtReserve,
+    getMyReserves,
     createReserve,
-    deleteUserReserve,
-    deleteCourtReserve,
+    deleteReserve,
   };
 };

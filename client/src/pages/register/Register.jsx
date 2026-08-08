@@ -2,8 +2,7 @@ import './register.css';
 import { useNavigate } from 'react-router-dom';
 import { isStrongPassword } from 'validator';
 import { useForm } from 'react-hook-form';
-import { jwtDecode } from 'jwt-decode';
-import { useAxiosInstance } from '../../hooks';
+import { useUserAPI } from '../../hooks/useUserAPI.jsx';
 import { userStore } from '../../stores';
 import { useState } from 'react';
 
@@ -13,9 +12,9 @@ const Register = () => {
     user: { loading, error },
   } = userStore();
   const [welcomeMessage, setWelcomeMessage] = useState(false);
+  const { userRegister } = useUserAPI();
 
   const navigate = useNavigate();
-  const axios = useAxiosInstance();
 
   const {
     register,
@@ -24,35 +23,38 @@ const Register = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    try {
-      const passwordValidationOptions = {
-        minLength: 8,
-        minLowercase: 0,
-        minUppercase: 1,
-        minNumbers: 1,
-        minSymbols: 0,
-      };
+    const passwordValidationOptions = {
+      minLength: 8,
+      minLowercase: 0,
+      minUppercase: 1,
+      minNumbers: 1,
+      minSymbols: 0,
+    };
 
-      if (!isStrongPassword(data.password, passwordValidationOptions)) {
-        setUser({ type: 'LOGIN_FAILURE', payload: 'Error de contraseña' });
+    if (!isStrongPassword(data.password, passwordValidationOptions)) {
+      setUser({ type: 'LOGIN_FAILURE', payload: 'La contraseña no cumple los requisitos' });
+      return;
+    }
+
+    try {
+      const result = await userRegister({
+        username: data.username,
+        password: data.password,
+        nombre: data.nombre,
+        apellido: data.apellido,
+        edad: Number(data.edad),
+        telefono: data.telefono,
+      });
+
+      if (result?.requiresEmailConfirmation) {
+        setUser({ type: 'LOGIN_FAILURE', payload: 'Revisá tu casilla para confirmar el email.' });
         return;
       }
 
-      const { data: token } = await axios.post('/users/register', data);
-
-      const decoded = jwtDecode(token);
-
-      const user = { ...decoded, token: token };
-
-      setUser({ type: 'LOGIN_SUCCESS', payload: user });
-
       setWelcomeMessage(true);
-
-      setTimeout(() => {
-        navigate('/');
-      }, 2000);
-    } catch (error) {
-      setUser({ type: 'LOGIN_FAILURE', payload: error.response.data });
+      setTimeout(() => navigate('/'), 2000);
+    } catch {
+      // useUserAPI already shows the error toast.
     }
   };
 
@@ -62,7 +64,6 @@ const Register = () => {
         <>
           <div className='text-success text-center my-4 d-flex align-items-center'>
             <i className='bi bi-list-check mx-1 fs-4'></i>
-
             <h1>¡SUMATE A NUESTRA APP!</h1>
           </div>
 
@@ -73,11 +74,8 @@ const Register = () => {
             onSubmit={handleSubmit(onSubmit)}>
             <div className='input-group align-items-center'>
               <div className='input-group-prepend mx-1 border rounded p-1'>
-                <i
-                  className='bi bi-envelope-at fs-4'
-                  id='basic-addon2'></i>
+                <i className='bi bi-envelope-at fs-4' id='basic-addon2'></i>
               </div>
-
               <input
                 id='userName'
                 name='username'
@@ -91,24 +89,21 @@ const Register = () => {
             {errors.username && (
               <small className='text-danger text-center'>Este campo es obligatorio</small>
             )}
+
             <div className='input-group align-items-center'>
               <div className='input-group-prepend mx-1 border rounded p-1'>
-                <i
-                  className='bi bi-asterisk'
-                  id='basic-addon2'></i>
+                <i className='bi bi-asterisk' id='basic-addon2'></i>
               </div>
-
               <input
                 id='passWord'
                 name='password'
                 placeholder='Contraseña'
                 className='form-control my-2 text-center border-0 border-bottom ph'
                 type='password'
-                autoComplete='current-password'
+                autoComplete='new-password'
                 {...register('password', { required: true })}
               />
             </div>
-
             <small className='text-success col-9 text-center'>
               La contraseña debe tener al menos 8 caracteres y, debe incluir como mínimo una
               MAYÚSCULA, y un número.{' '}
@@ -116,18 +111,14 @@ const Register = () => {
                 <i className='text-decoration-underline'>Ejemplo:</i> Nombre1980
               </strong>
             </small>
-
             {errors.password && (
               <small className='text-danger text-center'>Este campo es obligatorio</small>
             )}
 
             <div className='input-group align-items-center'>
               <div className='input-group-prepend mx-1 border rounded p-1'>
-                <i
-                  className='bi bi-person-check fs-4'
-                  id='basic-addon2'></i>
+                <i className='bi bi-person-check fs-4' id='basic-addon2'></i>
               </div>
-
               <input
                 id='nombre'
                 name='nombre'
@@ -137,17 +128,12 @@ const Register = () => {
                 {...register('nombre', { required: true })}
               />
             </div>
-            {errors.nombre && (
-              <small className='text-danger text-center'>Este campo es obligatorio</small>
-            )}
+            {errors.nombre && <small className='text-danger text-center'>Este campo es obligatorio</small>}
 
             <div className='input-group align-items-center'>
               <div className='input-group-prepend mx-1 border rounded p-1'>
-                <i
-                  className='bi bi-person-check fs-4'
-                  id='basic-addon2'></i>
+                <i className='bi bi-person-check fs-4' id='basic-addon2'></i>
               </div>
-
               <input
                 id='apellido'
                 name='apellido'
@@ -157,39 +143,29 @@ const Register = () => {
                 {...register('apellido', { required: true })}
               />
             </div>
-            {errors.apellido && (
-              <small className='text-danger text-center'>Este campo es obligatorio</small>
-            )}
+            {errors.apellido && <small className='text-danger text-center'>Este campo es obligatorio</small>}
 
             <div className='input-group align-items-center'>
               <div className='input-group-prepend mx-1 border rounded p-1'>
-                <i
-                  className='bi bi-calendar-date fs-4'
-                  id='basic-addon2'></i>
+                <i className='bi bi-calendar-date fs-4' id='basic-addon2'></i>
               </div>
-
               <input
                 id='edad'
                 name='edad'
                 placeholder='Edad'
                 className='form-control my-2 text-center border-0 border-bottom ph'
                 type='number'
-                min={0}
+                min={12}
                 max={99}
                 {...register('edad', { required: true })}
               />
             </div>
-            {errors.edad && (
-              <small className='text-danger text-center'>Este campo es obligatorio</small>
-            )}
+            {errors.edad && <small className='text-danger text-center'>Este campo es obligatorio</small>}
 
             <div className='input-group align-items-center'>
               <div className='input-group-prepend mx-1 border rounded p-1'>
-                <i
-                  className='bi bi-phone fs-4'
-                  id='basic-addon2'></i>
+                <i className='bi bi-phone fs-4' id='basic-addon2'></i>
               </div>
-
               <input
                 id='telefono'
                 name='telefono'
@@ -199,17 +175,12 @@ const Register = () => {
                 {...register('telefono', { required: true })}
               />
             </div>
-            {errors.telefono && (
-              <small className='text-danger text-center'>Este campo es obligatorio</small>
-            )}
+            {errors.telefono && <small className='text-danger text-center'>Este campo es obligatorio</small>}
 
             <div className='input-group my-2 justify-content-center align-items-center'>
               <div className='input-group-prepend mx-2'>
-                <i
-                  className='bi bi-send fs-4'
-                  id='basic-addon2'></i>
+                <i className='bi bi-send fs-4' id='basic-addon2'></i>
               </div>
-
               <input
                 className='my-2 text-center border border-success col-6 rounded bg-white text-secondary p-2 register-Btn'
                 type='submit'

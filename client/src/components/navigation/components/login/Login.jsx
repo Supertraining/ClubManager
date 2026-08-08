@@ -1,20 +1,18 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
 import { useForm } from 'react-hook-form';
 import './login.css';
-import { useAxiosInstance } from '../../../../hooks/useAxiosInstance.jsx';
+import { useUserAPI } from '../../../../hooks/useUserAPI.jsx';
 import { userStore } from '../../../../stores/index.js';
 import Spinner from '../../../spinner/Spinner.jsx';
+
 const Login = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-
   const navigate = useNavigate();
-  const axios = useAxiosInstance();
-
+  const { userLogin } = useUserAPI();
   const {
     setUser,
     user: { loading, error },
@@ -24,18 +22,11 @@ const Login = () => {
   const onSubmit = async (data) => {
     try {
       setUser({ type: ACTIONS.LOGIN_START });
-
-      const { data: token } = await axios.post('/users/login', data);
-
-      const decoded = jwtDecode(token);
-
-      const user = { ...decoded, token: token };
-
-      setUser({ type: ACTIONS.LOGIN_SUCCESS, payload: user });
-
+      await userLogin({ username: data.username, password: data.password });
       navigate('/');
-    } catch (error) {
-      setUser({ type: ACTIONS.LOGIN_FAILURE, payload: error.response.data });
+    } catch {
+      // useUserAPI already notifyWarning'd the user. The store gets the failure
+      // set inside userLogin itself.
     }
   };
 
@@ -81,7 +72,7 @@ const Login = () => {
             placeholder='Contraseña'
             className='form-control m-3 bg-transparent border-0 border-bottom text-white'
             type='password'
-            autoComplete='on'
+            autoComplete='current-password'
             disabled={loading}
             {...register('password', { required: true })}
           />
@@ -94,8 +85,8 @@ const Login = () => {
           )}
         </div>
         {errors.password && (
-          <div className='text-center'>
-            <small className='text-danger'>Este campo es obligatorio</small>
+          <div className='text-danger text-center'>
+            <small>Este campo es obligatorio</small>
           </div>
         )}
         {loading && (

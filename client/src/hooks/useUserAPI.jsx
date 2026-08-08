@@ -1,119 +1,128 @@
+import { useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '../lib/supabaseClient';
 import { useNotifications } from './useNotifications';
 import { useAxiosInstance } from './useAxiosInstance';
 import { userStore } from '../stores';
-import { useNavigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
 
+/**
+ * useUserAPI — Supabase edition.
+ *
+ * Auth (login, logout) goes through `supabase.auth.*`.
+ * Profile/admin operations go through the Express backend with the
+ * Supabase access_token as Bearer.
+ *
+ * Backward-compatible surface: same function names + signatures as the
+ * pre-migration hook, so existing components keep working.
+ */
 export const useUserAPI = () => {
-  const { notifyWarning } = useNotifications();
+  const { notifyWarning, notifyError } = useNotifications();
   const axios = useAxiosInstance();
-  const {
-    setUser,
-    user: { user },
-  } = userStore();
+  const { setUser, ACTIONS } = userStore((s) => s);
   const navigate = useNavigate();
 
-  const userLogin = async (credentials) => {
-    try {
-      const { data: token } = await axios.post('/users/login', credentials);
-      const decodedUser = jwtDecode(token);
-
-      const user = { ...decodedUser, token: token };
-
-      return user;
-    } catch (error) {
-      notifyWarning(`Hubo un problema, ${error?.response?.data}`);
+  const userLogin = useCallback(async ({ username, password }) => {
+    setUser({ type: ACTIONS.LOGIN_START });
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: String(username).trim().toLowerCase(),
+      password,
+    });
+    if (error) {
+      setUser({ type: ACTIONS.LOGIN_FAILURE, payload: error.message });
+      notifyWarning('Email o contraseña incorrectos.');
+      throw error;
     }
-  };
+    setUser({ type: ACTIONS.LOGIN_SUCCESS, payload: { id: data.user.id, email: data.user.email } });
+    return data.user;
+  }, [setUser, ACTIONS, notifyWarning]);
 
-  const getAllUsers = async () => {
+  const userRegister = useCallback(async ({ username, password, nombre, apellido, edad, telefono }) => {
+    const { data, error } = await supabase.auth.signUp({
+      email: String(username).trim().toLowerCase(),
+      password,
+      options: {
+        data: {
+          first_name: nombre,
+          last_name: apellido,
+          age: Number(edad),
+          phone: telefono,
+        },
+      },
+    });
+    if (error) {
+      notifyError(error.message);
+      throw error;
+    }
+    if (!data.session) {
+      // Supabase project has email confirmation enabled; the profile trigger
+      // still fires on confirm.
+      return { requiresEmailConfirmation: true, user: data.user };
+    }
+    setUser({ type: ACTIONS.LOGIN_SUCCESS, payload: { id: data.user.id, email: data.user.email } });
+    return { user: data.user, session: data.session };
+  }, [setUser, ACTIONS, notifyError]);
+
+  const getAllUsers = useCallback(async () => {
     try {
       const { data: allUsers } = await axios.get('/users/getAll');
-
-      allUsers.sort((a, b) => {
-        if (a.apellido > b.apellido) {
-          return 1;
-        }
-        if (a.apellido < b.apellido) {
-          return -1;
-        }
-        return 0;
-      });
-
+      allUsers.sort((a, b) => (a.last_name > b.last_name ? 1 : a.last_name < b.last_name ? -1 : 0));
       return allUsers;
     } catch (error) {
-      notifyWarning(`Hubo un problema, ${error?.response?.data}`);
+      notifyWarning(`Hubo un problema: ${error?.response?.data?.message || error.message}`);
+      return [];
     }
-  };
+  }, [axios, notifyWarning]);
 
-  const updateUserById = async (credentials) => {
+  const getUserById = useCallback(async (id) => {
     try {
-      const { data: updatedUser } = await axios.put(`/users/update/${credentials._id}`, {
-        ...credentials,
-      });
-
-      return updatedUser;
+      const { data } = await axios.get(`/users/user/${id}`);
+      return data;
     } catch (error) {
-      notifyWarning(`Hubo un problema, ${error?.response?.data}`);
+      notifyWarning(`Hubo un problema: ${error?.response?.data?.message || error.message}`);
+      return null;
     }
-  };
+  }, [axios, notifyWarning]);
 
-  const updateUsersPassword = async (user, newPassword) => {
+  const updateUserById = useCallback(async (id, updates) => {
     try {
-      await axios.put('/users/update', { ...user, password: newPassword });
+      const { data } = await axios.put(`/users/update/${id}`, updates);
+      return data;
     } catch (error) {
-      notifyWarning(`Hubo un problema, ${error?.response?.data}`);
+      notifyWarning(`Hubo un problema: ${error?.response?.data?.message || error.message}`);
+      return null;
     }
-  };
+  }, [axios, notifyWarning]);
 
-  const getUserById = async () => {
+  const updateUsersPassword = useCallback(async (targetUser, newPassword) => {
     try {
-      const { data: userById } = await axios.get(`/users/user/${user?._id}`);
-
-      return userById;
+      await axios.put('/users/update', { _id: targetUser.id, password: newPassword });
     } catch (error) {
-      notifyWarning(`Hubo un problema, ${error?.response?.data}`);
+      notifyWarning(`Hubo un problema: ${error?.response?.data?.message || error.message}`);
     }
-  };
+  }, [axios, notifyWarning]);
 
-  const deleteUserById = async (id) => {
+  const deleteUserById = useCallback(async (id) => {
     try {
-      const { data: userDeleted } = await axios.delete(`/users/eliminar/${id}`);
-      return userDeleted;
+      await axios.delete(`/users/eliminar/${id}`);
     } catch (error) {
-      notifyWarning(`Hubo un problema, ${error?.response?.data}`);
+      notifyWarning(`Hubo un problema: ${error?.response?.data?.message || error.message}`);
     }
-  };
+  }, [axios, notifyWarning]);
 
-  const deleteUserReserve = async (username, id) => {
-    try {
-      await axios.put(`/users/reserves/delete`, {
-        username: username,
-        reserveId: id,
-      });
-    } catch (error) {
-      notifyWarning(`Hubo un problema, ${error?.response?.data}`);
-    }
-  };
-
-  const closeSession = async () => {
-    try {
-      setUser({ type: 'LOGOUT' });
-      localStorage.removeItem('user');
-      navigate('/login');
-    } catch (error) {
-      notifyWarning('Ha ocurrido un problema, por favor intente nuevamente mas tarde');
-    }
-  };
+  const closeSession = useCallback(async () => {
+    await supabase.auth.signOut();
+    setUser({ type: ACTIONS.LOGOUT });
+    navigate('/login');
+  }, [setUser, ACTIONS, navigate]);
 
   return {
     userLogin,
+    userRegister,
     getAllUsers,
+    getUserById,
     updateUserById,
     updateUsersPassword,
-    getUserById,
     deleteUserById,
-    deleteUserReserve,
     closeSession,
   };
 };

@@ -1,181 +1,60 @@
-import { v4 as uuidv4 } from 'uuid';
-import unidecode from 'unidecode';
+import { useCallback } from 'react';
 import { useNotifications } from './useNotifications';
 import { useAxiosInstance } from './useAxiosInstance';
-import { userStore } from '../stores/index';
 
+/**
+ * useReservesAPI (admin) — Supabase edition.
+ *
+ * Admins can create a reservation on behalf of any user. The server's
+ * `create_reservation` RPC accepts (court_id, start, end, permanent, info)
+ * and enforces RLS (admins can insert on behalf of anyone).
+ */
 export const useReservesAPI = () => {
-  const { notifyWarning } = useNotifications();
+  const { notifyWarning, notifySuccess } = useNotifications();
   const axios = useAxiosInstance();
 
-  const {
-    user: { user: admin },
-    updateUser,
-  } = userStore();
-
-  const createUserReserve = async (
-    court,
-    initialTime,
-    finalTime,
-    permanent,
-    username,
-    UUID,
-    unaccentedWeekday,
-    unaccentedDate
-  ) => {
+  const getReservationsForCourt = useCallback(async (courtName) => {
     try {
-      await axios.put(`/users/reserves/${username}`, {
-        court: `${court}`,
-        weekday: unaccentedWeekday,
-        date: unaccentedDate,
-        initialTime: initialTime,
-        finalTime: finalTime,
-        id: UUID,
-        permanent: permanent,
+      const { data } = await axios.get(`/courts/${courtName}`);
+      return data;
+    } catch (error) {
+      notifyWarning(`Hubo un problema: ${error?.response?.data?.message || error.message}`);
+      return null;
+    }
+  }, [axios, notifyWarning]);
+
+  const createReserve = useCallback(async ({ courtName, date, initialTime, finalTime, permanent = false, info = null, onBehalfOfUserId = null }) => {
+    try {
+      const start = new Date(`${date}T${initialTime}:00-03:00`);
+      const end = new Date(`${date}T${finalTime}:00-03:00`);
+      const { data } = await axios.put('/courts/reserve', {
+        name: courtName,
+        selectedDates: { date, initialTime, finalTime, permanent },
+        startTime: start.toISOString(),
+        endTime: end.toISOString(),
+        onBehalfOfUserId,
       });
+      notifySuccess('Reserva creada');
+      return data;
     } catch (error) {
-      console.log(error);
+      const msg = error?.response?.data?.message || error.message;
+      notifyWarning(`No se pudo crear la reserva: ${msg}`);
+      return null;
     }
-  };
+  }, [axios, notifySuccess, notifyWarning]);
 
-  const createCourtReserve = async (
-    court,
-    unaccentedWeekday,
-    unaccentedDate,
-    initialTime,
-    finalTime,
-    username,
-    UUID,
-    info,
-    permanent
-  ) => {
+  const deleteReserve = useCallback(async (reservationId) => {
     try {
-      await axios.put('/courts/reserve', {
-        name: `${court}`,
-        selectedDates: {
-          weekday: unaccentedWeekday,
-          date: unaccentedDate,
-          initialTime: initialTime,
-          finalTime: finalTime,
-          user: username,
-          id: UUID,
-          info: info.length > 0 ? info : null,
-          permanent: permanent,
-        },
-      });
+      await axios.delete(`/users/reserves/${reservationId}`);
+      notifySuccess('Reserva eliminada');
     } catch (error) {
-      console.log(error);
+      notifyWarning(`Hubo un problema: ${error?.response?.data?.message || error.message}`);
     }
-  };
-
-  const createReserve = async (court, initialTime, finalTime, permanent, info, username) => {
-    const weekday = new Date(initialTime).toLocaleDateString('es-AR', {
-      weekday: 'long',
-    });
-    const unaccentedWeekday = unidecode(weekday);
-
-    const date = new Date(initialTime).toLocaleDateString('es-AR', {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'numeric',
-    });
-    const unaccentedDate = unidecode(date);
-
-    const UUID = uuidv4();
-
-    try {
-      createUserReserve(
-        court,
-        initialTime,
-        finalTime,
-        permanent,
-        username,
-        UUID,
-        unaccentedWeekday,
-        unaccentedDate
-      );
-
-      createCourtReserve(
-        court,
-        unaccentedWeekday,
-        unaccentedDate,
-        initialTime,
-        finalTime,
-        username,
-        UUID,
-        info,
-        permanent
-      );
-
-      if (permanent) {
-        const today = new Date(initialTime);
-        const oneWeekFromNow = today.setDate(today.getDate() + 7);
-        const dateOneWeekFromNow = unidecode(
-          new Date(oneWeekFromNow).toLocaleDateString('es-AR', {
-            weekday: 'long',
-            day: 'numeric',
-            month: 'numeric',
-          })
-        );
-
-        const initialTimeWeekFromNow = new Date(today.getTime());
-        const todayFinalTime = new Date(finalTime);
-        const finalTimeWeekFromNow = new Date(
-          todayFinalTime.getTime() + 7 * 24 * 60 * 60 * 1000
-        ).getTime();
-
-        createUserReserve(
-          court,
-          initialTime,
-          finalTime,
-          permanent,
-          username,
-          UUID,
-          unaccentedWeekday,
-          dateOneWeekFromNow
-        );
-
-        createCourtReserve(
-          court,
-          unaccentedWeekday,
-          dateOneWeekFromNow,
-          initialTimeWeekFromNow,
-          finalTimeWeekFromNow,
-          username,
-          UUID,
-          info,
-          permanent
-        );
-      }
-      if (username === admin.username) {
-        updateUser();
-      }
-       
-    } catch (error) {
-      notifyWarning(`Hubo un problema, ${error?.response?.data}`);
-    }
-  };
-
-  const deleteUserReserve = async (username, id) => {
-    await axios.put(`/users/reserves/delete`, {
-      username: username,
-      reserveId: id,
-    });
-  };
-
-  const deleteCourtReserve = async (court, day, id) => {
-    await axios.put(`/courts/reserve/delete`, {
-      courtName: court,
-      reserveDay: day,
-      reserveId: id,
-    });
-  };
+  }, [axios, notifySuccess, notifyWarning]);
 
   return {
-    createUserReserve,
-    createCourtReserve,
+    getReservationsForCourt,
     createReserve,
-    deleteUserReserve,
-    deleteCourtReserve,
+    deleteReserve,
   };
 };
