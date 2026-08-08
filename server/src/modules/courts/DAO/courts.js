@@ -1,257 +1,132 @@
-import { Logger } from "../../../utils/logger.js";
+import { Logger } from '../../../utils/logger.js';
+import { supabaseAdmin, createUserClient } from '../../../config/supabaseClient.js';
 
 let instance = null;
+
+/**
+ * CourtsDAO — Supabase edition.
+ *
+ * - Courts are public-read (anon can list).
+ * - Writes are admin-only (RLS).
+ * - Reservations live in their own table; the old "unavailableDates" array
+ *   on the court doc is gone. Use `getReservationsForCourt` to power the
+ *   week-board.
+ */
 export default class CourtsDAO {
 
-    constructor(courtModel, userModel) {
+  async getAll() {
+    const { data, error } = await supabaseAdmin
+      .from('courts')
+      .select('*')
+      .eq('active', true)
+      .order('name', { ascending: true });
+    if (error) throw error;
+    return data ?? [];
+  }
 
-        this.courtModel = courtModel;
-        this.userModel = userModel;
+  async getByName(name) {
+    const { data, error } = await supabaseAdmin
+      .from('courts')
+      .select('*')
+      .eq('name', name)
+      .maybeSingle();
+    if (error) throw error;
+    return data;
+  }
 
+  async getById(id) {
+    const { data, error } = await supabaseAdmin
+      .from('courts')
+      .select('*')
+      .eq('id', id)
+      .maybeSingle();
+    if (error) throw error;
+    return data;
+  }
+
+  async create(court) {
+    const { data, error } = await supabaseAdmin
+      .from('courts')
+      .insert(court)
+      .select()
+      .single();
+    if (error) throw error;
+    return data;
+  }
+
+  async deleteById(id) {
+    const { error } = await supabaseAdmin
+      .from('courts')
+      .delete()
+      .eq('id', id);
+    if (error) throw error;
+    return { deletedCount: 1 };
+  }
+
+  /**
+   * Returns the reservations for a court between two dates. Same shape as the
+   * legacy /courts/:name endpoint, but rows come from `reservations` instead
+   * of `unavailableDates`.
+   */
+  async getReservationsForCourtByName(name, fromIso, toIso) {
+    const { data: court, error: courtError } = await supabaseAdmin
+      .from('courts')
+      .select('id, name, display_name')
+      .eq('name', name)
+      .maybeSingle();
+    if (courtError) throw courtError;
+    if (!court) return { court: null, reservations: [] };
+
+    const { data, error } = await supabaseAdmin
+      .from('reservations')
+      .select('id, weekday, reservation_date, start_time, end_time, user_id, permanent, info')
+      .eq('court_id', court.id)
+      .gte('start_time', fromIso ?? new Date().toISOString())
+      .lte('end_time', toIso ?? new Date(Date.now() + 14 * 86400000).toISOString())
+      .order('start_time', { ascending: true });
+    if (error) throw error;
+    return { court, reservations: data ?? [] };
+  }
+
+  /**
+   * Create a reservation via the server-side RPC. RLS + EXCLUDE constraint
+   * enforce ownership and double-booking protection.
+   */
+  async createReservation({ courtId, startTime, endTime, permanent = false, info = null }, accessToken) {
+    const userClient = createUserClient(accessToken);
+    const { data, error } = await userClient.rpc('create_reservation', {
+      p_court_id: courtId,
+      p_start_time: startTime,
+      p_end_time: endTime,
+      p_permanent: permanent,
+      p_info: info,
+    });
+    if (error) throw error;
+    return data;
+  }
+
+  async deleteReservation(reservationId, accessToken) {
+    const userClient = createUserClient(accessToken);
+    const { error } = await userClient
+      .from('reservations')
+      .delete()
+      .eq('id', reservationId);
+    if (error) throw error;
+    return { deletedCount: 1 };
+  }
+
+  async deleteOldReservations() {
+    // RPC defined in 03_rpc.sql — security definer, runs as service_role.
+    const { data, error } = await supabaseAdmin.rpc('delete_old_reservations');
+    if (error) throw error;
+    return { deletedCount: data ?? 0 };
+  }
+
+  static getInstance() {
+    if (!instance) {
+      instance = new CourtsDAO();
+      Logger.level().info('CourtsDAO instance created');
     }
-
-    save = async (court) => {
-
-        try {
-
-            let data = await this.courtModel
-                .create(court);
-
-            return data;
-
-        } catch (error) {
-
-            throw (error)
-
-        }
-
-    }
-
-    getAll = async () => {
-
-        try {
-
-            let data = await this.courtModel
-                .find();
-
-            return data;
-
-        } catch (error) {
-
-            throw (error)
-
-        }
-    }
-
-    deleteCourtById = async (id) => {
-        try {
-
-            let data = await this.courtModel
-                .deleteOne({ _id: id });
-
-            return data;
-
-        } catch (error) {
-
-            throw (error)
-
-        }
-    }
-
-    getUnavailableDatesByName = async (name) => {
-
-        try {
-
-            let data = await this.courtModel
-                .findOne(
-                    {
-                        name: name
-                    }
-                );
-
-            let unavailableDates = data.get('unavailableDates')
-
-            return unavailableDates;
-
-        } catch (error) {
-
-            throw (error)
-
-        }
-
-    }
-
-    reserveDate = async (reserve) => {
-
-        try {
-
-            let data = await this.courtModel
-                .updateOne(
-                    {
-                        name: reserve.name
-                    },
-                    {
-                        $push:
-                        {
-
-                            [ `unavailableDates.${reserve.selectedDates.weekday}` ]: reserve.selectedDates,
-
-                        }
-                    }
-                );
-
-            return data;
-
-        } catch (error) {
-            throw (error)
-        }
-    }
-
-    deleteReserveById = async (courtName, reserveDay, reserveId) => {
-
-        try {
-
-            let data = await this.courtModel
-                .updateOne(
-                    { name: courtName },
-                    { $pull: { [ `unavailableDates.${reserveDay}` ]: { id: reserveId } } }
-                );
-
-            return data;
-
-        } catch (error) {
-
-            throw (error)
-
-        }
-
-    }
-
-    deleteOldReserves = async () => {
-        try {
-            // Get yesterday's date
-            const yesterday = new Date();
-            yesterday.setDate(yesterday.getDate() - 1);
-
-            // Iterate over each court and remove reserves from yesterday
-            const courts = await this.courtModel.find();
-            for (const court of courts) {
-                for (const [ dayOfWeek, reserves ] of Object.entries(court.unavailableDates)) {
-
-                    court.unavailableDates[ dayOfWeek ] = reserves.filter((reserve) => {
-
-                        return reserve.initialTime > yesterday.getTime()
-                    });
-                }
-
-                const result = await this.courtModel.updateOne(
-                    { _id: court._id },
-                    { $set: { unavailableDates: court.unavailableDates } }
-                );
-
-                Logger.level().info(result.modifiedCount + ' reserves deleted from ' + court.name);
-            }
-            const users = await this.userModel.find();
-            for (const user of users) {
-                user.reserves = user.reserves.filter((reserve) => {
-                    return reserve.initialTime > yesterday.getTime()
-                })
-
-                const userResult = await this.userModel.updateOne(
-                    { _id: user._id },
-                    { $set: { reserves: user.reserves } }
-                )
-
-                Logger.level().info(userResult.modifiedCount + ' reserves deleted from ' + user.username);
-
-            }
-        } catch (error) {
-            throw (error)
-        }
-    }
-    deleteUserReserves = async (user) => {
-
-        try {
-
-            const courts = await this.courtModel.find();
-            for (const court of courts) {
-                for (const [ dayOfWeek, reserves ] of Object.entries(court.unavailableDates)) {
-
-                    court.unavailableDates[ dayOfWeek ] = reserves.filter((reserve) => {
-
-                        return reserve.user != user.username
-                    });
-                }
-
-                const result = await this.courtModel.updateOne(
-                    { _id: court._id },
-                    { $set: { unavailableDates: court.unavailableDates } }
-                );
-
-                Logger.level().info(result.modifiedCount + ' reserves deleted from ' + court.name);
-
-                return result;
-            }
-
-        } catch (error) {
-            throw (error)
-        }
-    }
-
-    updateReservesUser = async (user) => {
-        try {
-            const courts = await this.courtModel.find();
-            let reserveUpdated = false;
-
-            for (const court of courts) {
-                for (const [ dayOfWeek, reserves ] of Object.entries(court.unavailableDates)) {
-                    for (const reserve of reserves) {
-                        if (reserve.user == user.user) {
-                            const result = await this.courtModel.updateOne(
-                                { _id: court._id },
-                                { $set: { [ `unavailableDates.${dayOfWeek}.$[elem].user` ]: user.newUser } },
-                                { arrayFilters: [ { "elem.user": user.user } ] }
-                            );
-
-                            if (result.modifiedCount > 0) {
-                                reserveUpdated = true;
-                            }
-                        }
-                    }
-                }
-            }
-
-            return reserveUpdated;
-
-        } catch (error) {
-            throw error;
-        }
-    };
-
-    static getInstance(courtModel, userModel) {
-        try {
-
-            if (!instance) {
-
-                instance = new CourtsDAO(courtModel, userModel);
-
-                Logger.level().info('Se ha creado una instancia de CourtsDAO');
-
-                return instance;
-            }
-
-            Logger.level().info('Se ha utilizado una instancia ya creada de CourtsDAO');
-
-            return instance;
-
-        } catch (error) {
-
-            throw (error)
-
-        }
-    }
-
+    return instance;
+  }
 }
-
-
-

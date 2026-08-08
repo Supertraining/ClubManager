@@ -1,67 +1,35 @@
 import { CustomError } from "../../../utils/customError.Utils.js";
+
 export default class ActivityServices {
-  constructor(activityRepository) {
-    this.activityRepository = activityRepository;
+  constructor(activityDAO) {
+    this.repository = activityDAO;
   }
+
   save = async (activityData) => {
-    const activity = await this.activityRepository.save(activityData);
-    return activity;
+    return this.repository.save(activityData);
   };
 
   getAll = async () => {
-    const activity = await this.activityRepository.getAll();
-    return activity;
+    return this.repository.getAll();
   };
 
   getById = async (id) => {
-    try {
-      const activity = await this.activityRepository.getById(id);
-
-      if (!activity) {
-        throw CustomError.notFound("El usuarios no existe");
-      }
-
-      return activity;
-    } catch (error) {
-      if (error.kind === "ObjectId") {
-        throw CustomError.badRequest("Id incorrecta");
-      }
-      throw error;
-    }
+    const activity = await this.repository.getById(id);
+    if (!activity) throw CustomError.notFound(`Actividad ${id} no encontrada`);
+    return activity;
   };
 
   update = async (id, data) => {
-    const activity = await this.activityRepository.update(id, data);
-
-    if (activity.matchedCount === 0) {
-      throw CustomError.notFound(`La actividad con el Id: ${id} no encontrado`);
-    }
-    if (activity.modifiedCount === 0 && activity.matchedCount === 1) {
-      throw CustomError.badRequest(`La actividad con el Id: ${id} no ha sido modificado`);
-    }
-
-    return activity;
+    const result = await this.repository.update(id, data);
+    if (!result) throw CustomError.notFound(`Actividad ${id} no encontrada`);
+    return result;
   };
 
   delete = async (id) => {
-    try {
-      const activity = await this.activityRepository.delete(id);
-
-      if (activity.matchedCount === 0) {
-        throw CustomError.notFound(`La actividad con el Id: ${reserveId} no encontrada`);
-      }
-
-      return activity;
-    } catch (error) {
-      if (error.kind === "ObjectId") {
-        throw CustomError.badRequest("Id incorrecta");
-      }
-      throw error;
-    }
+    return this.repository.delete(id);
   };
 
   deleteAll = async () => {
-    const activity = await this.activityRepository.deleteAll();
-    return activity;
+    return this.repository.deleteAll();
   };
 }

@@ -4,33 +4,23 @@ import { dirname, basename } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-
-const PATH_ROUTER = `${__dirname}`;
 const router = Router();
 
-const cleanFileName = (fileName) => {
-  const file = basename(fileName, '.js')
-  return file;
-}
+const cleanFileName = (fileName) => basename(fileName, '.js');
 
-async function dinamycRouter() {
-  try {
-    const dirList = await fs.promises.readdir(PATH_ROUTER);
-    
-    dirList.forEach(async (fileName) => {
-      const cleanName = cleanFileName(fileName);
-      if (cleanName !== 'index' && cleanName !== 'middlewares') {
-        const module = await import(`./${cleanName}.js`);
-        const subRouter =  module.default;
-        router.use(`/${cleanName}`, subRouter);
-        console.log(`Se esta cargando la ruta... /${cleanName}`);
-      }
-    });
-  } catch (error) {
-    console.log(error);
+async function dynamicRouter() {
+  const dirList = await fs.promises.readdir(__dirname);
+  for (const fileName of dirList) {
+    const cleanName = cleanFileName(fileName);
+    if (cleanName === 'index' || cleanName === 'middlewares') continue;
+    const module = await import(`./${cleanName}.js`);
+    const subRouter = module.default;
+    router.use(`/${cleanName}`, subRouter);
+    // eslint-disable-next-line no-console
+    console.log(`✓ route loaded: /${cleanName}`);
   }
 }
 
-await dinamycRouter();
+await dynamicRouter();
 
 export default router;

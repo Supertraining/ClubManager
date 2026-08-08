@@ -1,11 +1,9 @@
-import CourtsDAO from "../modules/courts/DAO/courts.js";
-import CourtsControllers from "../modules/courts/controllers/courts.js";
-import CourtServices from "../modules/courts/services/courts.js";
-import { courtModel } from "../db/models/court.js";
-import { userModel } from "../db/models/user.js";
-import CourtsRouter from "../routes/courts.js";
+import CourtsDAO from '../modules/courts/DAO/courts.js';
+import CourtsControllers from '../modules/courts/controllers/courts.js';
+import CourtServices from '../modules/courts/services/courts.js';
+import CourtsRouter from '../routes/courts.js';
 
-const courtDAO = CourtsDAO.getInstance(courtModel, userModel);
+const courtDAO = CourtsDAO.getInstance();
 const courtService = new CourtServices(courtDAO);
 const courtController = new CourtsControllers(courtService);
 const courtRouter = new CourtsRouter(courtController);

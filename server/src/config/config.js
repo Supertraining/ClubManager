@@ -9,12 +9,18 @@ nodeEnv === "dev"
   : nodeEnv === "prod" ? process.loadEnvFile(join(__dirname, ".env")) : Logger.level().info("Production environment");
 
 export const {
-  MONGO_URL: mongoUrl,
+  // CORS — frontend URLs
   CLIENT_PROD_URL: client_prod_url,
   ADMIN_PROD_URL: admin_prod_url,
   CLIENT_DEV_URL: client_dev_url,
   ADMIN_DEV_URL: admin_dev_url,
-  JWT_SECRET: JWT_SEED,
+
+  // Supabase — required
+  SUPABASE_URL: supabaseUrl,
+  SUPABASE_SERVICE_ROLE_KEY: supabaseServiceRoleKey,
+  SUPABASE_ANON_KEY: supabaseAnonKey,
+
+  // Gmail — optional (used for new-user + password-change notifications)
   SERVICE: gmailService,
   GMAILPORT: gmailPort,
   GMAILUSER: gmailUser,
@@ -22,3 +28,16 @@ export const {
 } = process.env;
 
 export const port = process.env.PORT || 8080;
+
+/**
+ * Guard: in prod, Supabase credentials are mandatory. In dev, log a warning
+ * and let the dev set them up. See server/src/config/.env.example.
+ */
+if (nodeEnv === "prod") {
+  if (!supabaseUrl || !supabaseServiceRoleKey) {
+    throw new Error(
+      "SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required in production. " +
+      "See server/src/config/.env.example."
+    );
+  }
+}

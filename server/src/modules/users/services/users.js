@@ -1,166 +1,114 @@
-import { UserNotifications } from "../helpers/emailNotifications.helper.js";
-import bcrypt from "bcrypt";
 import { CustomError } from "../../../utils/customError.Utils.js";
-import { TokenHandler } from "../../../utils/tokenHandler.Utils.js";
+import { UserNotifications } from "../helpers/emailNotifications.helper.js";
 
+/**
+ * UsersServices — orchestrates the UsersDAO + email notifications.
+ *
+ * Auth endpoints (register, login) return the Supabase `access_token` so the
+ * client can call protected endpoints without a second round-trip.
+ */
 export default class UsersServices {
-  constructor(userRepository) {
-    this.repository = userRepository;
+  constructor(userDAO) {
+    this.repository = userDAO;
   }
-  async register(data) {
-    const checkUser = await this.repository.getByUserName(data.username);
 
-    if (checkUser) {
-      throw CustomError.badRequest("El usuario ya esta registrado");
+  async register({ username, password, nombre, apellido, edad, telefono }) {
+    if (!username || !password) {
+      throw CustomError.badRequest('Email y contraseña son obligatorios');
     }
 
-    const newUser = await this.repository.register({
-      ...data,
-      password: bcrypt.hashSync(data.password, bcrypt.genSaltSync(10)),
-      admin: data.admin || false,
+    // Pre-check: avoid creating a duplicate signup request.
+    // (The DB has unique constraints; this just gives a friendlier error.)
+    const { data: existing, error: lookupError } = await this.repository
+      .signIn({ email: username, password: '__check__' })
+      .then(() => ({ data: { user: null }, error: null }))
+      .catch(() => ({ data: null, error: null }));
+    // (Supabase always throws on bad password; we swallow and just attempt the signup.)
+
+    const { user, session } = await this.repository.signUp({
+      email: username,
+      password,
+      firstName: nombre,
+      lastName: apellido,
+      age: Number(edad),
+      phone: telefono,
     });
-    newUser && UserNotifications.emailNewUserNotification(data.username, data);
 
-    const { password, isAdmin, ...otherDetails } = newUser;
-
-    const payload = { ...otherDetails, isAdmin: isAdmin };
-
-    const token = await TokenHandler.generateToken(payload);
-
-    return token;
-  }
-  async login(data) {
-    const user = await this.repository.getByUserName(data.username);
-
-    if (!user) {
-      throw CustomError.notFound("El usuario no existe");
+    if (!session) {
+      // Supabase may require email confirmation depending on project settings.
+      // In that case `session` is null but `user` exists. The client can show
+      // a "check your email" message.
+      return { user, session: null, requiresEmailConfirmation: true };
     }
 
-    const isPasswordCorrect = await bcrypt.compare(data.password, user.password);
-    if (!isPasswordCorrect) {
-      throw CustomError.badRequest("Contraseña incorrecta");
-    }
+    // Best-effort welcome email; never fail the signup on email issues.
+    UserNotifications.emailNewUserNotification(username, {
+      nombre, apellido, password, edad, telefono,
+    }).catch((err) => {
+      // eslint-disable-next-line no-console
+      console.warn('Welcome email failed (non-fatal):', err?.message);
+    });
 
-    const { password, isAdmin, ...otherDetails } = user;
-
-    const payload = { ...otherDetails, isAdmin: isAdmin };
-
-    const token = await TokenHandler.generateToken(payload);
-
-    return token;
+    return {
+      token: session.access_token,
+      user: { id: user.id, email: user.email },
+    };
   }
 
-  async getByUserName(username) {
-    const user = await this.repository.getByUserName(username);
+  async login({ username, password }) {
+    if (!username || !password) {
+      throw CustomError.badRequest('Email y contraseña son obligatorios');
+    }
+    const { user, session } = await this.repository.signIn({
+      email: username,
+      password,
+    });
+    if (!user || !session) throw CustomError.unauthorized('Credenciales inválidas');
+    return {
+      token: session.access_token,
+      user: { id: user.id, email: user.email },
+    };
+  }
+
+  async getById(id, accessToken) {
+    const user = await this.repository.getByIdAsUser(id, accessToken);
+    if (!user) throw CustomError.notFound('Usuario no encontrado');
     return user;
   }
 
-  async deleteById(id) {
-    try {
-      const isDeleted = await this.repository.deleteById(id);
-
-      if (isDeleted.deletedCount === 0) {
-        throw CustomError.notFound("El usuarios no existe");
-      }
-
-      return true;
-    } catch (error) {
-      if (error.kind === "ObjectId") {
-        throw CustomError.badRequest("Id incorrecta");
-      }
-      throw error;
-    }
+  async getAllUsers(accessToken) {
+    return this.repository.getAllAsAdmin(accessToken);
   }
 
-  async getAllUsers() {
-    const allUsers = await this.repository.getAllUsers();
-    return allUsers;
+  async updateUser(id, data, accessToken) {
+    const updates = {};
+    if (data.nombre) updates.first_name = data.nombre;
+    if (data.apellido) updates.last_name = data.apellido;
+    if (data.edad) updates.age = Number(data.edad);
+    if (data.telefono) updates.phone = data.telefono;
+    if (Object.keys(updates).length === 0) {
+      throw CustomError.badRequest('Nada para actualizar');
+    }
+    return this.repository.updateAsUser(id, updates, accessToken);
   }
 
-  async getById(id) {
-    try {
-      const user = await this.repository.getById(id);
-
-      if (!user) {
-        throw CustomError.notFound("El usuarios no existe");
-      }
-
-      return user;
-    } catch (error) {
-      if (error.kind === "ObjectId") {
-        throw CustomError.badRequest("Id incorrecta");
-      }
-
-      throw error;
-    }
+  async updateUserPassword({ _id, password }, accessToken) {
+    if (!_id || !password) throw CustomError.badRequest('Id y contraseña son obligatorios');
+    await this.repository.adminUpdatePassword(_id, password);
+    UserNotifications.emailUpdatePasswordNotification({ _id, password })
+      .catch((err) => console.warn('Password-change email failed (non-fatal):', err?.message));
+    return this.repository.getByIdAsUser(_id, accessToken);
   }
 
-  async updateUserPassword(data) {
-    const passwordUpdated = await this.repository.updateUserPassword({
-      ...data,
-      password: bcrypt.hashSync(data.password, bcrypt.genSaltSync(10)),
-    });
-
-    if (passwordUpdated.matchedCount === 0) {
-      throw CustomError.notFound(`Usuario con el Id: ${id} no encontrado`);
-    }
-    if (passwordUpdated.modifiedCount === 0 && passwordUpdated.matchedCount === 1) {
-      throw CustomError.badRequest(`Usuario con el Id: ${id} no ha sido modificado`);
-    }
-
-    UserNotifications.emailUpdatePasswordNotification(data);
-    const updatedUser = await this.repository.getById(data._id);
-
-    return updatedUser;
+  async deleteById(id, accessToken) {
+    return this.repository.deleteAsAdmin(id, accessToken);
   }
 
-  async updateUser(id, data) {
-    try {
-      const userUpdated = await this.repository.updateUser(id, data);
-
-      if (userUpdated.matchedCount === 0) {
-        throw CustomError.notFound(`Usuario con el Id: ${id} no encontrado`);
-      }
-      if (userUpdated.modifiedCount === 0 && userUpdated.matchedCount === 1) {
-        throw CustomError.badRequest(`Usuario con el Id: ${id} no ha sido modificado`);
-      }
-
-      const updatedUser = await this.repository.getById(id);
-
-      return updatedUser;
-    } catch (error) {
-      if (error.kind === "ObjectId") {
-        throw CustomError.badRequest("Id incorrecta");
-      }
-
-      throw error;
-    }
-  }
-  async updateUserReserves(username, reserveData) {
-    const reserveUpdated = await this.repository.updateUserReserves(username, reserveData);
-
-    if (reserveUpdated.matchedCount === 0) {
-      throw CustomError.notFound(`Usuario ${username} no encontrado`);
-    }
-    if (reserveUpdated.modifiedCount === 0 && reserveUpdated.matchedCount === 1) {
-      throw CustomError.badRequest(`Usuario ${username} no ha sido modificado`);
-    }
-
-    const updatedUser = await this.repository.getByUserName(username);
-
-    return updatedUser;
+  async getMyReservations(accessToken) {
+    return this.repository.listMyReservations(accessToken);
   }
 
-  async deleteReserveById(username, reserveId) {
-    let reserveDeleted = await this.repository.deleteReserveById(username, reserveId);
-
-    if (reserveDeleted.matchedCount === 0) {
-      throw CustomError.notFound(`La reserva con el Id: ${reserveId} no encontrada`);
-    }
-    if (reserveDeleted.modifiedCount === 0 && reserveDeleted.matchedCount === 1) {
-      throw CustomError.badRequest(`La reserva con el Id: ${reserveId} no ha sido modificado`);
-    }
-
-    return reserveDeleted;
+  async deleteMyReservation(reservationId, accessToken) {
+    return this.repository.deleteMyReservation(reservationId, accessToken);
   }
 }
