@@ -1,0 +1,17 @@
+{
+  "name": "club-manager-etl",
+  "version": "1.0.0",
+  "description": "One-off ETL to migrate Club Manager data from MongoDB to Supabase",
+  "type": "module",
+  "scripts": {
+    "extract": "node scripts/01_extract_mongo.js",
+    "transform": "node scripts/02_transform.js",
+    "load": "node scripts/03_load_postgres.js",
+    "etl": "node scripts/01_extract_mongo.js && node scripts/02_transform.js && node scripts/03_load_postgres.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0",
+    "mongodb": "^6.3.0",
+    "unidecode": "^0.1.8"
+  }
+}
