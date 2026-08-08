@@ -145,24 +145,8 @@ NavBarOffCanvasStart.propTypes = {
   handleCloseSession: PropTypes.func.isRequired,
   handleUserReserves: PropTypes.func.isRequired,
   user: PropTypes.shape({
-    admin: PropTypes.bool.isRequired,
-    apellido: PropTypes.string.isRequired,
-    edad: PropTypes.number.isRequired,
-    nombre: PropTypes.string.isRequired,
-    reserves: PropTypes.arrayOf(
-      PropTypes.shape({
-        court: PropTypes.string.isRequired,
-        date: PropTypes.string.isRequired,
-        finalTime: PropTypes.number.isRequired,
-        id: PropTypes.string.isRequired,
-        initialTime: PropTypes.number.isRequired,
-        permanent: PropTypes.bool.isRequired,
-        weekday: PropTypes.string.isRequired,
-      })
-    ),
-    telefono: PropTypes.string.isRequired,
-    username: PropTypes.string.isRequired,
-    _id: PropTypes.string.isRequired,
+    id: PropTypes.string,
+    email: PropTypes.string,
   }),
 }
 

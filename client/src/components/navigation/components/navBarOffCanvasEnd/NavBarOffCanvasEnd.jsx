@@ -13,11 +13,10 @@ const NavBarOffCanvasEnd = (props) => {
   const [passwordData, setPasswordData] = useState(initialState);
 
   const handleChange = (e) => {
-    setPasswordData({
-      username: props?.user.username,
-      ...passwordData,
+    setPasswordData((prev) => ({
+      ...prev,
       [e.target.name]: e.target.value,
-    });
+    }));
   };
 
   return (
@@ -35,7 +34,7 @@ const NavBarOffCanvasEnd = (props) => {
           <h5
             className='offcanvas-title m-1 text-white offcanvas-Header-Title'
             id='offcanvasExampleLabel'>
-            {props?.user?.username}
+            {props?.user?.email}
           </h5>
 
           <button
@@ -171,25 +170,8 @@ NavBarOffCanvasEnd.propTypes = {
   squashReserves: PropTypes.array.isRequired,
   strongPassword: PropTypes.bool.isRequired,
   user: PropTypes.shape({
-    admin: PropTypes.bool.isRequired,
-    apellido: PropTypes.string.isRequired,
-    edad: PropTypes.number.isRequired,
-    nombre: PropTypes.string.isRequired,
-    reserves: PropTypes.arrayOf(
-      PropTypes.shape({
-        court: PropTypes.string.isRequired,
-        date: PropTypes.string.isRequired,
-        finalTime: PropTypes.number.isRequired,
-        id: PropTypes.string.isRequired,
-        initialTime: PropTypes.number.isRequired,
-        permanent: PropTypes.bool.isRequired,
-        weekday: PropTypes.string.isRequired,
-      })
-    ),
-    telefono: PropTypes.string.isRequired,
-    username: PropTypes.string.isRequired,
-    __v: PropTypes.number,
-    _id: PropTypes.string.isRequired,
+    id: PropTypes.string,
+    email: PropTypes.string,
   }),
 };
 
