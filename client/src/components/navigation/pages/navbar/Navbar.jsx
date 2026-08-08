@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { isStrongPassword } from 'validator';
 import NavBarOffCanvasStart from '../../components/navBarOffCanvasStart/NavBarOffCanvasStart';
 import NavBarOffCanvasEnd from '../../components/navBarOffCanvasEnd/NavBarOffCanvasEnd';
-import { useCourtAPI, useNotifications, useUserAPI } from '../../../../hooks';
+import { useCourtAPI, useNotifications, useReservesAPI, useUserAPI } from '../../../../hooks';
 import { userStore } from '../../../../stores';
 import { useState } from 'react';
 
@@ -16,98 +16,80 @@ const Navbar = () => {
 
   const navigate = useNavigate();
   const { notifySuccess, notifyError, notifyWarning } = useNotifications();
+
   const {
     getUserById,
     updateUserById,
     updateUsersPassword,
     deleteUserById,
     closeSession,
-    deleteUserReserve,
     userLogin,
   } = useUserAPI();
-  const { updateReserveUsername, deleteReserveByUsername, deleteCourtReserve } = useCourtAPI();
+  const { getUnavailableDatesByName } = useCourtAPI();
+  const { getMyReserves, deleteReserve } = useReservesAPI();
 
-  const {
-    user: { user },
-    setUser,
-    setReserveDeleted,
-  } = userStore();
+  const user = userStore((s) => s.user.user);
+  const setUser = userStore((s) => s.setUser);
+  const setReserveDeleted = userStore((s) => s.setReserveDeleted);
 
   const handleUserReserves = async () => {
     try {
-      const userById = await getUserById();
-      const { reserves } = userById;
+      const reserves = await getMyReserves();
       setUserReserves(reserves);
     } catch (error) {
       notifyWarning('Hubo un problema, por favor intente nuevamente mas tarde');
     }
   };
 
-  const futbolReserves = userReserves?.filter((res) => res.court === 'futbol');
-  const paddleReserves = userReserves?.filter((res) => res.court === 'paddle');
-  const squashReserves = userReserves?.filter((res) => res.court === 'squash');
-  const paletaReserves = userReserves?.filter((res) => res.court === 'paleta');
+  const futbolReserves = userReserves?.filter((res) => res.court?.name === 'futbol');
+  const paddleReserves = userReserves?.filter((res) => res.court?.name === 'paddle');
+  const squashReserves = userReserves?.filter((res) => res.court?.name === 'squash');
+  const paletaReserves = userReserves?.filter((res) => res.court?.name === 'paleta');
 
-  const allArrays = [futbolReserves, paddleReserves, squashReserves, paletaReserves].some(
-    (arr) => arr.length > 0
-  );
+  const allArrays = [futbolReserves, paddleReserves, squashReserves, paletaReserves]
+    .filter(Boolean)
+    .some((arr) => arr.length > 0);
 
   const handleCloseSession = async () => {
-    closeSession();
+    await closeSession();
   };
 
   const handleUpdateUser = async (e, credentials) => {
     try {
       e.preventDefault();
-
-      const updatedUserData = { ...credentials, reserves: userReserves };
-      const updatedUser = await updateUserById(updatedUserData);
-
-      updateReserveUsername(user.username, credentials.username);
-
-      setUser({ type: 'UPDATE_USER', payload: { ...updatedUser, token: user.token } });
-
-      handleUserReserves();
-
-      setReserveDeleted(true);
-
+      if (!user?.id) return;
+      const updatedUser = await updateUserById(user.id, {
+        first_name: credentials.nombre,
+        last_name: credentials.apellido,
+        age: Number(credentials.edad),
+        phone: credentials.telefono,
+        email: credentials.username,
+      });
+      setUser({ type: 'UPDATE_USER', payload: { id: user.id, email: user.email, ...updatedUser } });
       notifySuccess('Usuario actualizado');
     } catch (error) {
       notifyWarning('Hubo un problema, por favor intente nuevamente mas tarde');
     }
   };
 
-  const handleDeleteAccount = async (user) => {
+  const handleDeleteAccount = async (target) => {
     try {
-      deleteReserveByUsername(user.username);
-
-      const userDeleted = await deleteUserById(user._id);
-
+      if (!target?.id) return;
+      await deleteUserById(target.id);
       setUserReserves([]);
-
-      if (userDeleted === true) {
-        setUser({ type: 'LOGOUT' });
-
-        notifySuccess('Cuenta Eliminada');
-
-        setTimeout(() => {
-          navigate('/');
-        }, 2000);
-      }
+      setUser({ type: 'LOGOUT' });
+      notifySuccess('Cuenta Eliminada');
+      setTimeout(() => navigate('/'), 2000);
     } catch (error) {
       notifyWarning('Hubo un problema, por favor intente nuevamente mas tarde');
     }
   };
 
-  const handleDeleteReserve = async (court, day, id) => {
+  const handleDeleteReserve = async (reservationId) => {
     try {
-      deleteUserReserve(user.username, id);
-      deleteCourtReserve(court, day, id);
-
-      handleUserReserves();
-
+      await deleteReserve(reservationId);
+      await handleUserReserves();
       setReserveDeleted(true);
-
       notifySuccess('Reserva Eliminada');
     } catch (error) {
       notifyWarning('Hubo un problema, por favor intente nuevamente mas tarde');
@@ -118,7 +100,6 @@ const Navbar = () => {
     try {
       e.preventDefault();
       const { password, newPassword } = data;
-
       const passwordValidationOptions = {
         minLength: 8,
         minLowercase: 0,
@@ -126,40 +107,27 @@ const Navbar = () => {
         minNumbers: 1,
         minSymbols: 0,
       };
-
       if (!isStrongPassword(newPassword, passwordValidationOptions)) {
         setStrongPassword(false);
         return;
       }
-
       setStrongPassword(true);
-
-      const isAuthorized = await userLogin({
-        username: user.username,
-        password: password,
-      });
-
-      if (isAuthorized) {
-        updateUsersPassword(user, newPassword);
+      const isAuthorized = await userLogin({ username: user.email, password });
+      if (isAuthorized && user?.id) {
+        await updateUsersPassword(user, newPassword);
       }
       notifySuccess('Contraseña Actualizada');
-
       setShowChangePasswordForm(false);
     } catch (error) {
       notifyError('Contraseña incorrecta');
     }
   };
 
-
   return (
     <div className='navBarContainer col-12 sticky-top container-fluid'>
       <nav className='navbar navbar-dark bg-dark h-100 row'>
         <div className='d-flex justify-content-between col-12'>
-          <Link
-            to='/'
-            className='navbar-brand title'>
-            Club Ranelagh
-          </Link>
+          <Link to='/' className='navbar-brand title'>Club Ranelagh</Link>
 
           <button
             className='navbar-toggler'

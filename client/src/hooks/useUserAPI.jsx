@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabaseClient';
 import { useNotifications } from './useNotifications';
 import { useAxiosInstance } from './useAxiosInstance';
 import { userStore } from '../stores';
+import { ACTIONS } from '../stores/user/actions';
 
 /**
  * useUserAPI — Supabase edition.
@@ -13,12 +14,14 @@ import { userStore } from '../stores';
  * Supabase access_token as Bearer.
  *
  * Backward-compatible surface: same function names + signatures as the
- * pre-migration hook, so existing components keep working.
+ * pre-migration hook where possible. Note that reservation deletes moved
+ * to `useReservesAPI.deleteReserve(id)` because the data model changed
+ * (reservations are no longer nested on the user document).
  */
 export const useUserAPI = () => {
   const { notifyWarning, notifyError } = useNotifications();
   const axios = useAxiosInstance();
-  const { setUser, ACTIONS } = userStore((s) => s);
+  const setUser = userStore((s) => s.setUser);
   const navigate = useNavigate();
 
   const userLogin = useCallback(async ({ username, password }) => {
@@ -34,7 +37,7 @@ export const useUserAPI = () => {
     }
     setUser({ type: ACTIONS.LOGIN_SUCCESS, payload: { id: data.user.id, email: data.user.email } });
     return data.user;
-  }, [setUser, ACTIONS, notifyWarning]);
+  }, [setUser, notifyWarning]);
 
   const userRegister = useCallback(async ({ username, password, nombre, apellido, edad, telefono }) => {
     const { data, error } = await supabase.auth.signUp({
@@ -54,19 +57,17 @@ export const useUserAPI = () => {
       throw error;
     }
     if (!data.session) {
-      // Supabase project has email confirmation enabled; the profile trigger
-      // still fires on confirm.
       return { requiresEmailConfirmation: true, user: data.user };
     }
     setUser({ type: ACTIONS.LOGIN_SUCCESS, payload: { id: data.user.id, email: data.user.email } });
     return { user: data.user, session: data.session };
-  }, [setUser, ACTIONS, notifyError]);
+  }, [setUser, notifyError]);
 
   const getAllUsers = useCallback(async () => {
     try {
-      const { data: allUsers } = await axios.get('/users/getAll');
-      allUsers.sort((a, b) => (a.last_name > b.last_name ? 1 : a.last_name < b.last_name ? -1 : 0));
-      return allUsers;
+      const { data } = await axios.get('/users/getAll');
+      data.sort((a, b) => (a.last_name > b.last_name ? 1 : a.last_name < b.last_name ? -1 : 0));
+      return data ?? [];
     } catch (error) {
       notifyWarning(`Hubo un problema: ${error?.response?.data?.message || error.message}`);
       return [];
@@ -74,6 +75,7 @@ export const useUserAPI = () => {
   }, [axios, notifyWarning]);
 
   const getUserById = useCallback(async (id) => {
+    if (!id) return null;
     try {
       const { data } = await axios.get(`/users/user/${id}`);
       return data;
@@ -113,7 +115,7 @@ export const useUserAPI = () => {
     await supabase.auth.signOut();
     setUser({ type: ACTIONS.LOGOUT });
     navigate('/login');
-  }, [setUser, ACTIONS, navigate]);
+  }, [setUser, navigate]);
 
   return {
     userLogin,

@@ -2,15 +2,7 @@ import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { persist } from 'zustand/middleware';
 import { supabase } from '../../lib/supabaseClient';
-
-const ACTIONS = {
-  LOGIN_START: 'LOGIN_START',
-  LOGIN_SUCCESS: 'LOGIN_SUCCESS',
-  LOGIN_FAILURE: 'LOGIN_FAILURE',
-  LOGOUT: 'LOGOUT',
-  UPDATE_USER: 'UPDATE_USER',
-};
-Object.freeze(ACTIONS);
+import { ACTIONS } from './actions';
 
 /**
  * userStore — Supabase edition.
@@ -33,8 +25,6 @@ const storeApi = (set, get) => ({
     error: null,
   },
 
-  ACTIONS,
-
   setUser: (action) => {
     switch (action.type) {
       case ACTIONS.LOGIN_START:
@@ -46,7 +36,6 @@ const storeApi = (set, get) => ({
         set((state) => {
           state.user = { user: action.payload, loading: false, error: null };
         });
-        // Persist a tiny profile blob (NOT the token — Supabase keeps that).
         if (action.payload) {
           localStorage.setItem('user-profile', JSON.stringify(action.payload));
         }
@@ -91,10 +80,11 @@ const storeApi = (set, get) => ({
       );
       if (!res.ok) return;
       const profile = await res.json();
+      const next = { id: profile.id, email: profile.email, ...profile };
       set((state) => ({
-        user: { ...state.user, user: { ...profile, id: profile.id, email: profile.email } },
+        user: { ...state.user, user: next },
       }));
-      localStorage.setItem('user-profile', JSON.stringify({ ...profile, id: profile.id, email: profile.email }));
+      localStorage.setItem('user-profile', JSON.stringify(next));
     } catch (err) {
       // eslint-disable-next-line no-console
       console.warn('updateUser failed:', err?.message);
