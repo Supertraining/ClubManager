@@ -30,15 +30,13 @@ import {
 } from '../../hooks';
 
 const Home = () => {
-  const {
-    user: { user: admin },
-    updateUser,
-  } = userStore();
+  const admin = userStore((s) => s.user.user);
+  const updateUser = userStore((s) => s.updateUser);
 
   const { notifySuccess, notifyWarning } = useNotifications();
   const axios = useAxiosInstance();
   const navigate = useNavigate();
-  const { deleteCourtReserve, deleteUserReserve } = useReservesAPI();
+  const { deleteReserve } = useReservesAPI();
   const { getAllUsers, updateUserById, deleteUserById, getUserById, closeSession } = useUserAPI();
   const { getAllCourts, deleteCourt, deleteOldReserves } = useCourtAPI();
 
@@ -77,34 +75,26 @@ const Home = () => {
         [option]: true,
       });
     },
-    [setMenu]
+    [setMenu],
   );
 
   const handleGetAllUsers = useCallback(async () => {
     try {
       const allUsersResponse = await getAllUsers();
-
       setAllUsers(allUsersResponse);
     } catch (error) {
       notifyWarning('Ha ocurrido un problema, por favor intente nuevamente mas tarde');
     }
-  }, []);
+  }, [getAllUsers, notifyWarning]);
 
-  const handleDeleteReserve = async (court, day, id, userid, user) => {
+  const handleDeleteReserve = async (reservationId, targetUser) => {
     try {
-      deleteCourtReserve(court, day, id);
-
-      deleteUserReserve(user, id);
-
-      const userById = await getUserById(userid);
-
+      await deleteReserve(reservationId);
       notifySuccess('Reserva eliminada');
-
-      if (user.username === admin.username) {
-        updateUser();
+      // If the admin is removing their own reservation, refresh their profile.
+      if (targetUser?.id && admin?.id === targetUser.id) {
+        await updateUser();
       }
-
-      return userById;
     } catch (error) {
       notifyWarning('Ha ocurrido un problema, por favor intente nuevamente mas tarde');
     }
@@ -113,32 +103,26 @@ const Home = () => {
   const handleUpdateUser = async (e, credentials, id) => {
     try {
       e.preventDefault();
-
       const updatedUser = await updateUserById(id, credentials);
-
       setSelectedUser(updatedUser);
-
-      if (credentials.username === admin.username) {
-        updateUser();
+      if (id === admin?.id) {
+        await updateUser();
       }
-
       notifySuccess('Usuario actualizado');
     } catch (error) {
       notifyWarning('Ha ocurrido un problema, por favor intente nuevamente mas tarde');
     }
   };
 
-  const handleDeleteUser = async (user) => {
+  const handleDeleteUser = async (targetUser) => {
     try {
-      deleteUserById(user._id);
-
-      user.reserves.forEach(async (res) => {
-        const { court, weekday, id } = res;
-        deleteCourtReserve(court, weekday, id);
-      });
-
+      if (!targetUser?.id) return;
+      // Note: under RLS, the admin can delete any user (auth.users cascades the
+      // profile row). We do NOT need to walk the user's reserves first — the
+      // reservations table has `user_id` FK with `on delete restrict`, so the
+      // server will block this if the user has active reservations.
+      await deleteUserById(targetUser.id);
       notifySuccess('Usuario eliminado');
-
       setTimeout(() => {
         handleGetAllUsers();
         setIsUserSelected(false);
@@ -152,11 +136,8 @@ const Home = () => {
   const handleCreateCourt = async (e, name) => {
     try {
       e.preventDefault();
-
       await axios.post('/courts/createCourt', name);
-
       notifySuccess('Cancha creada');
-
       handleGetAllCourts();
     } catch (error) {
       notifyWarning('Ha ocurrido un problema, por favor intente nuevamente mas tarde');
@@ -173,17 +154,16 @@ const Home = () => {
   }, [getAllCourts, notifyWarning]);
 
   const handleDeleteCourt = async (id) => {
-    deleteCourt(id);
-
+    await deleteCourt(id);
     handleGetAllCourts();
   };
 
   const handleDeleteOldReserves = async () => {
-    deleteOldReserves();
+    await deleteOldReserves();
   };
 
   const handleCloseSession = async () => {
-    closeSession();
+    await closeSession();
   };
 
   useEffect(() => {
@@ -201,7 +181,7 @@ const Home = () => {
     try {
       if (admin) {
         return true;
-      } else if (admin?.admin === false) {
+      } else if (admin?.isAdmin === false) {
         return <FailLogin />;
       }
     } catch (error) {

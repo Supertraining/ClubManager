@@ -11,12 +11,12 @@ const UserData = ({
   confirmDelete,
 }) => {
   const [credentials, setCredentials] = useState({
-    username: selectedUser.username,
-    nombre: selectedUser.nombre,
-    apellido: selectedUser.apellido,
-    edad: selectedUser.edad,
-    telefono: selectedUser.telefono,
-    admin: selectedUser.admin,
+    email: selectedUser.email,
+    first_name: selectedUser.first_name,
+    last_name: selectedUser.last_name,
+    age: selectedUser.age,
+    phone: selectedUser.phone,
+    role: selectedUser.role,
   });
 
   const [showForm, setShowForm] = useState(false);
@@ -39,63 +39,39 @@ const UserData = ({
       <div className='d-flex flex-column flex-md-row align-items-center'>
         <ul className='list-unstyled mb-4 col-12 col-md-6 d-flex flex-column align-items-center'>
           <li className='col-12'>
-            <i
-              className='bi bi-envelope-at '
-              id='basic-addon1'></i>
-
-            <b className='text-success mx-1 selectedUser-data'>Usuario:</b>
-
-            <span className='mx-1 fw-bold selectedUser-data'>{selectedUser.username}</span>
+            <i className='bi bi-envelope-at' id='basic-addon1'></i>
+            <b className='text-success mx-1 selectedUser-data'>Email:</b>
+            <span className='mx-1 fw-bold selectedUser-data'>{selectedUser.email}</span>
           </li>
 
           <li className='col-12'>
-            <i
-              className='bi bi-person-check'
-              id='basic-addon1'></i>
-
+            <i className='bi bi-person-check' id='basic-addon1'></i>
             <b className='text-success mx-1 selectedUser-data'>Nombre:</b>
-
-            <span className='mx-1 fw-bold selectedUser-data'>{selectedUser.nombre}</span>
+            <span className='mx-1 fw-bold selectedUser-data'>{selectedUser.first_name}</span>
           </li>
 
           <li className='col-12'>
-            <i
-              className='bi bi-person-check'
-              id='basic-addon1'></i>
-
+            <i className='bi bi-person-check' id='basic-addon1'></i>
             <b className='text-success mx-1 selectedUser-data'>Apellido:</b>
-
-            <span className='mx-1 fw-bold selectedUser-data'>{selectedUser.apellido}</span>
+            <span className='mx-1 fw-bold selectedUser-data'>{selectedUser.last_name}</span>
           </li>
 
           <li className='col-12'>
-            <i
-              className='bi bi-calendar-date'
-              id='basic-addon1'></i>
-
+            <i className='bi bi-calendar-date' id='basic-addon1'></i>
             <b className='text-success mx-1 selectedUser-data'>Edad:</b>
-
-            <span className='mx-1 fw-bold selectedUser-data'>{selectedUser.edad}</span>
+            <span className='mx-1 fw-bold selectedUser-data'>{selectedUser.age}</span>
           </li>
 
           <li className='col-12'>
-            <i
-              className='bi bi-phone'
-              id='basic-addon1'></i>
-
+            <i className='bi bi-phone' id='basic-addon1'></i>
             <b className='text-success mx-1 selectedUser-data'>Telefono:</b>
-
-            <span className='mx-1 fw-bold selectedUser-data'>{selectedUser.telefono}</span>
+            <span className='mx-1 fw-bold selectedUser-data'>{selectedUser.phone}</span>
           </li>
 
           <li className='col-12'>
             <i className='bi bi-sunglasses'></i>
-
-            <b className='text-success mx-1 selectedUser-data'>Admin:</b>
-
-            <span className='mx-1 fw-bold selectedUser-data'>
-              {selectedUser.admin ? 'Si' : 'No'}
-            </span>
+            <b className='text-success mx-1 selectedUser-data'>Rol:</b>
+            <span className='mx-1 fw-bold selectedUser-data'>{selectedUser.role}</span>
           </li>
         </ul>
 
@@ -104,79 +80,67 @@ const UserData = ({
             <form className='text-center col-12 col-md-6'>
               <input
                 className='mx-2 mt-3 text-warning text-center border-0 border-bottom border-primary col-12'
-                type='text'
-                name='username'
-                id='username'
-                placeholder='Usuario'
+                type='email'
+                name='email'
+                id='email'
+                placeholder='Email'
+                value={credentials.email ?? ''}
                 onChange={handleChange}
               />
 
               <input
                 className='mx-2 mt-3 text-warning text-center border-0 border-bottom border-primary col-12'
                 type='text'
-                name='nombre'
-                id='nombre'
+                name='first_name'
+                id='first_name'
                 placeholder='Nombre'
+                value={credentials.first_name ?? ''}
                 onChange={handleChange}
               />
 
               <input
                 className='mx-2 mt-3 text-warning text-center border-0 border-bottom border-primary col-12'
                 type='text'
-                name='apellido'
-                id='apellido'
+                name='last_name'
+                id='last_name'
                 placeholder='Apellido'
+                value={credentials.last_name ?? ''}
                 onChange={handleChange}
               />
 
               <input
                 className='mx-2 mt-3 text-warning text-center border-0 border-bottom border-primary col-12'
-                type='text'
-                name='edad'
-                id='edad'
+                type='number'
+                min={12}
+                max={99}
+                name='age'
+                id='age'
                 placeholder='Edad'
+                value={credentials.age ?? ''}
                 onChange={handleChange}
               />
 
               <input
                 className='mx-2 mt-3 text-warning text-center border-0 border-bottom border-primary col-12'
                 type='text'
-                name='telefono'
-                id='telefono'
+                name='phone'
+                id='phone'
                 placeholder='Telefono'
+                value={credentials.phone ?? ''}
                 onChange={handleChange}
               />
 
               <div className='d-flex justify-content-center border-primary m-2 mt-2'>
-                <label htmlFor='admin'>Admin</label>
+                <label htmlFor='role'>Rol</label>
                 <select
-                  name='admin'
-                  id='admin'
+                  name='role'
+                  id='role'
+                  value={credentials.role ?? 'socio'}
                   onChange={handleChange}
                   className='col-3 mx-2 border'>
-                  <option></option>
-
-                  <option value={true}>Si</option>
-
-                  <option value={false}>No</option>
+                  <option value='socio'>socio</option>
+                  <option value='admin'>admin</option>
                 </select>
-                {/* 
-                <input
-                  className=' text-warning text-center mx-2'
-                  type="radio"
-                  value={ true }
-                  name="admin"
-                  id="adminTrue"
-                  onChange={ handleChange }
-                />
-                <input
-                  className=' text-warning text-center mx-2'
-                  type="radio"
-                  value={ false }
-                  name="admin"
-                  id="adminFalse"
-                  onChange={ handleChange }
-                /> */}
               </div>
 
               <div className='d-flex flex-row justify-content-evenly'>
@@ -184,7 +148,7 @@ const UserData = ({
                   type='submit'
                   value='Actualizar'
                   className='btn btn-sm btn-outline-danger m-1'
-                  onClick={(e) => handleUpdateUser(e, credentials, selectedUser._id)}
+                  onClick={(e) => handleUpdateUser(e, credentials, selectedUser.id)}
                 />
 
                 <button

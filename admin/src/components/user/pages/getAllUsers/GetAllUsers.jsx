@@ -5,6 +5,7 @@ import { ToastContainer } from 'react-toastify';
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Spinner from '../../../spinner/Spinner';
+
 export const GetAllUsers = ({
   handleMenuClick,
   menu,
@@ -27,7 +28,7 @@ export const GetAllUsers = ({
   useEffect(() => {
     handleMenuClick('getAllUsers');
   }, [handleMenuClick]);
-  
+
   return (
     <>
       {menu.getAllUsers && (
@@ -54,30 +55,18 @@ export const GetAllUsers = ({
                   <thead>
                     <tr className='text-center text-dark'>
                       <th scope='col'>#</th>
-
-                      <th scope='col'>UserName</th>
-
+                      <th scope='col'>Email</th>
                       <th scope='col'>Nombre</th>
-
                       <th scope='col'>Apellido</th>
-
-                      <th scope='col'>edad</th>
-
-                      <th scope='col'>telefono</th>
-
-                      <th scope='col'>reservas</th>
-
-                      <th scope='col'>actividades</th>
-
-                      <th scope='col'>admin</th>
+                      <th scope='col'>Edad</th>
+                      <th scope='col'>Teléfono</th>
+                      <th scope='col'>Rol</th>
                     </tr>
                   </thead>
 
                   <tbody>
                     {allUsers.map((user, i) => (
-                      <tr
-                        key={user._id}
-                        className='text-center'>
+                      <tr key={user.id} className='text-center'>
                         <td>
                           <div className='text-dark'>{i + 1}</div>
                         </td>
@@ -86,45 +75,32 @@ export const GetAllUsers = ({
                           <button
                             className='text-primary'
                             onClick={() => {
-                              setIsUserSelected(true), setSelectedUser(user);
+                              setIsUserSelected(true);
+                              setSelectedUser(user);
                             }}>
-                            {user.username}
+                            {user.email}
                           </button>
                         </td>
 
                         <td>
-                          <div className='text-dark'>{user.nombre}</div>
+                          <div className='text-dark'>{user.first_name}</div>
                         </td>
 
                         <td>
-                          <div className='text-dark'>{user.apellido}</div>
+                          <div className='text-dark'>{user.last_name}</div>
                         </td>
 
                         <td>
-                          <div className='text-dark'>{user.edad}</div>
+                          <div className='text-dark'>{user.age}</div>
                         </td>
 
                         <td>
-                          <div className='text-dark'>{user.telefono}</div>
-                        </td>
-
-                        {user.reserves.length === 0 ? (
-                          <td>
-                            <div className='text-danger fw-bold'>Sin reservas</div>
-                          </td>
-                        ) : (
-                          <td>
-                            <div className='text-success fw-bold'>Reservas activas</div>
-                          </td>
-                        )}
-
-                        <td>
-                          <div className='text-dark'>@actividades</div>
+                          <div className='text-dark'>{user.phone}</div>
                         </td>
 
                         <td>
                           <div className='text-dark'>
-                            {user.admin ? (
+                            {user.role === 'admin' ? (
                               <i className='bi bi-check-circle-fill text-success'></i>
                             ) : (
                               <i className='bi bi-x-circle-fill text-danger'></i>
@@ -166,7 +142,6 @@ GetAllUsers.propTypes = {
   allUsers: PropTypes.array,
   handleGetAllUsers: PropTypes.func,
   handleDeleteReserve: PropTypes.func,
-  user: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
   setUser: PropTypes.func,
   handleUpdateUser: PropTypes.func,
   handleDeleteUser: PropTypes.func,
