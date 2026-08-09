@@ -1,1 +1,4 @@
-
+/* Reserved for project-wide overrides. Bootstrap + tokens.css + base.css
+   carry the bulk of the styling. This file is intentionally left empty
+   so it can be a one-stop place to drop ad-hoc fixes without polluting
+   the brand tokens or the base layer. */

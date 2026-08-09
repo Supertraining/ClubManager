@@ -1,0 +1,64 @@
+/* ===========================================================================
+ * Base styles — applies the design tokens to the document + bootstraps
+ * typography. Loaded right after bootstrap so our overrides win.
+ * =========================================================================== */
+
+html, body, #root {
+  min-height: 100%;
+  background: var(--c-bg);
+  color: var(--c-ink);
+}
+
+body {
+  font-family: var(--f-body);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6, .display-1, .display-2, .display-3, .display-4 {
+  font-family: var(--f-display);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--c-ink);
+}
+
+h1 { font-weight: 700; }
+h2, h3 { font-weight: 600; }
+
+a {
+  color: var(--c-brand);
+  text-decoration: none;
+  transition: color var(--t-fast);
+}
+a:hover { color: var(--c-brand-700); }
+
+/* Navbar override — bootstrap's default dark bg fights the brand green. */
+.navbar.bg-dark {
+  background-color: var(--c-brand) !important;
+}
+
+/* Card defaults that read like the rest of the brand. */
+.card {
+  border-color: var(--c-line);
+  border-radius: var(--r-md);
+  box-shadow: var(--sh-sm);
+  background: #fff;
+}
+
+/* WhatsApp floating button sits above the offcanvas. */
+.whatsapp-div {
+  position: sticky;
+  top: 30%;
+  margin-left: 5px;
+  z-index: 4;
+}
+
+/* Carousel fills its container and crops to a consistent aspect. */
+.carousel-img {
+  object-fit: cover;
+  height: 60vh;
+  min-height: 320px;
+  max-height: 560px;
+}
