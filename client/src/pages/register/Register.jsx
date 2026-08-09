@@ -1,42 +1,29 @@
-import './register.css';
-import { useNavigate } from 'react-router-dom';
-import { isStrongPassword } from 'validator';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { isStrongPassword } from 'validator';
 import { useUserAPI } from '../../hooks/useUserAPI.jsx';
-import { userStore } from '../../stores';
-import { useState } from 'react';
+import './Register.module.css';
+
+const PERKS = [
+  'Reservas en fútbol, paddle, squash y paleta',
+  'Disponibilidad de la semana en vivo',
+  'Cancelá o reprogramá desde la app',
+];
 
 const Register = () => {
-  const {
-    setUser,
-    user: { loading, error },
-  } = userStore();
-  const [welcomeMessage, setWelcomeMessage] = useState(false);
+  const { register, handleSubmit, formState: { errors } } = useForm();
   const { userRegister } = useUserAPI();
-
   const navigate = useNavigate();
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const [submitting, setSubmitting] = React.useState(false);
+  const [confirmationNeeded, setConfirmationNeeded] = React.useState(false);
 
   const onSubmit = async (data) => {
-    const passwordValidationOptions = {
-      minLength: 8,
-      minLowercase: 0,
-      minUppercase: 1,
-      minNumbers: 1,
-      minSymbols: 0,
-    };
-
-    if (!isStrongPassword(data.password, passwordValidationOptions)) {
-      setUser({ type: 'LOGIN_FAILURE', payload: 'La contraseña no cumple los requisitos' });
+    const opts = { minLength: 8, minUppercase: 1, minNumbers: 1, minLowercase: 0, minSymbols: 0 };
+    if (!isStrongPassword(data.password, opts)) {
       return;
     }
-
     try {
+      setSubmitting(true);
       const result = await userRegister({
         username: data.username,
         password: data.password,
@@ -45,162 +32,147 @@ const Register = () => {
         edad: Number(data.edad),
         telefono: data.telefono,
       });
-
       if (result?.requiresEmailConfirmation) {
-        setUser({ type: 'LOGIN_FAILURE', payload: 'Revisá tu casilla para confirmar el email.' });
+        setConfirmationNeeded(true);
         return;
       }
-
-      setWelcomeMessage(true);
-      setTimeout(() => navigate('/'), 2000);
+      navigate('/');
     } catch {
-      // useUserAPI already shows the error toast.
+      // toast already shown
+    } finally {
+      setSubmitting(false);
     }
   };
 
-  return (
-    <div className='my-5 rounded col-12 d-flex flex-column align-items-center'>
-      {!welcomeMessage && (
-        <>
-          <div className='text-success text-center my-4 d-flex align-items-center'>
-            <i className='bi bi-list-check mx-1 fs-4'></i>
-            <h1>¡SUMATE A NUESTRA APP!</h1>
-          </div>
+  if (confirmationNeeded) {
+    return (
+      <div className='auth-page'>
+        <div className='auth-card'>
+          <div className='auth-card__eyebrow'>— Casi listo</div>
+          <h1 className='auth-card__title'>Revisá tu casilla.</h1>
+          <p className='auth-card__sub'>
+            Te enviamos un email de confirmación. Hacé click en el link para activar tu cuenta
+            y empezar a reservar canchas.
+          </p>
+          <Link to='/login' className='auth-cta'>Ir a iniciar sesión</Link>
+        </div>
+      </div>
+    );
+  }
 
-          <form
-            className='form d-flex flex-column align-items-center col-12 col-sm-8 col-md-6'
-            role='form'
-            autoComplete='on'
-            onSubmit={handleSubmit(onSubmit)}>
-            <div className='input-group align-items-center'>
-              <div className='input-group-prepend mx-1 border rounded p-1'>
-                <i className='bi bi-envelope-at fs-4' id='basic-addon2'></i>
-              </div>
+  return (
+    <div className='auth-page auth-page--split'>
+      <aside className='auth-side'>
+        <div className='auth-side__inner'>
+          <div className='auth-side__eyebrow'>— Sumate al club</div>
+          <h1 className='auth-side__title'>
+            Tu cancha, tus<br />reservas, todo en<br />un solo lugar.
+          </h1>
+          <p className='auth-side__sub'>
+            Registrarte te toma dos minutos. Vas a poder reservar canchas, ver la
+            disponibilidad de la semana y gestionar tus turnos cuando quieras.
+          </p>
+          <ul className='auth-side__perks'>
+            {PERKS.map((p) => (
+              <li key={p}>
+                <i className='bi bi-check2-circle' aria-hidden='true'></i>
+                {p}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </aside>
+
+      <section className='auth-form-side'>
+        <div className='auth-card auth-card--wide'>
+          <div className='auth-card__eyebrow'>Crear cuenta</div>
+          <p className='auth-card__hint'>
+            ¿Ya tenés cuenta? <Link to='/login'>Iniciá sesión</Link>
+          </p>
+
+          <form onSubmit={handleSubmit(onSubmit)} className='auth-form-grid'>
+            <div className='auth-field auth-field--full'>
+              <label className='auth-label'>Email <span className='text-danger'>*</span></label>
               <input
-                id='userName'
-                name='username'
-                placeholder='Email'
-                autoComplete='username'
-                className='form-control my-2 text-center border-0 border-bottom ph'
                 type='email'
+                autoComplete='username'
+                className='auth-input'
+                placeholder='tu@email.com'
                 {...register('username', { required: true })}
               />
             </div>
-            {errors.username && (
-              <small className='text-danger text-center'>Este campo es obligatorio</small>
-            )}
 
-            <div className='input-group align-items-center'>
-              <div className='input-group-prepend mx-1 border rounded p-1'>
-                <i className='bi bi-asterisk' id='basic-addon2'></i>
-              </div>
+            <div className='auth-field auth-field--full'>
+              <label className='auth-label'>Contraseña <span className='text-danger'>*</span></label>
               <input
-                id='passWord'
-                name='password'
-                placeholder='Contraseña'
-                className='form-control my-2 text-center border-0 border-bottom ph'
                 type='password'
                 autoComplete='new-password'
+                className='auth-input'
+                placeholder='Mínimo 8 caracteres'
                 {...register('password', { required: true })}
               />
+              <small className='auth-help'>
+                Al menos 8 caracteres, una mayúscula y un número. Ejemplo: <strong>Nombre1980</strong>
+              </small>
             </div>
-            <small className='text-success col-9 text-center'>
-              La contraseña debe tener al menos 8 caracteres y, debe incluir como mínimo una
-              MAYÚSCULA, y un número.{' '}
-              <strong>
-                <i className='text-decoration-underline'>Ejemplo:</i> Nombre1980
-              </strong>
-            </small>
-            {errors.password && (
-              <small className='text-danger text-center'>Este campo es obligatorio</small>
-            )}
 
-            <div className='input-group align-items-center'>
-              <div className='input-group-prepend mx-1 border rounded p-1'>
-                <i className='bi bi-person-check fs-4' id='basic-addon2'></i>
-              </div>
+            <div className='auth-field'>
+              <label className='auth-label'>Nombre <span className='text-danger'>*</span></label>
               <input
-                id='nombre'
-                name='nombre'
-                placeholder='Nombre'
-                className='form-control my-2 text-center border-0 border-bottom ph'
                 type='text'
+                autoComplete='given-name'
+                className='auth-input'
+                placeholder='Tu nombre'
                 {...register('nombre', { required: true })}
               />
             </div>
-            {errors.nombre && <small className='text-danger text-center'>Este campo es obligatorio</small>}
-
-            <div className='input-group align-items-center'>
-              <div className='input-group-prepend mx-1 border rounded p-1'>
-                <i className='bi bi-person-check fs-4' id='basic-addon2'></i>
-              </div>
+            <div className='auth-field'>
+              <label className='auth-label'>Apellido <span className='text-danger'>*</span></label>
               <input
-                id='apellido'
-                name='apellido'
-                placeholder='Apellido'
-                className='form-control my-2 text-center border-0 border-bottom ph'
                 type='text'
+                autoComplete='family-name'
+                className='auth-input'
+                placeholder='Tu apellido'
                 {...register('apellido', { required: true })}
               />
             </div>
-            {errors.apellido && <small className='text-danger text-center'>Este campo es obligatorio</small>}
-
-            <div className='input-group align-items-center'>
-              <div className='input-group-prepend mx-1 border rounded p-1'>
-                <i className='bi bi-calendar-date fs-4' id='basic-addon2'></i>
-              </div>
+            <div className='auth-field'>
+              <label className='auth-label'>Edad <span className='text-danger'>*</span></label>
               <input
-                id='edad'
-                name='edad'
-                placeholder='Edad'
-                className='form-control my-2 text-center border-0 border-bottom ph'
                 type='number'
                 min={12}
                 max={99}
+                className='auth-input'
+                placeholder='30'
                 {...register('edad', { required: true })}
               />
             </div>
-            {errors.edad && <small className='text-danger text-center'>Este campo es obligatorio</small>}
-
-            <div className='input-group align-items-center'>
-              <div className='input-group-prepend mx-1 border rounded p-1'>
-                <i className='bi bi-phone fs-4' id='basic-addon2'></i>
-              </div>
+            <div className='auth-field'>
+              <label className='auth-label'>Teléfono <span className='text-danger'>*</span></label>
               <input
-                id='telefono'
-                name='telefono'
-                placeholder='Telefono'
-                className='form-control my-2 text-center border-0 border-bottom ph'
-                type='text'
+                type='tel'
+                autoComplete='tel'
+                className='auth-input'
+                placeholder='+54 9 11 0000-0000'
                 {...register('telefono', { required: true })}
               />
             </div>
-            {errors.telefono && <small className='text-danger text-center'>Este campo es obligatorio</small>}
 
-            <div className='input-group my-2 justify-content-center align-items-center'>
-              <div className='input-group-prepend mx-2'>
-                <i className='bi bi-send fs-4' id='basic-addon2'></i>
-              </div>
-              <input
-                className='my-2 text-center border border-success col-6 rounded bg-white text-secondary p-2 register-Btn'
-                type='submit'
-                value='Registrarme'
-                disabled={loading}
-              />
-            </div>
+            <button type='submit' className='auth-cta auth-field--full' disabled={submitting}>
+              <i className='bi bi-person-plus me-1' aria-hidden='true'></i>
+              Crear mi cuenta
+            </button>
+
+            <p className='auth-terms auth-field--full'>
+              Al registrarte aceptás los términos y condiciones del Club Ranelagh.
+            </p>
           </form>
-        </>
-      )}
-
-      {error && <div className='text-danger p-1 m-1'>{error}</div>}
-
-      {welcomeMessage && (
-        <div className=' rounded p-4 col-6 welcome-background d-flex  align-items-center justify-content-center'>
-          <h1 className='welcome-title text-success'>¡Bienvenido!</h1>
         </div>
-      )}
+      </section>
     </div>
   );
 };
+
+import React from 'react';
 
 export default Register;

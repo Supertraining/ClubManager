@@ -1,0 +1,20 @@
+.logo-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--c-brand);
+  color: var(--c-accent);
+  font-family: var(--f-display);
+  font-weight: 800;
+  font-size: 1.5rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.logo-mark--inverse {
+  background: var(--c-accent);
+  color: var(--c-brand);
+}
