@@ -1,8 +1,10 @@
+/* Reserved for project-wide overrides. Bootstrap + tokens.css + base.css
+   carry the bulk of the styling. */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 body {
-  overflow: scroll !important;
+  overflow: auto !important;
 }

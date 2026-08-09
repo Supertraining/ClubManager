@@ -1,0 +1,66 @@
+/* ===========================================================================
+ * Club Ranelagh — admin design tokens
+ * Mirrors client/src/styles/tokens.css so the admin looks like the same
+ * brand as the public site.
+ * =========================================================================== */
+
+:root {
+  --c-brand:        #0F4F3F;
+  --c-brand-700:    #0b3d30;
+  --c-brand-300:    #4f7e72;
+  --c-brand-50:     #e6f0ed;
+
+  --c-accent:       #E8A33D;
+  --c-accent-700:   #b87e29;
+  --c-accent-50:    #fbf1de;
+
+  --c-ink:          #1a1a1a;
+  --c-ink-2:        #4a4a4a;
+  --c-ink-3:        #7a7a7a;
+
+  --c-bg:           #fafaf7;
+  --c-bg-2:         #f0f0ec;
+  --c-line:         #e2e2dc;
+
+  --c-success:      #2f8a6e;
+  --c-danger:       #c1403b;
+  --c-warning:      #d99a2b;
+  --c-info:         #2a6dd1;
+
+  --f-display: 'Outfit', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --f-body:    'Inter',  system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-lg: 14px;
+
+  --sh-sm: 0 1px 2px rgba(0,0,0,.06);
+  --sh-md: 0 6px 18px rgba(15,79,63,.10);
+
+  --t-fast: 120ms ease;
+  --t-base: 200ms ease;
+}
+
+.btn-success {
+  background-color: var(--c-brand) !important;
+  border-color: var(--c-brand) !important;
+}
+.btn-success:hover,
+.btn-success:focus {
+  background-color: var(--c-brand-700) !important;
+  border-color: var(--c-brand-700) !important;
+}
+.btn-outline-success {
+  color: var(--c-brand) !important;
+  border-color: var(--c-brand) !important;
+}
+.btn-outline-success:hover,
+.btn-outline-success:focus {
+  background-color: var(--c-brand) !important;
+  border-color: var(--c-brand) !important;
+  color: #fff !important;
+}
+
+.text-brand { color: var(--c-brand) !important; }
+.bg-brand   { background-color: var(--c-brand) !important; color: #fff; }
+.bg-accent  { background-color: var(--c-accent) !important; color: var(--c-ink); }
