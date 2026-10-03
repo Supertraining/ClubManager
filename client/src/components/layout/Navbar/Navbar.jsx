@@ -1,24 +1,21 @@
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import Logo from '../../ui/Logo/Logo';
 import './Navbar.css';
 import { userStore } from '../../../stores';
 
+// Hashes sueltos, sin la barra inicial: se combinan con { pathname: '/' } para
+// armar la navegación. Guardarlos como '/#canchas' y concatenar un '/' delante
+// producía '//#canchas', que el browser interpreta como URL protocol-relative
+// y resuelve a about:blank#blocked.
 const NAV_LINKS = [
-  { to: '/#canchas',      label: 'Canchas' },
-  { to: '/#actividades',  label: 'Actividades' },
-  { to: '/#el-club',      label: 'El club' },
-  { to: '/#contacto',     label: 'Contacto' },
+  { hash: '#canchas',     label: 'Canchas' },
+  { hash: '#actividades', label: 'Actividades' },
+  { hash: '#el-club',     label: 'El club' },
+  { hash: '#contacto',    label: 'Contacto' },
 ];
 
 const Navbar = () => {
-  const location = useLocation();
   const user = userStore((s) => s.user?.user);
-
-  // On non-home routes, "#section" anchors should go to home + anchor.
-  const anchorFor = (hash) => {
-    if (location.pathname === '/') return hash;
-    return `/${hash}`;
-  };
 
   return (
     <header className='app-navbar' role='banner'>
@@ -27,9 +24,12 @@ const Navbar = () => {
 
         <nav className='app-navbar__links' aria-label='Navegación principal'>
           {NAV_LINKS.map((link) => (
-            <a key={link.to} href={anchorFor(link.to)} className='app-navbar__link'>
+            <Link
+              key={link.hash}
+              to={{ pathname: '/', hash: link.hash }}
+              className='app-navbar__link'>
               {link.label}
-            </a>
+            </Link>
           ))}
         </nav>
 

@@ -1,7 +1,9 @@
+import { useEffect } from 'react';
 import {
   BrowserRouter as Router,
   Route,
   Routes,
+  useLocation,
 } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -17,9 +19,39 @@ import Register from './pages/register/Register';
 import Account from './pages/account/Account';
 import NotFound from './pages/notFound/NotFound';
 
+/**
+ * React Router no scrollea al hash: cambiar a "/#canchas" navega, pero deja
+ * la vista donde estaba. Esto corre después del render, cuando la sección
+ * destino ya está en el DOM.
+ *
+ * Depende de pathname además de hash porque al venir de otra ruta el hash
+ * puede no cambiar (pisar dos veces el mismo link de la barra).
+ */
+function ScrollToHash() {
+  const { pathname, hash } = useLocation();
+
+  useEffect(() => {
+    if (!hash) return undefined;
+
+    // Un frame: en navegación desde otra ruta la sección se monta en este
+    // mismo commit, y hay que esperarla.
+    const raf = requestAnimationFrame(() => {
+      const target = document.getElementById(hash.slice(1));
+      if (!target) return;
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    });
+
+    return () => cancelAnimationFrame(raf);
+  }, [pathname, hash]);
+
+  return null;
+}
+
 function App() {
   return (
     <Router>
+      <ScrollToHash />
       <Navbar />
       <main>
         <Routes>

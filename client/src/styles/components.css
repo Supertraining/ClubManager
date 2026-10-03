@@ -8,6 +8,13 @@
 
 /* ---- Section (reusable vertical rhythm) ---- */
 
+/* The navbar is sticky at --navbar-h, so an anchor scrolled to block:start
+ * would land underneath it and hide the section title. */
+.section,
+.footer {
+  scroll-margin-top: var(--navbar-h);
+}
+
 .section {
   padding: clamp(3rem, 6vw, 5.5rem) 0;
 }
