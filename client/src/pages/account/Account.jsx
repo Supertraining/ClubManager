@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useReservesAPI, useNotifications } from '../../hooks';
 import { userStore } from '../../stores';
+import ConfirmDialog from '../../components/ui/ConfirmDialog/ConfirmDialog';
 import './Account.css';
 
 const COURT_LABELS = {
@@ -47,6 +48,8 @@ const Account = () => {
   const [reserves, setReserves] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('upcoming');
+  const [cancelling, setCancelling] = useState(null);
+  const [cancellingBusy, setCancellingBusy] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -70,12 +73,28 @@ const Account = () => {
 
   const visible = filter === 'upcoming' ? upcoming : past;
 
-  const handleCancel = async (id) => {
-    if (!confirm('¿Cancelar tu reserva? Tu lugar se libera para otra familia.')) return;
-    await deleteReserve(id);
-    const after = await getMyReserves();
-    setReserves(after);
-    notifySuccess('Tu reserva se canceló. Tu lugar se libera para otra familia.');
+  // Cancelar es destructivo y libera el turno para otra familia, así que pide
+  // confirmación explícita en un diálogo propio. Decir QUÉ se está cancelando
+  // importa: con varias reservas en pantalla, "confirmar" a secas es ambiguo.
+  const requestCancel = (reserve) => setCancelling(reserve);
+
+  const confirmCancel = async () => {
+    if (!cancelling) return;
+    setCancellingBusy(true);
+    try {
+      const ok = await deleteReserve(cancelling.id);
+      // El hook ya notificó el error si lo hubo; no cerramos sobre un fallo.
+      if (!ok) {
+        setCancelling(null);
+        return;
+      }
+      const after = await getMyReserves();
+      setReserves(after);
+      setCancelling(null);
+      notifySuccess('Tu reserva se canceló. Ese horario ya está disponible para otra familia.');
+    } finally {
+      setCancellingBusy(false);
+    }
   };
 
   const initials = (user.email || 'U').slice(0, 1).toUpperCase();
@@ -180,7 +199,7 @@ const Account = () => {
                       <button
                         type='button'
                         className='btn btn--ghost btn--sm'
-                        onClick={() => handleCancel(r.id)}>
+                        onClick={() => requestCancel(r)}>
                         <i className='bi bi-x-circle' aria-hidden='true'></i>
                         Cancelar
                       </button>
@@ -191,6 +210,35 @@ const Account = () => {
           )}
         </section>
       </div>
+
+      <ConfirmDialog
+        open={Boolean(cancelling)}
+        title='¿Cancelar la reserva?'
+        confirmLabel='Sí, cancelar'
+        cancelLabel='Mantener reserva'
+        destructive
+        busy={cancellingBusy}
+        onConfirm={confirmCancel}
+        onCancel={() => setCancelling(null)}>
+        {cancelling && (
+          <>
+            Vas a liberar{' '}
+            <strong>
+              {cancelling.courtLabel} ·{' '}
+              {new Date(cancelling.start).toLocaleDateString('es-AR', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+              })}{' '}
+              {new Date(cancelling.start).toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit',
+              })}
+            </strong>
+            . Queda disponible para otra familia y no vas a poder recuperarla desde acá.
+          </>
+        )}
+      </ConfirmDialog>
     </div>
   );
 };

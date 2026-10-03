@@ -1,0 +1,136 @@
+/* ===========================================================================
+ * ConfirmDialog — overlay de confirmación
+ * ===========================================================================
+ * Fondo scrim plano (sin blur: el glassmorphism decorativo está descartado
+ * por el sistema de diseño) y panel con la superficie del club.
+ * =========================================================================== */
+
+.confirm {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  background: rgba(26, 31, 27, 0.55);
+  animation: confirm-fade var(--t-base) both;
+}
+
+.confirm__panel {
+  width: 100%;
+  max-width: 26rem;
+  padding: var(--space-5) var(--space-5) var(--space-5);
+  background: var(--c-surface);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-lg);
+  text-align: center;
+  animation: confirm-pop var(--t-base) both;
+}
+
+/* ---- Marca ---- */
+
+.confirm__mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  margin-bottom: var(--space-3);
+  border-radius: 50%;
+  background: var(--c-brand-50);
+  color: var(--c-brand);
+  font-size: 1.4rem;
+}
+.confirm__mark--danger {
+  background: var(--c-danger-soft);
+  color: var(--c-danger);
+}
+
+/* ---- Texto ---- */
+
+.confirm__title {
+  font-family: var(--f-display);
+  font-size: var(--fs-xl);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--c-ink);
+  margin: 0 0 var(--space-2);
+}
+
+.confirm__body {
+  font-size: var(--fs-base);
+  line-height: 1.55;
+  color: var(--c-ink-soft);
+  margin-bottom: var(--space-5);
+}
+
+.confirm__body strong {
+  color: var(--c-ink);
+  font-weight: 600;
+}
+
+/* ---- Acciones ---- */
+
+.confirm__actions {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--space-2);
+}
+
+.confirm__actions .btn {
+  width: 100%;
+}
+
+.confirm__spinner {
+  display: inline-block;
+  width: 0.9rem;
+  height: 0.9rem;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: confirm-spin 700ms linear infinite;
+}
+
+/* ---- Animación ---- */
+
+@keyframes confirm-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes confirm-pop {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes confirm-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ---- En pantallas anchas los botones van en fila ---- */
+
+@media (min-width: 30rem) {
+  .confirm__actions {
+    flex-direction: row;
+    justify-content: center;
+  }
+  .confirm__actions .btn {
+    width: auto;
+    min-width: 10rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .confirm,
+  .confirm__panel {
+    animation: none;
+  }
+  .confirm__spinner {
+    animation: none;
+    border-right-color: currentColor;
+    opacity: 0.5;
+  }
+}

@@ -54,14 +54,19 @@ export const useReservesAPI = () => {
     }
   }, [axios, notifySuccess, notifyWarning]);
 
+  // No dispara toast de éxito: el copy depende del contexto ("se liberó tu
+  // turno" en Mi cuenta, otra cosa en el panel), y así una sola llamada no
+  // produce dos toasts apilados. El error sí se reporta acá, porque no hay
+  // nadie más enterado del fallo.
   const deleteReserve = useCallback(async (reservationId) => {
     try {
       await axios.delete(`/users/reserves/${reservationId}`);
-      notifySuccess('Reserva eliminada');
+      return true;
     } catch (error) {
       notifyWarning(`Hubo un problema: ${error?.response?.data?.message || error.message}`);
+      return false;
     }
-  }, [axios, notifySuccess, notifyWarning]);
+  }, [axios, notifyWarning]);
 
   return {
     getMyReserves,
