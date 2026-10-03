@@ -11,6 +11,28 @@ const COURT_LABELS = {
   paleta: 'Paleta',
 };
 
+/**
+ * Normaliza una fila de `reservations` a la vista que usa el componente.
+ *
+ * El server devuelve las columnas tal cual (snake_case) más
+ * `court: { name, display_name }`. Antes se leía r.endTime / r.startTime /
+ * r.initialTime, que nunca existieron: `new Date(undefined)` es Invalid Date,
+ * la comparación contra `now` daba false y TODAS las reservas caían en
+ * "Historial" en vez de "Próximas". Normalizar una sola vez evita volver a
+ * adivinar nombres de campo.
+ */
+const toReserveView = (r) => {
+  const start = new Date(r.start_time).getTime();
+  const end = new Date(r.end_time).getTime();
+  return {
+    id: r.id,
+    start: Number.isNaN(start) ? 0 : start,
+    end: Number.isNaN(end) ? 0 : end,
+    courtLabel: r.court?.display_name || COURT_LABELS[r.court?.name] || r.court?.name || 'Cancha',
+    permanent: Boolean(r.permanent),
+  };
+};
+
 const formatDate = (date) => {
   if (!date) return '';
   const d = new Date(date);
@@ -41,13 +63,10 @@ const Account = () => {
 
   if (!user) return null;
 
-  const now = new Date();
-  const upcoming = reserves
-    .filter((r) => new Date(r.endTime || r.finalTime || r.startTime) > now)
-    .sort((a, b) => new Date(a.startTime || a.initialTime) - new Date(b.startTime || b.initialTime));
-  const past = reserves
-    .filter((r) => new Date(r.endTime || r.finalTime || r.startTime) <= now)
-    .sort((a, b) => new Date(b.startTime || b.initialTime) - new Date(a.startTime || a.initialTime));
+  const now = Date.now();
+  const views = reserves.map(toReserveView);
+  const upcoming = views.filter((r) => r.end > now).sort((a, b) => a.start - b.start);
+  const past = views.filter((r) => r.end <= now).sort((a, b) => b.start - a.start);
 
   const visible = filter === 'upcoming' ? upcoming : past;
 
@@ -136,31 +155,27 @@ const Account = () => {
             </div>
           ) : (
             <ul className='account-list'>
-              {visible.map((r) => {
-                const start = r.startTime || r.initialTime;
-                const end = r.endTime || r.finalTime;
-                const court = r.court || r.name || r.court_name;
-                return (
-                  <li key={r.id} className='account-list__item'>
-                    <div className='account-list__date'>
-                      <span className='account-list__day'>
-                        {new Date(start).toLocaleDateString('es-AR', { day: 'numeric' })}
-                      </span>
-                      <span className='account-list__month'>
-                        {new Date(start).toLocaleDateString('es-AR', { month: 'short' })}
-                      </span>
-                    </div>
-                    <div className='account-list__copy'>
-                      <h3 className='account-list__court'>
-                        {COURT_LABELS[court] || court}
-                        {r.permanent && <span className='tag tag--mustard'>Permanente</span>}
-                      </h3>
-                      <p className='account-list__when'>
-                        {formatDate(start)} · {new Date(start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                        {' – '}
-                        {new Date(end).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                      </p>
-                    </div>
+              {visible.map((r) => (
+                <li key={r.id} className='account-list__item'>
+                  <div className='account-list__date'>
+                    <span className='account-list__day'>
+                      {new Date(r.start).toLocaleDateString('es-AR', { day: 'numeric' })}
+                    </span>
+                    <span className='account-list__month'>
+                      {new Date(r.start).toLocaleDateString('es-AR', { month: 'short' })}
+                    </span>
+                  </div>
+                  <div className='account-list__copy'>
+                    <h3 className='account-list__court'>
+                      {r.courtLabel}
+                      {r.permanent && <span className='tag tag--mustard'>Permanente</span>}
+                    </h3>
+                    <p className='account-list__when'>
+                      {formatDate(r.start)} · {new Date(r.start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      {' – '}
+                      {new Date(r.end).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                  </div>
                     {filter === 'upcoming' && (
                       <button
                         type='button'
@@ -171,8 +186,7 @@ const Account = () => {
                       </button>
                     )}
                   </li>
-                );
-              })}
+              ))}
             </ul>
           )}
         </section>
