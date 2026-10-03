@@ -50,6 +50,21 @@ export default class UserRouter {
       this.controllers.deleteReserveById
     );
 
+    // Reservations belonging to the caller. The DAO scopes both of these to the
+    // access token, so a socio can only read or cancel their own rows (RLS
+    // backs it up on top of that).
+    router.get(
+      '/me/reserves',
+
+      this.controllers.getMyReserves
+    );
+
+    router.delete(
+      '/reserves/:reserveId',
+
+      this.controllers.deleteReserveById
+    );
+
     router.put(
       '/reserves/:username',
 
