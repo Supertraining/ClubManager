@@ -1,5 +1,5 @@
 /* ===========================================================================
- * BookingPanel — sticky sidebar (desktop) / sheet (mobile)
+ * BookingPanel â€” sticky sidebar (desktop) / sheet (mobile)
  * =========================================================================== */
 
 .booking-panel {
@@ -143,4 +143,65 @@
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+/* ---- Duration picker ---- */
+
+.booking-panel__duration {
+  border: 0;
+  padding: 0;
+  margin: 0 0 var(--space-4);
+}
+
+.booking-panel__duration-legend {
+  display: block;
+  font-family: var(--f-body);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--c-ink-soft);
+  margin-bottom: var(--space-2);
+  padding: 0;
+}
+
+.booking-panel__duration-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+}
+
+.booking-duration {
+  min-height: 44px; /* touch target */
+  padding: 0.5rem 0.5rem;
+  font-family: var(--f-body);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--c-ink-soft);
+  background: var(--c-surface);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-md);
+  transition: border-color var(--t-fast), background var(--t-fast), color var(--t-fast);
+}
+
+.booking-duration:hover:not(:disabled) {
+  border-color: var(--c-line-strong);
+  background: var(--c-surface-alt);
+  color: var(--c-ink);
+}
+
+.booking-duration--active,
+.booking-duration--active:hover:not(:disabled) {
+  background: var(--c-brand-50);
+  border-color: var(--c-brand);
+  color: var(--c-brand);
+}
+
+.booking-duration:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+.booking-duration:focus-visible {
+  outline: 2px solid var(--c-brand);
+  outline-offset: 2px;
 }

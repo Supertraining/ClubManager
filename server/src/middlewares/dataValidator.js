@@ -1,5 +1,12 @@
 import { body, param, validationResult } from 'express-validator';
 
+/** 'HH:mm' -> minutes from midnight. NaN when malformed. */
+const toMinutes = (hhmm) => {
+  const m = /^(\d{1,2}):(\d{2})$/.exec(String(hhmm || ''));
+  if (!m) return NaN;
+  return Number(m[1]) * 60 + Number(m[2]);
+};
+
 const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -31,6 +38,21 @@ export const validate = {
     body('selectedDates.finalTime').exists().notEmpty(),
     body('for').exists().notEmpty().optional(),
     body('selectedDates.permanent').exists().notEmpty(),
+
+    // A booking is between 1 and 2 hours, in half-hour steps. The client
+    // offers the same three options, but it is a UI, not a guarantee: without
+    // this a crafted request could book a court for 5 seconds and still pass
+    // the EXCLUDE constraint, since that only stops overlaps.
+    body('selectedDates.initialTime').custom((value, { req }) => {
+      const start = toMinutes(value);
+      const end = toMinutes(req.body?.selectedDates?.finalTime);
+      if ([start, end].some(Number.isNaN)) throw new Error();
+      const duration = end - start;
+      if (duration < 60) throw new Error('La reserva dura menos de 1 hora.');
+      if (duration > 120) throw new Error('La reserva dura más de 2 horas.');
+      if (duration % 30 !== 0) throw new Error('La duración tiene que ser múltiplo de 30 minutos.');
+      return true;
+    }),
 
     handleValidationErrors
   ],

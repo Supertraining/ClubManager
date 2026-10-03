@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { slotEnd } from './helpers';
+import { DURATION_OPTIONS, formatDuration } from './courtConfig';
 import './BookingPanel.css';
 
 /**
@@ -18,9 +19,21 @@ const BookingPanel = ({
   isAuthenticated,
   nextSlotHint,
   onUseNextSlot,
+  durationMin,
+  onDurationChange,
+  closeMin,
 }) => {
-  const endTime = startTime ? slotEnd(startTime) : null;
+  const endTime = startTime ? slotEnd(startTime, durationMin) : null;
   const canConfirm = Boolean(startTime) && !isSubmitting;
+
+  // A duration that would run past closing is not offered for this slot: on a
+  // court that shuts at 23:00, the 22:00 slot can be 1 h but not 2 h.
+  const durationFits = (min) => {
+    if (!startTime) return false;
+    if (closeMin == null) return true;
+    const [sh, sm] = startTime.split(':').map(Number);
+    return sh * 60 + sm + min <= closeMin;
+  };
 
   if (!isAuthenticated) {
     return (
@@ -70,6 +83,29 @@ const BookingPanel = ({
           </span>
         </div>
       </div>
+
+      {startTime && (
+        <fieldset className='booking-panel__duration'>
+          <legend className='booking-panel__duration-legend'>¿Cuánto tiempo?</legend>
+          <div className='booking-panel__duration-options'>
+            {DURATION_OPTIONS.map((min) => {
+              const fits = durationFits(min);
+              return (
+                <button
+                  key={min}
+                  type='button'
+                  className={`booking-duration${durationMin === min ? ' booking-duration--active' : ''}`}
+                  onClick={() => onDurationChange(min)}
+                  disabled={!fits}
+                  aria-pressed={durationMin === min}
+                  title={fits ? undefined : 'No entra antes del cierre del club'}>
+                  {formatDuration(min)}
+                </button>
+              );
+            })}
+          </div>
+        </fieldset>
+      )}
 
       {startTime && (
         <button
@@ -125,6 +161,9 @@ BookingPanel.propTypes = {
   isAuthenticated: PropTypes.bool,
   nextSlotHint: PropTypes.string,
   onUseNextSlot: PropTypes.func,
+  durationMin: PropTypes.number,
+  onDurationChange: PropTypes.func,
+  closeMin: PropTypes.number,
 };
 
 export default BookingPanel;

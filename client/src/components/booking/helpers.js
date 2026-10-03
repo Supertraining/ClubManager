@@ -1,4 +1,8 @@
-import { addMinutes, SLOT_DURATION_MIN, toDateKey } from './courtConfig';
+import {
+  addMinutes,
+  DEFAULT_DURATION_MIN,
+  toDateKey,
+} from './courtConfig';
 
 /**
  * Convert a reserves payload (the response from /courts/:name) into a
@@ -15,30 +19,34 @@ export const flattenReserves = (courtReserves) => {
   return Object.values(courtReserves).flat().filter(Boolean);
 };
 
-/** Does any reservation overlap with the slot [start, end] on `dateKey`? */
-export const isSlotOccupied = (reserves, dateKey, slotStart) => {
-  const slotEndMin = (() => {
-    const [h, m] = slotStart.split(':').map(Number);
-    return h * 60 + m + SLOT_DURATION_MIN;
-  })();
+/**
+ * Does any reservation overlap the range [slotStart, slotStart + durationMin)?
+ *
+ * The duration matters: with 1 h selected, a slot at 18:00 is free even if
+ * somebody holds 17:00-17:30, but the same slot is taken for a 2 h booking.
+ * Passing DEFAULT_DURATION_MIN keeps the old fixed-length behaviour.
+ */
+export const isSlotOccupied = (reserves, dateKey, slotStart, durationMin = DEFAULT_DURATION_MIN) => {
+  const slotStartMin = toMinutes(slotStart);
+  const slotEndMin = slotStartMin + durationMin;
 
   return reserves.some((r) => {
     if (r.date !== dateKey) return false;
-    const [ih, im] = toHHmm(r.initialTime).split(':').map(Number);
-    const [fh, fm] = toHHmm(r.finalTime).split(':').map(Number);
-    const rStart = ih * 60 + im;
-    const rEnd = fh * 60 + fm;
-    return rStart < slotEndMin && rEnd > (() => {
-      const [h, m] = slotStart.split(':').map(Number);
-      return h * 60 + m;
-    })();
+    const rStart = toMinutes(toHHmm(r.initialTime));
+    const rEnd = toMinutes(toHHmm(r.finalTime));
+    return rStart < slotEndMin && rEnd > slotStartMin;
   });
 };
 
-/** Find a reservation that occupies this slot, if any. */
-export const findReservationForSlot = (reserves, dateKey, slotStart) => {
+/** Find a reservation that overlaps this slot for the chosen duration, if any. */
+export const findReservationForSlot = (
+  reserves,
+  dateKey,
+  slotStart,
+  durationMin = DEFAULT_DURATION_MIN,
+) => {
   const slotStartMin = toMinutes(slotStart);
-  const slotEndMin = slotStartMin + SLOT_DURATION_MIN;
+  const slotEndMin = slotStartMin + durationMin;
   return reserves.find((r) => {
     if (r.date !== dateKey) return false;
     const rStart = toMinutes(toHHmm(r.initialTime));
@@ -47,8 +55,25 @@ export const findReservationForSlot = (reserves, dateKey, slotStart) => {
   }) || null;
 };
 
-/** Returns a friendly end time string for a slot start. */
-export const slotEnd = (slotStart) => addMinutes(slotStart, SLOT_DURATION_MIN);
+/** End time for a slot start at the chosen duration. */
+export const slotEnd = (slotStart, durationMin = DEFAULT_DURATION_MIN) =>
+  addMinutes(slotStart, durationMin);
+
+/**
+ * Has this slot's start already passed? Only ever true for today — a slot on
+ * any future date is bookable no matter what time of day it is.
+ *
+ * Shared by SlotGrid (to disable the button) and CourtPage (to count available
+ * slots per range), because counting slots that are actually disabled shows a
+ * number the member cannot act on.
+ */
+export const isSlotPast = (slotStart, dateKey) => {
+  if (!dateKey || dateKey !== toDateKey(new Date())) return false;
+  const [h, m] = slotStart.split(':').map(Number);
+  const slotDate = new Date();
+  slotDate.setHours(h, m, 0, 0);
+  return slotDate.getTime() <= Date.now();
+};
 
 const toHHmm = (date) => {
   if (!date) return '';

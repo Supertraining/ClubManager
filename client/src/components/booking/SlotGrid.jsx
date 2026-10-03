@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { slotEnd } from './helpers';
+import { isSlotPast, slotEnd } from './helpers';
 import './SlotGrid.css';
 
 /**
@@ -18,7 +18,15 @@ import './SlotGrid.css';
  * profiles de otros usuarios (la política "profiles: read own" lo impide por
  * diseño). Un slot de otra persona se anuncia como "Horario ocupado".
  */
-const SlotGrid = ({ slots, selectedStart, onSelect, getReservation, currentUserId }) => {
+const SlotGrid = ({
+  slots,
+  selectedStart,
+  onSelect,
+  getReservation,
+  currentUserId,
+  durationMin,
+  dateKey,
+}) => {
   if (!slots || slots.length === 0) {
     return (
       <div className='slot-grid__empty'>
@@ -29,12 +37,10 @@ const SlotGrid = ({ slots, selectedStart, onSelect, getReservation, currentUserI
     );
   }
 
-  const now = new Date();
-
   return (
     <div className='slot-grid' role='list' aria-label='Turnos disponibles'>
       {slots.map((start) => {
-        const end = slotEnd(start);
+        const end = slotEnd(start, durationMin);
         const reservation = getReservation?.(start);
         const occupied = Boolean(reservation);
         const mine = occupied && Boolean(currentUserId) && reservation.user === currentUserId;
@@ -85,13 +91,7 @@ const SlotGrid = ({ slots, selectedStart, onSelect, getReservation, currentUserI
   );
 
   function isPast(slotStart) {
-    // past if hour already passed today
-    const today = new Date();
-    if (today.toDateString() !== new Date().toDateString()) return false;
-    const [h, m] = slotStart.split(':').map(Number);
-    const slotTime = new Date();
-    slotTime.setHours(h, m, 0, 0);
-    return slotTime.getTime() <= now.getTime();
+    return isSlotPast(slotStart, dateKey);
   }
 };
 
@@ -101,6 +101,8 @@ SlotGrid.propTypes = {
   onSelect: PropTypes.func.isRequired,
   getReservation: PropTypes.func,
   currentUserId: PropTypes.string,
+  durationMin: PropTypes.number,
+  dateKey: PropTypes.string,
 };
 
 export default SlotGrid;

@@ -8,9 +8,16 @@
  *   - pills:        small features list (shown on Home card and in the header)
  *   - weekdayHours: open hours per weekday. `null` means closed.
  *
- * Slot duration is 90 minutes (the max allowed by the existing
- * `isReserveDateAvailable` helper). Hours are interpreted in the club's
- * local timezone (America/Argentina/Buenos_Aires).
+ * Reservation timing. These used to be a single 90-minute constant doing two
+ * jobs at once, so every booking was exactly 90 minutes. They are separate now:
+ *
+ *   - SLOT_STEP_MIN       how often a slot can START. This is the grid density.
+ *   - DURATION_OPTIONS    how long a booking can be, chosen per reservation.
+ *
+ * Durations are enforced again on the server (dataValidator.courtReservation);
+ * these constants are the UI-side truth, not the only guard.
+ *
+ * Hours are interpreted in the club's local timezone (America/Argentina/Buenos_Aires).
  */
 
 import futbolImg from '../../assets/football/footballCourt.webp';
@@ -67,7 +74,24 @@ export const COURT_LIST = Object.values(COURTS);
 
 export const getCourt = (name) => COURTS[name] || null;
 
-export const SLOT_DURATION_MIN = 90;
+/** How often a slot can start. This is grid density, not booking length. */
+export const SLOT_STEP_MIN = 60;
+
+/** A booking can be between 1 and 2 hours, in half-hour steps. */
+export const MIN_DURATION_MIN = 60;
+export const MAX_DURATION_MIN = 120;
+export const DURATION_OPTIONS = [60, 90, 120];
+
+/** 90 minutes, so the default booking is unchanged from what it used to be. */
+export const DEFAULT_DURATION_MIN = 90;
+
+/** "90" -> "1 h 30 min" */
+export const formatDuration = (min) => {
+  if (min < 60) return `${min} min`;
+  const h = Math.floor(min / 60);
+  const m = min % 60;
+  return m === 0 ? `${h} h` : `${h} h ${m} min`;
+};
 
 /** Format a Date (or string) to 'HH:mm' in 24h local time. */
 export const toHHmm = (date) => {
@@ -89,26 +113,38 @@ export const addMinutes = (hhmm, min) => {
   return `${hh}:${mm}`;
 };
 
+/**
+ * Open/close for a court on a given day, in minutes from midnight.
+ * Saturday closes at "00:00", which means midnight, so it becomes 1440.
+ * Returns null when the court is closed that day.
+ */
+export const getCourtHours = (courtName, date) => {
+  const court = COURTS[courtName];
+  if (!court || !date) return null;
+
+  const wh = court.hours[date.getDay()]; // 0 = Sunday
+  if (!wh) return null;
+
+  const [ch, cm] = wh.close.split(':').map(Number);
+  const [oh, om] = wh.open.split(':').map(Number);
+  return {
+    openMin: oh * 60 + om,
+    closeMin: ch * 60 + cm === 0 ? 24 * 60 : ch * 60 + cm,
+  };
+};
+
 /** Return slot start times for a given day+court, broken into range keys. */
 export const getSlotsForDay = (courtName, date) => {
-  const court = COURTS[courtName];
-  if (!court || !date) return { manana: [], tarde: [], noche: [] };
-
-  // `date` is a Date object set to the user's selected day.
-  const dow = date.getDay(); // 0 = Sunday
-  const wh = court.hours[dow];
-  if (!wh) return { manana: [], tarde: [], noche: [] };
-
-  // Saturday close can be "00:00" (midnight) — treat as 24:00 for math
-  const closeMin = (() => {
-    const [h, m] = wh.close.split(':').map(Number);
-    return h * 60 + m === 0 ? 24 * 60 : h * 60 + m;
-  })();
-  const [oh, om] = wh.open.split(':').map(Number);
-  const openMin = oh * 60 + om;
+  const hours = getCourtHours(courtName, date);
+  if (!hours) return { manana: [], tarde: [], noche: [] };
+  const { openMin, closeMin } = hours;
 
   const slots = [];
-  for (let m = openMin; m + SLOT_DURATION_MIN <= closeMin; m += SLOT_DURATION_MIN) {
+  // A slot is offered as long as the SHORTEST booking fits, so the last hour
+  // of court time stays sellable. Longer durations are gated in BookingPanel
+  // against the same closeMin, which is why a 22:00 slot on a court that shuts
+  // at 23:00 offers 1 h but not 2 h.
+  for (let m = openMin; m + MIN_DURATION_MIN <= closeMin; m += SLOT_STEP_MIN) {
     const hh = Math.floor(m / 60).toString().padStart(2, '0');
     const mm = (m % 60).toString().padStart(2, '0');
     slots.push(`${hh}:${mm}`);

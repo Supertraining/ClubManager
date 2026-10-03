@@ -6,14 +6,17 @@ import { userStore } from '../../stores';
 
 import {
   getCourt,
+  getCourtHours,
   getSlotsForDay,
   toDateKey,
+  DEFAULT_DURATION_MIN,
 } from './courtConfig';
 import {
   flattenReserves,
   findReservationForSlot,
   getWeekDays,
   isSameDay,
+  isSlotPast,
   slotEnd,
 } from './helpers';
 
@@ -43,6 +46,7 @@ const CourtPage = ({ court }) => {
   const [selectedDate, setSelectedDate] = useState(() => new Date());
   const [range, setRange] = useState('manana');
   const [startTime, setStartTime] = useState(null);
+  const [durationMin, setDurationMin] = useState(DEFAULT_DURATION_MIN);
   const [submitting, setSubmitting] = useState(false);
 
   // Refetch on mount + on court change
@@ -55,6 +59,7 @@ const CourtPage = ({ court }) => {
     setStartTime(null);
     setSelectedDate(new Date());
     setRange('manana');
+    setDurationMin(DEFAULT_DURATION_MIN);
   }, [courtName]);
 
   // Derived: slots for the selected day
@@ -66,17 +71,22 @@ const CourtPage = ({ court }) => {
   // Derived: flat list of reservations
   const reserves = useMemo(() => flattenReserves(courtReserves), [courtReserves]);
 
-  // Counts per range (available slots)
+  // Counts per range (bookable slots). Availability depends on the chosen
+  // duration: a slot someone else holds for 1 h may still fit a different
+  // start, so the counts are recomputed when the duration changes. Elapsed
+  // slots are excluded too, otherwise the tab advertises a number of slots
+  // that are rendered disabled.
   const rangeCounts = useMemo(() => {
     const dateKey = toDateKey(selectedDate);
     const counts = {};
     for (const r of RANGE_ORDER) {
-      counts[r] = (slotsByRange[r] || []).filter((slot) => {
-        return !findReservationForSlot(reserves, dateKey, slot);
-      }).length;
+      counts[r] = (slotsByRange[r] || []).filter((slot) => (
+        !findReservationForSlot(reserves, dateKey, slot, durationMin)
+        && !isSlotPast(slot, dateKey)
+      )).length;
     }
     return counts;
-  }, [slotsByRange, reserves, selectedDate]);
+  }, [slotsByRange, reserves, selectedDate, durationMin]);
 
   // Adjust range to first non-empty if current becomes empty
   useEffect(() => {
@@ -89,8 +99,8 @@ const CourtPage = ({ court }) => {
   const slots = slotsByRange[range] || [];
 
   const getReservation = useCallback(
-    (slot) => findReservationForSlot(reserves, toDateKey(selectedDate), slot),
-    [reserves, selectedDate],
+    (slot) => findReservationForSlot(reserves, toDateKey(selectedDate), slot, durationMin),
+    [reserves, selectedDate, durationMin],
   );
 
   // Find next available slot across the next 7 days
@@ -101,7 +111,7 @@ const CourtPage = ({ court }) => {
       const slots = getSlotsForDay(courtName, day);
       for (const r of RANGE_ORDER) {
         for (const s of slots[r] || []) {
-          if (!findReservationForSlot(reserves, dayKey, s)) {
+          if (!findReservationForSlot(reserves, dayKey, s, durationMin)) {
             // Skip past slots of today
             if (isSameDay(day, new Date())) {
               const [h, m] = s.split(':').map(Number);
@@ -115,7 +125,7 @@ const CourtPage = ({ court }) => {
       }
     }
     return null;
-  }, [courtName, reserves]);
+  }, [courtName, reserves, durationMin]);
 
   const nextSlotHint = nextSlot
     ? `Próximo libre: ${nextSlot.day.toLocaleDateString('es-AR', { weekday: 'short' })} ${nextSlot.day.getDate()} · ${nextSlot.slot}`
@@ -139,7 +149,7 @@ const CourtPage = ({ court }) => {
       return;
     }
     setSubmitting(true);
-    const end = slotEnd(startTime);
+    const end = slotEnd(startTime, durationMin);
     const dateKey = toDateKey(selectedDate);
     const result = await createReserve(courtName, dateKey, startTime, end);
     setSubmitting(false);
@@ -151,7 +161,7 @@ const CourtPage = ({ court }) => {
       notifyWarning('No se pudo reservar. Probá con otro horario.');
       reFetch();
     }
-  }, [startTime, user, createReserve, courtName, selectedDate, reFetch, navigate, notifySuccess, notifyWarning]);
+  }, [startTime, durationMin, user, createReserve, courtName, selectedDate, reFetch, navigate, notifySuccess, notifyWarning]);
 
   // Auth gate
   if (!user) {
@@ -191,6 +201,8 @@ const CourtPage = ({ court }) => {
                   onSelect={() => navigate('/login?next=' + encodeURIComponent(window.location.pathname + window.location.search))}
                   getReservation={getReservation}
                   currentUserId={null}
+                  durationMin={durationMin}
+                  dateKey={toDateKey(selectedDate)}
                 />
               </div>
             </div>
@@ -205,6 +217,9 @@ const CourtPage = ({ court }) => {
                 isAuthenticated={false}
                 nextSlotHint={nextSlotHint}
                 onUseNextSlot={onUseNextSlot}
+                durationMin={durationMin}
+                onDurationChange={setDurationMin}
+                closeMin={getCourtHours(courtName, selectedDate)?.closeMin ?? null}
               />
             </div>
           </div>
@@ -250,6 +265,8 @@ const CourtPage = ({ court }) => {
                 onSelect={setStartTime}
                 getReservation={getReservation}
                 currentUserId={user?.id}
+                durationMin={durationMin}
+                dateKey={toDateKey(selectedDate)}
               />
             </div>
           </div>
@@ -264,6 +281,9 @@ const CourtPage = ({ court }) => {
               isAuthenticated={Boolean(user)}
               nextSlotHint={nextSlotHint}
               onUseNextSlot={onUseNextSlot}
+              durationMin={durationMin}
+              onDurationChange={setDurationMin}
+              closeMin={getCourtHours(courtName, selectedDate)?.closeMin ?? null}
             />
           </div>
         </div>
