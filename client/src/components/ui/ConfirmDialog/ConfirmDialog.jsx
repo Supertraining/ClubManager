@@ -45,35 +45,41 @@ const ConfirmDialog = ({
   const restoreRef = useRef(null);
   const uid = useId();
 
-  const handleKeyDown = useCallback(
-    (event) => {
-      if (event.key === 'Escape') {
-        event.preventDefault();
-        event.stopPropagation();
-        onCancel();
-        return;
-      }
-      if (event.key !== 'Tab') return;
+  // onCancel suele ser una closure nueva en cada render del padre. Guardarla
+  // en un ref mantiene el efecto de montaje estable: si el efecto dependiera
+  // de esa identidad, se desarmaría y se rearmaría en cada render del padre,
+  // moviendo el foco entre el panel y el elemento de origem sin parar.
+  const onCancelRef = useRef(onCancel);
+  useEffect(() => {
+    onCancelRef.current = onCancel;
+  });
 
-      const panel = panelRef.current;
-      if (!panel) return;
-      const items = [...panel.querySelectorAll(FOCUSABLE)].filter(
-        (el) => el.offsetWidth > 0 || el.offsetHeight > 0,
-      );
-      if (items.length === 0) return;
+  const handleKeyDown = useCallback((event) => {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      event.stopPropagation();
+      onCancelRef.current();
+      return;
+    }
+    if (event.key !== 'Tab') return;
 
-      const first = items[0];
-      const last = items[items.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    },
-    [onCancel],
-  );
+    const panel = panelRef.current;
+    if (!panel) return;
+    const items = [...panel.querySelectorAll(FOCUSABLE)].filter(
+      (el) => el.offsetWidth > 0 || el.offsetHeight > 0,
+    );
+    if (items.length === 0) return;
+
+    const first = items[0];
+    const last = items[items.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  }, []);
 
   useEffect(() => {
     if (!open) return undefined;
