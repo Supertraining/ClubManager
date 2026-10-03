@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './styles/tokens.css';
 import './styles/base.css';
+import './styles/components.css';
 import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(

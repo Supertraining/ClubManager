@@ -1,37 +1,48 @@
-import './App.css';
-import Navbar from './components/layout/Navbar/Navbar';
-import Footer from './components/layout/Footer/Footer';
-import Home from './pages/home/Home';
-import Reserves from './pages/reserves/Reserves';
-import Register from './pages/register/Register';
-import Login from './pages/login/Login';
-import NotFound from './pages/notFound/NotFound';
 import {
   BrowserRouter as Router,
-  Routes,
   Route,
-  Navigate,
+  Routes,
 } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+import Navbar from './components/layout/Navbar/Navbar';
+import Footer from './components/layout/Footer/Footer';
+
+import Home from './pages/home/Home';
+import Reserves from './pages/reserves/Reserves';
+import Activities from './pages/activities/Activities';
+import Login from './pages/login/Login';
+import Register from './pages/register/Register';
+import Account from './pages/account/Account';
+import NotFound from './pages/notFound/NotFound';
 
 function App() {
   return (
-    <div className='App col-12'>
-      <Router>
-        <Navbar />
-
-        <main>
-          <Routes>
-            <Route exact path='/' element={<Home />} />
-            <Route exact path='/reserves' element={<Reserves />} />
-            <Route exact path='/login' element={<Login />} />
-            <Route exact path='/register' element={<Register />} />
-            <Route path='*' element={<NotFound />} />
-          </Routes>
-        </main>
-
-        <Footer />
-      </Router>
-    </div>
+    <Router>
+      <Navbar />
+      <main>
+        <Routes>
+          <Route exact path='/' element={<Home />} />
+          <Route path='/reserves' element={<Reserves />} />
+          <Route path='/activities' element={<Activities />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/register' element={<Register />} />
+          <Route path='/account' element={<Account />} />
+          <Route path='*' element={<NotFound />} />
+        </Routes>
+      </main>
+      <Footer />
+      <ToastContainer
+        position='top-right'
+        autoClose={4000}
+        hideProgressBar
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        theme='light'
+      />
+    </Router>
   );
 }
 

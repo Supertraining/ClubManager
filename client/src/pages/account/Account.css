@@ -1,0 +1,282 @@
+/* ===========================================================================
+ * Account — perfil + próximas reservas + historial
+ * =========================================================================== */
+
+.account-page {
+  background: var(--c-bg);
+  min-height: 100vh;
+  padding: var(--space-7) 0 var(--space-8);
+}
+
+.account-page__inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: 880px;
+}
+
+/* ---- Profile header ---- */
+
+.account-profile {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-5) var(--space-5);
+}
+
+.account-profile__avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: var(--r-pill);
+  background: var(--c-brand);
+  color: var(--c-bg);
+  font-family: var(--f-display);
+  font-weight: 800;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.account-profile__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.account-profile__email {
+  font-family: var(--f-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--c-ink);
+  letter-spacing: -0.02em;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.account-profile__hint {
+  font-size: 0.95rem;
+  color: var(--c-ink-soft);
+  margin: 0;
+}
+
+/* ---- Stats ---- */
+
+.account-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+.account-stat {
+  padding: var(--space-4) var(--space-5);
+  text-align: center;
+}
+
+.account-stat__value {
+  font-family: var(--f-display);
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--c-brand);
+  line-height: 1;
+}
+
+.account-stat__label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--c-ink-soft);
+  margin-top: 0.4rem;
+}
+
+/* ---- Reserves ---- */
+
+.account-reserves {
+  padding: var(--space-5);
+}
+
+.account-reserves__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+@media (min-width: 640px) {
+  .account-reserves__head {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.account-reserves__title {
+  font-family: var(--f-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--c-ink);
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.account-reserves__filter {
+  display: flex;
+  gap: 0.4rem;
+  background: var(--c-surface-alt);
+  padding: 0.25rem;
+  border-radius: var(--r-pill);
+  width: fit-content;
+}
+
+.account-filter {
+  padding: 0.45rem 0.95rem;
+  background: transparent;
+  border: 0;
+  border-radius: var(--r-pill);
+  font-family: var(--f-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--c-ink-soft);
+  cursor: pointer;
+  transition: background var(--t-fast), color var(--t-fast);
+}
+
+.account-filter:hover { color: var(--c-ink); }
+
+.account-filter--active {
+  background: var(--c-surface);
+  color: var(--c-brand);
+  box-shadow: var(--sh-xs);
+}
+
+.account-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.account-list__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) 0;
+  border-top: 1px solid var(--c-line);
+}
+
+.account-list__item:first-child { border-top: 0; padding-top: 0; }
+.account-list__item:last-child { padding-bottom: 0; }
+
+.account-list__date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: var(--r-md);
+  background: var(--c-brand-50);
+  color: var(--c-brand);
+  font-family: var(--f-body);
+  flex-shrink: 0;
+}
+
+.account-list__day {
+  font-family: var(--f-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.account-list__month {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-top: 0.2rem;
+}
+
+.account-list__copy {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.account-list__court {
+  font-family: var(--f-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--c-ink);
+  margin: 0;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.account-list__court .tag {
+  font-size: 0.65rem;
+  padding: 0.2rem 0.5rem;
+}
+
+.account-list__when {
+  font-size: 0.9rem;
+  color: var(--c-ink-soft);
+  margin: 0;
+  text-transform: capitalize;
+}
+
+.account-list__item .btn { flex-shrink: 0; }
+
+/* ---- Empty / Loading ---- */
+
+.account-empty,
+.account-loading {
+  text-align: center;
+  padding: var(--space-7) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--c-ink-soft);
+}
+
+.account-empty i {
+  font-size: 2.2rem;
+  color: var(--c-line-strong);
+}
+
+.account-empty p {
+  font-weight: 600;
+  color: var(--c-ink);
+  margin: 0;
+}
+
+.account-empty small {
+  color: var(--c-ink-muted);
+  font-size: 0.85rem;
+  margin: 0;
+  margin-bottom: 0.5rem;
+}
+
+.account-loading__spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--c-line);
+  border-top-color: var(--c-brand);
+  border-radius: 50%;
+  animation: account-spin 0.7s linear infinite;
+}
+
+@keyframes account-spin {
+  to { transform: rotate(360deg); }
+}

@@ -1,0 +1,115 @@
+/* ===========================================================================
+ * Navbar — sticky con blur, fondo crema cálido translúcido
+ * =========================================================================== */
+
+.app-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: var(--navbar-h);
+  background: rgba(250, 245, 236, 0.88);
+  backdrop-filter: saturate(180%) blur(14px);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  border-bottom: 1px solid var(--c-line);
+  transition: background var(--t-base), border-color var(--t-base);
+}
+
+.app-navbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  height: 100%;
+}
+
+.app-navbar__brand {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--c-ink);
+  flex-shrink: 0;
+}
+
+.app-navbar__links {
+  display: none;
+  gap: var(--space-5);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+@media (min-width: 992px) {
+  .app-navbar__links { display: flex; }
+}
+
+.app-navbar__link {
+  color: var(--c-ink-soft);
+  font-weight: 500;
+  font-size: 0.95rem;
+  text-decoration: none;
+  padding: 0.5rem 0;
+  position: relative;
+  transition: color var(--t-fast);
+}
+
+.app-navbar__link:hover,
+.app-navbar__link:focus-visible {
+  color: var(--c-brand);
+}
+
+.app-navbar__link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--c-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--t-base);
+}
+
+.app-navbar__link:hover::after,
+.app-navbar__link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.app-navbar__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.app-navbar__cta-ghost span,
+.app-navbar__cta-primary span {
+  display: none;
+}
+
+@media (min-width: 576px) {
+  .app-navbar__cta-ghost span,
+  .app-navbar__cta-primary span { display: inline; }
+}
+
+.app-navbar__cta-ghost {
+  color: var(--c-ink-soft);
+}
+.app-navbar__cta-ghost:hover {
+  color: var(--c-brand);
+  border-color: var(--c-brand-300);
+  background: var(--c-brand-50);
+}
+
+.app-navbar__cta-primary {
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
+}
+.app-navbar__cta-primary:hover {
+  background: var(--c-accent-strong);
+  border-color: var(--c-accent-strong);
+  box-shadow: var(--sh-sm);
+}
+
+@media (max-width: 575px) {
+  .app-navbar__cta-ghost { display: none; }
+}

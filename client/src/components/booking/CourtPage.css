@@ -1,0 +1,131 @@
+/* ===========================================================================
+ * CourtPage — hero + grid de slots + panel lateral
+ * =========================================================================== */
+
+.court-page {
+  background: var(--c-bg);
+  min-height: 100vh;
+}
+
+.court-page__hero {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  color: var(--c-bg);
+  margin-top: calc(var(--navbar-h) * -1);
+  padding-top: calc(var(--navbar-h) + var(--space-7));
+  padding-bottom: var(--space-7);
+  isolation: isolate;
+}
+
+.court-page__hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 90% 0%, rgba(201, 162, 74, 0.18), transparent 50%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.court-page__hero-inner {
+  position: relative;
+  max-width: 900px;
+}
+
+.court-page__title {
+  font-family: var(--f-display);
+  font-size: clamp(2.25rem, 5vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  color: var(--c-bg);
+  margin: 0 0 var(--space-2);
+}
+
+.court-page__sub {
+  font-family: var(--f-display);
+  font-size: 1.1rem;
+  color: var(--c-mustard);
+  margin: 0 0 var(--space-4);
+  font-weight: 500;
+}
+
+.court-page__pills {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.court-page__pills li {
+  font-size: 0.78rem;
+  padding: 0.35rem 0.75rem;
+}
+
+.court-page__body {
+  padding: var(--space-6) 0 var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.court-page__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-5);
+  align-items: start;
+}
+
+@media (min-width: 992px) {
+  .court-page__grid {
+    grid-template-columns: 1fr 340px;
+    gap: var(--space-6);
+  }
+}
+
+.court-page__main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  background: var(--c-surface);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-lg);
+  padding: var(--space-5);
+  box-shadow: var(--sh-sm);
+}
+
+.court-page__section-title {
+  font-family: var(--f-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--c-ink);
+  margin: 0 0 var(--space-2);
+  letter-spacing: -0.02em;
+}
+
+.court-page__side {
+  min-width: 0;
+}
+
+.court-page__hint {
+  font-size: 0.95rem;
+  color: var(--c-ink-soft);
+  margin: 0 0 var(--space-3);
+}
+
+.court-page__auth-gate {
+  padding: var(--space-6) 0 var(--space-8);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-5);
+  align-items: start;
+}
+
+@media (min-width: 992px) {
+  .court-page__auth-gate {
+    grid-template-columns: 1fr 340px;
+    gap: var(--space-6);
+  }
+}

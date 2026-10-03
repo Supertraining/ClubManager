@@ -1,0 +1,62 @@
+/* ===========================================================================
+ * BookingInstructions — 3 pasos numerados
+ * =========================================================================== */
+
+.booking-instructions {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+  background: var(--c-surface);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-lg);
+  padding: var(--space-4) var(--space-5);
+}
+
+@media (min-width: 768px) {
+  .booking-instructions {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-5);
+  }
+}
+
+.booking-instructions__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.booking-instructions__num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--r-pill);
+  background: var(--c-brand-50);
+  color: var(--c-brand);
+  font-family: var(--f-display);
+  font-weight: 800;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+}
+
+.booking-instructions__copy { display: flex; flex-direction: column; gap: 0.2rem; }
+
+.booking-instructions__title {
+  font-family: var(--f-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--c-ink);
+  margin: 0;
+  line-height: 1.3;
+}
+
+.booking-instructions__desc {
+  font-size: 0.85rem;
+  color: var(--c-ink-soft);
+  line-height: 1.4;
+  margin: 0;
+}

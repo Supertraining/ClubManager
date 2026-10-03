@@ -1,2 +1,5 @@
 _trash_*/
 
+# Debug screenshots de iteraciones de UI (19 MB de PNGs descartables)
+client/snapshots/
+

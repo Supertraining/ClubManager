@@ -1,9 +1,379 @@
-.whatsapp-div {
-  position: sticky ;
-  top: 30% ;
-  margin-left: 5px;
-  z-index: 4;
+/* ===========================================================================
+ * Home — hero, canchas, el club, esto se viene
+ * =========================================================================== */
+
+.home {
+  background: var(--c-bg);
 }
-.whatsapp-text {
-  z-index: 1;
+
+.home__empty {
+  text-align: center;
+  color: var(--c-ink-soft);
+  padding: var(--space-7) 0;
+  width: 100%;
+}
+
+/* ============================== HERO ============================== */
+
+.hero {
+  position: relative;
+  min-height: 78vh;
+  display: flex;
+  align-items: center;
+  background-size: cover;
+  background-position: center;
+  color: var(--c-bg);
+  margin-top: calc(var(--navbar-h) * -1);
+  padding-top: var(--navbar-h);
+  isolation: isolate;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(194, 106, 74, 0.20), transparent 50%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.hero__inner {
+  position: relative;
+  padding: var(--space-8) 0 var(--space-7);
+  max-width: 900px;
+}
+
+.hero__eyebrow {
+  display: inline-block;
+  font-family: var(--f-body);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--c-mustard);
+  margin-bottom: var(--space-4);
+}
+
+.hero__title {
+  font-family: var(--f-display);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  margin: 0 0 var(--space-4);
+  color: var(--c-bg);
+  max-width: 18ch;
+}
+
+.hero__accent { color: var(--c-mustard); }
+
+.hero__sub {
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  max-width: 52ch;
+  color: rgba(250, 245, 236, 0.88);
+  margin-bottom: var(--space-5);
+  line-height: 1.6;
+}
+
+.hero__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: var(--space-7);
+}
+
+.hero__stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-5);
+  border-top: 1px solid rgba(250, 245, 236, 0.18);
+  padding-top: var(--space-5);
+  max-width: 640px;
+}
+
+@media (min-width: 640px) {
+  .hero__stats { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* ============================== CANCHAS / COURT GRID ============================== */
+
+.court-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-5);
+}
+
+@media (min-width: 640px) {
+  .court-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1024px) {
+  .court-grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-6); }
+}
+
+.court-card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  overflow: hidden;
+  background: var(--c-surface);
+}
+
+.court-card__media {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+
+.court-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.court-card:hover .court-card__media img {
+  transform: scale(1.04);
+}
+
+.court-card__badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.7rem;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  background: rgba(15, 79, 63, 0.85);
+  color: var(--c-bg);
+  border: 1px solid rgba(250, 245, 236, 0.18);
+}
+
+.court-card__body {
+  padding: var(--space-5) var(--space-5) var(--space-3);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.court-card__title {
+  font-family: var(--f-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--c-ink);
+  letter-spacing: -0.02em;
+}
+
+.court-card__desc {
+  color: var(--c-ink-soft);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.court-card__pills {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-2) 0 0;
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  color: var(--c-ink-soft);
+}
+
+.court-card__pills i {
+  color: var(--c-accent);
+  margin-right: 0.5rem;
+  font-weight: 700;
+}
+
+.court-card__footer {
+  padding: 0 var(--space-5) var(--space-5);
+}
+
+.court-card__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--f-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--c-brand);
+  transition: color var(--t-fast), gap var(--t-base);
+}
+
+.court-card:hover .court-card__cta {
+  color: var(--c-accent-strong);
+  gap: 0.7rem;
+}
+
+/* ============================== EL CLUB ============================== */
+
+.el-club__row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-6);
+  align-items: center;
+}
+
+@media (min-width: 992px) {
+  .el-club__row { grid-template-columns: 1fr 1fr; gap: var(--space-8); }
+}
+
+.el-club__media {
+  position: relative;
+}
+
+.el-club__photo {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: var(--r-xl);
+  box-shadow: var(--sh-lg);
+  display: block;
+}
+
+.el-club__copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.el-club__points {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-4) 0 0;
+  display: grid;
+  gap: 0.65rem;
+  color: rgba(250, 245, 236, 0.95);
+}
+
+.el-club__points li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1rem;
+}
+
+.el-club__points i {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--r-pill);
+  background: var(--c-mustard);
+  color: var(--c-brand-strong);
+  font-size: 0.85rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ============================== ACTIVITIES TEASER ============================== */
+
+.activities-teaser {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-5);
+}
+
+@media (min-width: 768px) {
+  .activities-teaser { grid-template-columns: repeat(3, 1fr); gap: var(--space-5); }
+}
+
+.activity-teaser {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--c-surface);
+}
+
+.activity-teaser__media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
+.activity-teaser__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.activity-teaser__days {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+
+.activity-teaser__body {
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.activity-teaser__title {
+  font-family: var(--f-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--c-ink);
+  letter-spacing: -0.02em;
+}
+
+.activity-teaser__desc {
+  font-size: 0.92rem;
+  color: var(--c-ink-soft);
+  line-height: 1.5;
+  margin: 0;
+  flex: 1;
+}
+
+.activity-teaser__footer {
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--c-line);
+}
+
+.profe-avatar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.profe-avatar__letter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--r-pill);
+  background: var(--c-accent);
+  color: var(--c-bg);
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+}
+
+.profe-avatar__name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--c-ink-soft);
+}
+
+.activities-teaser__cta {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-7);
 }

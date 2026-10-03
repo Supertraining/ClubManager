@@ -1,0 +1,82 @@
+/* ===========================================================================
+ * Logo — block-letter "R" mark + wordmark
+ * =========================================================================== */
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  text-decoration: none;
+  color: var(--c-ink);
+  line-height: 1;
+}
+
+.logo-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--c-brand);
+  color: var(--c-bg);
+  font-family: var(--f-display);
+  font-weight: 800;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  letter-spacing: -0.04em;
+  position: relative;
+  transition: transform var(--t-base);
+}
+
+.logo-mark__u {
+  display: block;
+  transform: translateY(-1px);
+}
+
+.logo:hover .logo-mark {
+  transform: rotate(-4deg);
+}
+
+.logo-mark--inverse {
+  background: var(--c-bg);
+  color: var(--c-brand);
+}
+
+.logo-mark--compact {
+  width: 32px;
+  height: 32px;
+  font-size: 1.1rem;
+}
+
+.logo-text {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+  line-height: 1;
+}
+
+.logo-wordmark {
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+  color: var(--c-ink);
+}
+
+.logo-wordmark--inverse { color: var(--c-bg); }
+
+.logo-subtitle {
+  font-family: var(--f-body);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--c-ink-soft);
+  opacity: 0.85;
+}
+
+.logo-subtitle--inverse {
+  color: var(--c-mustard);
+  opacity: 1;
+}

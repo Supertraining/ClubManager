@@ -1,0 +1,155 @@
+/* ===========================================================================
+ * SlotGrid — grilla de slots 90 min
+ * =========================================================================== */
+
+.slot-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+  padding: 0 var(--space-2);
+}
+
+@media (min-width: 640px) {
+  .slot-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (min-width: 1024px) {
+  .slot-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+.slot {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2rem;
+  padding: var(--space-3) var(--space-4);
+  background: var(--c-surface);
+  border: 1.5px solid var(--c-line);
+  border-radius: var(--r-md);
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--f-body);
+  color: var(--c-ink);
+  transition: background var(--t-fast), border-color var(--t-fast), transform var(--t-fast);
+  min-height: 78px;
+}
+
+.slot:hover:not(:disabled) {
+  border-color: var(--c-brand);
+  background: var(--c-brand-50);
+  transform: translateY(-1px);
+}
+
+.slot:disabled { cursor: not-allowed; }
+
+.slot__time {
+  font-family: var(--f-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.slot__range {
+  font-size: 0.78rem;
+  color: var(--c-ink-soft);
+  font-weight: 500;
+}
+
+.slot__tag {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 0.65rem;
+  padding: 0.2rem 0.5rem;
+}
+
+.slot__who {
+  font-size: 0.75rem;
+  color: var(--c-ink-muted);
+  font-weight: 500;
+  margin-top: 0.2rem;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.slot__check {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  color: var(--c-mustard);
+  font-size: 1.1rem;
+}
+
+.slot--occupied {
+  background: var(--c-surface-alt);
+  border-style: dashed;
+  color: var(--c-ink-soft);
+  opacity: 0.78;
+}
+
+.slot--occupied:hover { transform: none; }
+
+.slot--permanent {
+  border-color: var(--c-mustard);
+  background: var(--c-mustard-50);
+  opacity: 1;
+}
+
+.slot--mine {
+  border-color: var(--c-accent);
+  background: var(--c-accent-50);
+  opacity: 1;
+}
+
+.slot--mine .slot__time { color: var(--c-accent-strong); }
+
+.slot--selected {
+  background: var(--c-brand);
+  border-color: var(--c-brand);
+  color: var(--c-bg);
+  box-shadow: var(--sh-md);
+  transform: translateY(-1px);
+}
+
+.slot--selected .slot__range { color: rgba(250, 245, 236, 0.78); }
+.slot--selected:hover { background: var(--c-brand-strong); border-color: var(--c-brand-strong); }
+
+.slot--past {
+  opacity: 0.35;
+  background: var(--c-surface-alt);
+}
+
+/* ---- Empty state ---- */
+
+.slot-grid__empty {
+  text-align: center;
+  padding: var(--space-7) var(--space-4);
+  color: var(--c-ink-soft);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  grid-column: 1 / -1;
+}
+
+.slot-grid__empty i {
+  font-size: 2.2rem;
+  color: var(--c-line-strong);
+  margin-bottom: 0.5rem;
+}
+
+.slot-grid__empty p {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--c-ink);
+  margin: 0;
+}
+
+.slot-grid__empty small {
+  color: var(--c-ink-muted);
+  font-size: 0.85rem;
+}

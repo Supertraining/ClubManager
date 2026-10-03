@@ -1,7 +1,0 @@
-.offcanvas-Header-Title {
-  font-size: clamp(1rem, 5vw, 1.3rem) !important;
-}
-
-.tableData-text {
-  filter: brightness(2);
-}

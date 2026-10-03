@@ -1,0 +1,44 @@
+/* ===========================================================================
+ * NextSlotFab — floating action button (mobile only)
+ * =========================================================================== */
+
+.next-slot-fab {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 30;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.2rem;
+  background: var(--c-accent);
+  color: var(--c-bg);
+  border: 0;
+  border-radius: var(--r-pill);
+  font-family: var(--f-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  box-shadow: var(--sh-lg);
+  cursor: pointer;
+  transition: transform var(--t-fast), background var(--t-fast);
+  max-width: calc(100vw - 40px);
+}
+
+.next-slot-fab:hover {
+  background: var(--c-accent-strong);
+  transform: translateY(-2px);
+}
+
+.next-slot-fab i {
+  font-size: 1.1rem;
+}
+
+.next-slot-fab__label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (min-width: 992px) {
+  .next-slot-fab { display: none; }
+}

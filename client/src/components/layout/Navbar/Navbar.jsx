@@ -1,41 +1,56 @@
-import { Link } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import Logo from '../../ui/Logo/Logo';
-import './Navbar.module.css';
+import './Navbar.css';
+import { userStore } from '../../../stores';
 
 const NAV_LINKS = [
-  { to: '/#canchas',     label: 'Canchas' },
-  { to: '/#actividades', label: 'Actividades' },
-  { to: '/#el-club',     label: 'El club' },
-  { to: '/#contacto',    label: 'Contacto' },
+  { to: '/#canchas',      label: 'Canchas' },
+  { to: '/#actividades',  label: 'Actividades' },
+  { to: '/#el-club',      label: 'El club' },
+  { to: '/#contacto',     label: 'Contacto' },
 ];
 
 const Navbar = () => {
+  const location = useLocation();
+  const user = userStore((s) => s.user?.user);
+
+  // On non-home routes, "#section" anchors should go to home + anchor.
+  const anchorFor = (hash) => {
+    if (location.pathname === '/') return hash;
+    return `/${hash}`;
+  };
+
   return (
-    <header className='app-navbar'>
-      <nav className='container-xl d-flex align-items-center justify-content-between py-3'>
-        <Logo />
+    <header className='app-navbar' role='banner'>
+      <div className='container-xl app-navbar__inner'>
+        <Logo to='/' />
 
-        <ul className='app-navbar__links d-none d-lg-flex list-unstyled mb-0'>
+        <nav className='app-navbar__links' aria-label='Navegación principal'>
           {NAV_LINKS.map((link) => (
-            <li key={link.to}>
-              <a href={link.to} className='app-navbar__link'>
-                {link.label}
-              </a>
-            </li>
+            <a key={link.to} href={anchorFor(link.to)} className='app-navbar__link'>
+              {link.label}
+            </a>
           ))}
-        </ul>
+        </nav>
 
-        <div className='d-flex align-items-center gap-2'>
-          <Link to='/login' className='btn btn-sm btn-outline-light app-navbar__cta-ghost d-none d-md-inline-flex'>
-            <i className='bi bi-person-circle me-1' aria-hidden='true'></i>
-            Mi cuenta
-          </Link>
-          <Link to='/reserves' className='btn btn-sm app-navbar__cta-primary'>
-            <i className='bi bi-calendar2-week me-1' aria-hidden='true'></i>
-            Reservar
+        <div className='app-navbar__actions'>
+          {user ? (
+            <NavLink to='/account' className='btn btn--ghost btn--sm app-navbar__cta-ghost'>
+              <i className='bi bi-person-circle' aria-hidden='true'></i>
+              <span>Mi cuenta</span>
+            </NavLink>
+          ) : (
+            <NavLink to='/login' className='btn btn--ghost btn--sm app-navbar__cta-ghost'>
+              <i className='bi bi-person-circle' aria-hidden='true'></i>
+              <span>Iniciar sesión</span>
+            </NavLink>
+          )}
+          <Link to='/reserves' className='btn btn--primary btn--sm btn--pill app-navbar__cta-primary'>
+            <i className='bi bi-calendar2-week' aria-hidden='true'></i>
+            <span>Reservar</span>
           </Link>
         </div>
-      </nav>
+      </div>
     </header>
   );
 };

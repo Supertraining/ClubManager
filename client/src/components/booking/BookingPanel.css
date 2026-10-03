@@ -1,0 +1,146 @@
+/* ===========================================================================
+ * BookingPanel — sticky sidebar (desktop) / sheet (mobile)
+ * =========================================================================== */
+
+.booking-panel {
+  background: var(--c-surface);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-lg);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  box-shadow: var(--sh-sm);
+  position: sticky;
+  top: calc(var(--navbar-h) + var(--space-3));
+}
+
+@media (max-width: 991px) {
+  .booking-panel {
+    position: static;
+  }
+}
+
+.booking-panel--auth {
+  background: var(--c-surface-alt);
+  border-color: var(--c-line-strong);
+}
+
+.booking-panel__eyebrow {
+  margin-bottom: 0;
+}
+
+.booking-panel__title {
+  font-family: var(--f-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--c-ink);
+  margin: 0;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.booking-panel__sub {
+  font-size: 0.95rem;
+  color: var(--c-ink-soft);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.booking-panel__summary {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-top: 1px solid var(--c-line);
+  border-bottom: 1px solid var(--c-line);
+  padding: var(--space-3) 0;
+}
+
+.booking-panel__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: 0.5rem 0;
+}
+
+.booking-panel__row--active {
+  background: var(--c-brand-50);
+  border-radius: var(--r-sm);
+  padding: 0.65rem 0.75rem;
+  margin: 0.35rem -0.35rem;
+}
+
+.booking-panel__label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--c-ink-muted);
+}
+
+.booking-panel__value {
+  font-family: var(--f-body);
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--c-ink);
+  text-align: right;
+}
+
+.booking-panel__value--time {
+  font-family: var(--f-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--c-brand);
+  letter-spacing: -0.02em;
+}
+
+.booking-panel__placeholder {
+  font-family: var(--f-body);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--c-ink-muted);
+  font-style: italic;
+}
+
+.booking-panel__cta {
+  width: 100%;
+  margin-top: var(--space-2);
+}
+
+.booking-panel__next {
+  width: 100%;
+  margin-top: var(--space-2);
+}
+
+.booking-panel__terms {
+  font-size: 0.78rem;
+  color: var(--c-ink-muted);
+  text-align: center;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.booking-panel__cta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.booking-panel__cta .btn {
+  width: 100%;
+}
+
+.booking-panel__spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

@@ -1,37 +1,49 @@
 import { Link } from 'react-router-dom';
-import './Logo.module.css';
+import './Logo.css';
 
 /**
  * Logo — the club mark + wordmark.
  *
- * Two variants:
- *   - default:  U square + "Ranelagh CLUB" (used in the navbar and footer)
- *   - compact:  U square only, with brand colors inverted (used in dark
- *               contexts where the default colors disappear)
- *
- * The mark itself is a CSS-drawn block letter "U" on a rounded square so
- * we don't need to ship a binary asset for it.
+ * Props:
+ *   - compact:  when true, only the mark (the "U" square) is shown.
+ *   - variant:  "default" (dark mark, for light backgrounds — navbar)
+ *               or "inverse" (light mark, for dark backgrounds — footer)
+ *   - to:       link target (default "/").
  */
-const Logo = ({ compact = false, to = '/' }) => {
-  const label = compact ? null : (
-    <span className='d-flex flex-column lh-1 ms-2'>
-      <span className='fw-bold fs-5' style={{ fontFamily: 'var(--f-display)' }}>
-        Ranelagh
-      </span>
-      <span
-        className='text-uppercase fw-semibold'
-        style={{ fontSize: '0.7rem', letterSpacing: '0.18em', opacity: 0.7 }}>
-        Club
-      </span>
-    </span>
-  );
+const Logo = ({ compact = false, variant = 'default', to = '/' }) => {
+  const markClasses = [
+    'logo-mark',
+    compact ? 'logo-mark--compact' : '',
+    variant === 'inverse' ? 'logo-mark--inverse' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  const wordmarkClasses = [
+    'logo-wordmark',
+    variant === 'inverse' ? 'logo-wordmark--inverse' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  const subtitleClasses = [
+    'logo-subtitle',
+    variant === 'inverse' ? 'logo-subtitle--inverse' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
-    <Link to={to} className='navbar-brand d-flex align-items-center text-decoration-none p-0'>
-      <span className={`logo-mark ${compact ? 'logo-mark--inverse' : ''}`} aria-hidden='true'>
-        U
+    <Link to={to} className='logo' aria-label='Club Ranelagh — ir al inicio'>
+      <span className={markClasses} aria-hidden='true'>
+        <span className='logo-mark__u'>R</span>
       </span>
-      {label}
+      {!compact && (
+        <span className='logo-text'>
+          <span className={wordmarkClasses}>Ranelagh</span>
+          <span className={subtitleClasses}>Club</span>
+        </span>
+      )}
     </Link>
   );
 };

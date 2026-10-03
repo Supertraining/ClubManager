@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import './NotFound.module.css';
+import './NotFound.css';
 
 const NotFound = () => {
   const navigate = useNavigate();
@@ -12,11 +12,11 @@ const NotFound = () => {
           La página que buscás no está o fue movida. Volvé al inicio y reservá tu turno.
         </p>
         <div className='notfound-card__ctas'>
-          <Link to='/' className='btn btn-lg notfound-cta-primary'>
-            <i className='bi bi-house me-1' aria-hidden='true'></i>
+          <Link to='/' className='btn btn--primary btn--lg btn--pill'>
+            <i className='bi bi-house' aria-hidden='true'></i>
             Ir al inicio
           </Link>
-          <button type='button' className='btn btn-lg notfound-cta-ghost' onClick={() => navigate(-1)}>
+          <button type='button' className='btn btn--ghost btn--lg btn--pill' onClick={() => navigate(-1)}>
             Volver
           </button>
         </div>

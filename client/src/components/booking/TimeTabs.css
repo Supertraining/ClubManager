@@ -1,0 +1,76 @@
+/* ===========================================================================
+ * TimeTabs — Mañana / Tarde / Noche
+ * =========================================================================== */
+
+.time-tabs {
+  display: flex;
+  gap: var(--space-2);
+  padding: 0 var(--space-2);
+  overflow-x: auto;
+}
+
+.time-tabs__tab {
+  flex: 1;
+  min-width: 96px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--c-surface);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-md);
+  font-family: var(--f-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--c-ink-soft);
+  cursor: pointer;
+  transition: background var(--t-fast), border-color var(--t-fast), color var(--t-fast);
+  white-space: nowrap;
+}
+
+.time-tabs__tab:hover:not(:disabled) {
+  background: var(--c-surface-alt);
+  border-color: var(--c-line-strong);
+  color: var(--c-ink);
+}
+
+.time-tabs__tab--active {
+  background: var(--c-brand);
+  border-color: var(--c-brand);
+  color: var(--c-bg);
+}
+
+.time-tabs__tab--active:hover {
+  background: var(--c-brand-strong);
+  border-color: var(--c-brand-strong);
+  color: var(--c-bg);
+}
+
+.time-tabs__tab:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.time-tabs__tab i { font-size: 1.05rem; }
+
+.time-tabs__label { font-weight: 600; }
+
+.time-tabs__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 0.45rem;
+  border-radius: var(--r-pill);
+  background: var(--c-surface-alt);
+  color: var(--c-ink-soft);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.time-tabs__tab--active .time-tabs__count {
+  background: rgba(250, 245, 236, 0.18);
+  color: var(--c-bg);
+}
