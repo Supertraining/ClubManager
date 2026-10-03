@@ -2,6 +2,26 @@
 
 <!-- impeccable:design-schema 1 -->
 
+> ## ⚠️ Documento superseded (2026-10-03)
+>
+> Este archivo describe un **borrador temprano** del diseño visual y ya **no refleja lo implementado**. Queda como registro histórico de la primera iteración.
+>
+> Lo que está en producción:
+>
+> - **Paleta y tokens reales:** `client/src/styles/tokens.css` (prefijo `--c-*`) — esta es la fuente de verdad, sin excepción.
+> - **Decisión de diseño aprobada:** `docs/superpowers/specs/2026-08-08-ranelagh-vivo-redesign.md` (enfoque "Ranelagh Vivo", aprobado 2026-08-08).
+>
+> **Diferencias principales con lo de abajo**, que fue lo que quedó obsoleto:
+>
+> | | Este doc (obsoleto) | Implementado |
+> |---|---|---|
+> | Acento | ámbar `#E8A33D` | terracota `#C26A4A` |
+> | Fondo | blanco hueso `#FAF8F4` | crema cálido `#FAF5EC` |
+> | Tokens | `--color-*` | `--c-*` |
+> | Acento secundario | — | mostaza `#C9A24A`, **solo** badges |
+>
+> Al agregar o cambiar estilos, leé `tokens.css` y el spec, no este archivo. Las prohibiciones de diseño (sin glassmorphism, sin gradientes sobre texto, sin `border-left` de color salvo toasts, sin sombras azules, fotos reales únicamente) **siguen vigentes** y están mejor especificadas en el spec.
+
 ## Visual World
 
 **THESIS** — Una herramienta operativa para reservar canchas con la calidez de un club de barrio. La cancha y el horario son el centro; el resto se acomoda alrededor. Ni frío-SaaS ni cliché-deportivo: verde profundo, tipografía geométrica apretada, una sola acción primaria por pantalla.

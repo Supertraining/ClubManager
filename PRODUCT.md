@@ -2,6 +2,13 @@
 
 <!-- impeccable:product-schema 1 -->
 
+> **Nota de mantenimiento (2026-10-03).** La sección "Restricciones técnicas confirmadas" de más abajo quedó desactualizada en dos puntos. Lo vigente:
+>
+> - **Base de datos: Supabase** (Postgres + Auth + RLS). MongoDB fue **desechado**; el ETL de la migración está en `migracion/02_etl/` y no corre en runtime.
+> - **Autenticación: Supabase Auth** con JWT emitido por Supabase y revalidado por el server en cada request. El server ya **no** firma JWTs propios.
+>
+> También: `client` está en **React 19** y `admin` en **React 18**. Para convenciones, comandos y mapa de módulos ver `AGENTS.md` en la raíz y `docs/ARCHITECTURE.md`.
+
 ## Platform
 
 web
