@@ -39,9 +39,12 @@ begin
     new.id,
     new.email,
     new.email,                              -- username mirrors email
-    coalesce(new.raw_user_meta_data->>'first_name', ''),
-    coalesce(new.raw_user_meta_data->>'last_name', ''),
-    coalesce((new.raw_user_meta_data->>'age')::smallint, 18),
+    -- first_name / last_name are NOT NULL with CHECK (length between 1 and 80),
+    -- so coalescing to '' would fail the constraint and abort the whole signup.
+    coalesce(nullif(new.raw_user_meta_data->>'first_name', ''), 'Socio'),
+    coalesce(nullif(new.raw_user_meta_data->>'last_name', ''), 'Club Ranelagh'),
+    -- age is CHECK (age between 12 and 99): clamp rather than trust the metadata.
+    greatest(12, least(99, coalesce((new.raw_user_meta_data->>'age')::smallint, 18))),
     coalesce(new.raw_user_meta_data->>'phone', ''),
     coalesce((new.raw_user_meta_data->>'role')::user_role, 'socio')
   )
