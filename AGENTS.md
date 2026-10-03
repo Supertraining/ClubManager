@@ -131,7 +131,8 @@ Todo el copy de cara al usuario es **español rioplatense en voseo** ("reservá"
 
 ## Gotchas conocidos
 
-- **`npm run lint` está rojo en las dos partes** (client: 6 errores / 2 warnings; admin: 5 / 2), arrastrado desde el rediseño. Son triviales: directivas `eslint-disable` sin uso, variables sin usar, `prop-types` faltantes en `Logo.jsx`. Arreglalos antes de usar el lint como puerta de calidad, o el `--max-warnings 0` siempre va a fallar.
+- **`npm run lint` es la puerta de calidad en `client` y `admin`, y hoy está verde** (0 errores, 0 warnings, con `--max-warnings 0`). Si lo rompés, arreglalo en el mismo PR.
+- **No silencies `react-hooks/exhaustive-deps` con un disable.** Si un hook devuelve funciones nuevas en cada render, memoizalo (ver `admin/src/components/activities/hooks/useActivityAPI.jsx`) y recién ahí agregá la dependencia: con el hook sin memoizar, agregar la dep que falta causa un loop infinito de fetch.
 - **SQL duplicado**: `migracion/01_database/*.sql` y `server/supabase/*.sql` son copias byte-idénticas. Editar **una sola** y copiar, o mejor: dejar `server/supabase/` como fuente y borrar la otra.
 - **`admin` no fue reestructurado** como `client`: conserva el árbol anidado viejo (`components/courts/pages/football/`, `components/activities/components/activityCard/`). Cualquier component nuevo en admin debería seguir el patrón de `client`, no el legado.
 - **`admin/src/components/oldReservesDeleted/`** es código muerto. No reanimar sin saber por qué se borró.
