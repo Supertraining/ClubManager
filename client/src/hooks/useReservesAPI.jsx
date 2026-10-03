@@ -33,8 +33,9 @@ export const useReservesAPI = () => {
    */
   const createReserve = useCallback(async (courtName, date, initialTime, finalTime, permanent = false) => {
     try {
-      const start = new Date(`${date}T${initialTime}:00-03:00`);
-      const end = new Date(`${date}T${finalTime}:00-03:00`);
+      // The server rebuilds the timestamptz range from these three fields and
+      // derives weekday / reservation_date itself (see create_reservation in
+      // 03_rpc.sql), so nothing else needs to be sent.
       const { data } = await axios.put('/courts/reserve', {
         name: courtName,
         selectedDates: {
@@ -43,10 +44,6 @@ export const useReservesAPI = () => {
           finalTime,
           permanent,
         },
-        // startTime/endTime are what the server actually uses now; the legacy
-        // selectedDates object is still accepted for backward compat.
-        startTime: start.toISOString(),
-        endTime: end.toISOString(),
       });
       notifySuccess('Reserva confirmada');
       return data;

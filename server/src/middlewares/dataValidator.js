@@ -26,11 +26,9 @@ export const validate = {
   courtReservation: [
 
     body('name').exists().notEmpty(),
-    body('selectedDates.weekday').exists().notEmpty(),
     body('selectedDates.date').exists().notEmpty(),
     body('selectedDates.initialTime').exists().notEmpty(),
     body('selectedDates.finalTime').exists().notEmpty(),
-    body('selectedDates.id').exists().notEmpty(),
     body('for').exists().notEmpty().optional(),
     body('selectedDates.permanent').exists().notEmpty(),
 

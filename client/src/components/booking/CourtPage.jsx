@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
 import { useFetch, useNotifications, useReservesAPI } from '../../hooks';
 import { userStore } from '../../stores';
 
@@ -210,7 +209,6 @@ const CourtPage = ({ court }) => {
             </div>
           </div>
         </div>
-        <ToastContainer />
       </div>
     );
   }
@@ -276,7 +274,6 @@ const CourtPage = ({ court }) => {
         onClick={onUseNextSlot}
         visible={!startTime && Boolean(nextSlot)}
       />
-      <ToastContainer />
     </div>
   );
 };
