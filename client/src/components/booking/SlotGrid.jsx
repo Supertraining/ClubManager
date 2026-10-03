@@ -8,10 +8,15 @@ import './SlotGrid.css';
  * Estado de cada slot:
  *   - available: outline verde, clickeable
  *   - occupied:  bg alt, opacidad 60%, no interactivo
- *   - permanent: tag "Permanente" + nombre del socio
- *   - mine:      outline mostaza + tag "Tuya" + nombre
+ *   - permanent: tag "Permanente"
+ *   - mine:      outline mostaza + tag "Tuya"
  *   - selected:  bg brand, texto crema
  *   - past:      opacidad 30%, no interactivo
+ *
+ * Nunca se muestra la identidad de quien reservó: la grilla es pública para
+ * todos los socios, y resolver el user_id a un nombre exigiría exponer
+ * profiles de otros usuarios (la política "profiles: read own" lo impide por
+ * diseño). Un slot de otra persona se anuncia como "Horario ocupado".
  */
 const SlotGrid = ({ slots, selectedStart, onSelect, getReservation, currentUserId }) => {
   if (!slots || slots.length === 0) {
@@ -32,7 +37,7 @@ const SlotGrid = ({ slots, selectedStart, onSelect, getReservation, currentUserI
         const end = slotEnd(start);
         const reservation = getReservation?.(start);
         const occupied = Boolean(reservation);
-        const mine = occupied && currentUserId && reservation.userId === currentUserId;
+        const mine = occupied && Boolean(currentUserId) && reservation.user === currentUserId;
         const permanent = occupied && reservation.permanent;
         const past = isPast(start);
         const isSelected = !occupied && !past && selectedStart === start;
@@ -65,8 +70,8 @@ const SlotGrid = ({ slots, selectedStart, onSelect, getReservation, currentUserI
             {permanent && !mine && (
               <span className='slot__tag tag tag--mustard'>Permanente</span>
             )}
-            {occupied && !mine && !permanent && reservation?.user && (
-              <span className='slot__who'>{reservation.user}</span>
+            {occupied && !mine && !permanent && (
+              <span className='slot__occupied'>Horario ocupado</span>
             )}
             {isSelected && (
               <span className='slot__check' aria-hidden='true'>

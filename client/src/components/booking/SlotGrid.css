@@ -65,7 +65,7 @@
   padding: 0.2rem 0.5rem;
 }
 
-.slot__who {
+.slot__occupied {
   font-size: 0.75rem;
   color: var(--c-ink-muted);
   font-weight: 500;
