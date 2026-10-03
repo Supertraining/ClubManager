@@ -2,6 +2,10 @@
 -- Triggers — auth.users → profiles, updated_at, etc.
 -- =====================================================
 -- Run after 01_schema.sql and 02_rls.sql.
+--
+-- This file is idempotent: every trigger is dropped before it is created,
+-- so re-running it against a database that already has some of them does not
+-- abort with 42710 ("trigger already exists").
 -- =====================================================
 
 -- ---- updated_at trigger ----
@@ -16,9 +20,13 @@ begin
 end;
 $$;
 
+drop trigger if exists profiles_set_updated_at on public.profiles;
+
 create trigger profiles_set_updated_at
   before update on public.profiles
   for each row execute function public.set_updated_at();
+
+drop trigger if exists activities_set_updated_at on public.activities;
 
 create trigger activities_set_updated_at
   before update on public.activities
@@ -77,6 +85,8 @@ begin
   return null;
 end;
 $$;
+
+drop trigger if exists profiles_block_delete_with_reservations on public.profiles;
 
 create trigger profiles_block_delete_with_reservations
   before delete on public.profiles

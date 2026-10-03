@@ -1,13 +1,20 @@
 -- =====================================================
 -- Club Ranelagh — Supabase schema
 -- =====================================================
--- Run this against a fresh Supabase project (or in the SQL editor).
+-- Run this against a FRESH Supabase project (or in the SQL editor).
 -- Order of execution:
 --   1. 01_schema.sql   (this file: tables, types, constraints)
 --   2. 02_rls.sql       (Row Level Security policies)
 --   3. 03_rpc.sql       (RPC functions used by the app)
 --   4. 04_triggers.sql  (auth.users → profiles, slot bookkeeping)
 --   5. 05_seed.sql      (initial admin + 4 courts)
+--
+-- This file is NOT idempotent and must not be re-run on a database that
+-- already has the tables: `create type` / `create table` / `create index`
+-- would abort with 42P07 / 42710. That is deliberate — re-running a schema
+-- file should be a reviewed act, not something that silently no-ops and
+-- hides drift. 02_rls.sql, 03_rpc.sql and 04_triggers.sql ARE idempotent and
+-- can be re-applied freely.
 -- =====================================================
 
 -- ---- Extensions ----
