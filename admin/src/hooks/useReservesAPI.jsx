@@ -23,7 +23,7 @@ export const useReservesAPI = () => {
     }
   }, [axios, notifyWarning]);
 
-  const createReserve = useCallback(async ({ courtName, date, initialTime, finalTime, permanent = false, info = null, onBehalfOfUserId = null }) => {
+  const createReserve = useCallback(async ({ courtName, date, initialTime, finalTime, permanent = false, onBehalfOfUserId = null }) => {
     try {
       const start = new Date(`${date}T${initialTime}:00-03:00`);
       const end = new Date(`${date}T${finalTime}:00-03:00`);

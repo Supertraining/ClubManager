@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import './Logo.css';
 
@@ -46,6 +47,12 @@ const Logo = ({ compact = false, variant = 'default', to = '/' }) => {
       )}
     </Link>
   );
+};
+
+Logo.propTypes = {
+  compact: PropTypes.bool,
+  variant: PropTypes.oneOf(['default', 'inverse']),
+  to: PropTypes.string,
 };
 
 export default Logo;

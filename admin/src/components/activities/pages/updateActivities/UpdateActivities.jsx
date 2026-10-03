@@ -39,7 +39,7 @@ export const UpdateActivities = () => {
     } catch (error) {
       notifyWarning('Hubo un problema, por favor intente nuevamente mas tarde');
     }
-  }, [id]);
+  }, [id, getActivityById, notifyWarning]);
 
   const handleCategoryChange = (e) => {
     setCategory({

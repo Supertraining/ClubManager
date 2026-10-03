@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { useMemo } from 'react';
 import { supabase, API_BASE } from '../lib/supabaseClient';
-import { userStore } from '../stores';
 
 /**
  * useAxiosInstance — builds an axios client that automatically attaches the
@@ -12,8 +11,6 @@ import { userStore } from '../stores';
  * the redirect to /login.
  */
 export const useAxiosInstance = () => {
-  const user = userStore((s) => s.user?.user);
-
   return useMemo(() => {
     const instance = axios.create({
       baseURL: API_BASE,
@@ -50,5 +47,5 @@ export const useAxiosInstance = () => {
     );
 
     return instance;
-  }, [user?.id]); // recreate when the signed-in user changes
+  }, []); // stable: the token is read fresh on every request, not captured
 };

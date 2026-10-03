@@ -24,7 +24,7 @@ export const useFetch = (url) => {
             setLoading(false);
         };
         fetchData();
-    }, []);
+    }, [axios, url]);
 
     const reFetch = async () => {
         setLoading(true);

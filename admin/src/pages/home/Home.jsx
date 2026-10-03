@@ -37,7 +37,7 @@ const Home = () => {
   const axios = useAxiosInstance();
   const navigate = useNavigate();
   const { deleteReserve } = useReservesAPI();
-  const { getAllUsers, updateUserById, deleteUserById, getUserById, closeSession } = useUserAPI();
+  const { getAllUsers, updateUserById, deleteUserById, closeSession } = useUserAPI();
   const { getAllCourts, deleteCourt, deleteOldReserves } = useCourtAPI();
 
   const menuFeatures = {

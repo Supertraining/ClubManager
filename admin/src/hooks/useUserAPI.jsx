@@ -13,7 +13,7 @@ import { userStore } from '../stores';
  * middleware (via `verifyAccessToken`) enforces admin-only endpoints.
  */
 export const useUserAPI = () => {
-  const { notifyWarning, notifyError } = useNotifications();
+  const { notifyWarning } = useNotifications();
   const axios = useAxiosInstance();
   const { setUser, ACTIONS } = userStore((s) => s);
   const navigate = useNavigate();

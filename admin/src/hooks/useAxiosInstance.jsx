@@ -1,15 +1,12 @@
 import axios from 'axios';
 import { useMemo } from 'react';
 import { supabase, API_BASE } from '../lib/supabaseClient';
-import { userStore } from '../stores';
 
 /**
  * useAxiosInstance (admin) — same shape as the client version, separate
  * Supabase storage key. Refreshes the access_token on 401.
  */
 export const useAxiosInstance = () => {
-  const user = userStore((s) => s.user?.user);
-
   return useMemo(() => {
     const instance = axios.create({
       baseURL: API_BASE,
@@ -45,5 +42,5 @@ export const useAxiosInstance = () => {
     );
 
     return instance;
-  }, [user?.id]);
+  }, []); // stable: the token is read fresh on every request, not captured
 };

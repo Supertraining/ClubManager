@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 import { useNotifications } from './useNotifications';
 import { useAxiosInstance } from './useAxiosInstance';
-import { userStore } from '../stores';
 
 /**
  * useReservesAPI — Supabase edition.
@@ -13,7 +12,6 @@ import { userStore } from '../stores';
 export const useReservesAPI = () => {
   const { notifyWarning, notifySuccess } = useNotifications();
   const axios = useAxiosInstance();
-  const user = userStore((s) => s.user?.user);
 
   const getMyReserves = useCallback(async () => {
     try {

@@ -4,7 +4,6 @@ const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-  // eslint-disable-next-line no-console
   console.error(
     '[supabase] VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are required. ' +
     'Add them to client/.env and restart the dev server.',

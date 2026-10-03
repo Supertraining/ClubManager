@@ -42,7 +42,6 @@ const storeApi = (set, get) => ({
       set((state) => ({ user: { ...state.user, user: next } }));
       sessionStorage.setItem('admin-profile', JSON.stringify(next));
     } catch (err) {
-      // eslint-disable-next-line no-console
       console.warn('updateUser failed:', err?.message);
     }
   },

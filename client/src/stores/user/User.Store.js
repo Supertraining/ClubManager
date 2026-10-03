@@ -86,7 +86,6 @@ const storeApi = (set, get) => ({
       }));
       localStorage.setItem('user-profile', JSON.stringify(next));
     } catch (err) {
-      // eslint-disable-next-line no-console
       console.warn('updateUser failed:', err?.message);
     }
   },
