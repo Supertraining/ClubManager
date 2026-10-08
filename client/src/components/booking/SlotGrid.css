@@ -76,6 +76,13 @@
   white-space: nowrap;
 }
 
+/* The blocker is one of the member's own bookings, so it reads in the same
+   colour as the "Tuya" tag rather than as somebody else's. */
+.slot__occupied--mine {
+  color: var(--c-mustard);
+  font-weight: 600;
+}
+
 .slot__check {
   position: absolute;
   top: 8px;

@@ -50,7 +50,13 @@ const SlotGrid = ({
         // three "Tuya" claims three bookings the member does not have. "Tuya"
         // means this slot IS the start of one of my bookings.
         const startsHere = occupied && toHHmm(reservation.initialTime) === start;
-        const mine = startsHere && Boolean(currentUserId) && reservation.user === currentUserId;
+        const isMine = occupied && Boolean(currentUserId) && reservation.user === currentUserId;
+        const mine = startsHere && isMine;
+        // A slot this member cannot take because their OWN booking overlaps it
+        // is a different fact from one taken by somebody else. "Horario
+        // ocupado" reads as "someone has it", which sends them hunting for a
+        // booking that isn't there — the blocker is the turn they just made.
+        const clashesWithMine = occupied && isMine && !startsHere;
         const permanent = startsHere && reservation.permanent;
         const past = isPast(start);
         // Same rule BookingPanel applies to the duration buttons: a slot whose
@@ -77,7 +83,11 @@ const SlotGrid = ({
             onClick={() => onSelect(start)}
             aria-label={
               occupied
-                ? `${start} a ${end}, ocupado${permanent ? ' (turno permanente)' : mine ? ', tu reserva' : ''}`
+                ? `${start} a ${end}, ${mine
+                  ? 'tu reserva'
+                  : clashesWithMine
+                    ? 'se superpone con tu turno'
+                    : `ocupado${permanent ? ' (turno permanente)' : ''}`}`
                 : runsPastClose
                   ? `${start} a ${end}, no entra antes del cierre`
                   : `${start} a ${end}, disponible`
@@ -91,7 +101,10 @@ const SlotGrid = ({
               <span className='slot__tag tag tag--mustard'>Permanente</span>
             )}
             {occupied && !mine && !permanent && (
-              <span className='slot__occupied'>Horario ocupado</span>
+              <span
+                className={`slot__occupied${clashesWithMine ? ' slot__occupied--mine' : ''}`}>
+                {clashesWithMine ? 'Choca con tu turno' : 'Horario ocupado'}
+              </span>
             )}
             {isSelected && (
               <span className='slot__check' aria-hidden='true'>
