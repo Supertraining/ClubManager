@@ -4,12 +4,12 @@ const STEPS = [
   {
     n: 1,
     title: 'Elegí el día y la franja',
-    desc: 'Pasá entre Mañana, Tarde y Noche. Cada slot dura 90 minutos.',
+    desc: 'Pasá entre Mañana, Tarde y Noche. Los turnos arrancan cada media hora.',
   },
   {
     n: 2,
-    title: 'Tocá un horario libre',
-    desc: 'Los slots en gris ya están reservados. Los tuyos se ven en naranja.',
+    title: 'Tocá un horario y elegí cuánto',
+    desc: 'Podés reservar entre 1 y 2 horas. Lo que no entra se tacha.',
   },
   {
     n: 3,

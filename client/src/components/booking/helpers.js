@@ -125,4 +125,4 @@ export const isSameDay = (a, b) => {
     && a.getDate() === b.getDate();
 };
 
-export { toDateKey, toHHmm };
+export { toDateKey, toHHmm, toMinutes };

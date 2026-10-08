@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { isSlotPast, slotEnd, toHHmm } from './helpers';
+import { isSlotPast, slotEnd, toHHmm, toMinutes } from './helpers';
 import './SlotGrid.css';
 
 /**
@@ -26,6 +26,7 @@ const SlotGrid = ({
   currentUserId,
   durationMin,
   dateKey,
+  closeMin,
 }) => {
   if (!slots || slots.length === 0) {
     return (
@@ -52,13 +53,18 @@ const SlotGrid = ({
         const mine = startsHere && Boolean(currentUserId) && reservation.user === currentUserId;
         const permanent = startsHere && reservation.permanent;
         const past = isPast(start);
-        const isSelected = !occupied && !past && selectedStart === start;
+        // Same rule BookingPanel applies to the duration buttons: a slot whose
+        // window runs past closing cannot be booked, so don't advertise it as
+        // free with a range that ends after the club shuts.
+        const runsPastClose = closeMin != null
+          && toMinutes(start) + durationMin > closeMin;
+        const isSelected = !occupied && !past && !runsPastClose && selectedStart === start;
 
         const classes = ['slot'];
         if (occupied) classes.push('slot--occupied');
         if (mine) classes.push('slot--mine');
         if (permanent) classes.push('slot--permanent');
-        if (past) classes.push('slot--past');
+        if (past || runsPastClose) classes.push('slot--past');
         if (isSelected) classes.push('slot--selected');
 
         return (
@@ -67,12 +73,14 @@ const SlotGrid = ({
             type='button'
             role='listitem'
             className={classes.join(' ')}
-            disabled={occupied || past}
+            disabled={occupied || past || runsPastClose}
             onClick={() => onSelect(start)}
             aria-label={
               occupied
                 ? `${start} a ${end}, ocupado${permanent ? ' (turno permanente)' : mine ? ', tu reserva' : ''}`
-                : `${start} a ${end}, disponible`
+                : runsPastClose
+                  ? `${start} a ${end}, no entra antes del cierre`
+                  : `${start} a ${end}, disponible`
             }>
             <span className='slot__time'>{start}</span>
             <span className='slot__range'>{start} – {end}</span>
@@ -109,6 +117,7 @@ SlotGrid.propTypes = {
   currentUserId: PropTypes.string,
   durationMin: PropTypes.number,
   dateKey: PropTypes.string,
+  closeMin: PropTypes.number,
 };
 
 export default SlotGrid;

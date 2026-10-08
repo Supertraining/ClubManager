@@ -74,16 +74,29 @@ export const COURT_LIST = Object.values(COURTS);
 
 export const getCourt = (name) => COURTS[name] || null;
 
-/** How often a slot can start. This is grid density, not booking length. */
-export const SLOT_STEP_MIN = 60;
+/**
+ * How often a slot can start. This is grid density, not booking length.
+ *
+ * 30 minutes, not 60: a booking can end at any half hour (19:00-20:30 is
+ * legal), so with an hourly grid the slot right after a booking is either
+ * unusable or blocked, and the true free boundary (20:30) is not
+ * representable at all. Half-hour steps make every free boundary reachable.
+ */
+export const SLOT_STEP_MIN = 30;
 
 /** A booking can be between 1 and 2 hours, in half-hour steps. */
 export const MIN_DURATION_MIN = 60;
 export const MAX_DURATION_MIN = 120;
 export const DURATION_OPTIONS = [60, 90, 120];
 
-/** 90 minutes, so the default booking is unchanged from what it used to be. */
-export const DEFAULT_DURATION_MIN = 90;
+/**
+ * 60 minutes by default. Defaulting to the longest booking made the grid
+ * look fuller than it is: with 90 minutes selected, the 18:00 slot overlaps a
+ * 19:00-20:30 booking and reads as taken even though 18:00-19:00 is free.
+ * The default is the shortest booking so the grid shows everything that can
+ * actually be reserved, and the member opts into longer.
+ */
+export const DEFAULT_DURATION_MIN = 60;
 
 /** "90" -> "1 h 30 min" */
 export const formatDuration = (min) => {

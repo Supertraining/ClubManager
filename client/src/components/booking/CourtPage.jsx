@@ -203,6 +203,7 @@ const CourtPage = ({ court }) => {
                   currentUserId={null}
                   durationMin={durationMin}
                   dateKey={toDateKey(selectedDate)}
+                  closeMin={getCourtHours(courtName, selectedDate)?.closeMin ?? null}
                 />
               </div>
             </div>
@@ -267,6 +268,7 @@ const CourtPage = ({ court }) => {
                 currentUserId={user?.id}
                 durationMin={durationMin}
                 dateKey={toDateKey(selectedDate)}
+                closeMin={getCourtHours(courtName, selectedDate)?.closeMin ?? null}
               />
             </div>
           </div>
