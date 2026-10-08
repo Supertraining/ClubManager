@@ -1,5 +1,5 @@
 /* ===========================================================================
- * BookingPanel â€” sticky sidebar (desktop) / sheet (mobile)
+ * BookingPanel — sticky sidebar (desktop) / sheet (mobile)
  * =========================================================================== */
 
 .booking-panel {
@@ -101,6 +101,55 @@
   font-weight: 500;
   color: var(--c-ink-muted);
   font-style: italic;
+}
+
+/* ---- Free windows for the selected day ---- */
+
+.booking-panel__free {
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  background: var(--c-brand-50);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-md);
+}
+
+.booking-panel__free-label {
+  display: block;
+  font-family: var(--f-body);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--c-brand);
+  margin-bottom: var(--space-2);
+}
+
+.booking-panel__free-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.booking-panel__free-item {
+  font-family: var(--f-body);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--c-brand);
+  background: var(--c-surface);
+  border: 1px solid var(--c-brand-300);
+  border-radius: var(--r-pill);
+  padding: 0.2rem 0.65rem;
+  line-height: 1.4;
+  /* a 44px tap target without the visual weight of a button */
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.booking-panel__free-hint {
+  font-family: var(--f-body);
+  font-size: var(--fs-sm);
+  color: var(--c-ink-soft);
 }
 
 .booking-panel__cta {

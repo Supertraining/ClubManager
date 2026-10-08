@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { slotEnd } from './helpers';
-import { DURATION_OPTIONS, formatDuration } from './courtConfig';
+import { DURATION_OPTIONS, addMinutes, formatDuration } from './courtConfig';
 import './BookingPanel.css';
 
 /**
@@ -22,6 +22,7 @@ const BookingPanel = ({
   durationMin,
   onDurationChange,
   closeMin,
+  freeWindows = [],
 }) => {
   const endTime = startTime ? slotEnd(startTime, durationMin) : null;
   const canConfirm = Boolean(startTime) && !isSubmitting;
@@ -82,6 +83,32 @@ const BookingPanel = ({
             )}
           </span>
         </div>
+
+        {/* The answer to "when can I book?" without inverting overlap maths.
+            A 19:00-20:30 booking does NOT take 18:00; it only makes an 18:00
+            start unavailable at 90 minutes. Saying so plainly beats leaving
+            the member to work it out from a grid of candidates. */}
+        {!startTime && freeWindows.length > 0 && (
+          <div className='booking-panel__free'>
+            <span className='booking-panel__free-label'>Libre ese día</span>
+            <span className='booking-panel__free-list'>
+              {freeWindows.map((w) => (
+                <span key={`${w.from}-${w.to}`} className='booking-panel__free-item'>
+                  {addMinutes('00:00', w.from)} – {addMinutes('00:00', w.to)}
+                </span>
+              ))}
+            </span>
+          </div>
+        )}
+
+        {!startTime && freeWindows.length === 0 && (
+          <div className='booking-panel__free'>
+            <span className='booking-panel__free-label'>Sin horarios libres</span>
+            <span className='booking-panel__free-hint'>
+              Ese día está completo. Probá con otra fecha.
+            </span>
+          </div>
+        )}
       </div>
 
       {startTime && (
@@ -164,6 +191,9 @@ BookingPanel.propTypes = {
   durationMin: PropTypes.number,
   onDurationChange: PropTypes.func,
   closeMin: PropTypes.number,
+  freeWindows: PropTypes.arrayOf(
+    PropTypes.shape({ from: PropTypes.number, to: PropTypes.number }),
+  ),
 };
 
 export default BookingPanel;

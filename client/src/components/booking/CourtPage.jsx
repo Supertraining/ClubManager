@@ -10,6 +10,7 @@ import {
   getSlotsForDay,
   toDateKey,
   DEFAULT_DURATION_MIN,
+  MIN_DURATION_MIN,
 } from './courtConfig';
 import {
   flattenReserves,
@@ -18,6 +19,8 @@ import {
   isSameDay,
   isSlotPast,
   slotEnd,
+  toHHmm,
+  toMinutes,
 } from './helpers';
 
 import DateStrip from './DateStrip';
@@ -88,6 +91,51 @@ const CourtPage = ({ court }) => {
     return counts;
   }, [slotsByRange, reserves, selectedDate, durationMin]);
 
+  /**
+   * Free windows for the selected day, longest first.
+   *
+   * The grid forces the member to invert the overlap maths to answer "when
+   * can I book?". A 19:00-20:30 booking looks like it blocks 18:00, 18:30,
+   * 19:30 and 20:00, and nothing in the UI says those are candidate starts
+   * rather than occupied time. This just states the answer: the court is
+   * free 18:00-19:00 and from 20:30 on. Windows shorter than the minimum
+   * booking are dropped, since they could never be reserved.
+   */
+  const freeWindows = useMemo(() => {
+    const hours = getCourtHours(courtName, selectedDate);
+    if (!hours) return [];
+
+    const dateKey = toDateKey(selectedDate);
+    const booked = reserves
+      .filter((r) => r.date === dateKey)
+      .map((r) => ({
+        start: toMinutes(toHHmm(r.initialTime)),
+        end: toMinutes(toHHmm(r.finalTime)),
+      }))
+      .sort((a, b) => a.start - b.start);
+
+    // merge touching/overlapping bookings into solid blocks
+    const blocks = [];
+    for (const b of booked) {
+      const last = blocks[blocks.length - 1];
+      if (last && b.start <= last.end) last.end = Math.max(last.end, b.end);
+      else blocks.push({ ...b });
+    }
+
+    const windows = [];
+    let cursor = hours.openMin;
+    for (const block of blocks) {
+      if (block.start - MIN_DURATION_MIN >= cursor) {
+        windows.push({ from: cursor, to: block.start });
+      }
+      cursor = Math.max(cursor, block.end);
+    }
+    if (hours.closeMin - MIN_DURATION_MIN >= cursor) {
+      windows.push({ from: cursor, to: hours.closeMin });
+    }
+    return windows;
+  }, [courtName, selectedDate, reserves]);
+
   // Adjust range to first non-empty if current becomes empty
   useEffect(() => {
     if (rangeCounts[range] === 0) {
@@ -156,6 +204,9 @@ const CourtPage = ({ court }) => {
     if (result !== null) {
       notifySuccess('Listo, te guardamos el turno. Si no podés venir, avisanos así otro socio lo aprovecha.');
       setStartTime(null);
+      // Volvemos a la duración por defecto. Dejarla en 2 h hacía que la grilla
+      // siguiente pareciera tres veces más llena de lo que realmente está.
+      setDurationMin(DEFAULT_DURATION_MIN);
       reFetch();
     } else {
       notifyWarning('No se pudo reservar. Probá con otro horario.');
@@ -204,6 +255,7 @@ const CourtPage = ({ court }) => {
                   durationMin={durationMin}
                   dateKey={toDateKey(selectedDate)}
                   closeMin={getCourtHours(courtName, selectedDate)?.closeMin ?? null}
+                  freeWindows={freeWindows}
                 />
               </div>
             </div>
@@ -221,6 +273,7 @@ const CourtPage = ({ court }) => {
                 durationMin={durationMin}
                 onDurationChange={setDurationMin}
                 closeMin={getCourtHours(courtName, selectedDate)?.closeMin ?? null}
+                freeWindows={freeWindows}
               />
             </div>
           </div>
@@ -269,6 +322,7 @@ const CourtPage = ({ court }) => {
                 durationMin={durationMin}
                 dateKey={toDateKey(selectedDate)}
                 closeMin={getCourtHours(courtName, selectedDate)?.closeMin ?? null}
+                freeWindows={freeWindows}
               />
             </div>
           </div>
@@ -286,6 +340,7 @@ const CourtPage = ({ court }) => {
               durationMin={durationMin}
               onDurationChange={setDurationMin}
               closeMin={getCourtHours(courtName, selectedDate)?.closeMin ?? null}
+              freeWindows={freeWindows}
             />
           </div>
         </div>
