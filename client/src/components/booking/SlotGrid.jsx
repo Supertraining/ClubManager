@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { isSlotPast, slotEnd } from './helpers';
+import { isSlotPast, slotEnd, toHHmm } from './helpers';
 import './SlotGrid.css';
 
 /**
@@ -43,8 +43,14 @@ const SlotGrid = ({
         const end = slotEnd(start, durationMin);
         const reservation = getReservation?.(start);
         const occupied = Boolean(reservation);
-        const mine = occupied && Boolean(currentUserId) && reservation.user === currentUserId;
-        const permanent = occupied && reservation.permanent;
+        // `reservation` is the first booking that OVERLAPS this slot's window,
+        // which is not the same as a booking that starts here. A 19:00-20:30
+        // booking overlaps 18:00 (at 90 min) and 20:00 too, and tagging all
+        // three "Tuya" claims three bookings the member does not have. "Tuya"
+        // means this slot IS the start of one of my bookings.
+        const startsHere = occupied && toHHmm(reservation.initialTime) === start;
+        const mine = startsHere && Boolean(currentUserId) && reservation.user === currentUserId;
+        const permanent = startsHere && reservation.permanent;
         const past = isPast(start);
         const isSelected = !occupied && !past && selectedStart === start;
 
