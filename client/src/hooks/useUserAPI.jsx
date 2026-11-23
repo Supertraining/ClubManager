@@ -112,10 +112,18 @@ export const useUserAPI = () => {
   }, [axios, notifyWarning]);
 
   const closeSession = useCallback(async () => {
-    await supabase.auth.signOut();
+    try {
+      const { error } = await supabase.auth.signOut({ scope: 'local' });
+      if (error) throw error;
+    } catch {
+      if (userStore.getState().user.user) {
+        notifyWarning('No se pudo cerrar la sesión. Volvé a intentarlo.');
+        return;
+      }
+    }
     setUser({ type: ACTIONS.LOGOUT });
-    navigate('/login');
-  }, [setUser, navigate]);
+    navigate('/login', { replace: true });
+  }, [setUser, navigate, notifyWarning]);
 
   return {
     userLogin,

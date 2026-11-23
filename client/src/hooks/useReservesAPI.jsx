@@ -47,12 +47,10 @@ export const useReservesAPI = () => {
       });
       notifySuccess('Reserva confirmada');
       return data;
-    } catch (error) {
-      const msg = error?.response?.data?.message || error.message;
-      notifyWarning(`No se pudo reservar: ${msg}`);
+    } catch {
       return null;
     }
-  }, [axios, notifySuccess, notifyWarning]);
+  }, [axios, notifySuccess]);
 
   // No dispara toast de éxito: el copy depende del contexto ("se liberó tu
   // turno" en Mi cuenta, otra cosa en el panel), y así una sola llamada no

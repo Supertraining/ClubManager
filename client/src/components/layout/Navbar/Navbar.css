@@ -82,6 +82,11 @@
   flex-shrink: 0;
 }
 
+.app-navbar__actions .btn {
+  min-width: 44px;
+  min-height: 44px;
+}
+
 .app-navbar__cta-ghost span,
 .app-navbar__cta-primary span {
   display: none;
@@ -108,8 +113,4 @@
   background: var(--c-accent-strong);
   border-color: var(--c-accent-strong);
   box-shadow: var(--sh-sm);
-}
-
-@media (max-width: 575px) {
-  .app-navbar__cta-ghost { display: none; }
 }

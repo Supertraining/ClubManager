@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
   BrowserRouter as Router,
   Route,
@@ -10,6 +10,9 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import Navbar from './components/layout/Navbar/Navbar';
 import Footer from './components/layout/Footer/Footer';
+import { supabase } from './lib/supabaseClient';
+import { userStore } from './stores';
+import { ACTIONS } from './stores/user/actions';
 
 import Home from './pages/home/Home';
 import Reserves from './pages/reserves/Reserves';
@@ -49,10 +52,37 @@ function ScrollToHash() {
 }
 
 function App() {
+  const [authReady, setAuthReady] = useState(false);
+
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      const { user: { user: currentUser }, setUser } = userStore.getState();
+      const sessionUser = session?.user;
+
+      if (!sessionUser) {
+        if (currentUser) setUser({ type: ACTIONS.LOGOUT });
+      } else if (currentUser?.id !== sessionUser.id) {
+        setUser({
+          type: ACTIONS.LOGIN_SUCCESS,
+          payload: { id: sessionUser.id, email: sessionUser.email },
+        });
+      } else if (currentUser.email !== sessionUser.email) {
+        setUser({
+          type: ACTIONS.UPDATE_USER,
+          payload: { ...currentUser, email: sessionUser.email },
+        });
+      }
+
+      setAuthReady(true);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
   return (
     <Router>
       <ScrollToHash />
-      <Navbar />
+      <Navbar authReady={authReady} />
       <main>
         <Routes>
           <Route exact path='/' element={<Home />} />
@@ -60,7 +90,7 @@ function App() {
           <Route path='/activities' element={<Activities />} />
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
-          <Route path='/account' element={<Account />} />
+          <Route path='/account' element={authReady ? <Account /> : null} />
           <Route path='*' element={<NotFound />} />
         </Routes>
       </main>

@@ -1,6 +1,9 @@
+import { useState } from 'react';
+import PropTypes from 'prop-types';
 import { Link, NavLink } from 'react-router-dom';
 import Logo from '../../ui/Logo/Logo';
 import './Navbar.css';
+import { useUserAPI } from '../../../hooks/useUserAPI';
 import { userStore } from '../../../stores';
 
 // Hashes sueltos, sin la barra inicial: se combinan con { pathname: '/' } para
@@ -14,8 +17,19 @@ const NAV_LINKS = [
   { hash: '#contacto',    label: 'Contacto' },
 ];
 
-const Navbar = () => {
+const Navbar = ({ authReady }) => {
   const user = userStore((s) => s.user?.user);
+  const { closeSession } = useUserAPI();
+  const [signingOut, setSigningOut] = useState(false);
+
+  const handleSignOut = async () => {
+    setSigningOut(true);
+    try {
+      await closeSession();
+    } finally {
+      setSigningOut(false);
+    }
+  };
 
   return (
     <header className='app-navbar' role='banner'>
@@ -34,18 +48,29 @@ const Navbar = () => {
         </nav>
 
         <div className='app-navbar__actions'>
-          {user ? (
-            <NavLink to='/account' className='btn btn--ghost btn--sm app-navbar__cta-ghost'>
-              <i className='bi bi-person-circle' aria-hidden='true'></i>
-              <span>Mi cuenta</span>
-            </NavLink>
+          {authReady && (user ? (
+            <>
+              <NavLink to='/account' aria-label='Mi cuenta' className='btn btn--ghost btn--sm app-navbar__cta-ghost'>
+                <i className='bi bi-person-circle' aria-hidden='true'></i>
+                <span>Mi cuenta</span>
+              </NavLink>
+              <button
+                type='button'
+                aria-label='Cerrar sesión'
+                className='btn btn--ghost btn--sm app-navbar__cta-ghost'
+                disabled={signingOut}
+                onClick={handleSignOut}>
+                <i className='bi bi-box-arrow-right' aria-hidden='true'></i>
+                <span>Cerrar sesión</span>
+              </button>
+            </>
           ) : (
-            <NavLink to='/login' className='btn btn--ghost btn--sm app-navbar__cta-ghost'>
+            <NavLink to='/login' aria-label='Iniciar sesión' className='btn btn--ghost btn--sm app-navbar__cta-ghost'>
               <i className='bi bi-person-circle' aria-hidden='true'></i>
               <span>Iniciar sesión</span>
             </NavLink>
-          )}
-          <Link to='/reserves' className='btn btn--primary btn--sm btn--pill app-navbar__cta-primary'>
+          ))}
+          <Link to='/reserves' aria-label='Reservar' className='btn btn--primary btn--sm btn--pill app-navbar__cta-primary'>
             <i className='bi bi-calendar2-week' aria-hidden='true'></i>
             <span>Reservar</span>
           </Link>
@@ -54,5 +79,7 @@ const Navbar = () => {
     </header>
   );
 };
+
+Navbar.propTypes = { authReady: PropTypes.bool.isRequired };
 
 export default Navbar;

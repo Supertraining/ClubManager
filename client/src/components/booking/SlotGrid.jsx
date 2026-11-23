@@ -3,7 +3,7 @@ import { isSlotPast, slotEnd, toHHmm, toMinutes } from './helpers';
 import './SlotGrid.css';
 
 /**
- * SlotGrid — grilla de slots de 90 min para la franja seleccionada.
+ * SlotGrid — grilla de horarios de inicio para la franja seleccionada.
  *
  * Estado de cada slot:
  *   - available: outline verde, clickeable
@@ -41,7 +41,6 @@ const SlotGrid = ({
   return (
     <div className='slot-grid' role='list' aria-label='Turnos disponibles'>
       {slots.map((start) => {
-        const end = slotEnd(start, durationMin);
         const reservation = getReservation?.(start);
         const occupied = Boolean(reservation);
         // `reservation` is the first booking that OVERLAPS this slot's window,
@@ -50,6 +49,7 @@ const SlotGrid = ({
         // three "Tuya" claims three bookings the member does not have. "Tuya"
         // means this slot IS the start of one of my bookings.
         const startsHere = occupied && toHHmm(reservation.initialTime) === start;
+        const end = startsHere ? toHHmm(reservation.finalTime) : slotEnd(start, durationMin);
         const isMine = occupied && Boolean(currentUserId) && reservation.user === currentUserId;
         const mine = startsHere && isMine;
         // A slot this member cannot take because their OWN booking overlaps it
@@ -62,7 +62,7 @@ const SlotGrid = ({
         // Same rule BookingPanel applies to the duration buttons: a slot whose
         // window runs past closing cannot be booked, so don't advertise it as
         // free with a range that ends after the club shuts.
-        const runsPastClose = closeMin != null
+        const runsPastClose = !startsHere && closeMin != null
           && toMinutes(start) + durationMin > closeMin;
         const isSelected = !occupied && !past && !runsPastClose && selectedStart === start;
 
