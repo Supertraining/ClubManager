@@ -63,24 +63,21 @@ export const GetAllActivities = ({ handleMenuClick, menu }) => {
             {handleInitialRender()}
 
             {data?.map((card) => (
-              <div key={window.crypto.randomUUID()}>
+              <div key={card.id}>
                 <ActivityCard
-                  key={card.id}
-                  id={card._id}
-                  img={card.img}
-                  imgText={card.imgText}
-                  title={card.activity}
+                  id={card.id}
+                  img={card.image_url}
+                  imgText={card.image_alt}
+                  title={card.name}
                   description={card.description}
-                  data_target={card.data_target}
+                  modalId={'actividad-' + card.id}
                   handleDeleteActivity={handleDeleteActivity}
                 />
 
                 <Modal
-                  key={window.crypto.randomUUID()}
-                  dataTarget={card.activity.split(' ').join('')}
-                  activity={card.activity}
+                  dataTarget={'actividad-' + card.id}
+                  activity={card.name}
                   categories={card.category}
-                  img={card.img}
                 />
               </div>
             ))}

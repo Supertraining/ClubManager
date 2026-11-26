@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { clubApi, clubPath } from '../lib/clubRoute';
 import { useMemo } from 'react';
 import { supabase, API_BASE } from '../lib/supabaseClient';
 
@@ -13,7 +14,7 @@ import { supabase, API_BASE } from '../lib/supabaseClient';
 export const useAxiosInstance = () => {
   return useMemo(() => {
     const instance = axios.create({
-      baseURL: API_BASE,
+      baseURL: clubApi(API_BASE),
       headers: { Accept: 'application/json' },
     });
 
@@ -38,8 +39,8 @@ export const useAxiosInstance = () => {
           }
           // Refresh failed — log out.
           await supabase.auth.signOut();
-          if (typeof window !== 'undefined' && window.location.pathname !== '/login') {
-            window.location.assign('/login');
+          if (typeof window !== 'undefined' && window.location.pathname !== clubPath('/login')) {
+            window.location.assign(clubPath('/login'));
           }
         }
         return Promise.reject(error);

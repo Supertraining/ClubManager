@@ -2,6 +2,19 @@
 
 Mapa de los módulos y de dónde viene cada cosa. Para las convenciones y comandos ver `AGENTS.md` en la raíz.
 
+## Alcance de un club
+
+Las apps leen el slug de `/clubes/:clubSlug` antes de cargar la ficha, los datos
+y la navegación del club. Las rutas originales identifican a Ranelagh.
+Express resuelve la misma identidad en `/clubs/:clubSlug`. En las operaciones
+privadas, el JWT identifica a la persona y una lectura de la membresía activa
+determina su rol. Los DAO filtran por el club resuelto y RLS aplica los permisos.
+
+Las migraciones vinculan las entidades a `club_id` y requieren referencias
+compuestas para reservas, canchas y categorías. Las fechas de turnos se
+interpretan en la zona horaria del club. Postgres sigue impidiendo el
+solapamiento para la misma cancha.
+
 ## Flujo de una request
 
 ```
@@ -59,7 +72,7 @@ server/
 │   ├── utils/                   customError.Utils.js, logger.js
 │   └── log/                     error.log, warn.log
 ├── supabase/                    01→05 SQL, fuente canónica del schema
-└── test/                        user.test.js, user.data.js (mocha + chai)
+└── test/                        Mocha con Express y fixture HTTP, más verificaciones SQL
 ```
 
 **Orden de las capas:** `DAO` (habla Supabase, sin reglas) → `service` (reglas de negocio) → `controller` (valida y responde). Los controllers se arman en `dependencies/` y se inyectan al router; los routers nunca instancian controllers solos.

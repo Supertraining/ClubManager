@@ -5,7 +5,7 @@ export default class ActivityControllers {
 
   save = async (req, res, next) => {
     try {
-      const activity = await this.activityControllers.save(req.body);
+      const activity = await this.activityControllers.save(req.body, req.club.id, req.accessToken);
       res.json(activity);
     } catch (error) {
       next(error)
@@ -13,7 +13,7 @@ export default class ActivityControllers {
   }
   getAll = async (req, res, next) => {
     try {
-      const activity = await this.activityControllers.getAll();
+      const activity = await this.activityControllers.getAll(req.club.id);
   
        res.json(activity); 
       
@@ -23,7 +23,7 @@ export default class ActivityControllers {
   }
   getById = async (req, res, next) => {
     try {
-      const activity = await this.activityControllers.getById(req.params.id);
+      const activity = await this.activityControllers.getById(req.params.id, req.club.id, req.accessToken);
       res.json(activity);
     } catch (error) {
       next(error)
@@ -31,7 +31,7 @@ export default class ActivityControllers {
   }
   update = async (req, res, next) => {
     try {
-      const activity = await this.activityControllers.update(req.params.id, req.body);
+      const activity = await this.activityControllers.update(req.params.id, req.body, req.club.id, req.accessToken);
       res.json(activity);
     } catch (error) {
       next(error)
@@ -39,7 +39,7 @@ export default class ActivityControllers {
   }
   delete = async (req, res, next) => {
     try {
-      const activity = await this.activityControllers.delete(req.params.id);
+      const activity = await this.activityControllers.delete(req.params.id, req.club.id, req.accessToken);
       res.json(activity); 
     } catch (error) {
       next(error)
@@ -47,7 +47,7 @@ export default class ActivityControllers {
   }
   deleteAll = async (req, res, next) => {
     try {
-      const activity = await this.activityControllers.deleteAll();
+      const activity = await this.activityControllers.deleteAll(req.club.id, req.accessToken);
       res.json(activity); 
     } catch (error) {
       next(error)

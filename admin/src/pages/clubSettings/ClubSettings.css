@@ -1,0 +1,3 @@
+.club-admin-form :is(.btn, .form-control, .form-select) {
+  min-height: 44px;
+}

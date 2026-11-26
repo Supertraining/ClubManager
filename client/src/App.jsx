@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import {
   BrowserRouter as Router,
+  Navigate,
   Route,
   Routes,
   useLocation,
@@ -8,7 +9,12 @@ import {
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import ClubLayout from './components/club/ClubLayout';
+import ClubHome from './components/club/ClubHome';
+import { useClub } from './components/club/useClub';
+import { clubBase } from './lib/clubRoute';
 import Navbar from './components/layout/Navbar/Navbar';
+import Subscribe from './pages/subscribe/Subscribe';
 import Footer from './components/layout/Footer/Footer';
 import { supabase } from './lib/supabaseClient';
 import { userStore } from './stores';
@@ -51,6 +57,18 @@ function ScrollToHash() {
   return null;
 }
 
+function ClubHomeRoute() {
+  const { club } = useClub();
+  return club.slug === 'ranelagh' ? <Home /> : <ClubHome />;
+}
+
+function ClubAccountRoute() {
+  const { access } = useClub();
+  if (access === 'loading') return <p role='status'>Cargando tu perfil?</p>;
+  if (access === 'error') return <p role='alert'>No pudimos cargar tu perfil. Recargá la página.</p>;
+  return access === 'denied' ? <Navigate to='/register' replace /> : <Account />;
+}
+
 function App() {
   const [authReady, setAuthReady] = useState(false);
 
@@ -79,18 +97,21 @@ function App() {
     return () => subscription.unsubscribe();
   }, []);
 
+  if (window.location.pathname.replace(/\/$/, '') === '/contratar') return <Subscribe />;
+
   return (
-    <Router>
+    <Router basename={clubBase || '/'}>
+      <ClubLayout authReady={authReady}>
       <ScrollToHash />
       <Navbar authReady={authReady} />
       <main>
         <Routes>
-          <Route exact path='/' element={<Home />} />
+          <Route exact path='/' element={<ClubHomeRoute />} />
           <Route path='/reserves' element={<Reserves />} />
           <Route path='/activities' element={<Activities />} />
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
-          <Route path='/account' element={authReady ? <Account /> : null} />
+          <Route path='/account' element={authReady ? <ClubAccountRoute /> : null} />
           <Route path='*' element={<NotFound />} />
         </Routes>
       </main>
@@ -104,6 +125,7 @@ function App() {
         pauseOnHover
         theme='light'
       />
+      </ClubLayout>
     </Router>
   );
 }

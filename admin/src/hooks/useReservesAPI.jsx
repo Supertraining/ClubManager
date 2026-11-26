@@ -47,8 +47,10 @@ export const useReservesAPI = () => {
     try {
       await axios.delete(`/users/reserves/${reservationId}`);
       notifySuccess('Reserva eliminada');
+      return true;
     } catch (error) {
       notifyWarning(`Hubo un problema: ${error?.response?.data?.message || error.message}`);
+      return false;
     }
   }, [axios, notifySuccess, notifyWarning]);
 

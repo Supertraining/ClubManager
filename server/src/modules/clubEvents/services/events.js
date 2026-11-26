@@ -5,26 +5,26 @@ export default class EventServices {
     this.EventDAO = eventDAO;
   }
 
-  getAllEvents = async () => this.EventDAO.getAllEvents();
+  getAllEvents = async (clubId, token) => this.EventDAO.getAllEvents(clubId, token);
 
-  getEventById = async (id) => {
-    const event = await this.EventDAO.getEventById(id);
-    if (!event) throw CustomError.notFound('Event not found');
+  getEventById = async (id, clubId, token) => {
+    const event = await this.EventDAO.getEventById(id, clubId, token);
+    if (!event) throw CustomError.notFound('Evento no encontrado.');
     return event;
   };
 
-  insertEvent = async (data) => this.EventDAO.insertEvent(data);
+  insertEvent = async (data, clubId, token) => this.EventDAO.insertEvent(data, clubId, token);
 
-  updateEvent = async (data) => {
+  updateEvent = async (data, clubId, token) => {
     if (!data?.id) throw CustomError.badRequest('Falta el id del evento');
-    const updated = await this.EventDAO.updateEvent(data);
-    if (!updated) throw CustomError.notFound('Event not found');
+    const updated = await this.EventDAO.updateEvent(data, clubId, token);
+    if (!updated) throw CustomError.notFound('Evento no encontrado.');
     return updated;
   };
 
-  deleteEvent = async (id) => {
-    const result = await this.EventDAO.deleteEvent(id);
-    if (result.deletedCount === 0) throw CustomError.notFound('Event not found');
+  deleteEvent = async (id, clubId, token) => {
+    const result = await this.EventDAO.deleteEvent(id, clubId, token);
+    if (result.deletedCount === 0) throw CustomError.notFound('Evento no encontrado.');
     return result;
   };
 }

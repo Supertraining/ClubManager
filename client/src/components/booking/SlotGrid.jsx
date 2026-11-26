@@ -27,6 +27,7 @@ const SlotGrid = ({
   durationMin,
   dateKey,
   closeMin,
+  timeZone,
 }) => {
   if (!slots || slots.length === 0) {
     return (
@@ -118,7 +119,7 @@ const SlotGrid = ({
   );
 
   function isPast(slotStart) {
-    return isSlotPast(slotStart, dateKey);
+    return isSlotPast(slotStart, dateKey, timeZone);
   }
 };
 
@@ -131,6 +132,7 @@ SlotGrid.propTypes = {
   durationMin: PropTypes.number,
   dateKey: PropTypes.string,
   closeMin: PropTypes.number,
+  timeZone: PropTypes.string,
 };
 
 export default SlotGrid;

@@ -4,7 +4,8 @@ import { Link, NavLink } from 'react-router-dom';
 import Logo from '../../ui/Logo/Logo';
 import './Navbar.css';
 import { useUserAPI } from '../../../hooks/useUserAPI';
-import { userStore } from '../../../stores';
+import { userStore as useUserStore } from '../../../stores';
+import { useClub } from '../../club/useClub';
 
 // Hashes sueltos, sin la barra inicial: se combinan con { pathname: '/' } para
 // armar la navegación. Guardarlos como '/#canchas' y concatenar un '/' delante
@@ -18,9 +19,13 @@ const NAV_LINKS = [
 ];
 
 const Navbar = ({ authReady }) => {
-  const user = userStore((s) => s.user?.user);
+  const { club } = useClub();
+  const user = useUserStore((s) => s.user?.user);
   const { closeSession } = useUserAPI();
   const [signingOut, setSigningOut] = useState(false);
+  const navLinks = club.slug === 'ranelagh'
+    ? NAV_LINKS.map(link => ({ label: link.label, to: '/' + link.hash }))
+    : [{ label: 'Canchas', to: '/reserves' }, { label: 'Actividades', to: '/activities' }, { label: 'Contacto', to: '/#contacto' }];
 
   const handleSignOut = async () => {
     setSigningOut(true);
@@ -37,10 +42,10 @@ const Navbar = ({ authReady }) => {
         <Logo to='/' />
 
         <nav className='app-navbar__links' aria-label='Navegación principal'>
-          {NAV_LINKS.map((link) => (
+          {navLinks.map((link) => (
             <Link
-              key={link.hash}
-              to={{ pathname: '/', hash: link.hash }}
+              key={link.to}
+              to={link.to}
               className='app-navbar__link'>
               {link.label}
             </Link>

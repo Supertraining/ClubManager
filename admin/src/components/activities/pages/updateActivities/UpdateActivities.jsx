@@ -16,7 +16,6 @@ export const UpdateActivities = () => {
   const [activity, setActivity] = useState({});
   const [category, setCategory] = useState();
   const [categories, setCategories] = useState([]);
-  const [modalId, setModalId] = useState();
   const [handleShow, setHandleShow] = useState({ showUpdate: false, showAdd: false });
 
   const errorInitialState = {
@@ -33,9 +32,8 @@ export const UpdateActivities = () => {
 
       const { category, ...activityData } = data;
 
-      setActivity({ ...activityData });
-      setCategories(category);
-      setModalId(activityData.activity.split(' ').join(''));
+      setActivity({ ...activityData, activity: activityData.name, img: activityData.image_url, imgText: activityData.image_alt });
+      setCategories(category || []);
     } catch (error) {
       notifyWarning('Hubo un problema, por favor intente nuevamente mas tarde');
     }
@@ -125,7 +123,6 @@ export const UpdateActivities = () => {
 
       const updatedActivity = { ...activity, ...formObject };
       const dt = updatedActivity?.activity?.split(' ').join('');
-      setModalId(dt);
 
       const activityData = {
         ...updatedActivity,
@@ -474,12 +471,11 @@ export const UpdateActivities = () => {
             imgText={activity.imgText}
             title={activity.activity}
             description={activity.description}
-            data_target={activity.data_target}
+            modalId='actividad-previa-edicion'
           />
 
           <Modal
-            img={activity.img}
-            dataTarget={modalId}
+            dataTarget='actividad-previa-edicion'
             activity={activity.activity}
             categories={permanentCategories}
           />

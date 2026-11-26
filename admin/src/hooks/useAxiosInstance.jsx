@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { clubApi, clubPath } from '../lib/clubRoute';
 import { useMemo } from 'react';
 import { supabase, API_BASE } from '../lib/supabaseClient';
 
@@ -6,10 +7,10 @@ import { supabase, API_BASE } from '../lib/supabaseClient';
  * useAxiosInstance (admin) — same shape as the client version, separate
  * Supabase storage key. Refreshes the access_token on 401.
  */
-export const useAxiosInstance = () => {
+export const useAxiosInstance = (baseURL = clubApi(API_BASE)) => {
   return useMemo(() => {
     const instance = axios.create({
-      baseURL: API_BASE,
+      baseURL,
       headers: { Accept: 'application/json' },
     });
 
@@ -33,8 +34,8 @@ export const useAxiosInstance = () => {
             return instance(original);
           }
           await supabase.auth.signOut();
-          if (typeof window !== 'undefined' && window.location.pathname !== '/login') {
-            window.location.assign('/login');
+          if (typeof window !== 'undefined' && window.location.pathname !== clubPath('/login')) {
+            window.location.assign(clubPath('/login'));
           }
         }
         return Promise.reject(error);
@@ -42,5 +43,5 @@ export const useAxiosInstance = () => {
     );
 
     return instance;
-  }, []); // stable: the token is read fresh on every request, not captured
+  }, [baseURL]);
 };

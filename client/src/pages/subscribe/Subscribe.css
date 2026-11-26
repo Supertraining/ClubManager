@@ -1,0 +1,39 @@
+.subscribe {
+  padding-block: 2rem;
+}
+
+.subscribe__form {
+  display: grid;
+  gap: 1rem;
+  max-width: 38rem;
+  margin-block: 1.5rem;
+  padding: 1.25rem;
+  border: 1px solid var(--c-line);
+  border-radius: 1rem;
+}
+
+.subscribe__form label {
+  display: grid;
+  gap: .35rem;
+}
+
+.subscribe .btn {
+  min-height: 44px;
+}
+
+.subscribe__link-field {
+  display: grid;
+  gap: .5rem;
+}
+
+.subscribe__link-field p {
+  margin: 0;
+  color: var(--c-ink-soft);
+  overflow-wrap: anywhere;
+}
+
+.subscribe__club-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}

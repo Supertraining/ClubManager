@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { createClient } from '@supabase/supabase-js';
+import { loadUsers } from './loadUsers.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -24,41 +25,6 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
  * For users, we use auth.admin.createUser so the trigger creates the
  * profile row automatically. For everything else, direct table inserts.
  */
-
-async function loadUsers(users) {
-  console.log(`[load] Creating ${users.length} users via auth.admin.createUser...`);
-  const emailToId = {};
-  let created = 0;
-  let failed = 0;
-
-  for (const u of users) {
-    // Use a random password the user will have to reset on first login.
-    // (You can also call supabase.auth.resetPasswordForEmail(email) for each.)
-    const tempPassword = 'Club' + Math.random().toString(36).slice(2, 10) + '!2026';
-    const { data, error } = await supabase.auth.admin.createUser({
-      email: u.email,
-      password: tempPassword,
-      email_confirm: true,
-      user_metadata: {
-        first_name: u.first_name,
-        last_name: u.last_name,
-        age: u.age,
-        phone: u.phone,
-        role: u.role,
-      },
-    });
-    if (error) {
-      console.error(`[load]   ✗ ${u.email}: ${error.message}`);
-      failed++;
-      continue;
-    }
-    emailToId[u.email] = data.user.id;
-    created++;
-    if (created % 50 === 0) console.log(`[load]   ...${created} users created`);
-  }
-  console.log(`[load] Users done: ${created} created, ${failed} failed.`);
-  return emailToId;
-}
 
 async function loadCourts(courts) {
   console.log(`[load] Inserting ${courts.length} courts...`);
@@ -210,7 +176,7 @@ async function main() {
   const t = JSON.parse(readFileSync(path, 'utf8'));
 
   // 1. Users
-  const emailToId = await loadUsers(t.users);
+  const emailToId = await loadUsers(supabase, t.users);
   console.log(`[load] users → emailToId map size: ${Object.keys(emailToId).length}`);
 
   // 2. Courts

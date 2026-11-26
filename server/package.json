@@ -4,7 +4,7 @@
     "version": "2.0.0",
     "main": "index.js",
     "scripts": {
-        "test": "mocha ./test/user.test.js",
+        "test": "mocha --require ./test/support/apiFixture.js \"test/**/*.test.js\"",
         "dev": "set NODE_ENV=dev && node --watch index.js",
         "prod": "set NODE_ENV=prod && node --watch index.js",
         "start": "node index.js"

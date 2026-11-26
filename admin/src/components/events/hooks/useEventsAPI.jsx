@@ -1,7 +1,10 @@
 import { useAxiosInstance } from '../../../hooks';
 import { useNotifications } from '../../../hooks';
+import { useClub } from '../../club/useClub';
+import { localEventInstant } from '../eventDates';
 export const useEventsAPI = () => {
   const axios = useAxiosInstance();
+  const { club } = useClub();
   const { notifyWarning, notifySuccess, notifyError } = useNotifications();
 
   const deleteReserve = async (id) => {
@@ -16,16 +19,22 @@ export const useEventsAPI = () => {
 
   const createEvent = async (eventData, date, calendarData) => {
     try {
+      const day = date.format('YYYY-MM-DD');
+      const start = localEventInstant(day, eventData.horaInicia, club.timezone);
+      if (eventData.horaInicia === eventData.horaFinaliza) throw new Error('Indicá horas distintas de inicio y fin.');
+      const endDay = eventData.horaFinaliza < eventData.horaInicia ? date.add(1, 'day').format('YYYY-MM-DD') : day;
+      const end = localEventInstant(endDay, eventData.horaFinaliza, club.timezone);
       const { status } = await axios.post(`/events/createEvent`, {
         ...eventData,
-        date: new Date(date).toLocaleDateString(),
-        calendarData: calendarData,
+        start_time: start,
+        end_time: end,
+        calendarData: [calendarData],
       });
 
-      status === 200 && notifySuccess('Evento Creado');
+      if (status === 201) notifySuccess('Evento creado.');
     } catch (error) {
-      console.log(error);
-      notifyWarning(`Hubo un problema, ${error?.response?.data}`);
+      notifyWarning(error.response?.data || error.message);
+      throw error;
     }
   };
 

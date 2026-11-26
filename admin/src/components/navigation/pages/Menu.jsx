@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 export const Menu = ({
   menu,
   handleGetAllUsers,
-  handleGetAllCourts,
   handleCloseSession,
   handleMenuClick,
 }) => {
@@ -36,7 +35,7 @@ export const Menu = ({
                   onClick={() => {
                     handleMenuClick('createUser');
                   }}>
-                  Crear usuario
+                  Invitar socio
                 </Link>
 
                 <i
@@ -56,7 +55,7 @@ export const Menu = ({
                   onClick={() => {
                     handleMenuClick('getAllUsers'), handleGetAllUsers();
                   }}>
-                  Todos los usuarios
+                  Padrón de socios
                 </Link>
 
                 <i
@@ -74,7 +73,7 @@ export const Menu = ({
                     menu.getAllCourts ? 'btn btn-success' : 'btn btn-success bg-transparent'
                   }
                   onClick={() => {
-                    handleMenuClick('getAllCourts'), handleGetAllCourts();
+                    handleMenuClick('getAllCourts');
                   }}>
                   Canchas
                 </Link>
@@ -85,6 +84,17 @@ export const Menu = ({
                       ? 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-active text-success'
                       : 'bi bi-box-arrow-right fs-4 mx-2 btn-arrow-inActive'
                   }></i>
+              </li>
+
+              <li className='d-flex align-items-center col-12'>
+                <Link to='/configuracion' className='btn btn-success bg-transparent' onClick={() => handleMenuClick('settings')}>
+                  Datos del club
+                </Link>
+              </li>
+              <li className='d-flex align-items-center col-12'>
+                <Link to='/facturacion' className='btn btn-success bg-transparent' onClick={() => handleMenuClick('billing')}>
+                  Facturación
+                </Link>
               </li>
 
               <li className='d-flex align-items-center col-12'>
@@ -183,7 +193,6 @@ export const Menu = ({
 Menu.propTypes = {
   menu: PropTypes.object,
   handleGetAllUsers: PropTypes.func,
-  handleGetAllCourts: PropTypes.func,
   handleCloseSession: PropTypes.func,
   handleMenuClick: PropTypes.func,
 };

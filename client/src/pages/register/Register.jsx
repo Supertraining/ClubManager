@@ -3,9 +3,11 @@ import { useForm } from 'react-hook-form';
 import { isStrongPassword } from 'validator';
 import { useUserAPI } from '../../hooks/useUserAPI.jsx';
 import './Register.css';
+import { useClub } from '../../components/club/useClub';
+import { userStore as useUserStore } from '../../stores';
 
 const PERKS = [
-  'Reservas en fútbol, paddle, squash y paleta',
+  'Reservas de las canchas del club',
   'Disponibilidad de la semana en vivo',
   'Cancelá o reprogramá desde la app',
   'Sin llamadas, sin planilla',
@@ -13,11 +15,25 @@ const PERKS = [
 
 const Register = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
-  const { userRegister } = useUserAPI();
+  const { userRegister, joinClub } = useUserAPI();
+  const { club, access } = useClub();
+  const user = useUserStore(state => state.user.user);
   const navigate = useNavigate();
   const [submitting, setSubmitting] = React.useState(false);
   const [confirmationNeeded, setConfirmationNeeded] = React.useState(false);
   const [passwordError, setPasswordError] = React.useState(null);
+
+  const handleJoin = async () => {
+    setSubmitting(true);
+    try {
+      await joinClub();
+      navigate('/reserves');
+    } catch {
+      // The hook displays the reason the club denied enrollment.
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   const onSubmit = async (data) => {
     const opts = { minLength: 8, minUppercase: 1, minNumbers: 1, minLowercase: 0, minSymbols: 0 };
@@ -48,6 +64,22 @@ const Register = () => {
     }
   };
 
+  if (user) {
+    return (
+      <section className='container-xl my-5'>
+        <h1>{access === 'member' ? 'Ya sos parte del club' : 'Sumate a ' + club.name}</h1>
+        {access === 'member'
+          ? <Link className='btn btn--primary btn--pill' to='/reserves'>Ver canchas</Link>
+          : <>
+            {club.signupMode === 'invitation' && <p>Usá la cuenta con el correo que recibió la invitación.</p>}
+            <button type='button' className='btn btn--primary btn--pill' disabled={submitting || access === 'loading'} onClick={handleJoin}>
+              {submitting ? 'Confirmando…' : 'Sumarme al club'}
+            </button>
+          </>}
+      </section>
+    );
+  }
+
   if (confirmationNeeded) {
     return (
       <div className='auth-page--register'>
@@ -56,7 +88,7 @@ const Register = () => {
           <h2 className='auth-card__title'>Revisá tu casilla.</h2>
           <p className='auth-card__sub'>
             Te enviamos un email de confirmación. Hacé click en el link para
-            activar tu cuenta y empezar a reservar canchas.
+            confirmar tu correo. Después podés sumarte al club.
           </p>
           <Link to='/login' className='btn btn--primary btn--block btn--lg btn--pill'>
             Ir a iniciar sesión
@@ -169,7 +201,7 @@ const Register = () => {
             </button>
 
             <p className='auth-terms auth-field--full'>
-              Al registrarte aceptás los términos y condiciones del Club Ranelagh.
+              {club.signupMode === 'invitation' ? 'Registrate con el mismo correo que recibió la invitación.' : 'Usá un correo al que tengas acceso para confirmar tu cuenta.'}
             </p>
           </form>
         </div>

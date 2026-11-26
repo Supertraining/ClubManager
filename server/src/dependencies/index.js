@@ -1,26 +1,21 @@
 import { Router } from 'express';
-import fs from 'fs';
-import { dirname, basename } from 'path';
-import { fileURLToPath } from 'url';
+import users from './users.js';
+import courts from './courts.js';
+import activities from './activities.js';
+import events from './events.js';
+import billing from './billing.js';
+import clubs from '../routes/clubs.js';
+import { resolveClub, resolveRanelagh } from '../middlewares/clubContext.js';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
 const router = Router();
+router.use('/billing', billing);
+router.use('/clubs/:clubSlug', resolveClub, clubs);
+const clubOperations = Router();
 
-const cleanFileName = (fileName) => basename(fileName, '.js');
-
-async function dynamicRouter() {
-  const dirList = await fs.promises.readdir(__dirname);
-  for (const fileName of dirList) {
-    const cleanName = cleanFileName(fileName);
-    if (cleanName === 'index' || cleanName === 'middlewares') continue;
-    const module = await import(`./${cleanName}.js`);
-    const subRouter = module.default;
-    router.use(`/${cleanName}`, subRouter);
-    // eslint-disable-next-line no-console
-    console.log(`✓ route loaded: /${cleanName}`);
-  }
+for (const [name, controller] of Object.entries({ users, courts, activities, events })) {
+  clubOperations.use('/' + name, controller);
+  router.use('/' + name, resolveRanelagh, controller);
 }
 
-await dynamicRouter();
-
+router.use('/clubs/:clubSlug', clubOperations);
 export default router;

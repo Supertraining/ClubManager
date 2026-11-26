@@ -6,8 +6,7 @@
 -- =====================================================
 
 -- ---- get_court_reservations(court_id, from_date, to_date) ----
--- Returns every reservation for a court between two dates.
--- Equivalent to the current GET /courts/:name in Express.
+-- Returns reservations visible to the caller under RLS for the court and dates.
 create or replace function public.get_court_reservations(
   p_court_id uuid,
   p_from timestamptz default now(),
@@ -24,7 +23,7 @@ returns table (
   info jsonb
 )
 language sql
-security definer
+security invoker
 stable
 as $$
   select r.id, r.weekday, r.reservation_date, r.start_time, r.end_time,
@@ -36,7 +35,7 @@ as $$
   order by r.start_time;
 $$;
 
-revoke all on function public.get_court_reservations(uuid, timestamptz, timestamptz) from public;
+revoke all on function public.get_court_reservations(uuid, timestamptz, timestamptz) from public, anon;
 grant execute on function public.get_court_reservations(uuid, timestamptz, timestamptz) to authenticated;
 
 -- ---- create_reservation_for_user(court_id, start_time, end_time) ----
@@ -85,7 +84,7 @@ exception
 end;
 $$;
 
-revoke all on function public.create_reservation(uuid, timestamptz, timestamptz, boolean, jsonb) from public;
+revoke all on function public.create_reservation(uuid, timestamptz, timestamptz, boolean, jsonb) from public, anon;
 grant execute on function public.create_reservation(uuid, timestamptz, timestamptz, boolean, jsonb) to authenticated;
 
 -- ---- delete_old_reservations() ----
@@ -94,7 +93,7 @@ grant execute on function public.create_reservation(uuid, timestamptz, timestamp
 create or replace function public.delete_old_reservations()
 returns integer
 language plpgsql
-security definer
+security invoker
 as $$
 declare
   v_deleted integer;
@@ -109,7 +108,7 @@ begin
 end;
 $$;
 
-revoke all on function public.delete_old_reservations() from public;
+revoke all on function public.delete_old_reservations() from public, anon, authenticated;
 grant execute on function public.delete_old_reservations() to service_role;
 
 -- ---- search_profiles(query, limit) ----
@@ -143,27 +142,21 @@ as $$
   limit p_limit;
 $$;
 
-revoke all on function public.search_profiles(text, integer) from public;
+revoke all on function public.search_profiles(text, integer) from public, anon;
 grant execute on function public.search_profiles(text, integer) to authenticated;
 
 -- ---- promote_to_admin(target_email) ----
--- Bootstrap helper. The first admin can promote themselves by calling this
--- from the Supabase SQL editor with their own email. After that, only admins
--- can call it.
+-- Controlled administrative operation, available to the owner and service_role.
 create or replace function public.promote_to_admin(p_email citext)
 returns void
 language plpgsql
-security definer
+security invoker
+set search_path = ''
 as $$
 begin
-  -- The first time, allow without admin (bootstrap). After that, require admin.
-  if exists (select 1 from public.profiles where role = 'admin') then
-    if not public.is_admin(auth.uid()) then
-      raise exception 'Solo un admin puede promover a otro admin' using errcode = '42501';
-    end if;
-  end if;
-
-  update public.profiles set role = 'admin' where email = p_email;
+  update public.profiles
+  set role = 'admin'
+  where lower(email::text) = lower(p_email::text);
 
   if not found then
     raise exception 'Usuario con email % no encontrado', p_email using errcode = 'P0002';
@@ -171,5 +164,5 @@ begin
 end;
 $$;
 
-revoke all on function public.promote_to_admin(citext) from public;
-grant execute on function public.promote_to_admin(citext) to authenticated;
+revoke all on function public.promote_to_admin(citext) from public, anon, authenticated;
+grant execute on function public.promote_to_admin(citext) to service_role;

@@ -1,35 +1,32 @@
 import ActivityModal from '../ActivityModal/ActivityModal';
 import PropTypes from 'prop-types';
 
-const Modal = ({ dataTarget, activity, categories, img }) => {
+const Modal = ({ dataTarget, activity, categories = [] }) => {
   return (
     <div
-      className='modal fade'
+      className='modal fade activity-hours-modal'
       id={dataTarget}
       tabIndex='-1'
       role='dialog'
-      aria-labelledby='exampleModalLabel'
+      aria-labelledby={dataTarget + '-title'}
       aria-hidden='true'>
       <div
-        className='modal-dialog'
+        className='modal-dialog modal-dialog-centered modal-dialog-scrollable'
         role='document'>
         <div
-          className='modal-content'
-          style={{ backgroundImage: `url(${img})`, backgroundSize: 'cover' }}>
+          className='modal-content'>
           <div className='modal-header'>
             <h5
               className='modal-title fs-5 p-2 rounded'
-              id='exampleModalLabel'>
-              {activity}
+              id={dataTarget + '-title'}>
+              Días y horarios{activity ? ' de ' + activity : ''}
             </h5>
 
             <button
               type='button'
-              className='close btn modal-btn'
+              className='btn-close'
               data-bs-dismiss='modal'
-              aria-label='Close'>
-              <span aria-hidden='true'>&times;</span>
-            </button>
+              aria-label='Cerrar ventana' />
           </div>
 
           <div className='modal-body'>
@@ -38,7 +35,8 @@ const Modal = ({ dataTarget, activity, categories, img }) => {
 
           <div className='modal-footer'>
             <button
-              className='btn modal-btn'
+              type='button'
+              className='btn btn-outline-secondary'
               data-bs-dismiss='modal'>
               Cerrar
             </button>
@@ -50,8 +48,7 @@ const Modal = ({ dataTarget, activity, categories, img }) => {
 };
 
 Modal.propTypes = {
-  img: PropTypes.string,
-  dataTarget: PropTypes.string,
+  dataTarget: PropTypes.string.isRequired,
   activity: PropTypes.string,
   categories: PropTypes.array,
 };

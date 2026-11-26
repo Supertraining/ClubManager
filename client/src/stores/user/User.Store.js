@@ -1,7 +1,8 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { persist } from 'zustand/middleware';
-import { supabase } from '../../lib/supabaseClient';
+import { clubApi, clubStorage } from '../../lib/clubRoute';
+import { supabase, API_BASE } from '../../lib/supabaseClient';
 import { ACTIONS } from './actions';
 
 /**
@@ -20,7 +21,7 @@ const storeApi = (set, get) => ({
   reserveDeleted: false,
 
   user: {
-    user: JSON.parse(localStorage.getItem('user-profile') || 'null'),
+    user: JSON.parse(localStorage.getItem(clubStorage('user-profile')) || 'null'),
     loading: false,
     error: null,
   },
@@ -37,7 +38,7 @@ const storeApi = (set, get) => ({
           state.user = { user: action.payload, loading: false, error: null };
         });
         if (action.payload) {
-          localStorage.setItem('user-profile', JSON.stringify(action.payload));
+          localStorage.setItem(clubStorage('user-profile'), JSON.stringify(action.payload));
         }
         break;
       case ACTIONS.LOGIN_FAILURE:
@@ -49,14 +50,14 @@ const storeApi = (set, get) => ({
         set((state) => {
           state.user = { user: null, loading: false, error: null };
         });
-        localStorage.removeItem('user-profile');
+        localStorage.removeItem(clubStorage('user-profile'));
         break;
       case ACTIONS.UPDATE_USER:
         set((state) => {
           state.user = { user: action.payload, loading: false, error: null };
         });
         if (action.payload) {
-          localStorage.setItem('user-profile', JSON.stringify(action.payload));
+          localStorage.setItem(clubStorage('user-profile'), JSON.stringify(action.payload));
         }
         break;
       default:
@@ -75,7 +76,7 @@ const storeApi = (set, get) => ({
     if (!session) return;
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080'}/users/user/${current.id}`,
+        clubApi(API_BASE) + '/users/me',
         { headers: { Authorization: `Bearer ${session.access_token}` } },
       );
       if (!res.ok) return;
@@ -84,7 +85,7 @@ const storeApi = (set, get) => ({
       set((state) => ({
         user: { ...state.user, user: next },
       }));
-      localStorage.setItem('user-profile', JSON.stringify(next));
+      localStorage.setItem(clubStorage('user-profile'), JSON.stringify(next));
     } catch (err) {
       console.warn('updateUser failed:', err?.message);
     }
@@ -95,4 +96,4 @@ const storeApi = (set, get) => ({
   },
 });
 
-export const userStore = create(immer(persist(storeApi, { name: 'clubmanager.user' })));
+export const userStore = create(immer(persist(storeApi, { name: clubStorage('clubmanager.user') })));

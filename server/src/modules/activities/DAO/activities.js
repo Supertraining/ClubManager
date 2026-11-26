@@ -1,111 +1,58 @@
-import { supabaseAdmin } from '../../../config/supabaseClient.js';
+import { createUserClient } from '../../../config/supabaseClient.js';
+import { clubRpc } from '../../clubs/DAO/clubs.js';
+import { throwClubDbError } from '../../../utils/clubDbError.js';
+import { CustomError } from '../../../utils/customError.Utils.js';
 import { Logger } from '../../../utils/logger.js';
 
-let instance = null;
+let instance;
+const fields = '*, category:activity_categories!category_club_activity_fkey(*)';
 
 export default class ActivitiesDAO {
-  async save(data) {
-    // Insert the activity, then attach its categories in a second insert.
-    const { data: row, error } = await supabaseAdmin
-      .from('activities')
-      .insert({
-        name: data.activity,
-        description: data.description,
-        image_url: data.img,
-        image_alt: data.imgText,
-        data_target: data.data_target,
-      })
-      .select()
-      .single();
-    if (error) throw error;
-
-    if (Array.isArray(data.category) && data.category.length) {
-      const { error: catError } = await supabaseAdmin
-        .from('activity_categories')
-        .insert(
-          data.category.map((c, i) => ({
-            activity_id: row.id,
-            name: c.name,
-            age_range: c.age_range,
-            days: c.days,
-            schedule: c.schedule,
-            display_order: i,
-          })),
-        );
-      if (catError) throw catError;
-    }
-    return row;
+  save(data, clubId, token) {
+    return this.write(null, data, clubId, token);
   }
 
-  async getAll() {
-    const { data, error } = await supabaseAdmin
-      .from('activities')
-      .select('*, category:activity_categories(*)')
-      .order('name', { ascending: true });
-    if (error) throw error;
-    return data ?? [];
-  }
-
-  async getById(id) {
-    const { data, error } = await supabaseAdmin
-      .from('activities')
-      .select('*, category:activity_categories(*)')
-      .eq('id', id)
-      .maybeSingle();
-    if (error) throw error;
+  async getAll(clubId) {
+    const { data, error } = await createUserClient().from('activities')
+      .select(fields).eq('club_id', clubId).order('name');
+    if (error) throwClubDbError(error);
     return data;
   }
 
-  async update(id, data) {
-    const updates = {};
-    if (data.activity) updates.name = data.activity;
-    if (data.description) updates.description = data.description;
-    if (data.img) updates.image_url = data.img;
-    if (data.imgText) updates.image_alt = data.imgText;
+  async getById(id, clubId, token) {
+    const { data, error } = await createUserClient(token).from('activities')
+      .select(fields).eq('club_id', clubId).eq('id', id).maybeSingle();
+    if (error) throwClubDbError(error);
+    return data;
+  }
 
-    if (Object.keys(updates).length) {
-      const { error } = await supabaseAdmin
-        .from('activities')
-        .update(updates)
-        .eq('id', id);
-      if (error) throw error;
-    }
+  write(id, data, clubId, token) {
+    const changes = { name: data.activity, description: data.description, image_url: data.img, image_alt: data.imgText, data_target: data.data_target };
+    const categories = Array.isArray(data.category) ? data.category.map((category, displayOrder) => ({
+      name: category.name, age_range: category.age_range, days: category.days,
+      schedule: category.schedule, display_order: displayOrder,
+    })) : null;
+    return clubRpc(token, 'save_club_activity', { p_club_id: clubId, p_id: id, p_changes: changes, p_category: categories });
+  }
 
-    if (Array.isArray(data.category)) {
-      // Replace the categories wholesale — simpler than diffing.
-      await supabaseAdmin.from('activity_categories').delete().eq('activity_id', id);
-      if (data.category.length) {
-        const { error } = await supabaseAdmin
-          .from('activity_categories')
-          .insert(
-            data.category.map((c, i) => ({
-              activity_id: id,
-              name: c.name,
-              age_range: c.age_range,
-              days: c.days,
-              schedule: c.schedule,
-              display_order: i,
-            })),
-          );
-        if (error) throw error;
-      }
-    }
+  async update(id, data, clubId, token) {
+    await this.write(id, data, clubId, token);
     return { matchedCount: 1, modifiedCount: 1 };
   }
 
-  async delete(id) {
-    const { error } = await supabaseAdmin.from('activities').delete().eq('id', id);
-    if (error) throw error;
+  async delete(id, clubId, token) {
+    const { data, error } = await createUserClient(token).from('activities')
+      .delete().eq('club_id', clubId).eq('id', id).select('id').maybeSingle();
+    if (error) throwClubDbError(error);
+    if (!data) throw CustomError.notFound('Actividad no encontrada.');
     return { matchedCount: 1, modifiedCount: 1 };
   }
 
-  async deleteAll() {
-    const { error } = await supabaseAdmin
-      .from('activities')
-      .delete()
-      .neq('id', '00000000-0000-0000-0000-000000000000'); // delete all
-    if (error) throw error;
-    return { deletedCount: 1 };
+  async deleteAll(clubId, token) {
+    const { count, error } = await createUserClient(token).from('activities')
+      .delete({ count: 'exact' }).eq('club_id', clubId);
+    if (error) throwClubDbError(error);
+    return { deletedCount: count ?? 0 };
   }
 
   static getInstance() {

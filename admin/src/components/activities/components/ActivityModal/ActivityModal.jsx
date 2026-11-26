@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
 const ActivityModal = ({ categories }) => {
+  if (!categories?.length) return <p className='mb-0'>Todavía no hay días y horarios cargados para esta actividad.</p>;
   return (
-    <>
-      <table className='modal-table table-responsive bg-transparent w-100'>
+    <div className='table-responsive'>
+      <table className='modal-table bg-transparent w-100'>
         <thead className='bg-success text-white text-center border border-success'>
           <tr>
             <th
@@ -44,7 +45,7 @@ const ActivityModal = ({ categories }) => {
           ))}
         </tbody>
       </table>
-    </>
+    </div>
   );
 };
 

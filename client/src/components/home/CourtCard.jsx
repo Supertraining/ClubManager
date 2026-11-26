@@ -6,7 +6,7 @@ const CourtCard = ({ court }) => {
   return (
     <Link to={`/reserves?court=${court.name}`} className='court-card card-soft card-soft--interactive'>
       <div className='court-card__media'>
-        <img src={court.image} alt={court.displayName || court.name} loading='lazy' />
+        {court.image && <img src={court.image} alt={court.displayName || court.name} loading='lazy' />}
         <span className='court-card__badge tag tag--inverse'>
           <i className='bi bi-trophy' aria-hidden='true'></i>
           {(court.surface || 'CANCHA').toUpperCase()}

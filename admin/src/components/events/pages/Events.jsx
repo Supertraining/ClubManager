@@ -11,20 +11,17 @@ import PropTypes from 'prop-types';
 import { useNotifications, useFetch } from '../../../hooks';
 import { useEventsAPI } from '../hooks/useEventsAPI';
 import Spinner from '../../spinner/Spinner';
+import { useClub } from '../../club/useClub';
+import { eventForPanel } from '../eventDates';
 
 export const Events = ({ handleMenuClick, menu }) => {
   const { data, loading, error, reFetch } = useFetch('/events');
+  const { club } = useClub();
 
   const { notifyWarning } = useNotifications();
   const { deleteReserve, createEvent, updateEvent } = useEventsAPI();
-  const calendarArray = [];
-  !error
-    ? data.forEach((event) => {
-        event.calendarData.forEach((calendarData) => {
-          calendarArray.push(calendarData);
-        });
-      })
-    : notifyWarning('Ha ocurrido un error, por favor intente nuevamente mas tarde');
+  const events = data.map(event => eventForPanel(event, club.timezone));
+  const calendarArray = events.flatMap(event => event.calendarData);
 
   let EVENT_DATA_INITIAL_STATE = {
     evento: '',
@@ -58,8 +55,8 @@ export const Events = ({ handleMenuClick, menu }) => {
 
   const handleDeleteReserve = async (id) => {
     try {
-      deleteReserve(id);
-      reFetch();
+      await deleteReserve(id);
+      await reFetch();
     } catch (error) {
       notifyWarning('Ha ocurrido un error, por favor intente nuevamente mas tarde');
     }
@@ -67,15 +64,15 @@ export const Events = ({ handleMenuClick, menu }) => {
 
   const eventsBooking = async (date, calendarData) => {
     try {
-      const completeEvent = Object.values(eventData).some((el) => el.length === 0);
+      const completeEvent = ['evento', 'nombre', 'apellido', 'telefono', 'horaInicia', 'horaFinaliza'].some(key => !eventData[key]);
       if (completeEvent) {
         notifyWarning('Formulario Incompleto');
         return;
       }
 
-      createEvent(eventData, date, calendarData);
+      await createEvent(eventData, date, calendarData);
 
-      reFetch();
+      await reFetch();
     } catch (error) {
       notifyWarning('Ha ocurrido un error, por favor intente nuevamente mas tarde');
     }
@@ -83,7 +80,7 @@ export const Events = ({ handleMenuClick, menu }) => {
 
   const handleIsEventSettled = async (id, isSettled) => {
     try {
-      updateEvent(id, isSettled);
+      await updateEvent(id, isSettled);
 
       reFetch();
     } catch (error) {
@@ -109,7 +106,8 @@ export const Events = ({ handleMenuClick, menu }) => {
           />
 
           <div className='col-12 p-2 react-full-year-scheduler-container'>
-            {loading ? (
+          {error && <p role='alert'>No pudimos cargar los eventos del club.</p>}
+          {loading ? (
               <Spinner
                 type={'grow'}
                 color={'text-success'}
@@ -133,7 +131,7 @@ export const Events = ({ handleMenuClick, menu }) => {
                   maxRangeSelection={1}
                   minRangeSelection={1}
                   firstDayOfWeek='Monday'
-                  maxYear={2025}
+                  maxYear={new Date().getFullYear() + 2}
                   minYear={2022}
                   readonlyCalendar={false}
                   showWeekSeparator={true}
@@ -164,7 +162,7 @@ export const Events = ({ handleMenuClick, menu }) => {
 
           <div className='overflow-x-auto'>
             <EventsTable
-              data={data}
+              data={events}
               handleIsEventSettled={handleIsEventSettled}
               handleDeleteReserve={handleDeleteReserve}
             />

@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import { validate } from '../middlewares/dataValidator.js';
 import { IsAuthenticated } from '../middlewares/isAuthenticated.js';
+import { IsAdmin } from '../middlewares/isAdmin.js';
+import { requireMembership } from '../middlewares/clubContext.js';
 
 const router = Router();
 
@@ -24,10 +26,14 @@ export default class UserRouter {
       this.controllers.login
     );
 
-    router.use(IsAuthenticated.checkJwt)
+    router.use(IsAuthenticated.checkJwt, requireMembership);
+
+    router.get('/me', this.controllers.getByUserName);
+    router.get('/user/:id/reserves', IsAdmin.requireAdmin, this.controllers.getMemberReserves);
 
     router.get(
       '/getAll',
+      IsAdmin.requireAdmin,
 
       this.controllers.getAllUsers
     );
@@ -40,6 +46,7 @@ export default class UserRouter {
 
     router.delete(
       '/eliminar/:id',
+      IsAdmin.requireAdmin,
 
       this.controllers.deleteById
     );
@@ -76,7 +83,7 @@ export default class UserRouter {
     router.put(
       '/update',
 
-      validate.userUpdatePassword,
+      IsAdmin.requireAdmin,
 
       this.controllers.updateUserPassword
     );

@@ -1,28 +1,11 @@
-import { useEffect, useMemo, useState, useCallback } from 'react';
+import { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useFetch, useNotifications, useReservesAPI } from '../../hooks';
-import { userStore } from '../../stores';
-
-import {
-  getCourt,
-  getCourtHours,
-  getSlotsForDay,
-  toDateKey,
-  DEFAULT_DURATION_MIN,
-  MIN_DURATION_MIN,
-} from './courtConfig';
-import {
-  flattenReserves,
-  findReservationForSlot,
-  getWeekDays,
-  isSameDay,
-  isSlotPast,
-  slotEnd,
-  toHHmm,
-  toMinutes,
-} from './helpers';
-
+import { userStore as useUserStore } from '../../stores';
+import { useClub } from '../club/useClub';
+import { getCourt, getCourtHours, getSlotsForDay, toDateKey } from './courtConfig';
+import { clubClock, clubDateKey, clubToday, findReservationForSlot, flattenReserves, getWeekDays, isSlotPast, slotEnd, toMinutes } from './helpers';
 import DateStrip from './DateStrip';
 import TimeTabs from './TimeTabs';
 import SlotGrid from './SlotGrid';
@@ -31,332 +14,163 @@ import BookingInstructions from './BookingInstructions';
 import NextSlotFab from './NextSlotFab';
 import './CourtPage.css';
 
-const RANGE_ORDER = ['manana', 'tarde', 'noche'];
+const ranges = ['manana', 'tarde', 'noche'];
 
-const CourtPage = ({ court }) => {
+function availableWindows(hours, reserves, dateKey, minDuration, nowMinutes) {
+  if (!hours) return [];
+  const bookings = reserves.filter(row => row.date === dateKey)
+    .map(row => ({ from: toMinutes(row.initialTime), to: toMinutes(row.finalTime) }))
+    .sort((a, b) => a.from - b.from);
+  const windows = [];
+  let cursor = Math.max(hours.openMin, nowMinutes);
+  for (const booking of bookings) {
+    if (booking.from - cursor >= minDuration) windows.push({ from: cursor, to: booking.from });
+    cursor = Math.max(cursor, booking.to);
+  }
+  if (hours.closeMin - cursor >= minDuration) windows.push({ from: cursor, to: hours.closeMin });
+  return windows;
+}
+
+export default function CourtPage({ court }) {
+  const { club, access } = useClub();
+  const user = useUserStore(state => state.user.user);
+  const member = Boolean(user) && access === 'member';
+  const canBook = member && club.bookingEnabled;
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const courtFromUrl = searchParams.get('court');
-  const courtName = court || courtFromUrl || 'futbol';
-
-  const courtConfig = getCourt(courtName);
-  const user = userStore((s) => s.user?.user);
-
-  const { data: courtReserves, reFetch } = useFetch(`/courts/${courtName}`);
+  const location = useLocation();
+  const timeZone = club.timezone;
+  const today = clubToday(timeZone);
+  const durations = court.durationOptionsMin;
+  const minDuration = durations[0];
+  const artwork = club.slug === 'ranelagh' ? getCourt(court.slug) : null;
+  const image = artwork?.image ?? club.coverImageUrl;
   const { createReserve } = useReservesAPI();
-  const { notifySuccess, notifyWarning } = useNotifications();
+  const { notifySuccess } = useNotifications();
+  const { data, loading, error, reFetch } = useFetch('/courts/' + court.slug + (member ? '' : '/availability'));
 
-  const [selectedDate, setSelectedDate] = useState(() => new Date());
-  const [range, setRange] = useState('manana');
-  const [startTime, setStartTime] = useState(null);
-  const [durationMin, setDurationMin] = useState(DEFAULT_DURATION_MIN);
+  const [date, setDate] = useState(today);
+  const [preferredRange, setRange] = useState('manana');
+  const [start, setStart] = useState(null);
+  const [duration, setDuration] = useState(minDuration);
   const [submitting, setSubmitting] = useState(false);
 
-  // Refetch on mount + on court change
-  useEffect(() => {
-    reFetch();
-  }, [courtName, reFetch]);
+  const reserves = useMemo(() => flattenReserves(data).map(row => {
+    const startTime = row.startTime ?? row.initialTime;
+    const endTime = row.endTime ?? row.finalTime;
+    const startDate = clubDateKey(startTime, timeZone);
+    return {
+      date: startDate,
+      initialTime: clubClock(startTime, timeZone),
+      finalTime: clubDateKey(endTime, timeZone) > startDate ? '24:00' : clubClock(endTime, timeZone),
+      user: row.user ?? (row.mine ? user?.id : null),
+      permanent: row.permanent ?? false,
+    };
+  }), [data, timeZone, user?.id]);
 
-  // Reset selection on court change
-  useEffect(() => {
-    setStartTime(null);
-    setSelectedDate(new Date());
-    setRange('manana');
-    setDurationMin(DEFAULT_DURATION_MIN);
-  }, [courtName]);
-
-  // Derived: slots for the selected day
-  const slotsByRange = useMemo(
-    () => getSlotsForDay(courtName, selectedDate),
-    [courtName, selectedDate],
+  const dateKey = toDateKey(date);
+  const hours = getCourtHours(court, date);
+  const slots = getSlotsForDay(court, date, minDuration);
+  const available = (slot, dayKey, close) => (
+    toMinutes(slot) + duration <= close && !isSlotPast(slot, dayKey, timeZone)
+      && !findReservationForSlot(reserves, dayKey, slot, duration)
   );
+  const counts = Object.fromEntries(ranges.map(range => [range, slots[range].filter(slot => available(slot, dateKey, hours?.closeMin)).length]));
+  const range = counts[preferredRange] ? preferredRange : ranges.find(item => counts[item] > 0) ?? preferredRange;
+  const windows = availableWindows(hours, reserves, dateKey, minDuration,
+    toDateKey(today) === dateKey ? (Math.floor(toMinutes(clubClock(new Date(), timeZone)) / 30) + 1) * 30 : 0);
 
-  // Derived: flat list of reservations
-  const reserves = useMemo(() => flattenReserves(courtReserves), [courtReserves]);
-
-  // Counts per range (bookable slots). Availability depends on the chosen
-  // duration: a slot someone else holds for 1 h may still fit a different
-  // start, so the counts are recomputed when the duration changes. Elapsed
-  // slots are excluded too, otherwise the tab advertises a number of slots
-  // that are rendered disabled.
-  const rangeCounts = useMemo(() => {
-    const dateKey = toDateKey(selectedDate);
-    const counts = {};
-    for (const r of RANGE_ORDER) {
-      counts[r] = (slotsByRange[r] || []).filter((slot) => (
-        !findReservationForSlot(reserves, dateKey, slot, durationMin)
-        && !isSlotPast(slot, dateKey)
-      )).length;
-    }
-    return counts;
-  }, [slotsByRange, reserves, selectedDate, durationMin]);
-
-  /**
-   * Free windows for the selected day, longest first.
-   *
-   * The grid forces the member to invert the overlap maths to answer "when
-   * can I book?". A 19:00-20:30 booking looks like it blocks 18:00, 18:30,
-   * 19:30 and 20:00, and nothing in the UI says those are candidate starts
-   * rather than occupied time. This just states the answer: the court is
-   * free 18:00-19:00 and from 20:30 on. Windows shorter than the minimum
-   * booking are dropped, since they could never be reserved.
-   */
-  const freeWindows = useMemo(() => {
-    const hours = getCourtHours(courtName, selectedDate);
-    if (!hours) return [];
-
-    const dateKey = toDateKey(selectedDate);
-    const booked = reserves
-      .filter((r) => r.date === dateKey)
-      .map((r) => ({
-        start: toMinutes(toHHmm(r.initialTime)),
-        end: toMinutes(toHHmm(r.finalTime)),
-      }))
-      .sort((a, b) => a.start - b.start);
-
-    // merge touching/overlapping bookings into solid blocks
-    const blocks = [];
-    for (const b of booked) {
-      const last = blocks[blocks.length - 1];
-      if (last && b.start <= last.end) last.end = Math.max(last.end, b.end);
-      else blocks.push({ ...b });
-    }
-
-    const windows = [];
-    let cursor = hours.openMin;
-    for (const block of blocks) {
-      if (block.start - MIN_DURATION_MIN >= cursor) {
-        windows.push({ from: cursor, to: block.start });
-      }
-      cursor = Math.max(cursor, block.end);
-    }
-    if (hours.closeMin - MIN_DURATION_MIN >= cursor) {
-      windows.push({ from: cursor, to: hours.closeMin });
-    }
-    return windows;
-  }, [courtName, selectedDate, reserves]);
-
-  // Adjust range to first non-empty if current becomes empty
-  useEffect(() => {
-    if (rangeCounts[range] === 0) {
-      const first = RANGE_ORDER.find((r) => rangeCounts[r] > 0);
-      if (first) setRange(first);
-    }
-  }, [rangeCounts, range]);
-
-  const slots = slotsByRange[range] || [];
-
-  const getReservation = useCallback(
-    (slot) => findReservationForSlot(reserves, toDateKey(selectedDate), slot, durationMin),
-    [reserves, selectedDate, durationMin],
-  );
-
-  // Find next available slot across the next 7 days
-  const nextSlot = useMemo(() => {
-    const week = getWeekDays();
-    for (const day of week) {
-      const dayKey = toDateKey(day);
-      const slots = getSlotsForDay(courtName, day);
-      for (const r of RANGE_ORDER) {
-        for (const s of slots[r] || []) {
-          if (!findReservationForSlot(reserves, dayKey, s, durationMin)) {
-            // Skip past slots of today
-            if (isSameDay(day, new Date())) {
-              const [h, m] = s.split(':').map(Number);
-              const slotDate = new Date();
-              slotDate.setHours(h, m, 0, 0);
-              if (slotDate.getTime() <= Date.now()) continue;
-            }
-            return { day, dayKey, range: r, slot: s };
-          }
+  let nextSlot;
+  if (canBook && !loading && !error) {
+    for (const day of getWeekDays(today)) {
+      const daySlots = getSlotsForDay(court, day, minDuration);
+      const dayHours = getCourtHours(court, day);
+      for (const dayRange of ranges) {
+        const slot = daySlots[dayRange].find(item => available(item, toDateKey(day), dayHours.closeMin));
+        if (slot) {
+          nextSlot = { day, range: dayRange, slot };
+          break;
         }
       }
+      if (nextSlot) break;
     }
-    return null;
-  }, [courtName, reserves, durationMin]);
-
-  const nextSlotHint = nextSlot
-    ? `Próximo libre: ${nextSlot.day.toLocaleDateString('es-AR', { weekday: 'short' })} ${nextSlot.day.getDate()} · ${nextSlot.slot}`
-    : null;
-
-  const onUseNextSlot = useCallback(() => {
-    if (!nextSlot) return;
-    setSelectedDate(nextSlot.day);
-    setRange(nextSlot.range);
-    setStartTime(nextSlot.slot);
-    // Scroll the grid into view
-    setTimeout(() => {
-      const el = document.getElementById('booking-slot-grid');
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 50);
-  }, [nextSlot]);
-
-  const handleConfirm = useCallback(async () => {
-    if (!startTime || !user) {
-      if (!user) navigate(`/login?next=${encodeURIComponent(window.location.pathname + window.location.search)}`);
-      return;
-    }
-    setSubmitting(true);
-    const end = slotEnd(startTime, durationMin);
-    const dateKey = toDateKey(selectedDate);
-    const result = await createReserve(courtName, dateKey, startTime, end);
-    setSubmitting(false);
-    if (result !== null) {
-      notifySuccess('Listo, te guardamos el turno. Si no podés venir, avisanos así otro socio lo aprovecha.');
-      setStartTime(null);
-      // Volvemos a la duración por defecto. Dejarla en 2 h hacía que la grilla
-      // siguiente pareciera tres veces más llena de lo que realmente está.
-      setDurationMin(DEFAULT_DURATION_MIN);
-      reFetch();
-    } else {
-      notifyWarning('No se pudo reservar. Probá con otro horario.');
-      reFetch();
-    }
-  }, [startTime, durationMin, user, createReserve, courtName, selectedDate, reFetch, navigate, notifySuccess, notifyWarning]);
-
-  // Auth gate
-  if (!user) {
-    return (
-      <div className='court-page court-page--gate'>
-        <div className='court-page__hero' style={{ backgroundImage: `linear-gradient(rgba(15, 79, 63, 0.55), rgba(10, 56, 44, 0.7)), url(${courtConfig?.image})` }}>
-          <div className='container-xl court-page__hero-inner'>
-            <span className='eyebrow eyebrow--inverse'>— Cancha</span>
-            <h1 className='court-page__title'>{courtConfig?.displayName || 'Cancha'}</h1>
-            <p className='court-page__sub'>{courtConfig?.surface}</p>
-            <ul className='court-page__pills'>
-              {courtConfig?.pills?.map((p) => (
-                <li key={p} className='tag tag--inverse'>{p}</li>
-              ))}
-            </ul>
-          </div>
-        </div>
-        <div className='container-xl court-page__body'>
-          <BookingInstructions />
-
-          <div className='court-page__grid'>
-            <div className='court-page__main'>
-              <h2 className='court-page__section-title'>Mirá la disponibilidad</h2>
-              <p className='court-page__hint'>Iniciá sesión para reservar un turno.</p>
-
-              <DateStrip selected={selectedDate} onSelect={setSelectedDate} />
-              <TimeTabs
-                value={range}
-                onChange={setRange}
-                counts={rangeCounts}
-              />
-
-              <div id='booking-slot-grid'>
-                <SlotGrid
-                  slots={slots}
-                  selectedStart={startTime}
-                  onSelect={() => navigate('/login?next=' + encodeURIComponent(window.location.pathname + window.location.search))}
-                  getReservation={getReservation}
-                  currentUserId={null}
-                  durationMin={durationMin}
-                  dateKey={toDateKey(selectedDate)}
-                  closeMin={getCourtHours(courtName, selectedDate)?.closeMin ?? null}
-                  freeWindows={freeWindows}
-                />
-              </div>
-            </div>
-
-            <div className='court-page__side'>
-              <BookingPanel
-                date={selectedDate}
-                startTime={null}
-                courtDisplayName={courtConfig?.displayName || '—'}
-                onConfirm={() => navigate('/login?next=' + encodeURIComponent(window.location.pathname + window.location.search))}
-                isSubmitting={false}
-                isAuthenticated={false}
-                nextSlotHint={nextSlotHint}
-                onUseNextSlot={onUseNextSlot}
-                durationMin={durationMin}
-                onDurationChange={setDurationMin}
-                closeMin={getCourtHours(courtName, selectedDate)?.closeMin ?? null}
-                freeWindows={freeWindows}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    );
   }
+
+  const nextSlotHint = nextSlot ? 'Próximo libre: ' + nextSlot.day.toLocaleDateString('es-AR', { weekday: 'short', day: 'numeric' }) + ' · ' + nextSlot.slot : null;
+  const login = '/login?next=' + encodeURIComponent(location.pathname + location.search);
+  const chooseDay = day => {
+    setDate(day);
+    setStart(null);
+  };
+  const useNextSlot = () => {
+    if (!nextSlot) return;
+    setDate(nextSlot.day);
+    setRange(nextSlot.range);
+    setStart(nextSlot.slot);
+  };
+  const confirm = async () => {
+    if (!canBook || !start || submitting || !available(start, dateKey, hours?.closeMin)) return;
+    setSubmitting(true);
+    try {
+      const result = await createReserve(court.slug, dateKey, start, slotEnd(start, duration));
+      if (result !== null) {
+        setStart(null);
+        setDuration(minDuration);
+        notifySuccess('Listo, te guardamos el turno.');
+      }
+      await reFetch();
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className='court-page'>
-      <div className='court-page__hero' style={{ backgroundImage: `linear-gradient(rgba(15, 79, 63, 0.55), rgba(10, 56, 44, 0.78)), url(${courtConfig?.image})` }}>
+      <header className='court-page__hero' style={image ? { backgroundImage: 'linear-gradient(rgba(15, 79, 63, 0.55), rgba(10, 56, 44, 0.78)), url("' + image + '")' } : { backgroundColor: 'var(--c-brand)' }}>
         <div className='container-xl court-page__hero-inner'>
-          <span className='eyebrow eyebrow--inverse'>— Cancha</span>
-          <h1 className='court-page__title'>{courtConfig?.displayName || 'Cancha'}</h1>
-          <p className='court-page__sub'>{courtConfig?.surface}</p>
-          <ul className='court-page__pills'>
-            {courtConfig?.pills?.map((p) => (
-              <li key={p} className='tag tag--inverse'>{p}</li>
-            ))}
-          </ul>
+          <h1 className='court-page__title'>{court.displayName}</h1>
+          {court.surface && <p className='court-page__sub'>{court.surface}</p>}
+          {artwork?.pills && <ul className='court-page__pills'>{artwork.pills.map(item => <li className='tag tag--inverse' key={item}>{item}</li>)}</ul>}
         </div>
-      </div>
-
+      </header>
       <div className='container-xl court-page__body'>
         <BookingInstructions />
-
         <div className='court-page__grid'>
-          <div className='court-page__main'>
+          <section className='court-page__main'>
             <h2 className='court-page__section-title'>Elegí día y horario</h2>
-
-            <DateStrip selected={selectedDate} onSelect={setSelectedDate} />
-
-            <TimeTabs
-              value={range}
-              onChange={setRange}
-              counts={rangeCounts}
-            />
-
-            <div id='booking-slot-grid'>
-              <SlotGrid
-                slots={slots}
-                selectedStart={startTime}
-                onSelect={setStartTime}
-                getReservation={getReservation}
-                currentUserId={user?.id}
-                durationMin={durationMin}
-                dateKey={toDateKey(selectedDate)}
-                closeMin={getCourtHours(courtName, selectedDate)?.closeMin ?? null}
-                freeWindows={freeWindows}
-              />
-            </div>
-          </div>
-
+            <DateStrip selected={date} today={today} onSelect={chooseDay} />
+            {loading ? <p role='status'>Cargando horarios…</p> : error
+              ? <p role='alert'>No pudimos consultar los horarios. <button type='button' className='btn btn--ghost' onClick={reFetch}>Reintentar</button></p>
+              : <>
+                <TimeTabs value={range} onChange={value => { setRange(value); setStart(null); }} counts={counts} />
+                <div id='booking-slot-grid'>
+                  <SlotGrid slots={slots[range]} selectedStart={start} getReservation={slot => findReservationForSlot(reserves, dateKey, slot, duration)}
+                    onSelect={slot => canBook ? setStart(slot) : club.bookingEnabled && navigate(user ? '/register' : login)}
+                    dateKey={dateKey} timeZone={timeZone} currentUserId={user?.id}
+                    durationMin={duration} closeMin={hours?.closeMin} />
+                </div>
+              </>}
+          </section>
           <div className='court-page__side'>
-            <BookingPanel
-              date={selectedDate}
-              startTime={startTime}
-              courtDisplayName={courtConfig?.displayName || '—'}
-              onConfirm={handleConfirm}
-              isSubmitting={submitting}
-              isAuthenticated={Boolean(user)}
-              nextSlotHint={nextSlotHint}
-              onUseNextSlot={onUseNextSlot}
-              durationMin={durationMin}
-              onDurationChange={setDurationMin}
-              closeMin={getCourtHours(courtName, selectedDate)?.closeMin ?? null}
-              freeWindows={freeWindows}
-            />
+            {!club.bookingEnabled ? <p>El club pausó la toma de reservas.</p> : user && !canBook
+              ? <Link to='/register' className='btn btn--primary btn--pill'>Sumarme al club</Link>
+              : <BookingPanel date={date} startTime={start} courtDisplayName={court.displayName}
+                onConfirm={confirm} isSubmitting={submitting || loading || Boolean(error)} isAuthenticated={canBook}
+                nextSlotHint={nextSlotHint} onUseNextSlot={useNextSlot} durationMin={duration}
+                durationOptions={durations} onDurationChange={setDuration} closeMin={hours?.closeMin}
+                freeWindows={loading || error ? [] : windows} />}
           </div>
         </div>
       </div>
-
-      <NextSlotFab
-        hint={nextSlotHint}
-        onClick={onUseNextSlot}
-        visible={!startTime && Boolean(nextSlot)}
-      />
+      <NextSlotFab hint={nextSlotHint} onClick={useNextSlot} visible={!start && Boolean(nextSlot)} />
     </div>
   );
-};
+}
 
 CourtPage.propTypes = {
-  court: PropTypes.string,
+  court: PropTypes.shape({
+    slug: PropTypes.string.isRequired,
+    displayName: PropTypes.string.isRequired,
+    surface: PropTypes.string,
+    durationOptionsMin: PropTypes.arrayOf(PropTypes.number).isRequired,
+  }).isRequired,
 };
-
-export default CourtPage;

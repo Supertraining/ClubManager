@@ -1,216 +1,158 @@
-import { useState } from 'react';
-import { ToastContainer } from 'react-toastify';
-import './UserData.css';
+import { useEffect, useId, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import PropTypes from 'prop-types';
+import './UserData.css';
 
-const UserData = ({
-  selectedUser,
-  handleUpdateUser,
-  handleDeleteUser,
-  setConfirmDelete,
-  confirmDelete,
-}) => {
-  const [credentials, setCredentials] = useState({
-    email: selectedUser.email,
-    first_name: selectedUser.first_name,
-    last_name: selectedUser.last_name,
-    age: selectedUser.age,
-    phone: selectedUser.phone,
-    role: selectedUser.role,
+const fields = [
+  { name: 'first_name', label: 'Nombre', type: 'text', rules: { validate: value => Boolean(value.trim()) || 'Ingresá el nombre.', maxLength: 80 } },
+  { name: 'last_name', label: 'Apellido', type: 'text', rules: { validate: value => Boolean(value.trim()) || 'Ingresá el apellido.', maxLength: 80 } },
+  { name: 'age', label: 'Edad', type: 'number', rules: {
+    valueAsNumber: true,
+    validate: value => (Number.isInteger(value) && value >= 12 && value <= 99) || 'Ingresá una edad entre 12 y 99 años.',
+  } },
+  { name: 'phone', label: 'Teléfono', type: 'tel', rules: { maxLength: 80 } },
+];
+
+function formValues(user) {
+  return {
+    first_name: user.first_name ?? '',
+    last_name: user.last_name ?? '',
+    age: user.age ?? '',
+    phone: user.phone ?? '',
+  };
+}
+
+function saveError(error) {
+  const { status, data } = error.response ?? {};
+  if (status >= 400 && status < 500 && typeof data === 'string') return data;
+  return error.response
+    ? 'No pudimos guardar los cambios. Volvé a intentar.'
+    : 'Revisá tu conexión y volvé a intentar guardar los cambios.';
+}
+
+export default function UserData({ selectedUser, handleUpdateUser, handleDeleteUser, setConfirmDelete, confirmDelete }) {
+  const id = useId();
+  const editButton = useRef(null);
+  const [editing, setEditing] = useState(false);
+  const [feedback, setFeedback] = useState(null);
+  const { register, reset, handleSubmit, setFocus, formState: { errors, isSubmitting } } = useForm({
+    defaultValues: formValues(selectedUser),
   });
 
-  const [showForm, setShowForm] = useState(false);
+  useEffect(() => {
+    if (editing) setFocus('first_name');
+  }, [editing, setFocus]);
 
-  const handleChange = (e) => {
-    setCredentials({
-      ...credentials,
-      [e.target.name]: e.target.value,
-    });
-  };
+  const name = [selectedUser.first_name, selectedUser.last_name].filter(Boolean).join(' ') || selectedUser.email;
+  const initials = [selectedUser.first_name, selectedUser.last_name].filter(Boolean).map(value => value.trim()[0]).join('').toUpperCase() || 'S';
+  const administrator = selectedUser.role === 'admin';
+
+  function startEdit() {
+    reset(formValues(selectedUser));
+    setFeedback(null);
+    setEditing(true);
+  }
+
+  function closeEdit() {
+    setEditing(false);
+    requestAnimationFrame(() => editButton.current?.focus());
+  }
+
+  async function save(values) {
+    setFeedback(null);
+    try {
+      await handleUpdateUser(values, selectedUser.id);
+      closeEdit();
+      setFeedback({ text: 'Guardamos los cambios.' });
+    } catch (error) {
+      setFeedback({ error: true, text: saveError(error) });
+    }
+  }
 
   return (
-    <>
-      <div>
-        <ToastContainer />
-      </div>
-
-      <h3 className='text-primary fw-bold my-2'>@User Data</h3>
-
-      <div className='d-flex flex-column flex-md-row align-items-center'>
-        <ul className='list-unstyled mb-4 col-12 col-md-6 d-flex flex-column align-items-center'>
-          <li className='col-12'>
-            <i className='bi bi-envelope-at' id='basic-addon1'></i>
-            <b className='text-success mx-1 selectedUser-data'>Email:</b>
-            <span className='mx-1 fw-bold selectedUser-data'>{selectedUser.email}</span>
-          </li>
-
-          <li className='col-12'>
-            <i className='bi bi-person-check' id='basic-addon1'></i>
-            <b className='text-success mx-1 selectedUser-data'>Nombre:</b>
-            <span className='mx-1 fw-bold selectedUser-data'>{selectedUser.first_name}</span>
-          </li>
-
-          <li className='col-12'>
-            <i className='bi bi-person-check' id='basic-addon1'></i>
-            <b className='text-success mx-1 selectedUser-data'>Apellido:</b>
-            <span className='mx-1 fw-bold selectedUser-data'>{selectedUser.last_name}</span>
-          </li>
-
-          <li className='col-12'>
-            <i className='bi bi-calendar-date' id='basic-addon1'></i>
-            <b className='text-success mx-1 selectedUser-data'>Edad:</b>
-            <span className='mx-1 fw-bold selectedUser-data'>{selectedUser.age}</span>
-          </li>
-
-          <li className='col-12'>
-            <i className='bi bi-phone' id='basic-addon1'></i>
-            <b className='text-success mx-1 selectedUser-data'>Telefono:</b>
-            <span className='mx-1 fw-bold selectedUser-data'>{selectedUser.phone}</span>
-          </li>
-
-          <li className='col-12'>
-            <i className='bi bi-sunglasses'></i>
-            <b className='text-success mx-1 selectedUser-data'>Rol:</b>
-            <span className='mx-1 fw-bold selectedUser-data'>{selectedUser.role}</span>
-          </li>
-        </ul>
-
-        {showForm && (
-          <>
-            <form className='text-center col-12 col-md-6'>
-              <input
-                className='mx-2 mt-3 text-warning text-center border-0 border-bottom border-primary col-12'
-                type='email'
-                name='email'
-                id='email'
-                placeholder='Email'
-                value={credentials.email ?? ''}
-                onChange={handleChange}
-              />
-
-              <input
-                className='mx-2 mt-3 text-warning text-center border-0 border-bottom border-primary col-12'
-                type='text'
-                name='first_name'
-                id='first_name'
-                placeholder='Nombre'
-                value={credentials.first_name ?? ''}
-                onChange={handleChange}
-              />
-
-              <input
-                className='mx-2 mt-3 text-warning text-center border-0 border-bottom border-primary col-12'
-                type='text'
-                name='last_name'
-                id='last_name'
-                placeholder='Apellido'
-                value={credentials.last_name ?? ''}
-                onChange={handleChange}
-              />
-
-              <input
-                className='mx-2 mt-3 text-warning text-center border-0 border-bottom border-primary col-12'
-                type='number'
-                min={12}
-                max={99}
-                name='age'
-                id='age'
-                placeholder='Edad'
-                value={credentials.age ?? ''}
-                onChange={handleChange}
-              />
-
-              <input
-                className='mx-2 mt-3 text-warning text-center border-0 border-bottom border-primary col-12'
-                type='text'
-                name='phone'
-                id='phone'
-                placeholder='Telefono'
-                value={credentials.phone ?? ''}
-                onChange={handleChange}
-              />
-
-              <div className='d-flex justify-content-center border-primary m-2 mt-2'>
-                <label htmlFor='role'>Rol</label>
-                <select
-                  name='role'
-                  id='role'
-                  value={credentials.role ?? 'socio'}
-                  onChange={handleChange}
-                  className='col-3 mx-2 border'>
-                  <option value='socio'>socio</option>
-                  <option value='admin'>admin</option>
-                </select>
-              </div>
-
-              <div className='d-flex flex-row justify-content-evenly'>
-                <input
-                  type='submit'
-                  value='Actualizar'
-                  className='btn btn-sm btn-outline-danger m-1'
-                  onClick={(e) => handleUpdateUser(e, credentials, selectedUser.id)}
-                />
-
-                <button
-                  className='btn btn-sm btn-outline-success m-1'
-                  onClick={() => setShowForm(false)}>
-                  Cancelar
-                </button>
-              </div>
-            </form>
-          </>
-        )}
-      </div>
-
-      <div className='d-flex justify-content-evenly'>
-        {!showForm && !confirmDelete && (
-          <button
-            className='btn btn-success'
-            onClick={() => setShowForm(true)}>
-            <i className='bi bi-pencil mx-1'></i>
-            Editar
+    <section className='member-profile' aria-label='Datos del socio'>
+      <header className='member-profile__header'>
+        <span className='member-profile__initials' aria-hidden='true'>{initials}</span>
+        <div className='member-profile__identity'>
+          <h2>{name}</h2>
+          <p>{selectedUser.email}</p>
+          <span className='member-profile__role'>{administrator ? 'Administrador' : 'Socio'}</span>
+        </div>
+        {!editing && !confirmDelete && (
+          <button ref={editButton} type='button' className='btn btn-outline-success'
+            onClick={startEdit}>
+            <i className='bi bi-pencil' aria-hidden='true' /> Editar datos
           </button>
         )}
+      </header>
 
-        {!confirmDelete && !showForm && (
-          <button
-            className='btn btn-danger'
-            onClick={() => setConfirmDelete(true)}>
-            <i className='bi bi-trash mx-1'></i>
-            Eliminar
-          </button>
-        )}
-      </div>
+      {editing ? (
+        <form className='member-profile__body' onSubmit={handleSubmit(save)} noValidate autoComplete='off'>
+          <h3>Editar datos</h3>
+          <fieldset className='member-profile__grid' disabled={isSubmitting}>
+            {fields.map(({ name, label, type, rules }) => (
+              <div className='member-profile__field' key={name}>
+                <label htmlFor={id + name}>{label}</label>
+                <input id={id + name} type={type} className='form-control'
+                  min={name === 'age' ? 12 : undefined} max={name === 'age' ? 99 : undefined}
+                  maxLength={rules.maxLength} aria-required={name !== 'phone'}
+                  aria-invalid={Boolean(errors[name])} aria-describedby={errors[name] ? id + name + '-error' : undefined}
+                  {...register(name, rules)} />
+                {errors[name] && <p className='member-profile__error' id={id + name + '-error'}>{errors[name].message || 'Ingresá hasta 80 caracteres.'}</p>}
+              </div>
+            ))}
+          </fieldset>
 
-      {confirmDelete && (
-        <div className='alert alert-danger d-flex flex-column align-items-center p-1 m-0'>
-          <div>¿Estas seguro?</div>
+          {feedback?.error && <p className='member-profile__error' role='alert'>{feedback.text}</p>}
 
-          <div className='d-flex mt-3 justify-content-evenly col-6'>
-            <button
-              className='btn btn-sm btn-danger mx-1'
-              onClick={() => handleDeleteUser(selectedUser)}>
-              Confirmar
-            </button>
-
-            <button
-              className='btn btn-sm btn-success mx-1'
-              onClick={() => setConfirmDelete(false)}>
-              Cancelar
+          <div className='member-profile__actions'>
+            <button type='button' className='btn btn-outline-secondary' disabled={isSubmitting}
+              onClick={() => { setFeedback(null); closeEdit(); }}>Cancelar</button>
+            <button type='submit' className='btn btn-success' disabled={isSubmitting}>
+              {isSubmitting ? 'Guardando…' : 'Guardar cambios'}
             </button>
           </div>
+        </form>
+      ) : (
+        <div className='member-profile__body'>
+          {feedback && <p className='member-profile__success' role='status'>{feedback.text}</p>}
+          <dl className='member-profile__grid'>
+            <div><dt>Edad</dt><dd>{selectedUser.age ? selectedUser.age + ' años' : 'Sin informar'}</dd></div>
+            <div><dt>Teléfono</dt><dd>{selectedUser.phone || 'Sin informar'}</dd></div>
+          </dl>
+
+          {!administrator && (confirmDelete ? (
+            <div className='member-profile__deactivation'>
+              <h3>¿Dar de baja a este socio?</h3>
+              <p>La persona perderá el acceso a este club.</p>
+              <div className='member-profile__actions'>
+                <button type='button' className='btn btn-outline-secondary' onClick={() => setConfirmDelete(false)}>Cancelar</button>
+                <button type='button' className='btn btn-danger' onClick={() => handleDeleteUser(selectedUser)}>Confirmar baja</button>
+              </div>
+            </div>
+          ) : (
+            <button type='button' className='btn member-profile__deactivate' onClick={() => setConfirmDelete(true)}>
+              Dar de baja del club
+            </button>
+          ))}
         </div>
       )}
-    </>
+    </section>
   );
-};
+}
 
 UserData.propTypes = {
-  selectedUser: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
-  handleUpdateUser: PropTypes.func,
-  handleDeleteUser: PropTypes.func,
-  setConfirmDelete: PropTypes.func,
+  selectedUser: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    first_name: PropTypes.string,
+    last_name: PropTypes.string,
+    email: PropTypes.string,
+    role: PropTypes.string,
+    age: PropTypes.number,
+    phone: PropTypes.string,
+  }).isRequired,
+  handleUpdateUser: PropTypes.func.isRequired,
+  handleDeleteUser: PropTypes.func.isRequired,
+  setConfirmDelete: PropTypes.func.isRequired,
   confirmDelete: PropTypes.bool,
 };
-
-export default UserData;

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import Logo from '../../ui/Logo/Logo';
 import './Footer.css';
+import { useClub } from '../../club/useClub';
 
 const HOURS = [
   { day: 'Lunes a viernes',  range: '08:00 – 23:00' },
@@ -36,6 +37,23 @@ const MailIcon = () => (
 );
 
 const Footer = () => {
+  const { club } = useClub();
+  const whatsapp = club.contact.whatsapp?.replace(/[^0-9]/g, '');
+  if (club.slug !== 'ranelagh') {
+    return (
+      <footer className='footer py-4' id='contacto'>
+        <div className='container-xl'>
+          <Logo />
+          {club.contact.address && <p>{club.contact.address}</p>}
+          <div className='d-flex gap-3 flex-wrap'>
+            {whatsapp && <a href={'https://wa.me/' + whatsapp}>WhatsApp</a>}
+            {club.contact.instagram && <a href={club.contact.instagram}>Instagram</a>}
+            {club.contact.facebook && <a href={club.contact.facebook}>Facebook</a>}
+          </div>
+        </div>
+      </footer>
+    );
+  }
   return (
     <footer className='footer' id='contacto'>
       <div className='cta-band'>
@@ -64,15 +82,15 @@ const Footer = () => {
               Club Ranelagh, más de 50 años de deporte y comunidad en Ranelagh, provincia de Buenos Aires.
             </p>
             <div className='footer__social'>
-              <a href='https://instagram.com/ranelagh.club' target='_blank' rel='noreferrer' aria-label='Instagram del Club Ranelagh' className='footer__social-link'>
+              {club.contact.instagram && <a href={club.contact.instagram} target='_blank' rel='noreferrer' aria-label='Instagram del club' className='footer__social-link'>
                 <InstagramIcon />
-              </a>
-              <a href='https://facebook.com/100064211970969' target='_blank' rel='noreferrer' aria-label='Facebook del Club Ranelagh' className='footer__social-link'>
+              </a>}
+              {club.contact.facebook && <a href={club.contact.facebook} target='_blank' rel='noreferrer' aria-label='Facebook del club' className='footer__social-link'>
                 <FacebookIcon />
-              </a>
-              <a href='https://wa.me/5491138386877' target='_blank' rel='noreferrer' aria-label='WhatsApp del Club Ranelagh' className='footer__social-link'>
+              </a>}
+              {whatsapp && <a href={'https://wa.me/' + whatsapp} target='_blank' rel='noreferrer' aria-label='WhatsApp del club' className='footer__social-link'>
                 <WhatsappIcon />
-              </a>
+              </a>}
               <a href='mailto:contacto@ranelaghclub.com' aria-label='Email del Club Ranelagh' className='footer__social-link'>
                 <MailIcon />
               </a>
@@ -82,9 +100,9 @@ const Footer = () => {
           <div className='footer__col'>
             <h3 className='footer__col-title'>Navegación</h3>
             <ul className='footer__links'>
-              <li><a href='/#canchas'>Canchas</a></li>
-              <li><a href='/#actividades'>Actividades</a></li>
-              <li><a href='/#el-club'>El club</a></li>
+              <li><Link to='/#canchas'>Canchas</Link></li>
+              <li><Link to='/#actividades'>Actividades</Link></li>
+              <li><Link to='/#el-club'>El club</Link></li>
               <li><Link to='/reserves'>Reservar</Link></li>
               <li><Link to='/register'>Registrarme</Link></li>
               <li><Link to='/account'>Mi cuenta</Link></li>
@@ -108,11 +126,11 @@ const Footer = () => {
             <ul className='footer__contact'>
               <li>
                 <i className='bi bi-geo-alt' aria-hidden='true'></i>
-                <span>Av. Dr. A. Sabin 1751, B1886 Ranelagh, Buenos Aires</span>
+                <span>{club.contact.address}</span>
               </li>
               <li>
                 <i className='bi bi-telephone' aria-hidden='true'></i>
-                <a href='tel:+5491138386877'>+54 9 11 3838-6877</a>
+                {whatsapp && <a href={'https://wa.me/' + whatsapp}>{club.contact.whatsapp}</a>}
               </li>
               <li>
                 <i className='bi bi-envelope' aria-hidden='true'></i>

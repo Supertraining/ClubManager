@@ -20,30 +20,32 @@ create or replace function public.handle_new_user()
 returns trigger
 language plpgsql
 security definer
-set search_path = public
+set search_path = ''
 as $$
+declare
+  age_text text := btrim(new.raw_user_meta_data->>'age');
 begin
   insert into public.profiles (
-    id, email, username, first_name, last_name, age, phone, role
+    id, email, username, first_name, last_name, age, phone
   ) values (
     new.id,
     new.email,
     new.email,                              -- username mirrors email
-    -- profiles.first_name/last_name are NOT NULL with length >= 1, so an
-    -- empty string would fail the CHECK. Fall back to a placeholder instead.
-    coalesce(nullif(new.raw_user_meta_data->>'first_name', ''), 'Socio'),
-    coalesce(nullif(new.raw_user_meta_data->>'last_name', ''), 'Club Ranelagh'),
-    -- profiles.age is CHECK (age between 12 and 99); clamp instead of trusting
-    -- the metadata, otherwise a bogus value blocks the whole signup.
-    greatest(12, least(99, coalesce((new.raw_user_meta_data->>'age')::smallint, 18))),
-    coalesce(new.raw_user_meta_data->>'phone', ''),
-    coalesce((new.raw_user_meta_data->>'role')::user_role, 'socio')
+    left(coalesce(nullif(btrim(new.raw_user_meta_data->>'first_name'), ''), 'Socio'), 80),
+    left(coalesce(nullif(btrim(new.raw_user_meta_data->>'last_name'), ''), 'Club Ranelagh'), 80),
+    case
+      when age_text ~ '^-?[0-9]{1,9}$' then greatest(12, least(99, age_text::integer))
+      else 18
+    end,
+    coalesce(new.raw_user_meta_data->>'phone', '')
   )
   on conflict (id) do nothing;
 
   return new;
 end;
 $$;
+
+revoke execute on function public.handle_new_user() from public, anon, authenticated;
 
 -- ---- 2. install the trigger that was missing ----
 drop trigger if exists on_auth_user_created on auth.users;
@@ -54,22 +56,25 @@ create trigger on_auth_user_created
 
 -- ---- 3. backfill every auth user that still has no profile ----
 insert into public.profiles (
-  id, email, username, first_name, last_name, age, phone, role
+  id, email, username, first_name, last_name, age, phone
 )
 select
   u.id,
   u.email,
   u.email,
-  coalesce(nullif(u.raw_user_meta_data->>'first_name', ''), 'Socio'),
-  coalesce(nullif(u.raw_user_meta_data->>'last_name', ''), 'Club Ranelagh'),
-  greatest(12, least(99, coalesce((u.raw_user_meta_data->>'age')::smallint, 18))),
-  coalesce(u.raw_user_meta_data->>'phone', ''),
-  coalesce((u.raw_user_meta_data->>'role')::user_role, 'socio')
+  left(coalesce(nullif(btrim(u.raw_user_meta_data->>'first_name'), ''), 'Socio'), 80),
+  left(coalesce(nullif(btrim(u.raw_user_meta_data->>'last_name'), ''), 'Club Ranelagh'), 80),
+  case
+    when metadata.age_text ~ '^-?[0-9]{1,9}$' then greatest(12, least(99, metadata.age_text::integer))
+    else 18
+  end,
+  coalesce(u.raw_user_meta_data->>'phone', '')
 from auth.users u
+cross join lateral (select btrim(u.raw_user_meta_data->>'age') as age_text) metadata
 where not exists (select 1 from public.profiles p where p.id = u.id)
 on conflict (id) do nothing;
 
--- ---- 4. verify: this should return zero rows ----
-select u.id, u.email
+-- ---- 4. verify: the count should be zero ----
+select count(*) as profiles_missing
 from auth.users u
 where not exists (select 1 from public.profiles p where p.id = u.id);

@@ -132,8 +132,12 @@ export const addMinutes = (hhmm, min) => {
  * Returns null when the court is closed that day.
  */
 export const getCourtHours = (courtName, date) => {
-  const court = COURTS[courtName];
+  const court = typeof courtName === 'string' ? COURTS[courtName] : courtName;
   if (!court || !date) return null;
+  if (Array.isArray(court.hours)) {
+    const schedule = court.hours.find(({ weekday }) => weekday === date.getDay());
+    return schedule ? { openMin: schedule.openMin, closeMin: schedule.closeMin } : null;
+  }
 
   const wh = court.hours[date.getDay()]; // 0 = Sunday
   if (!wh) return null;
@@ -147,7 +151,7 @@ export const getCourtHours = (courtName, date) => {
 };
 
 /** Return slot start times for a given day+court, broken into range keys. */
-export const getSlotsForDay = (courtName, date) => {
+export const getSlotsForDay = (courtName, date, minimumDuration = MIN_DURATION_MIN) => {
   const hours = getCourtHours(courtName, date);
   if (!hours) return { manana: [], tarde: [], noche: [] };
   const { openMin, closeMin } = hours;
@@ -157,7 +161,7 @@ export const getSlotsForDay = (courtName, date) => {
   // of court time stays sellable. Longer durations are gated in BookingPanel
   // against the same closeMin, which is why a 22:00 slot on a court that shuts
   // at 23:00 offers 1 h but not 2 h.
-  for (let m = openMin; m + MIN_DURATION_MIN <= closeMin; m += SLOT_STEP_MIN) {
+  for (let m = openMin; m + minimumDuration <= closeMin; m += SLOT_STEP_MIN) {
     const hh = Math.floor(m / 60).toString().padStart(2, '0');
     const mm = (m % 60).toString().padStart(2, '0');
     slots.push(`${hh}:${mm}`);

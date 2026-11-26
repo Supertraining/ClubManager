@@ -1,5 +1,7 @@
 import { CustomError } from "../../../utils/customError.Utils.js";
+import { Logger } from "../../../utils/logger.js";
 import { UserNotifications } from "../helpers/emailNotifications.helper.js";
+import { clubRpc } from '../../clubs/DAO/clubs.js';
 
 /**
  * UsersServices — orchestrates the UsersDAO + email notifications.
@@ -8,22 +10,15 @@ import { UserNotifications } from "../helpers/emailNotifications.helper.js";
  * client can call protected endpoints without a second round-trip.
  */
 export default class UsersServices {
-  constructor(userDAO) {
+  constructor(userDAO, notifications = new UserNotifications()) {
     this.repository = userDAO;
+    this.notifications = notifications;
   }
 
-  async register({ username, password, nombre, apellido, edad, telefono }) {
+  async register({ username, password, nombre, apellido, edad, telefono }, club) {
     if (!username || !password) {
       throw CustomError.badRequest('Email y contraseña son obligatorios');
     }
-
-    // Pre-check: avoid creating a duplicate signup request.
-    // (The DB has unique constraints; this just gives a friendlier error.)
-    const { data: existing, error: lookupError } = await this.repository
-      .signIn({ email: username, password: '__check__' })
-      .then(() => ({ data: { user: null }, error: null }))
-      .catch(() => ({ data: null, error: null }));
-    // (Supabase always throws on bad password; we swallow and just attempt the signup.)
 
     const { user, session } = await this.repository.signUp({
       email: username,
@@ -41,13 +36,11 @@ export default class UsersServices {
       return { user, session: null, requiresEmailConfirmation: true };
     }
 
+    if (club.signup_mode === 'open') await clubRpc(session.access_token, 'join_club', { p_club_id: club.id });
+
     // Best-effort welcome email; never fail the signup on email issues.
-    UserNotifications.emailNewUserNotification(username, {
-      nombre, apellido, password, edad, telefono,
-    }).catch((err) => {
-      // eslint-disable-next-line no-console
-      console.warn('Welcome email failed (non-fatal):', err?.message);
-    });
+    this.notifications.emailNewUserNotification(user.email)
+      .catch(() => Logger.level().warn('Welcome email could not be sent'));
 
     return {
       token: session.access_token,
@@ -70,45 +63,52 @@ export default class UsersServices {
     };
   }
 
-  async getById(id, accessToken) {
-    const user = await this.repository.getByIdAsUser(id, accessToken);
+  async getById(id, clubId, actorId, accessToken) {
+    const user = await this.repository.getByIdAsUser(id, clubId, actorId, accessToken);
     if (!user) throw CustomError.notFound('Usuario no encontrado');
     return user;
   }
 
-  async getAllUsers(accessToken) {
-    return this.repository.getAllAsAdmin(accessToken);
+  async getAllUsers(clubId, accessToken) {
+    return this.repository.getAllAsAdmin(clubId, accessToken);
   }
 
-  async updateUser(id, data, accessToken) {
+  async updateUser(id, data, clubId, actorId, accessToken) {
     const updates = {};
-    if (data.nombre) updates.first_name = data.nombre;
-    if (data.apellido) updates.last_name = data.apellido;
-    if (data.edad) updates.age = Number(data.edad);
-    if (data.telefono) updates.phone = data.telefono;
+    for (const [field, value] of Object.entries({
+      first_name: data.first_name ?? data.nombre,
+      last_name: data.last_name ?? data.apellido,
+      phone: data.phone ?? data.telefono,
+    })) {
+      if (value === undefined) continue;
+      if (typeof value !== 'string' || (field !== 'phone' && !value.trim()) || value.trim().length > 80) {
+        throw CustomError.badRequest('Revisá el nombre, el apellido y el teléfono.');
+      }
+      updates[field] = value.trim();
+    }
+    const age = data.age ?? data.edad;
+    if (age !== undefined) {
+      if (!Number.isInteger(Number(age)) || Number(age) < 12 || Number(age) > 99) {
+        throw CustomError.badRequest('Ingresá una edad entre 12 y 99 años.');
+      }
+      updates.age = Number(age);
+    }
     if (Object.keys(updates).length === 0) {
       throw CustomError.badRequest('Nada para actualizar');
     }
-    return this.repository.updateAsUser(id, updates, accessToken);
+    return this.repository.updateAsUser(id, updates, clubId, actorId, accessToken);
   }
 
-  async updateUserPassword({ _id, password }, accessToken) {
-    if (!_id || !password) throw CustomError.badRequest('Id y contraseña son obligatorios');
-    await this.repository.adminUpdatePassword(_id, password);
-    UserNotifications.emailUpdatePasswordNotification({ _id, password })
-      .catch((err) => console.warn('Password-change email failed (non-fatal):', err?.message));
-    return this.repository.getByIdAsUser(_id, accessToken);
+  async deleteById(id, clubId, accessToken) {
+    await clubRpc(accessToken, 'suspend_club_member', { p_club_id: clubId, p_user_id: id });
+    return { deletedCount: 1 };
   }
 
-  async deleteById(id, accessToken) {
-    return this.repository.deleteAsAdmin(id, accessToken);
+  async getMyReservations(clubId, userId, accessToken) {
+    return this.repository.listMyReservations(clubId, userId, accessToken);
   }
 
-  async getMyReservations(accessToken) {
-    return this.repository.listMyReservations(accessToken);
-  }
-
-  async deleteMyReservation(reservationId, accessToken) {
-    return this.repository.deleteMyReservation(reservationId, accessToken);
+  async deleteMyReservation(reservationId, clubId, accessToken) {
+    return this.repository.deleteMyReservation(reservationId, clubId, accessToken);
   }
 }

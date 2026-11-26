@@ -1,27 +1,18 @@
-import { Logger } from "../utils/logger.js";
+import { randomUUID } from 'node:crypto';
+import { STATUS_CODES } from 'node:http';
+import { Logger } from '../utils/logger.js';
 
-const errorHandler = (err, req, res, next) => {
+export default function errorHandler(error, req, res, next) {
+  if (res.headersSent) return next(error);
 
-  try {
-    
-    const errorStatus = err.statusCode || 500;
-    const errorMessage = err.message || 'Internal server error';
+  const requestId = randomUUID();
+  const status = error.statusCode ?? 500;
+  res.set('X-Request-Id', requestId);
 
-    const additionalInfo = {
-      route: req.originalUrl,
-      method: req.method,
-      ip: req.ip,
-      user_agent: req.header[ 'user-agent' ],
-      user: req.user
-    };
-    Logger.errorLogger(err, additionalInfo);
-    res.status(errorStatus).send(errorMessage);
-    
-  } catch (error) {
-
-    Logger.errorLogger(error)
-    
+  if (status >= 500) {
+    Logger.level().error('Request failed', { requestId, status, method: req.method, code: error.code });
+    return res.status(status).send('Ocurrió un error. Volvé a intentarlo.');
   }
-};
 
-export default errorHandler;
+  return res.status(status).send(error.message || STATUS_CODES[status]);
+}

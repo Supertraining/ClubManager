@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import './Logo.css';
+import { useClub } from '../../club/useClub';
 
 /**
  * Logo — the club mark + wordmark.
@@ -12,6 +13,7 @@ import './Logo.css';
  *   - to:       link target (default "/").
  */
 const Logo = ({ compact = false, variant = 'default', to = '/' }) => {
+  const { club } = useClub();
   const markClasses = [
     'logo-mark',
     compact ? 'logo-mark--compact' : '',
@@ -35,14 +37,16 @@ const Logo = ({ compact = false, variant = 'default', to = '/' }) => {
     .join(' ');
 
   return (
-    <Link to={to} className='logo' aria-label='Club Ranelagh — ir al inicio'>
+    <Link to={to} className='logo' aria-label={club.name + ' · Inicio'}>
       <span className={markClasses} aria-hidden='true'>
-        <span className='logo-mark__u'>R</span>
+        {club.logoUrl
+          ? <img className='club-logo-image' src={club.logoUrl} alt='' />
+          : <span className='logo-mark__u'>{club.slug === 'ranelagh' ? 'R' : club.name.trim()[0]}</span>}
       </span>
       {!compact && (
         <span className='logo-text'>
-          <span className={wordmarkClasses}>Ranelagh</span>
-          <span className={subtitleClasses}>Club</span>
+          <span className={wordmarkClasses}>{club.name === 'Club Ranelagh' ? 'Ranelagh' : club.name}</span>
+          {club.name === 'Club Ranelagh' && <span className={subtitleClasses}>Club</span>}
         </span>
       )}
     </Link>

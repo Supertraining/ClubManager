@@ -21,6 +21,7 @@
 create extension if not exists "citext";   -- case-insensitive email
 create extension if not exists "pg_trgm";   -- fuzzy search (activities, users)
 create extension if not exists "uuid-ossp";
+create extension if not exists btree_gist;   -- UUID equality in reservations_no_overlap
 
 -- ---- Enums ----
 create type court_kind as enum ('futbol', 'paddle', 'squash', 'paleta');
@@ -125,7 +126,7 @@ create table public.reservations (
 
 create index reservations_court_date_idx on public.reservations(court_id, reservation_date);
 create index reservations_user_idx on public.reservations(user_id, start_time desc);
-create index reservations_active_idx on public.reservations(end_time) where end_time > now();
+create index reservations_end_time_idx on public.reservations(end_time);
 
 -- =====================================================
 -- events — eventos del club (cumple, casamiento, etc.)

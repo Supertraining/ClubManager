@@ -14,42 +14,31 @@ export const User = ({
   confirmDelete,
 }) => {
   return (
-    <>
-      <div className='my-3'>
+    <div className='member-detail'>
+      <div>
         <button
-          className='btn btn-close border border-dark p-2'
-          onClick={() => setIsUserSelected(false)}></button>
+          type='button' className='btn btn-outline-secondary'
+          onClick={() => { setConfirmDelete(false); setIsUserSelected(false); }}>
+          <i className='bi bi-arrow-left' aria-hidden='true' /> Volver al padrón
+        </button>
       </div>
 
-      <div className='col-12 h-auto p-1 border border-dark d-flex flex-column align-items-center gap-3'>
-        <div className='col-12 border border-dark shadow p-3'>
-          <UserData
-            selectedUser={selectedUser}
-            handleUpdateUser={handleUpdateUser}
-            handleDeleteUser={handleDeleteUser}
-            setConfirmDelete={setConfirmDelete}
-            confirmDelete={confirmDelete}
-          />
-        </div>
-
-        <div className='d-flex justify-content-evenly col-12'>
-          <div className='col-12 border border-dark shadow'>
-            <UserReserves
-              selectedUser={selectedUser}
-              setSelectedUser={setSelectedUser}
-              handleDeleteReserve={handleDeleteReserve}
-            />
-          </div>
-
-          {/* <div
-            className='col-5 border border-dark shadow'>
-            
-            <UserActivities />
-
-          </div> */}
-        </div>
+      <UserData
+        key={selectedUser.id}
+        selectedUser={selectedUser}
+        handleUpdateUser={handleUpdateUser}
+        handleDeleteUser={handleDeleteUser}
+        setConfirmDelete={setConfirmDelete}
+        confirmDelete={confirmDelete}
+      />
+      <div className='member-detail__reservations'>
+        <UserReserves
+          selectedUser={selectedUser}
+          setSelectedUser={setSelectedUser}
+          handleDeleteReserve={handleDeleteReserve}
+        />
       </div>
-    </>
+    </div>
   );
 };
 

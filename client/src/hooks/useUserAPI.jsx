@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
 import { useNotifications } from './useNotifications';
 import { useAxiosInstance } from './useAxiosInstance';
-import { userStore } from '../stores';
+import { userStore as useUserStore } from '../stores';
 import { ACTIONS } from '../stores/user/actions';
+import { clubPath } from '../lib/clubRoute';
 
 /**
  * useUserAPI — Supabase edition.
@@ -21,7 +22,7 @@ import { ACTIONS } from '../stores/user/actions';
 export const useUserAPI = () => {
   const { notifyWarning, notifyError } = useNotifications();
   const axios = useAxiosInstance();
-  const setUser = userStore((s) => s.setUser);
+  const setUser = useUserStore((s) => s.setUser);
   const navigate = useNavigate();
 
   const userLogin = useCallback(async ({ username, password }) => {
@@ -39,11 +40,26 @@ export const useUserAPI = () => {
     return data.user;
   }, [setUser, notifyWarning]);
 
+  const joinClub = useCallback(async () => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error('Iniciá sesión para sumarte al club.');
+      const { data } = await axios.post('/memberships/join');
+      setUser({ type: ACTIONS.LOGIN_SUCCESS, payload: { id: session.user.id, email: session.user.email, role: data.role } });
+      return data;
+    } catch (error) {
+      const detail = error.response?.data;
+      notifyWarning(detail?.message || (typeof detail === 'string' ? detail : error.message));
+      throw error;
+    }
+  }, [axios, setUser, notifyWarning]);
+
   const userRegister = useCallback(async ({ username, password, nombre, apellido, edad, telefono }) => {
     const { data, error } = await supabase.auth.signUp({
       email: String(username).trim().toLowerCase(),
       password,
       options: {
+        emailRedirectTo: window.location.origin + clubPath('/register'),
         data: {
           first_name: nombre,
           last_name: apellido,
@@ -60,8 +76,9 @@ export const useUserAPI = () => {
       return { requiresEmailConfirmation: true, user: data.user };
     }
     setUser({ type: ACTIONS.LOGIN_SUCCESS, payload: { id: data.user.id, email: data.user.email } });
+    await joinClub();
     return { user: data.user, session: data.session };
-  }, [setUser, notifyError]);
+  }, [setUser, notifyError, joinClub]);
 
   const getAllUsers = useCallback(async () => {
     try {
@@ -116,7 +133,7 @@ export const useUserAPI = () => {
       const { error } = await supabase.auth.signOut({ scope: 'local' });
       if (error) throw error;
     } catch {
-      if (userStore.getState().user.user) {
+      if (useUserStore.getState().user.user) {
         notifyWarning('No se pudo cerrar la sesión. Volvé a intentarlo.');
         return;
       }
@@ -128,6 +145,7 @@ export const useUserAPI = () => {
   return {
     userLogin,
     userRegister,
+    joinClub,
     getAllUsers,
     getUserById,
     updateUserById,

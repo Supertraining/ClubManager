@@ -1,10 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 import { Logger } from '../utils/logger.js';
+import { supabaseAnonKey, supabaseServiceRoleKey, supabaseUrl } from './config.js';
 
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+if (!supabaseUrl || !supabaseServiceRoleKey) {
   Logger.level().error(
     'SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required. ' +
     'See server/supabase/README.md for setup.',
@@ -20,7 +18,7 @@ if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
  *
  * For per-user requests, use createUserClient(token) so RLS kicks in.
  */
-export const supabaseAdmin = createClient(SUPABASE_URL || 'http://invalid', SUPABASE_SERVICE_ROLE_KEY || 'invalid', {
+export const supabaseAdmin = createClient(supabaseUrl || 'http://invalid', supabaseServiceRoleKey || 'invalid', {
   auth: {
     persistSession: false,
     autoRefreshToken: false,
@@ -28,11 +26,11 @@ export const supabaseAdmin = createClient(SUPABASE_URL || 'http://invalid', SUPA
 });
 
 /**
- * Create a per-request Supabase client that carries the user's JWT.
- * RLS policies in Postgres will then enforce what the user can do.
+ * Create a client for a single request. A JWT enables RLS as the caller.
+ * Without a JWT, use this client for public Auth operations.
  */
 export const createUserClient = (accessToken) =>
-  createClient(SUPABASE_URL || 'http://invalid', process.env.SUPABASE_ANON_KEY || 'invalid', {
+  createClient(supabaseUrl || 'http://invalid', supabaseAnonKey || 'invalid', {
     auth: {
       persistSession: false,
       autoRefreshToken: false,
@@ -59,13 +57,9 @@ export const verifyAccessToken = async (accessToken) => {
       .eq('id', data.user.id)
       .single();
     if (profileError || !profile) return null;
-    return {
-      ...data.user,
-      ...profile,
-      isAdmin: profile.role === 'admin',
-    };
+    return profile;
   } catch (err) {
-    Logger.level().error('Token verification failed: ' + err.message);
+    Logger.level().error('Token verification failed', { code: err.code });
     return null;
   }
 };

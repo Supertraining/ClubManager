@@ -1,7 +1,8 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { supabase } from '../../lib/supabaseClient';
+import { clubApi, clubStorage } from '../../lib/clubRoute';
+import { supabase, API_BASE } from '../../lib/supabaseClient';
 
 const ACTIONS = {
   LOGIN_START: 'LOGIN_START',
@@ -21,7 +22,7 @@ Object.freeze(ACTIONS);
  */
 const storeApi = (set, get) => ({
   user: {
-    user: JSON.parse(sessionStorage.getItem('admin-profile') || localStorage.getItem('admin-profile') || 'null'),
+    user: JSON.parse(sessionStorage.getItem(clubStorage('admin-profile')) || localStorage.getItem(clubStorage('admin-profile')) || 'null'),
     loading: false,
     error: null,
   },
@@ -33,14 +34,14 @@ const storeApi = (set, get) => ({
     if (!session) return;
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080'}/users/user/${current.id}`,
+        clubApi(API_BASE) + '/users/me',
         { headers: { Authorization: `Bearer ${session.access_token}` } },
       );
       if (!res.ok) return;
       const profile = await res.json();
       const next = { ...profile, id: profile.id, email: profile.email };
       set((state) => ({ user: { ...state.user, user: next } }));
-      sessionStorage.setItem('admin-profile', JSON.stringify(next));
+      sessionStorage.setItem(clubStorage('admin-profile'), JSON.stringify(next));
     } catch (err) {
       console.warn('updateUser failed:', err?.message);
     }
@@ -55,20 +56,20 @@ const storeApi = (set, get) => ({
         break;
       case ACTIONS.LOGIN_SUCCESS:
         set((state) => { state.user = { user: action.payload, loading: false, error: null }; });
-        if (action.payload) sessionStorage.setItem('admin-profile', JSON.stringify(action.payload));
+        if (action.payload) sessionStorage.setItem(clubStorage('admin-profile'), JSON.stringify(action.payload));
         break;
       case ACTIONS.LOGIN_FAILURE:
         set((state) => { state.user = { user: null, loading: false, error: action.payload }; });
         break;
       case ACTIONS.LOGOUT:
         set((state) => { state.user = { user: null, loading: false, error: null }; });
-        sessionStorage.removeItem('admin-profile');
-        localStorage.removeItem('admin-profile');
+        sessionStorage.removeItem(clubStorage('admin-profile'));
+        localStorage.removeItem(clubStorage('admin-profile'));
         break;
       case ACTIONS.DEFAULT:
         set((state) => {
           state.user = {
-            user: JSON.parse(sessionStorage.getItem('admin-profile') || localStorage.getItem('admin-profile') || 'null'),
+            user: JSON.parse(sessionStorage.getItem(clubStorage('admin-profile')) || localStorage.getItem(clubStorage('admin-profile')) || 'null'),
             loading: false,
             error: null,
           };
@@ -76,7 +77,7 @@ const storeApi = (set, get) => ({
         break;
       case ACTIONS.UPDATE_USER:
         set((state) => { state.user = { user: action.payload, loading: false, error: null }; });
-        if (action.payload) sessionStorage.setItem('admin-profile', JSON.stringify(action.payload));
+        if (action.payload) sessionStorage.setItem(clubStorage('admin-profile'), JSON.stringify(action.payload));
         break;
       default:
         get().user;
@@ -84,4 +85,4 @@ const storeApi = (set, get) => ({
   },
 });
 
-export const userStore = create(immer(persist(storeApi, { name: 'clubmanager.admin.user', storage: createJSONStorage(() => sessionStorage) })));
+export const userStore = create(immer(persist(storeApi, { name: clubStorage('clubmanager.admin.user'), storage: createJSONStorage(() => sessionStorage) })));

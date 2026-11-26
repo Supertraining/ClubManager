@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import './Home.css';
 
 import CourtCard from '../../components/home/CourtCard';
+import { useClub } from '../../components/club/useClub';
 import ActivityTeaserCard from '../../components/home/ActivityTeaserCard';
 
 import futbolCourt from '../../assets/football/footballCourt.webp';
@@ -87,6 +88,7 @@ const ACTIVITIES_TEASER = [
 ];
 
 const Home = () => {
+  const { club, courts } = useClub();
   return (
     <div className='home'>
       {/* ============================== HERO ============================== */}
@@ -100,7 +102,7 @@ const Home = () => {
             Tu cancha lista en <span className='hero__accent'>dos pasos.</span>
           </h1>
           <p className='hero__sub'>
-            Reservá fútbol, paddle, squash y paleta en el Club Ranelagh.
+            Reservá una cancha en {club.name}.
             Sin llamados, sin planillas, sin quedarte sin tu horario.
           </p>
           <div className='hero__ctas'>
@@ -134,13 +136,13 @@ const Home = () => {
               Elegí tu deporte,<br />elegí tu horario.
             </h2>
             <p className='section__sub'>
-              Cuatro canchas, una sola app. Reservá por día y hora, mirá la
+              Reservá por día y hora, mirá la
               disponibilidad de la semana y bloqueá tu turno en dos pasos.
             </p>
           </div>
           <div className='court-grid'>
-            {COURTS.map((court) => (
-              <CourtCard key={court.name} court={court} />
+            {courts.map((court) => (
+              <CourtCard key={court.id} court={{ ...COURTS.find(item => item.name === court.slug), ...court }} />
             ))}
           </div>
         </div>

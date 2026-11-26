@@ -3,12 +3,13 @@ import { useForm } from 'react-hook-form';
 import { useUserAPI } from '../../hooks/useUserAPI.jsx';
 import Logo from '../../components/ui/Logo/Logo';
 import './Login.css';
+import { safeClubReturn } from '../../lib/clubRoute';
 
 const Login = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const next = searchParams.get('next') || '/';
+  const next = safeClubReturn(searchParams.get('next'));
   const { userLogin } = useUserAPI();
   const [submitting, setSubmitting] = React.useState(false);
 

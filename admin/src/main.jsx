@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/js/dist/offcanvas';
+import 'bootstrap/js/dist/modal';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './styles/tokens.css';
 import './styles/base.css';

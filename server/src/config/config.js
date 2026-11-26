@@ -1,12 +1,13 @@
+import { existsSync } from "node:fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
-import { Logger } from "../utils/logger.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const nodeEnv = process.env.NODE_ENV?.trim();
-nodeEnv === "dev"
-  ? process.loadEnvFile(join(__dirname, ".env.dev"))
-  : nodeEnv === "prod" ? process.loadEnvFile(join(__dirname, ".env")) : Logger.level().info("Production environment");
+if (nodeEnv === "dev" || nodeEnv === "prod") {
+  const envPath = join(__dirname, nodeEnv === "dev" ? ".env.dev" : ".env");
+  if (existsSync(envPath)) process.loadEnvFile(envPath);
+}
 
 export const {
   // CORS — frontend URLs
@@ -29,15 +30,6 @@ export const {
 
 export const port = process.env.PORT || 8080;
 
-/**
- * Guard: in prod, Supabase credentials are mandatory. In dev, log a warning
- * and let the dev set them up. See server/src/config/.env.example.
- */
-if (nodeEnv === "prod") {
-  if (!supabaseUrl || !supabaseServiceRoleKey) {
-    throw new Error(
-      "SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required in production. " +
-      "See server/src/config/.env.example."
-    );
-  }
+if (nodeEnv === "prod" && (!supabaseUrl || !supabaseServiceRoleKey || !supabaseAnonKey)) {
+  throw new Error("Production requires SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY and SUPABASE_ANON_KEY.");
 }

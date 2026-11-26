@@ -1,30 +1,29 @@
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-const ActivityCard = ({ img, imgText, title, description, data_target, handleDeleteActivity, id }) => {
+const ActivityCard = ({ img, imgText, title, description, modalId, handleDeleteActivity, id }) => {
   return (
     <div className='card-wrapper mx-1 shadow'>
       <div className='card'>
-        <span className='text-center'>{id}</span>
-        <img
+        {img && <img
           className='card-img p-2'
-          src={img || 'https://picsum.photos/id/237/300/300'}
-          alt={imgText}
-        />
+          src={img}
+          alt={imgText || ''}
+        />}
         <div className='card-body'>
           <h5 className='card-title fw-bold'>{title}</h5>
           <p className='card-text'>{description}</p>
         </div>
         <div className='card-footer d-flex align-items-center justify-content-between'>
-          <Link
+          <button
+            type='button'
             data-bs-toggle='modal'
-            data-bs-target={data_target}
-            className={
-              data_target?.length == 0
-                ? `card-link text-decoration-none text-success border rounded p-2 disabled`
-                : `card-link text-decoration-none text-success border rounded p-2`
-            }>
-            <i className='bi bi-calendar-week'> Días y horarios</i>
-          </Link>
+            data-bs-target={'#' + modalId}
+            aria-haspopup='dialog'
+            aria-controls={modalId}
+            className='btn btn-outline-success'
+            style={{ minHeight: 44 }}>
+            <i className='bi bi-calendar-week' aria-hidden='true' /> Días y horarios
+          </button>
         </div>
         <div className='d-flex justify-content-evenly p-2'>
           {id && (
@@ -54,7 +53,7 @@ ActivityCard.propTypes = {
   imgText: PropTypes.string,
   title: PropTypes.string,
   description: PropTypes.string,
-  data_target: PropTypes.string,
+  modalId: PropTypes.string.isRequired,
   handleDeleteActivity: PropTypes.func,
   id: PropTypes.string,
 };

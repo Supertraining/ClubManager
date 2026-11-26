@@ -38,29 +38,34 @@ create or replace function public.handle_new_user()
 returns trigger
 language plpgsql
 security definer
-set search_path = public
+set search_path = ''
 as $$
+declare
+  age_text text := btrim(new.raw_user_meta_data->>'age');
 begin
   insert into public.profiles (
-    id, email, username, first_name, last_name, age, phone, role
+    id, email, username, first_name, last_name, age, phone
   ) values (
     new.id,
     new.email,
     new.email,                              -- username mirrors email
     -- first_name / last_name are NOT NULL with CHECK (length between 1 and 80),
     -- so coalescing to '' would fail the constraint and abort the whole signup.
-    coalesce(nullif(new.raw_user_meta_data->>'first_name', ''), 'Socio'),
-    coalesce(nullif(new.raw_user_meta_data->>'last_name', ''), 'Club Ranelagh'),
-    -- age is CHECK (age between 12 and 99): clamp rather than trust the metadata.
-    greatest(12, least(99, coalesce((new.raw_user_meta_data->>'age')::smallint, 18))),
-    coalesce(new.raw_user_meta_data->>'phone', ''),
-    coalesce((new.raw_user_meta_data->>'role')::user_role, 'socio')
+    left(coalesce(nullif(btrim(new.raw_user_meta_data->>'first_name'), ''), 'Socio'), 80),
+    left(coalesce(nullif(btrim(new.raw_user_meta_data->>'last_name'), ''), 'Club Ranelagh'), 80),
+    case
+      when age_text ~ '^-?[0-9]{1,9}$' then greatest(12, least(99, age_text::integer))
+      else 18
+    end,
+    coalesce(new.raw_user_meta_data->>'phone', '')
   )
   on conflict (id) do nothing;
 
   return new;
 end;
 $$;
+
+revoke execute on function public.handle_new_user() from public, anon, authenticated;
 
 -- Drop if exists (Supabase sometimes creates a default one).
 drop trigger if exists on_auth_user_created on auth.users;
@@ -69,25 +74,6 @@ create trigger on_auth_user_created
   after insert on auth.users
   for each row execute function public.handle_new_user();
 
--- ---- Reservation auto-cancel ----
--- Optional: when a user is deleted, cancel their pending reservations.
--- (Foreign key with `on delete restrict` will block user deletion if
--- reservations exist, so this trigger is for soft delete scenarios.)
-create or replace function public.cancel_user_reservations()
-returns trigger
-language plpgsql
-as $$
-begin
-  -- If you want hard delete, you would change the FK to `on delete cascade`.
-  -- For now we keep the restriction: deleting a user requires admin
-  -- to clean up reservations first (matches the current Express behaviour).
-  raise exception 'No se puede eliminar un usuario con reservas activas' using errcode = '23503';
-  return null;
-end;
-$$;
-
+-- Foreign keys protect reservations and other records that reference the profile.
 drop trigger if exists profiles_block_delete_with_reservations on public.profiles;
-
-create trigger profiles_block_delete_with_reservations
-  before delete on public.profiles
-  for each row execute function public.cancel_user_reservations();
+drop function if exists public.cancel_user_reservations();

@@ -20,7 +20,7 @@ export const useUserAPI = () => {
 
   const userLogin = useCallback(async ({ username, password }) => {
     setUser({ type: ACTIONS.LOGIN_START });
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signInWithPassword({
       email: String(username).trim().toLowerCase(),
       password,
     });
@@ -29,9 +29,11 @@ export const useUserAPI = () => {
       notifyWarning('Email o contraseña incorrectos.');
       throw error;
     }
-    setUser({ type: ACTIONS.LOGIN_SUCCESS, payload: { id: data.user.id, email: data.user.email } });
-    return data.user;
-  }, [setUser, ACTIONS, notifyWarning]);
+    const { data: profile } = await axios.get('/users/me');
+    if (!profile.isAdmin) throw Object.assign(new Error('Tu cuenta no administra este club.'), { status: 403 });
+    setUser({ type: ACTIONS.LOGIN_SUCCESS, payload: profile });
+    return profile;
+  }, [axios, setUser, ACTIONS, notifyWarning]);
 
   const getAllUsers = useCallback(async () => {
     try {
@@ -55,14 +57,9 @@ export const useUserAPI = () => {
   }, [axios, notifyWarning]);
 
   const updateUserById = useCallback(async (id, updates) => {
-    try {
-      const { data } = await axios.put(`/users/update/${id}`, updates);
-      return data;
-    } catch (error) {
-      notifyWarning(`Hubo un problema: ${error?.response?.data?.message || error.message}`);
-      return null;
-    }
-  }, [axios, notifyWarning]);
+    const { data } = await axios.put(`/users/update/${id}`, updates);
+    return data;
+  }, [axios]);
 
   const updateUsersPassword = useCallback(async (targetUser, newPassword) => {
     try {
@@ -76,7 +73,9 @@ export const useUserAPI = () => {
     try {
       await axios.delete(`/users/eliminar/${id}`);
     } catch (error) {
-      notifyWarning(`Hubo un problema: ${error?.response?.data?.message || error.message}`);
+      const detail = error.response?.data;
+      notifyWarning(detail?.message || (typeof detail === 'string' ? detail : error.message));
+      throw error;
     }
   }, [axios, notifyWarning]);
 

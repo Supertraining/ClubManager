@@ -1,78 +1,63 @@
 import './userReserve.css';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { useReservesAPI } from '../../../../hooks/useReservesAPI.jsx';
-import { useNotifications } from '../../../../hooks/useNotifications.jsx';
+import { useAxiosInstance } from '../../../../hooks/useAxiosInstance.jsx';
+import { useClub } from '../../../club/useClub';
 
-const COURT_KINDS = ['futbol', 'paddle', 'squash', 'paleta'];
-
-const formatTime = (iso) => {
+const formatTime = (iso, timeZone) => {
   if (!iso) return '';
-  try { return new Date(iso).toLocaleTimeString([], { timeStyle: 'short' }); } catch { return iso; }
+  try { return new Date(iso).toLocaleTimeString('es-AR', { timeStyle: 'short', timeZone }); } catch { return iso; }
 };
 
-const formatDate = (iso) => {
+const formatDate = (iso, timeZone) => {
   if (!iso) return '';
   try {
-    return new Date(iso).toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'numeric' });
+    return new Date(iso).toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'numeric', timeZone });
   } catch { return iso; }
 };
 
 const UserReserves = ({ selectedUser, handleDeleteReserve }) => {
-  const { getReservationsForCourt } = useReservesAPI();
-  const { notifyWarning } = useNotifications();
+  const api = useAxiosInstance();
+  const { club } = useClub();
   const [reserves, setReserves] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [fault, setFault] = useState(false);
 
   useEffect(() => {
     if (!selectedUser?.id) {
       setReserves([]);
       return;
     }
-    let cancelled = false;
+    const query = new AbortController();
     const load = async () => {
       setLoading(true);
+      setFault(false);
       try {
-        // The server has no "list reservations for a user" endpoint yet, so
-        // we hit /courts/:name for each kind and filter by user_id. The
-        // admin's RLS role bypasses the user_id filter, so we get all rows.
-        const all = [];
-        for (const kind of COURT_KINDS) {
-          try {
-            const result = await getReservationsForCourt(kind);
-            const list = result?.reservations ?? (Array.isArray(result) ? result : []);
-            all.push(...list.filter((r) => r.user_id === selectedUser.id));
-          } catch {
-            // one court failing shouldn't block the others
-          }
-        }
-        if (!cancelled) {
-          all.sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
-          setReserves(all);
-          setLoading(false);
-        }
+        const { data } = await api.get('/users/user/' + selectedUser.id + '/reserves', { signal: query.signal });
+        if (!query.signal.aborted) setReserves(data);
       } catch {
-        if (!cancelled) {
-          notifyWarning('No se pudieron cargar las reservas del socio');
-          setLoading(false);
-        }
+        if (!query.signal.aborted) setFault(true);
+      } finally {
+        if (!query.signal.aborted) setLoading(false);
       }
     };
     load();
-    return () => { cancelled = true; };
-  }, [selectedUser?.id, getReservationsForCourt, notifyWarning]);
+    return () => query.abort();
+  }, [selectedUser?.id, api]);
 
   return (
     <div>
-      <h3 className='text-primary fw-bold my-2 px-3'>@Reservas</h3>
+      <h3 className='fs-5 fw-semibold my-2 px-3'>Reservas</h3>
 
       {loading && <p className='text-muted px-3'>Cargando reservas...</p>}
 
-      {!loading && reserves.length === 0 && (
+      {fault && <p role='alert'>No pudimos cargar las reservas del socio.</p>}
+
+      {!loading && !fault && reserves.length === 0 && (
         <p className='text-muted px-3'>Este socio no tiene reservas activas.</p>
       )}
 
-      {!loading && reserves.length > 0 && (
+      {!loading && !fault && reserves.length > 0 && (
         <table className='table table-responsive w-100 bg-transparent'>
           <thead className='bg-dark text-white text-center'>
             <tr>
@@ -87,10 +72,10 @@ const UserReserves = ({ selectedUser, handleDeleteReserve }) => {
           <tbody>
             {reserves.map((res) => (
               <tr key={res.id} className='text-center text-dark'>
-                <td>{res.court?.name || '—'}</td>
-                <td>{formatDate(res.start_time || res.reservation_date)}</td>
-                <td>{formatTime(res.start_time)}</td>
-                <td>{formatTime(res.end_time)}</td>
+                <td>{res.court?.display_name || '—'}</td>
+                <td>{formatDate(res.start_time, club.timezone)}</td>
+                <td>{formatTime(res.start_time, club.timezone)}</td>
+                <td>{formatTime(res.end_time, club.timezone)}</td>
                 <td>
                   {res.permanent ? (
                     <i className='bi bi-check-circle-fill text-success'></i>
@@ -101,7 +86,11 @@ const UserReserves = ({ selectedUser, handleDeleteReserve }) => {
                 <td>
                   <button
                     className='m-0 px-2 py-0'
-                    onClick={() => handleDeleteReserve(res.id, selectedUser)}>
+                    aria-label='Cancelar reserva'
+                    onClick={async () => {
+                      const deleted = await handleDeleteReserve(res.id);
+                      if (deleted) setReserves(current => current.filter(row => row.id !== res.id));
+                    }}>
                     <i className='bi bi-trash-fill text-danger'></i>
                   </button>
                 </td>

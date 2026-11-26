@@ -1,132 +1,83 @@
 import { Logger } from '../../../utils/logger.js';
-import { supabaseAdmin, createUserClient } from '../../../config/supabaseClient.js';
+import { createUserClient } from '../../../config/supabaseClient.js';
+import { CustomError } from '../../../utils/customError.Utils.js';
+import { throwClubDbError } from '../../../utils/clubDbError.js';
 
-let instance = null;
+let instance;
+const editableFields = ['first_name', 'last_name', 'age', 'phone'];
+const memberWithProfile = 'role,member_first_name,member_last_name,member_age,member_phone,profile:profiles!club_memberships_user_id_fkey(*)';
 
-/**
- * UsersDAO — Supabase edition.
- *
- * Auth flows (login, register, password update) go through `supabase.auth.*`.
- * Profile reads/writes go through `public.profiles` (RLS-enforced).
- *
- * The login/register endpoints return the Supabase access_token + user
- * payload; the client uses the token on subsequent requests and the
- * `IsAuthenticated.checkJwt` middleware calls `verifyAccessToken` to load
- * the profile.
- */
+function toMemberProfile(membership, actorId) {
+  if (!membership?.profile) return null;
+  const profile = { ...membership.profile, role: membership.role, isAdmin: membership.role === 'admin' };
+  if (actorId !== profile.id) {
+    for (const field of editableFields) {
+      profile[field] = membership['member_' + field] ?? profile[field];
+    }
+  }
+  return profile;
+}
+
 export default class UsersDAO {
-
-  // ---- Auth (uses supabaseAdmin for service-role signups) ----
-
   async signUp({ email, password, firstName, lastName, age, phone }) {
-    const { data, error } = await supabaseAdmin.auth.signUp({
-      email,
-      password,
-      options: {
-        data: { first_name: firstName, last_name: lastName, age, phone },
-      },
+    const { data, error } = await createUserClient().auth.signUp({
+      email, password,
+      options: { data: { first_name: firstName, last_name: lastName, age, phone } },
     });
     if (error) throw error;
-    return data; // { user, session }
+    return data;
   }
 
   async signIn({ email, password }) {
-    // We use a per-request anon client to call signIn so the user gets a
-    // proper session; service_role signIn would skip password verification.
-    const { data, error } = await supabaseAdmin.auth.signInWithPassword({ email, password });
-    if (error) throw error;
-    return data; // { user, session }
-  }
-
-  /**
-   * Admin-only password reset (used by /users/update — admin updates a
-   * socio's password from the admin panel).
-   */
-  async adminUpdatePassword(userId, newPassword) {
-    const { data, error } = await supabaseAdmin.auth.admin.updateUserById(userId, {
-      password: newPassword,
-    });
+    const { data, error } = await createUserClient().auth.signInWithPassword({ email, password });
     if (error) throw error;
     return data;
   }
 
-  // ---- Profile reads/writes (RLS-enforced) ----
+  async getByIdAsUser(id, clubId, actorId, accessToken) {
+    const { data, error } = await createUserClient(accessToken).from('club_memberships')
+      .select(memberWithProfile).eq('club_id', clubId).eq('user_id', id).eq('status', 'active').maybeSingle();
+    if (error) throwClubDbError(error);
+    return toMemberProfile(data, actorId);
+  }
 
-  async getByIdAsUser(id, accessToken) {
+  async getAllAsAdmin(clubId, accessToken) {
+    const { data, error } = await createUserClient(accessToken).from('club_memberships')
+      .select(memberWithProfile).eq('club_id', clubId).eq('status', 'active').order('user_id');
+    if (error) throwClubDbError(error);
+    return data.map(row => toMemberProfile(row)).filter(Boolean);
+  }
+
+  async updateAsUser(id, updates, clubId, actorId, accessToken) {
     const userClient = createUserClient(accessToken);
-    const { data, error } = await userClient
-      .from('profiles')
-      .select('*')
-      .eq('id', id)
-      .maybeSingle();
-    if (error) throw error;
+    if (id === actorId) {
+      const { error } = await userClient.from('profiles').update(updates).eq('id', id);
+      if (error) throwClubDbError(error);
+    } else {
+      const scopedUpdates = Object.fromEntries(Object.entries(updates).map(([field, value]) => ['member_' + field, value]));
+      const { error } = await userClient.from('club_memberships').update(scopedUpdates)
+        .eq('club_id', clubId).eq('user_id', id).eq('status', 'active');
+      if (error) throwClubDbError(error);
+    }
+    const profile = await this.getByIdAsUser(id, clubId, actorId, accessToken);
+    if (!profile) throw CustomError.notFound('Socio no encontrado.');
+    return profile;
+  }
+
+  async listMyReservations(clubId, userId, accessToken) {
+    const { data, error } = await createUserClient(accessToken).from('reservations')
+      .select('*, court:courts!reservation_club_court_fkey(name, display_name)')
+      .eq('club_id', clubId).eq('user_id', userId).order('start_time', { ascending: false });
+    if (error) throwClubDbError(error);
     return data;
   }
 
-  async getAllAsAdmin(accessToken) {
-    const userClient = createUserClient(accessToken);
-    const { data, error } = await userClient
-      .from('profiles')
-      .select('*')
-      .order('created_at', { ascending: false });
-    if (error) throw error;
-    return data ?? [];
-  }
-
-  async getByEmailAsAdmin(email, accessToken) {
-    const userClient = createUserClient(accessToken);
-    const { data, error } = await userClient
-      .from('profiles')
-      .select('*')
-      .eq('email', email)
-      .maybeSingle();
-    if (error) throw error;
-    return data;
-  }
-
-  async updateAsUser(id, updates, accessToken) {
-    const userClient = createUserClient(accessToken);
-    const { data, error } = await userClient
-      .from('profiles')
-      .update(updates)
-      .eq('id', id)
-      .select()
-      .single();
-    if (error) throw error;
-    return data;
-  }
-
-  async deleteAsAdmin(id, accessToken) {
-    const userClient = createUserClient(accessToken);
-    // profiles row cascades from auth.users; just call admin to remove auth row.
-    const { error: authError } = await supabaseAdmin.auth.admin.deleteUser(id);
-    if (authError) throw authError;
-    return { deletedCount: 1 };
-  }
-
-  // ---- Reservations (per-user) ----
-
-  /**
-   * Returns the reservations for the current user, ordered by start_time desc.
-   * Backed by RLS — only the caller's reservations are visible.
-   */
-  async listMyReservations(accessToken) {
-    const userClient = createUserClient(accessToken);
-    const { data, error } = await userClient
-      .from('reservations')
-      .select('*, court:courts(name, display_name)')
-      .order('start_time', { ascending: false });
-    if (error) throw error;
-    return data ?? [];
-  }
-
-  async deleteMyReservation(reservationId, accessToken) {
-    const userClient = createUserClient(accessToken);
-    const { error } = await userClient
-      .from('reservations')
-      .delete()
-      .eq('id', reservationId);
-    if (error) throw error;
+  async deleteMyReservation(id, clubId, accessToken) {
+    if (!id) throw CustomError.badRequest('Elegí una reserva para cancelar.');
+    const { data, error } = await createUserClient(accessToken).from('reservations')
+      .delete().eq('club_id', clubId).eq('id', id).select('id').maybeSingle();
+    if (error) throwClubDbError(error);
+    if (!data) throw CustomError.notFound('Reserva no encontrada.');
     return { deletedCount: 1 };
   }
 

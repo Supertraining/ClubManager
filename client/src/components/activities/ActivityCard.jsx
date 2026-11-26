@@ -20,7 +20,7 @@ ProfeAvatar.propTypes = {
  * Diseñada para la página /activities y para el "Esto se viene en el club" del Home.
  */
 const ActivityCard = ({ activity, compact = false, onOpen }) => {
-  const { title, description, img, imgText, profe, days, hours, court, href, targetCourt } = activity;
+  const { title, description, img, imgText, profe, days, hours, court, href, targetCourt, categories = [] } = activity;
 
   const handleClick = (e) => {
     if (onOpen) {
@@ -35,15 +35,21 @@ const ActivityCard = ({ activity, compact = false, onOpen }) => {
 
   return (
     <article className={`activity-card${compact ? ' activity-card--compact' : ''}`}>
-      <Link to={innerHref} onClick={handleClick} className='activity-card__media-link'>
+      {img && <div className='activity-card__media-link'>
         <div className='activity-card__media'>
           <img src={img} alt={imgText || title} loading='lazy' />
           {days && <span className='tag tag--mustard activity-card__days'>{days}</span>}
         </div>
-      </Link>
+      </div>}
       <div className='activity-card__body'>
         <h3 className='activity-card__title'>{title}</h3>
         <p className='activity-card__desc'>{description}</p>
+        {categories.length > 0 && <ul className='list-unstyled'>
+          {categories.map(category => <li key={category.id}>
+            <strong>{category.name}</strong>
+            <span> · {[category.age_range, category.days, category.schedule].filter(Boolean).join(' · ')}</span>
+          </li>)}
+        </ul>}
         {hours && (
           <p className='activity-card__hours'>
             <i className='bi bi-clock' aria-hidden='true'></i>
@@ -56,12 +62,12 @@ const ActivityCard = ({ activity, compact = false, onOpen }) => {
             <span className='tag tag--brand activity-card__court'>{court}</span>
           )}
         </div>
-        <div className='activity-card__cta'>
+        {(targetCourt || href || onOpen) && <div className='activity-card__cta'>
           <Link to={innerHref} onClick={handleClick} className='btn btn--brand btn--sm btn--pill'>
             {targetCourt ? 'Reservar cancha' : 'Ver más'}
             <i className='bi bi-arrow-right' aria-hidden='true'></i>
           </Link>
-        </div>
+        </div>}
       </div>
     </article>
   );
@@ -80,6 +86,7 @@ ActivityCard.propTypes = {
     court: PropTypes.string,
     href: PropTypes.string,
     targetCourt: PropTypes.string,
+    categories: PropTypes.arrayOf(PropTypes.object),
   }).isRequired,
   compact: PropTypes.bool,
   onOpen: PropTypes.func,

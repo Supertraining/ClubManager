@@ -20,6 +20,7 @@ const BookingPanel = ({
   nextSlotHint,
   onUseNextSlot,
   durationMin,
+  durationOptions = DURATION_OPTIONS,
   onDurationChange,
   closeMin,
   freeWindows = [],
@@ -115,7 +116,7 @@ const BookingPanel = ({
         <fieldset className='booking-panel__duration'>
           <legend className='booking-panel__duration-legend'>¿Cuánto tiempo?</legend>
           <div className='booking-panel__duration-options'>
-            {DURATION_OPTIONS.map((min) => {
+            {durationOptions.map((min) => {
               const fits = durationFits(min);
               return (
                 <button
@@ -165,7 +166,7 @@ const BookingPanel = ({
       )}
 
       <p className='booking-panel__terms'>
-        Al confirmar aceptás las reglas de uso del Club Ranelagh. Tu lugar se
+        Al confirmar aceptás las reglas de uso del club. Tu lugar se
         reserva en el momento.
       </p>
     </aside>
@@ -189,6 +190,7 @@ BookingPanel.propTypes = {
   nextSlotHint: PropTypes.string,
   onUseNextSlot: PropTypes.func,
   durationMin: PropTypes.number,
+  durationOptions: PropTypes.arrayOf(PropTypes.number),
   onDurationChange: PropTypes.func,
   closeMin: PropTypes.number,
   freeWindows: PropTypes.arrayOf(

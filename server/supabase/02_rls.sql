@@ -11,6 +11,18 @@
 -- ---- profiles ----
 alter table public.profiles enable row level security;
 
+-- Older projects may still have broad table grants and individual column grants.
+revoke all on public.profiles from public, anon, authenticated;
+revoke all (id, email, username, first_name, last_name, age, phone, role, created_at, updated_at)
+  on public.profiles from public, anon, authenticated;
+grant select on public.profiles to authenticated, service_role;
+grant update (first_name, last_name, age, phone) on public.profiles to authenticated;
+grant update (role) on public.profiles to service_role;
+
+alter function public.is_admin(uuid) set search_path = '';
+revoke execute on function public.is_admin(uuid) from public, anon;
+grant execute on function public.is_admin(uuid) to authenticated;
+
 -- A user can read their own profile.
 drop policy if exists "profiles: read own" on public.profiles;
 
@@ -36,24 +48,24 @@ create policy "profiles: update own non-sensitive"
   using (id = auth.uid())
   with check (id = auth.uid());
 
+drop policy if exists "profiles: admin updates non-sensitive" on public.profiles;
+
+create policy "profiles: admin updates non-sensitive"
+  on public.profiles for update
+  to authenticated
+  using (public.is_admin(auth.uid()))
+  with check (public.is_admin(auth.uid()));
+
 -- Only admins can insert profiles (signups go through the trigger, not direct insert).
 drop policy if exists "profiles: admin inserts" on public.profiles;
-
-create policy "profiles: admin inserts"
-  on public.profiles for insert
-  to authenticated
-  with check (public.is_admin(auth.uid()));
 
 -- Only admins can delete profiles.
 drop policy if exists "profiles: admin deletes" on public.profiles;
 
-create policy "profiles: admin deletes"
-  on public.profiles for delete
-  to authenticated
-  using (public.is_admin(auth.uid()));
-
 -- ---- courts ----
 alter table public.courts enable row level security;
+grant select on public.courts to anon, authenticated, service_role;
+grant insert, update, delete on public.courts to authenticated, service_role;
 
 -- Public read (the public app lists courts).
 drop policy if exists "courts: public read" on public.courts;
@@ -74,6 +86,8 @@ create policy "courts: admin writes"
 
 -- ---- activities ----
 alter table public.activities enable row level security;
+grant select on public.activities to anon, authenticated, service_role;
+grant insert, update, delete on public.activities to authenticated, service_role;
 
 drop policy if exists "activities: public read" on public.activities;
 
@@ -92,6 +106,8 @@ create policy "activities: admin writes"
 
 -- ---- activity_categories ----
 alter table public.activity_categories enable row level security;
+grant select on public.activity_categories to anon, authenticated, service_role;
+grant insert, update, delete on public.activity_categories to authenticated, service_role;
 
 -- Categories inherit visibility from their parent activity.
 drop policy if exists "activity_categories: public read" on public.activity_categories;
@@ -116,6 +132,7 @@ create policy "activity_categories: admin writes"
 
 -- ---- reservations ----
 alter table public.reservations enable row level security;
+grant select, insert, update, delete on public.reservations to authenticated, service_role;
 
 -- Users read their own reservations.
 drop policy if exists "reservations: user reads own" on public.reservations;
@@ -184,6 +201,7 @@ create policy "reservations: admin updates any"
 
 -- ---- events ----
 alter table public.events enable row level security;
+grant select, insert, update, delete on public.events to authenticated, service_role;
 
 -- Events are admin-only data (the public app does not list them).
 drop policy if exists "events: admin reads" on public.events;

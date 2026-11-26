@@ -1,0 +1,33 @@
+.club-home {
+  padding-block: clamp(2rem, 5vw, 5rem);
+}
+
+.club-home__header {
+  margin-block-end: 2rem;
+}
+
+.club-home__cover {
+  width: 100%;
+  max-height: 24rem;
+  object-fit: cover;
+  border-radius: 1rem;
+  margin-block-end: 2rem;
+}
+
+.club-home__courts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: 1rem;
+  list-style: none;
+  padding: 0;
+}
+
+.club-home__courts li {
+  border: 1px solid var(--c-line);
+  border-radius: 1rem;
+  padding: 1.25rem;
+}
+
+.club-home .btn {
+  min-height: 44px;
+}

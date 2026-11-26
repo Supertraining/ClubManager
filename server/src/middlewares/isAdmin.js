@@ -2,12 +2,12 @@ import { CustomError } from '../utils/customError.Utils.js';
 
 /**
  * isAdmin — must be chained AFTER `IsAuthenticated.checkJwt`.
- * Reads `req.user.isAdmin` (set by the auth middleware via `verifyAccessToken`).
+ * Uses the current membership for the club resolved from this request.
  */
 export const IsAdmin = {
   requireAdmin: (req, _res, next) => {
-    if (!req.user?.isAdmin) {
-      return next(CustomError.forbidden('Admin role required'));
+    if (req.membership?.role !== 'admin') {
+      return next(CustomError.forbidden('Necesitás permisos de administrador.'));
     }
     next();
   },

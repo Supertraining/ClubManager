@@ -1,125 +1,52 @@
 import { Logger } from '../../../utils/logger.js';
-import { supabaseAdmin, createUserClient } from '../../../config/supabaseClient.js';
+import { createUserClient } from '../../../config/supabaseClient.js';
+import { clubRpc } from '../../clubs/DAO/clubs.js';
+import { throwClubDbError } from '../../../utils/clubDbError.js';
 
-let instance = null;
+let instance;
 
-/**
- * CourtsDAO — Supabase edition.
- *
- * - Courts are public-read (anon can list).
- * - Writes are admin-only (RLS).
- * - Reservations live in their own table; the old "unavailableDates" array
- *   on the court doc is gone. Use `getReservationsForCourt` to power the
- *   week-board.
- */
 export default class CourtsDAO {
-
-  async getAll() {
-    const { data, error } = await supabaseAdmin
-      .from('courts')
-      .select('*')
-      .eq('active', true)
-      .order('name', { ascending: true });
-    if (error) throw error;
-    return data ?? [];
-  }
-
-  async getByName(name) {
-    const { data, error } = await supabaseAdmin
-      .from('courts')
-      .select('*')
-      .eq('name', name)
-      .maybeSingle();
-    if (error) throw error;
+  async getAll(clubId) {
+    const { data, error } = await createUserClient().from('courts')
+      .select('id,name,sport,display_name,surface,duration_options_min,hours:court_schedules(weekday,open_min,close_min)')
+      .eq('club_id', clubId).eq('active', true).order('name');
+    if (error) throwClubDbError(error);
     return data;
   }
 
-  async getById(id) {
-    const { data, error } = await supabaseAdmin
-      .from('courts')
-      .select('*')
-      .eq('id', id)
-      .maybeSingle();
-    if (error) throw error;
-    return data;
+  save(clubId, slug, patch, accessToken) {
+    return clubRpc(accessToken, 'save_club_court', { p_club_id: clubId, p_slug: slug, p_changes: patch });
   }
 
-  async create(court) {
-    const { data, error } = await supabaseAdmin
-      .from('courts')
-      .insert(court)
-      .select()
-      .single();
-    if (error) throw error;
-    return data;
+  async deleteById(id, clubId, accessToken) {
+    const { data, error } = await createUserClient(accessToken).from('courts')
+      .delete().eq('club_id', clubId).eq('id', id).select('id').maybeSingle();
+    if (error) throwClubDbError(error);
+    return { deletedCount: data ? 1 : 0 };
   }
 
-  async deleteById(id) {
-    const { error } = await supabaseAdmin
-      .from('courts')
-      .delete()
-      .eq('id', id);
-    if (error) throw error;
-    return { deletedCount: 1 };
-  }
-
-  /**
-   * Returns the reservations for a court between two dates. Same shape as the
-   * legacy /courts/:name endpoint, but rows come from `reservations` instead
-   * of `unavailableDates`.
-   */
-  async getReservationsForCourtByName(name, fromIso, toIso) {
-    const { data: court, error: courtError } = await supabaseAdmin
-      .from('courts')
-      .select('id, name, display_name')
-      .eq('name', name)
-      .maybeSingle();
-    if (courtError) throw courtError;
-    if (!court) return { court: null, reservations: [] };
-
-    const { data, error } = await supabaseAdmin
-      .from('reservations')
-      .select('id, weekday, reservation_date, start_time, end_time, user_id, permanent, info')
-      .eq('court_id', court.id)
-      .gte('start_time', fromIso ?? new Date().toISOString())
-      .lte('end_time', toIso ?? new Date(Date.now() + 14 * 86400000).toISOString())
-      .order('start_time', { ascending: true });
-    if (error) throw error;
-    return { court, reservations: data ?? [] };
-  }
-
-  /**
-   * Create a reservation via the server-side RPC. RLS + EXCLUDE constraint
-   * enforce ownership and double-booking protection.
-   */
-  async createReservation({ courtId, startTime, endTime, permanent = false, info = null }, accessToken) {
-    const userClient = createUserClient(accessToken);
-    const { data, error } = await userClient.rpc('create_reservation', {
-      p_court_id: courtId,
-      p_start_time: startTime,
-      p_end_time: endTime,
-      p_permanent: permanent,
-      p_info: info,
+  slots(clubId, slug, from, days, accessToken, legacy) {
+    return clubRpc(accessToken, legacy ? 'club_court_slots' : 'club_court_availability', {
+      p_club_id: clubId, p_slug: slug, p_from: from, p_days: days,
     });
-    if (error) throw error;
-    return data;
   }
 
-  async deleteReservation(reservationId, accessToken) {
-    const userClient = createUserClient(accessToken);
-    const { error } = await userClient
-      .from('reservations')
-      .delete()
-      .eq('id', reservationId);
-    if (error) throw error;
-    return { deletedCount: 1 };
+  book(clubId, reservation, accessToken) {
+    return clubRpc(accessToken, 'book_club_court', { p_club_id: clubId, ...reservation });
   }
 
-  async deleteOldReservations() {
-    // RPC defined in 03_rpc.sql — security definer, runs as service_role.
-    const { data, error } = await supabaseAdmin.rpc('delete_old_reservations');
-    if (error) throw error;
-    return { deletedCount: data ?? 0 };
+  async deleteReservation(reservationId, clubId, accessToken) {
+    const { data, error } = await createUserClient(accessToken).from('reservations')
+      .delete().eq('club_id', clubId).eq('id', reservationId).select('id').maybeSingle();
+    if (error) throwClubDbError(error);
+    return { deletedCount: data ? 1 : 0 };
+  }
+
+  async deleteOldReservations(clubId, accessToken) {
+    const { count, error } = await createUserClient(accessToken).from('reservations')
+      .delete({ count: 'exact' }).eq('club_id', clubId).lt('end_time', new Date().toISOString());
+    if (error) throwClubDbError(error);
+    return { deletedCount: count ?? 0 };
   }
 
   static getInstance() {

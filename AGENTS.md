@@ -4,7 +4,7 @@ Contrato operativo del repo. Leer antes de tocar código. Si algo de acá contra
 
 ## Qué es
 
-Monolito de tres partes para el **Club Ranelagh** (Ranelagh, Gran Buenos Aires). Sistema de autogestión para socios: registro, grilla de actividades, reserva de canchas y gestión de reservas. No es multi-tenant ni un SaaS genérico — la identidad, las canchas y los horarios son del club.
+Monolito de tres partes de autogestión para clubes, con registro de socios, actividades y reservas. Cada club tiene una URL, una ficha y un padrón propios. El **Club Ranelagh** (Ranelagh, Gran Buenos Aires) conserva sus enlaces originales como primer club.
 
 Datos reales del club (no inventar nada nuevo): Av. Dr. A. Sabin 1751, B1886 GBA. WhatsApp +54 9 11 3838-6877. Instagram `@ranelagh.club`. Facebook perfil 100064211970969.
 
@@ -27,7 +27,7 @@ Ojo: `client` está en React 19 y `admin` en React 18. No unificar sin acordarlo
 # server (puerto 8080)
 cd server && npm run dev          # NODE_ENV=dev + node --watch
 cd server && npm start            # sin watch
-cd server && npm test             # mocha ./test/user.test.js
+cd server && npm test             # Mocha con Express y un fixture HTTP local
 
 # client (puerto 5173)
 cd client && npm run dev
@@ -44,7 +44,7 @@ cd admin && npm run lint
 ## Configuración
 
 - `client/.env` y `admin/.env` — solo variables `VITE_*` (Vite no expone el resto). `VITE_BACKEND_URL`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`.
-- `server/src/config/.env.dev` (dev) o `.env` (prod) — se cargan con `process.loadEnvFile()` según `NODE_ENV`, no hay `dotenv`. Ejemplos en `server/src/config/.env.example`.
+- `server/src/config/.env.dev` (dev) o `.env` (prod) — se cargan con `process.loadEnvFile()` según `NODE_ENV` si el archivo existe. El servidor también acepta las variables de su proceso. Ejemplos en `server/src/config/.env.example`.
 - **Nunca commitear `.env` / `.env.dev` / `.env.production`.** La `anon key` sí es pública por diseño (viaja al browser); la `service role key` es el secreto crítico y solo vive en el server.
 
 ## Autenticación
@@ -56,22 +56,22 @@ Supabase Auth es la fuente de verdad de la sesión. El Express server **no** emi
 3. El server valida el token con la `service role key` y opera sobre Postgres vía `@supabase/supabase-js`.
 4. En 401, el interceptor refresca la sesión y reintenta **una** vez; si falla, signOut + redirect a `/login`.
 
-`profiles` se crea sola por trigger sobre `auth.users` (ver `server/supabase/04_triggers.sql`). Roles: `socio` (default) y `admin`.
+`profiles` se crea por trigger sobre `auth.users` (ver `server/supabase/04_triggers.sql`). Cada solicitud privada valida una membresía activa de `club_memberships` para el club de la URL. La membresía determina el rol `socio` o `admin`. El alta desde el portal concede el rol de socio. El administrador inicial se asigna mediante una operación privilegiada del club.
 
 ## Data model
 
-Definido en `server/supabase/01_schema.sql`. Tablas: `profiles`, `courts`, `activities`, `activity_categories`, `reservations`, `events`.
+El esquema base vive en `server/supabase/01_schema.sql`. Las migraciones incrementales de `server/supabase/migrations/` agregan `clubs`, `club_memberships`, `court_schedules` y el alcance por `club_id` al catálogo, las reservas y los eventos.
 
 Lo importante:
 
 - **`reservations` tiene un `EXCLUDE USING gist` sobre `court_id` + `tstzrange(start_time, end_time)`**. El double-booking es estructuralmente imposible a nivel Postgres. No reimplementar esa chequea en JS: es la garantía central del sistema.
-- `courts.name` es un enum `court_kind`: solo `futbol`, `paddle`, `squash`, `paleta`.
+- `courts.name` es un identificador de URL único dentro de cada club. El deporte se guarda en `courts.sport`. Las canchas pueden repetir deporte y tener sus propios horarios.
 - `events` y `activity_categories` guardan campos legacy en `jsonb` a propósito, para no forzar migraciones.
 - RLS vive en `02_rls.sql`; funciones RPC en `03_rpc.sql`. **Cambiar tablas sin revisar RLS es el error más caro posible acá.**
 
 ## API
 
-`server/src/routes/index.js` monta cada archivo de `routes/` automáticamente en `/<nombre-del-archivo>`. Los controladores se inyectan por `src/dependencies/`.
+`server/src/dependencies/index.js` resuelve el club en `/clubs/:clubSlug` y monta los routers del club. Los aliases raíz se vinculan únicamente a Ranelagh. Las apps usan `/clubes/:clubSlug` y sus bases de URL correspondientes.
 
 | Mount | Endpoints |
 |---|---|
@@ -84,6 +84,7 @@ Lo importante:
 Convenciones del server:
 
 - Orden fijo: `validate.<tipo>` → `IsAuthenticated.checkJwt` → controller. El `router.use(IsAuthenticated.checkJwt)` se aplica a todo lo que sigue en el archivo, así que un endpoint público tiene que declararse **antes** de esa línea.
+- En rutas administrativas, usar `IsAdmin.requireAdmin` después de validar la sesión y antes del controller. Esto también aplica cuando el DAO usa la credencial de servicio.
 - Las rutas no cuelgan de `/api`; son `/users`, `/courts`, etc. directo.
 - Los middlewares viven en `src/middlewares/`, no en `src/routes/middlewares/` (el router dinámico los excluye por nombre).
 
@@ -121,7 +122,7 @@ Prohibiciones vinculantes: sin glassmorphism decorativo, sin gradientes sobre te
 
 - `controllers/` → `services/` → `DAO/`. El DAO habla Supabase; el service tiene la lógica; el controller solo valida y responde.
 - Errores con `utils/customError.Utils.js`, log con `utils/logger.js` (winston). No `console.log` en código nuevo.
-- `NODE_ENV=prod` exige `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY`; el server tira al inicio si faltan.
+- `NODE_ENV=prod` exige `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` y `SUPABASE_ANON_KEY` al iniciar.
 
 **Contenido**
 
@@ -133,7 +134,7 @@ Todo el copy de cara al usuario es **español rioplatense en voseo** ("reservá"
 
 - **`npm run lint` es la puerta de calidad en `client` y `admin`, y hoy está verde** (0 errores, 0 warnings, con `--max-warnings 0`). Si lo rompés, arreglalo en el mismo PR.
 - **No silencies `react-hooks/exhaustive-deps` con un disable.** Si un hook devuelve funciones nuevas en cada render, memoizalo (ver `admin/src/components/activities/hooks/useActivityAPI.jsx`) y recién ahí agregá la dependencia: con el hook sin memoizar, agregar la dep que falta causa un loop infinito de fetch.
-- **SQL duplicado**: `migracion/01_database/*.sql` y `server/supabase/*.sql` son copias byte-idénticas. Editar **una sola** y copiar, o mejor: dejar `server/supabase/` como fuente y borrar la otra.
+- **SQL base duplicado**. Los scripts `01` a `05` de `migracion/01_database/` son copias de `server/supabase/`. Las migraciones incrementales se mantienen en `server/supabase/migrations/`.
 - **`admin` no fue reestructurado** como `client`: conserva el árbol anidado viejo (`components/courts/pages/football/`, `components/activities/components/activityCard/`). Cualquier component nuevo en admin debería seguir el patrón de `client`, no el legado.
 - **`admin/src/components/oldReservesDeleted/`** es código muerto. No reanimar sin saber por qué se borró.
 - `client/.env.example` tiene una `anon key` real apuntando a un proyecto real. Es pública por diseño, pero conviene dejarla como placeholder como en `admin/.env.example`.

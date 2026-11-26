@@ -5,31 +5,31 @@ export default class ActivityServices {
     this.repository = activityDAO;
   }
 
-  save = async (activityData) => {
-    return this.repository.save(activityData);
+  save = async (activityData, clubId, token) => {
+    return this.repository.save(activityData, clubId, token);
   };
 
-  getAll = async () => {
-    return this.repository.getAll();
+  getAll = async (clubId) => {
+    return this.repository.getAll(clubId);
   };
 
-  getById = async (id) => {
-    const activity = await this.repository.getById(id);
+  getById = async (id, clubId, token) => {
+    const activity = await this.repository.getById(id, clubId, token);
     if (!activity) throw CustomError.notFound(`Actividad ${id} no encontrada`);
     return activity;
   };
 
-  update = async (id, data) => {
-    const result = await this.repository.update(id, data);
+  update = async (id, data, clubId, token) => {
+    const result = await this.repository.update(id, data, clubId, token);
     if (!result) throw CustomError.notFound(`Actividad ${id} no encontrada`);
     return result;
   };
 
-  delete = async (id) => {
-    return this.repository.delete(id);
+  delete = async (id, clubId, token) => {
+    return this.repository.delete(id, clubId, token);
   };
 
-  deleteAll = async () => {
-    return this.repository.deleteAll();
+  deleteAll = async (clubId, token) => {
+    return this.repository.deleteAll(clubId, token);
   };
 }

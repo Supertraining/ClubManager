@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import { validate } from '../middlewares/dataValidator.js';
 import { IsAuthenticated } from '../middlewares/isAuthenticated.js';
+import { IsAdmin } from '../middlewares/isAdmin.js';
+import { requireMembership } from '../middlewares/clubContext.js';
 
 const router = Router();
 export default class ActivityRouter {
@@ -11,7 +13,7 @@ export default class ActivityRouter {
     
     router.get('/getAll', this.activityControllers.getAll);
 
-    router.use(IsAuthenticated.checkJwt)
+    router.use(IsAuthenticated.checkJwt, requireMembership, IsAdmin.requireAdmin);
 
     router.post('/save', validate.activity, this.activityControllers.save);
     router.get('/getById/:id', validate.activityId, this.activityControllers.getById);

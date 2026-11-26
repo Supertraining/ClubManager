@@ -5,17 +5,15 @@ import { verifyAccessToken } from '../config/supabaseClient.js';
  * isAuthenticated — verifies the Supabase access token from the
  * `Authorization: Bearer <jwt>` header and attaches the user profile to `req.user`.
  *
- * `verifyAccessToken` returns the union of `auth.users` and the `profiles` row,
- * plus an `isAdmin` boolean derived from `profiles.role`.
+ * `verifyAccessToken` returns the caller's global identity.
  *
  * For per-user DB operations the handler should call
- * `createUserClient(req.user.accessToken)` so RLS policies kick in.
+ * `createUserClient(req.accessToken)` so RLS policies apply.
  */
 export const IsAuthenticated = {
   checkJwt: async (req, res, next) => {
     try {
-      const bearerJwt = req.headers.authorization;
-      const token = bearerJwt?.split(' ').pop();
+      const token = /^Bearer ([^\s]+)$/i.exec(req.headers.authorization ?? '')?.[1];
       const user = await verifyAccessToken(token);
       if (!user) throw CustomError.unauthorized('NOT AUTHORIZED');
       req.user = user;

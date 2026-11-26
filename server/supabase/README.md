@@ -11,16 +11,60 @@ migrate the Club Manager backend from MongoDB to Supabase (Postgres).
    - `01_schema.sql` — tables, types, constraints, `is_admin()` helper
    - `02_rls.sql` — Row Level Security policies
    - `03_rpc.sql` — RPC functions used by the frontend
-   - `04_triggers.sql` — `auth.users → profiles`, `updated_at`, delete guard
+   - `04_triggers.sql` — `auth.users → profiles` and `updated_at`
    - `05_seed.sql` — initial courts
-4. In **Authentication → Providers**, enable Email/Password and disable email
-   confirmation for the bootstrap admin (re-enable it for production).
-5. Sign up your first admin user from the public app (or via the dashboard).
-6. In **SQL Editor**, run:
+4. Register the first administrator and confirm the email using the project's Auth settings.
+5. As a database owner, assign the role to that confirmed account in **SQL Editor**.
    ```sql
    select public.promote_to_admin('tu-admin@ranelagh.club');
    ```
-7. Re-enable email confirmation in **Auth → Providers**.
+
+For an existing schema, verify the definitions and grants on the target, then
+apply `02_rls.sql`, `03_rpc.sql` and `04_triggers.sql` in order in a single
+transaction. Apply `01_schema.sql` to an empty database. Review the existing
+administrator roster against the authorized roster before updating a live
+environment. See `AGENTS.md` for approval requirements for external changes.
+
+## Local verification
+
+From the repository root, `npm --prefix server test` exercises the real Express
+routes with synthetic accounts through a loopback HTTP fixture. The suite uses
+the built-in Node 22 fetch and binds an ephemeral port.
+
+The SQL checks use PostgreSQL with the extensions declared in `01_schema.sql`.
+Create a fresh local cluster dedicated to the tests and run this sequence in
+PowerShell with the port and owner of that cluster. The fixture supplies the
+database roles and the minimum Auth schema required to exercise RLS.
+
+```powershell
+$clubTestPort = Read-Host 'Puerto del cluster descartable'
+$clubTestArgs = @('-X', '-h', '127.0.0.1', '-p', $clubTestPort, '-U', 'postgres', '-v', 'ON_ERROR_STOP=1')
+psql @clubTestArgs -d postgres -c 'create database clubmanager_test'
+psql @clubTestArgs -d clubmanager_test -f server/test/sql/supabaseFixture.sql
+psql @clubTestArgs -d clubmanager_test -1 -f server/supabase/01_schema.sql -f server/supabase/02_rls.sql -f server/supabase/03_rpc.sql -f server/supabase/04_triggers.sql -f server/supabase/05_seed.sql
+psql @clubTestArgs -d clubmanager_test -f server/test/sql/permissions.test.sql
+```
+
+The last command checks role assignment, legacy ACL cleanup, repair and RLS in
+a transaction that rolls back the fixtures. Verify Auth and PostgREST together
+in an isolated Supabase stack before releasing the change.
+
+## Migrating the single-club schema
+
+Review and rehearse the cutover with the plan in `docs/superpowers/plans/`.
+Verify the existing schema, pause writes, reconcile missing profiles, and
+confirm which existing users should administer Ranelagh. Set the confirmed
+UUID array as the transaction-local setting `clubmanager.ranelagh_admin_ids`.
+Use `{}` for a confirmed empty roster. The migration stops if an administrator
+roster still requires confirmation or an approved UUID has no profile.
+
+Apply the three migration files in timestamp order in the same transaction.
+The first assigns legacy rows to Ranelagh. The second replaces global
+authorization with membership policies. The third seeds the existing court
+hours and enables scoped booking operations. The apps and API use the migrated
+schema together. Test the updated API before reopening writes. Review any
+job that used the former global `delete_old_reservations()` function and move
+it to explicitly scoped cleanup before the cutover.
 
 ## What changed vs the current MongoDB model
 
@@ -59,37 +103,17 @@ constraint reservations_no_overlap exclude using gist (
 The `create_reservation` RPC translates the constraint violation into a clean
 Spanish error message: `"Ese horario ya está reservado"`.
 
-## How the frontend talks to Supabase
+## Application access
 
-Two options:
+The apps use Supabase Auth for browser sessions and send the JWT to Express.
+Express verifies the user's session and requires the administrator role on
+management routes. The legacy login and registration endpoints use a separate
+client per Auth request with the project's anon key. Profile reads and writes
+and a member's reservation data use the JWT and RLS.
 
-**Option A — keep axios, hit the RPCs via PostgREST**
-- Minimal frontend changes.
-- RLS still works because Supabase adds the JWT automatically.
-- Recommended for the initial migration.
-
-**Option B — switch to `@supabase/supabase-js`**
-- Better DX for realtime (`supabase.channel().on('postgres_changes', ...)`).
-- Cleaner auth (drop the `userStore` Zustand).
-- Required if you want the live-updating board in the admin.
-
-For the first cut, go with A. The admin can still do polling for now; switch
-to B later when you want realtime.
-
-## What still lives in Express
-
-If you keep Express (recommended during the transition):
-
-- `auth/users` + `auth/login` — replaced by Supabase Auth UI or `signInWithPassword()`
-- `users/reserves/:username` — replaced by direct INSERT to `reservations`
-- `courts/reserve` — replaced by `public.create_reservation()` RPC
-- `courts/reserve/clean` — replaced by `public.delete_old_reservations()` (call from a
-  scheduled Edge Function or `pg_cron`)
-
-What stays in Express for now (optional migration later):
-- Email notifications (`UserNotifications.emailNewUserNotification`) — can move
-  to a Supabase Edge Function triggered on `INSERT INTO profiles`
-- Cron for permanent reservation cloning — can be a `pg_cron` job
+The available HTTP routes are documented in `AGENTS.md`. The direct
+`get_court_reservations` RPC yields rows allowed by RLS. Reservation cleanup
+and global role assignment use privileged operations.
 
 ## Migration from existing data
 
@@ -120,6 +144,6 @@ reservations), so a downtime of a few minutes is acceptable.
 | `01_schema.sql` | Tables, types, constraints, EXCLUDE for double-booking |
 | `02_rls.sql` | Row Level Security policies (admin vs socio) |
 | `03_rpc.sql` | RPC functions: `create_reservation`, `get_court_reservations`, `delete_old_reservations`, `search_profiles`, `promote_to_admin` |
-| `04_triggers.sql` | `auth.users → profiles` sync, `updated_at`, delete guard |
+| `04_triggers.sql` | `auth.users → profiles` sync and `updated_at` |
 | `05_seed.sql` | 4 starter courts + bootstrap instructions |
 | `README.md` | This file |

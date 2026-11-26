@@ -48,6 +48,11 @@
   vertical-align: top;
   border-spacing: 2px;
 }
+.activity-hours-modal :is(.btn, .btn-close) {
+  min-width: 44px;
+  min-height: 44px;
+}
+
 .tableData {
   font-size: small;
 }

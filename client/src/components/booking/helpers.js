@@ -67,12 +67,28 @@ export const slotEnd = (slotStart, durationMin = DEFAULT_DURATION_MIN) =>
  * slots per range), because counting slots that are actually disabled shows a
  * number the member cannot act on.
  */
-export const isSlotPast = (slotStart, dateKey) => {
-  if (!dateKey || dateKey !== toDateKey(new Date())) return false;
-  const [h, m] = slotStart.split(':').map(Number);
-  const slotDate = new Date();
-  slotDate.setHours(h, m, 0, 0);
-  return slotDate.getTime() <= Date.now();
+export const clubDateKey = (value, timeZone) => {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone, year: 'numeric', month: '2-digit', day: '2-digit',
+  }).formatToParts(new Date(value));
+  const calendar = Object.fromEntries(parts.map(({ type, value }) => [type, value]));
+  return [calendar.year, calendar.month, calendar.day].join('-');
+};
+
+export const clubToday = (timeZone) => {
+  const [year, month, day] = clubDateKey(new Date(), timeZone).split('-').map(Number);
+  return new Date(year, month - 1, day);
+};
+
+export const clubClock = (value, timeZone) => new Intl.DateTimeFormat('es-AR', {
+  timeZone, hour: '2-digit', minute: '2-digit', hourCycle: 'h23',
+}).format(new Date(value));
+
+export const isSlotPast = (slotStart, dateKey, timeZone) => {
+  if (!dateKey) return false;
+  const now = new Date();
+  const today = clubDateKey(now, timeZone);
+  return dateKey < today || (dateKey === today && slotStart <= clubClock(now, timeZone));
 };
 
 const toHHmm = (date) => {
@@ -107,7 +123,7 @@ export const getWeekDays = (start = new Date()) => {
 const WEEKDAYS = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
 const WEEKDAYS_SHORT = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
 
-export const formatDayShort = (date) => {
+export const formatDayShort = (date, today = new Date()) => {
   const d = date instanceof Date ? date : new Date(date);
   return {
     weekday: WEEKDAYS[d.getDay()],
@@ -115,7 +131,7 @@ export const formatDayShort = (date) => {
     day: d.getDate(),
     month: d.getMonth() + 1,
     monthShort: d.toLocaleDateString('es-AR', { month: 'short' }),
-    isToday: isSameDay(d, new Date()),
+    isToday: isSameDay(d, today),
   };
 };
 

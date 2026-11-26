@@ -1,6 +1,4 @@
 import winston, { format } from "winston";
-import { CustomError } from "./customError.Utils.js";
-import { styleText } from "node:util";
 
 const { combine, prettyPrint, timestamp, errors } = winston.format;
 
@@ -14,32 +12,6 @@ function filterOnly(level) {
 }
 
 export class Logger {
-  static errorLogger = async (err, additionalInfo) => {
-    try {
-      if (!additionalInfo) {
-        this.level().error(err.stack);
-
-        return;
-      }
-
-      const errorMessage = `Error occurred: ${err.message}\nAdditional Info:\n
-			Route: ${additionalInfo.route} 
-			Method: ${additionalInfo.method}
-			IP: ${additionalInfo.ip}
-			User_agent: ${additionalInfo.user_agent}
-			user: ${additionalInfo.user?.username}
-			Stack Trace: ${err.stack}\n\n`;
-
-      this.level().error(errorMessage);
-
-      console.error(
-        styleText(["red", "bold"], "Error occurred, check error.log file for more details")
-      );
-    } catch (error) {
-      throw CustomError.internalError();
-    }
-  };
-
   static level = () => {
     const logger = winston.createLogger({
       format: combine(errors({ stack: true }), timestamp(), prettyPrint()),

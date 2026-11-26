@@ -1,46 +1,34 @@
-import { useEffect, useState } from "react";
-import PropTypes from 'prop-types';
-import {useAxiosInstance} from "./useAxiosInstance.jsx";
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useAxiosInstance } from './useAxiosInstance';
 
 export const useFetch = (url) => {
-    const [ data, setData ] = useState([]);
-    const [ loading, setLoading ] = useState(false);
-    const [ error, setError ] = useState(false);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const axios = useAxiosInstance();
+  const active = useRef(null);
 
+  const reFetch = useCallback(async () => {
+    active.current?.abort();
+    const request = new AbortController();
+    active.current = request;
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.get(url, { signal: request.signal });
+      if (!request.signal.aborted) setData(response.data);
+    } catch (failure) {
+      if (!request.signal.aborted) setError(failure);
+    } finally {
+      if (!request.signal.aborted) setLoading(false);
+    }
+  }, [axios, url]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true)
-            try {
+  useEffect(() => {
+    setData([]);
+    reFetch();
+    return () => active.current?.abort();
+  }, [reFetch]);
 
-                const res = await axios.get(url);
-
-                setData(res.data);
-                
-            } catch (error) {
-                setError(error)
-            }
-            setLoading(false);
-        };
-        fetchData();
-    }, [axios, url]);
-
-    const reFetch = async () => {
-        setLoading(true);
-        try {
-            const res = await axios.get(url);
-            setData(res.data);
-        } catch (err) {
-            setError(err);
-        }
-        setLoading(false);
-    };
-
-    return { data, loading, error, reFetch };
-
+  return { data, loading, error, reFetch };
 };
-
-useFetch.propTypes = {
-    url : PropTypes.string.isRequired
-}

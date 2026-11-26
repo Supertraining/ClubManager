@@ -1,5 +1,7 @@
 import { Router } from "express";
 import { IsAuthenticated } from "../middlewares/isAuthenticated.js";
+import { IsAdmin } from "../middlewares/isAdmin.js";
+import { requireMembership } from '../middlewares/clubContext.js';
 
 const router = Router();
 export default class EventRouter {
@@ -12,7 +14,7 @@ export default class EventRouter {
 
   start() {
 
-    router.use(IsAuthenticated.checkJwt)
+    router.use(IsAuthenticated.checkJwt, requireMembership, IsAdmin.requireAdmin);
 
     router.get('/', this.controllers.getAllEvents);
     router.get('/eventById/:id', this.controllers.getEventById);

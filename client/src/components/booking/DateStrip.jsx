@@ -8,13 +8,13 @@ import './DateStrip.css';
  * Scrolls horizontally on overflow; selected day is highlighted with the
  * brand green. Today gets a small dot indicator.
  */
-const DateStrip = ({ selected, onSelect }) => {
-  const days = getWeekDays();
+const DateStrip = ({ selected, onSelect, today }) => {
+  const days = getWeekDays(today);
 
   return (
     <div className='date-strip' role='radiogroup' aria-label='Día de la reserva'>
       {days.map((d) => {
-        const f = formatDayShort(d);
+        const f = formatDayShort(d, today);
         const active = isSameDay(d, selected);
         return (
           <button
@@ -37,6 +37,7 @@ const DateStrip = ({ selected, onSelect }) => {
 DateStrip.propTypes = {
   selected: PropTypes.instanceOf(Date).isRequired,
   onSelect: PropTypes.func.isRequired,
+  today: PropTypes.instanceOf(Date),
 };
 
 export default DateStrip;

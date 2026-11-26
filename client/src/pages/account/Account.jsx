@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useReservesAPI, useNotifications } from '../../hooks';
-import { userStore } from '../../stores';
+import { userStore as useUserStore } from '../../stores';
 import ConfirmDialog from '../../components/ui/ConfirmDialog/ConfirmDialog';
+import { useClub } from '../../components/club/useClub';
+import { clubClock } from '../../components/booking/helpers';
+import PasswordForm from './PasswordForm';
 import './Account.css';
 
 const COURT_LABELS = {
@@ -34,15 +37,17 @@ const toReserveView = (r) => {
   };
 };
 
-const formatDate = (date) => {
+const formatDate = (date, timeZone) => {
   if (!date) return '';
   const d = new Date(date);
-  return d.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' });
+  return d.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long', timeZone });
 };
 
 const Account = () => {
+  const { club } = useClub();
+  const timeZone = club.timezone;
   const navigate = useNavigate();
-  const user = userStore((s) => s.user?.user);
+  const user = useUserStore((s) => s.user?.user);
   const { getMyReserves, deleteReserve } = useReservesAPI();
   const { notifySuccess } = useNotifications();
   const [reserves, setReserves] = useState([]);
@@ -112,6 +117,8 @@ const Account = () => {
           </div>
         </header>
 
+        <PasswordForm />
+
         {/* Stats row */}
         <div className='account-stats'>
           <div className='account-stat card-soft'>
@@ -178,10 +185,10 @@ const Account = () => {
                 <li key={r.id} className='account-list__item'>
                   <div className='account-list__date'>
                     <span className='account-list__day'>
-                      {new Date(r.start).toLocaleDateString('es-AR', { day: 'numeric' })}
+                      {new Date(r.start).toLocaleDateString('es-AR', { day: 'numeric', timeZone })}
                     </span>
                     <span className='account-list__month'>
-                      {new Date(r.start).toLocaleDateString('es-AR', { month: 'short' })}
+                      {new Date(r.start).toLocaleDateString('es-AR', { month: 'short', timeZone })}
                     </span>
                   </div>
                   <div className='account-list__copy'>
@@ -190,9 +197,9 @@ const Account = () => {
                       {r.permanent && <span className='tag tag--mustard'>Permanente</span>}
                     </h3>
                     <p className='account-list__when'>
-                      {formatDate(r.start)} · {new Date(r.start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      {formatDate(r.start, timeZone)} · {clubClock(r.start, timeZone)}
                       {' – '}
-                      {new Date(r.end).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      {clubClock(r.end, timeZone)}
                     </p>
                   </div>
                     {filter === 'upcoming' && (
@@ -225,15 +232,8 @@ const Account = () => {
             Vas a liberar{' '}
             <strong>
               {cancelling.courtLabel} ·{' '}
-              {new Date(cancelling.start).toLocaleDateString('es-AR', {
-                weekday: 'long',
-                day: 'numeric',
-                month: 'long',
-              })}{' '}
-              {new Date(cancelling.start).toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit',
-              })}
+              {formatDate(cancelling.start, timeZone)}{' '}
+              {clubClock(cancelling.start, timeZone)}
             </strong>
             . Queda disponible para otra familia y no vas a poder recuperarla desde acá.
           </>

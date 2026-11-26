@@ -1,6 +1,7 @@
 import { Router } from "express";
-import { validate } from "../middlewares/dataValidator.js";
 import { IsAuthenticated } from "../middlewares/isAuthenticated.js";
+import { IsAdmin } from "../middlewares/isAdmin.js";
+import { requireMembership } from '../middlewares/clubContext.js';
 
 const router = Router();
 
@@ -11,8 +12,6 @@ export default class CourtsRouter {
 
     start() {
 
-        router.use(IsAuthenticated.checkJwt)
-
         router.get(
 
             "/",
@@ -21,6 +20,13 @@ export default class CourtsRouter {
                 .getAll
 
         )
+
+        router.get('/:name/availability', (req, res, next) => {
+            if (!req.headers.authorization) return next();
+            return IsAuthenticated.checkJwt(req, res, next);
+        }, this.controllers.availability);
+
+        router.use(IsAuthenticated.checkJwt, requireMembership);
 
         router.get(
 
@@ -34,6 +40,7 @@ export default class CourtsRouter {
         router.post(
 
             "/createCourt",
+            IsAdmin.requireAdmin,
 
             this.controllers
                 .save
@@ -43,6 +50,7 @@ export default class CourtsRouter {
         router.delete(
 
             "/delete/:id",
+            IsAdmin.requireAdmin,
 
             this.controllers
                 .deleteCourtById
@@ -52,8 +60,6 @@ export default class CourtsRouter {
         router.put(
 
             "/reserve",
-
-            validate.courtReservation,
 
             this.controllers
                 .reserveDate
@@ -78,6 +84,7 @@ export default class CourtsRouter {
         router.put(
 
             '/reserve/clean',
+            IsAdmin.requireAdmin,
 
             this.controllers
                 .deleteOldReserves
@@ -93,6 +100,7 @@ export default class CourtsRouter {
 
         )
 
+        router.put('/:name', IsAdmin.requireAdmin, this.controllers.update);
         return router
     }
 }

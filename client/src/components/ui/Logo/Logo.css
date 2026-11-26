@@ -80,3 +80,8 @@
   color: var(--c-mustard);
   opacity: 1;
 }
+.club-logo-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}

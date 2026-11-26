@@ -324,12 +324,11 @@ export const CreateActivity = ({ handleMenuClick, menu }) => {
                 imgText={activity.imgText}
                 title={activity.activity}
                 description={activity.description}
-                data_target={activity.data_target}
+                modalId='actividad-previa-alta'
               />
 
               <Modal
-                img={activity.img}
-                dataTarget={dataTarget}
+                dataTarget='actividad-previa-alta'
                 activity={activity.activity}
                 categories={categories}
               />

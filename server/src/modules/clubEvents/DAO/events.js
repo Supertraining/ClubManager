@@ -1,104 +1,77 @@
 import { Logger } from '../../../utils/logger.js';
-import { supabaseAdmin } from '../../../config/supabaseClient.js';
+import { createUserClient } from '../../../config/supabaseClient.js';
+import { throwClubDbError } from '../../../utils/clubDbError.js';
+import { CustomError } from '../../../utils/customError.Utils.js';
 
-let instance = null;
+let instance;
 
-/**
- * EventsDAO — Supabase edition.
- *
- * Events are admin-only data (see RLS in 02_rls.sql). The public app does
- * not list them. We use supabaseAdmin (service_role) here.
- */
-export default class EventDAO {
+function parseDate(value) {
+  const parsed = new Date(value);
+  if (!value || Number.isNaN(parsed.getTime())) throw CustomError.badRequest('Ingresá una fecha y hora válidas para el evento.');
+  return parsed.toISOString();
+}
 
-  async getAllEvents() {
-    const { data, error } = await supabaseAdmin
-      .from('events')
-      .select('*')
-      .order('start_time', { ascending: true });
-    if (error) throw error;
-    return data ?? [];
+function mapFields(data) {
+  const row = {
+    type: data.type ?? data.evento,
+    client_first_name: data.client_first_name ?? data.nombre,
+    client_last_name: data.client_last_name ?? data.apellido,
+    client_phone: data.client_phone ?? data.telefono,
+    adults: data.adults ?? data.adultos,
+    kids: data.kids ?? data.menores,
+    start_time: data.start_time ?? data.date ?? data.horaInicia,
+    end_time: data.end_time ?? data.horaFinaliza,
+    service_option: data.service_option ?? data.opcion,
+    extra_hours: data.extra_hours ?? data.horasAdicional,
+    extra_staff: data.extra_staff ?? data.camareraAdicional,
+    comments: data.comments ?? data.comentarios,
+    deposit: data.deposit ?? data.seña,
+    status: data.status ?? (typeof data.saldado === 'boolean' ? (data.saldado ? 'saldado' : 'pendiente') : undefined),
+    calendar_data: data.calendar_data ?? data.calendarData,
+  };
+  for (const field of ['start_time', 'end_time']) {
+    if (row[field] !== undefined) row[field] = parseDate(row[field]);
   }
+  for (const field of ['adults', 'kids']) {
+    if (row[field] === '') delete row[field];
+  }
+  return Object.fromEntries(Object.entries(row).filter(([, value]) => value !== undefined));
+}
 
-  async getEventById(id) {
-    const { data, error } = await supabaseAdmin
-      .from('events')
-      .select('*')
-      .eq('id', id)
-      .maybeSingle();
-    if (error) throw error;
+export default class EventDAO {
+  async getAllEvents(clubId, token) {
+    const { data, error } = await createUserClient(token).from('events')
+      .select('*').eq('club_id', clubId).order('start_time');
+    if (error) throwClubDbError(error);
     return data;
   }
 
-  async insertEvent(data) {
-    const row = this._mapFromLegacy(data);
-    const { data: inserted, error } = await supabaseAdmin
-      .from('events')
-      .insert(row)
-      .select()
-      .single();
-    if (error) throw error;
-    return inserted;
+  async getEventById(id, clubId, token) {
+    const { data, error } = await createUserClient(token).from('events')
+      .select('*').eq('club_id', clubId).eq('id', id).maybeSingle();
+    if (error) throwClubDbError(error);
+    return data;
   }
 
-  async updateEvent(data) {
-    const { id, ...rest } = data;
-    const row = this._mapFromLegacy(rest);
-    const { data: updated, error } = await supabaseAdmin
-      .from('events')
-      .update(row)
-      .eq('id', id)
-      .select()
-      .single();
-    if (error) throw error;
-    return updated;
+  async insertEvent(event, clubId, token) {
+    const { data, error } = await createUserClient(token).from('events')
+      .insert({ service_option: '', ...mapFields(event), club_id: clubId }).select().single();
+    if (error) throwClubDbError(error);
+    return data;
   }
 
-  async deleteEvent(id) {
-    const { error } = await supabaseAdmin
-      .from('events')
-      .delete()
-      .eq('id', id);
-    if (error) throw error;
-    return { deletedCount: 1 };
+  async updateEvent(event, clubId, token) {
+    const { data, error } = await createUserClient(token).from('events')
+      .update(mapFields(event)).eq('club_id', clubId).eq('id', event.id).select().maybeSingle();
+    if (error) throwClubDbError(error);
+    return data;
   }
 
-  /**
-   * Map the legacy Mongoose field names → Supabase column names.
-   * The old client posts camelCase Spanish field names; we accept both.
-   */
-  _mapFromLegacy(data) {
-    if (!data) return {};
-    const get = (...keys) => {
-      for (const k of keys) if (data[k] !== undefined) return data[k];
-      return undefined;
-    };
-    return {
-      type: get('type', 'evento'),
-      client_first_name: get('client_first_name', 'nombre'),
-      client_last_name: get('client_last_name', 'apellido'),
-      client_phone: get('client_phone', 'telefono'),
-      adults: Number(get('adults', 'adultos', 0)),
-      kids: Number(get('kids', 'menores', 0)),
-      start_time: this._parseDateTime(get('start_time', 'date', 'horaInicia')),
-      end_time: this._parseDateTime(get('end_time', 'horaFinaliza')),
-      service_option: get('service_option', 'opcion') ?? '',
-      extra_hours: get('extra_hours', 'horasAdicional'),
-      extra_staff: get('extra_staff', 'camareraAdicional'),
-      comments: get('comments', 'comentarios'),
-      deposit: get('deposit', 'seña'),
-      status: get('status') ?? (data.saldado ? 'saldado' : 'pendiente'),
-      calendar_data: get('calendar_data', 'calendarData') ?? [],
-    };
-  }
-
-  _parseDateTime(v) {
-    if (!v) return null;
-    if (v instanceof Date) return v.toISOString();
-    // Accept ISO strings or "YYYY-MM-DD HH:mm" / "YYYY-MM-DDTHH:mm"
-    const s = String(v).replace(' ', 'T');
-    const d = new Date(s);
-    return Number.isNaN(d.getTime()) ? null : d.toISOString();
+  async deleteEvent(id, clubId, token) {
+    const { data, error } = await createUserClient(token).from('events')
+      .delete().eq('club_id', clubId).eq('id', id).select('id').maybeSingle();
+    if (error) throwClubDbError(error);
+    return { deletedCount: data ? 1 : 0 };
   }
 
   static getInstance() {
